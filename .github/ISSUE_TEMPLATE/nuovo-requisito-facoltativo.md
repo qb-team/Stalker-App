@@ -1,8 +1,8 @@
 ---
-name: Nuovo requisito obbligatorio
-about: Nuovo requisito obbligatorio da implementare
+name: Nuovo requisito facoltativo
+about: Nuovo requisito facoltativo da implementare
 title: Codice requisito
-labels: Obbligatori
+labels: Facoltativi
 assignees: babastreio, ChristianMattei, EnricoSalmaso, FraDrago
 
 ---

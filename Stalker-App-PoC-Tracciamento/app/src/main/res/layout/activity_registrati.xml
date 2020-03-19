@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="android.StalkerAppPoCTracciamento.Registrati">
+
+    <TextView android:text = "Registrati" android:layout_width="wrap_content"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/textview"
+        android:textSize = "35dp"
+        android:layout_alignParentTop = "true"
+        android:layout_centerHorizontal = "true" />
+    <!--
+    <TextView
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/textView"
+        android:layout_below = "@+id/textview"
+        android:layout_centerHorizontal = "true"
+        android:textColor = "#ff7aff24"
+        android:textSize = "35dp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal" />
+    -->
+
+    <EditText
+        android:id="@+id/EmailID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+
+
+        android:layout_centerHorizontal = "true"
+
+        android:layout_marginTop="220dp"
+        android:hint="Email"
+        android:textColorHighlight="#ff7eff15"
+        android:textColorHint="#000000" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/textView"
+
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/PasswordID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="270dp"
+        android:layout_centerHorizontal = "true"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColorHint="#000000" />
+
+    <EditText
+        android:id="@+id/ConfPasswordID"
+        android:layout_width="408dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="331dp"
+
+        android:hint="Conferma Password"
+        android:inputType="textPassword"
+        android:textColorHint="#000000" />
+
+    <Button
+        android:id="@+id/RegistratiID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+
+
+        android:text="Registrati" />
+
+
+</RelativeLayout>

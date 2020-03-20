@@ -57,8 +57,9 @@ public class Registrati extends AppCompatActivity {
                     return;
                 }
 
-                if(password.length() < 6){
-                    mPassword.setError("La Password deve contenere almeno 6 caratteri");
+                if(!calculate(password)){
+                    //mPassword.setError("La Password deve contenere almeno una lettere maiuscola e minuscola, un numero, uno special char");
+                    Toast.makeText(getApplicationContext(),"La Password deve contenere almeno 6 caratteri, una lettere maiuscola e minuscola, un numero, uno special char",Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -101,6 +102,47 @@ public class Registrati extends AppCompatActivity {
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+    public boolean calculate(String password) {
+        int score = 0;
+        // boolean indicating if password has an upper case
+        boolean upper = false;
+        // boolean indicating if password has a lower case
+        boolean lower = false;
+        // boolean indicating if password has at least one digit
+        boolean digit = false;
+        // boolean indicating if password has a leat one special char
+        boolean specialChar = false;
+
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+
+            if (!specialChar  &&  !Character.isLetterOrDigit(c)) {
+                score++;
+                specialChar = true;
+            } else {
+                if (!digit  &&  Character.isDigit(c)) {
+                    score++;
+                    digit = true;
+                } else {
+                    if (!upper || !lower) {
+                        if (Character.isUpperCase(c)) {
+                            upper = true;
+                        } else {
+                            lower = true;
+                        }
+
+                        if (upper && lower) {
+                            score++;
+                        }
+                    }
+                }
+            }
+        }
+        if(upper && lower && digit && specialChar && password.length()>=6)
+            return true;
+        else
+            return false;
     }
 
 }

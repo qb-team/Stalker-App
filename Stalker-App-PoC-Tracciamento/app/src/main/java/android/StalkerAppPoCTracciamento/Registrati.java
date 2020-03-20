@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -25,12 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Registrati extends AppCompatActivity {
-    public static final String TAG = "TAG";
     EditText mEmail, mPassword, mConfPassword;
     Button mRegisterBtn;
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //Inizio onCreate
@@ -40,15 +37,7 @@ public class Registrati extends AppCompatActivity {
         mEmail =(EditText) findViewById(R.id.EmailID);
         mPassword = (EditText)findViewById(R.id.PasswordID);
         mConfPassword = (EditText)findViewById(R.id.ConfPasswordID);
-        mRegisterBtn= (Button) findViewById(R.id.RegistratiID);
-
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-
-        if(fAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
+        mRegisterBtn= (Button) findViewById(R.id.ContinuaID);
 
         mRegisterBtn.setOnClickListener(new View.OnClickListener() { // Inizio Funzionalità pulsante Registrati (quando lo clicchi)
             @Override
@@ -77,36 +66,14 @@ public class Registrati extends AppCompatActivity {
                     mConfPassword.setError("Le Password non coincidono");
                     return;
                 }
-                // Fine Messaggi Errore compilazione
 
-                // Registrazione dell'utente in Firebase
-                fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(Registrati.this, "Ti sei registrato e hai effettuato il login", Toast.LENGTH_SHORT).show();
-                            userID = fAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("users").document(userID);
-                            Map<String, Object> user = new HashMap<>();
-                            user.put("email",email);
-                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "onSuccess: Registrazione effettuata "+ userID);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: Si è verificato un errore" + e.toString());
-                                }
-                            });
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        }
-                        else{
-                            Toast.makeText(Registrati.this, "Errore! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                Intent intent = new Intent(getApplicationContext(), CondizioniDuso.class);
+                Bundle bundle = new Bundle();
+                intent.putExtras(bundle);
+                intent.putExtra("email", email);
+                intent.putExtra("password", password);
+                startActivity(intent);
+                // Fine Messaggi Errore compilazione
 
             }
         }); // Fine Funzionalità pulsante Registrati

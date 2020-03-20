@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ import java.util.Map;
 
 public class CondizioniDuso extends AppCompatActivity {
 
+    CheckBox mCondizioniDuso;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     public static final String TAG = "TAG";
@@ -57,6 +59,7 @@ public class CondizioniDuso extends AppCompatActivity {
         setContentView(R.layout.activity_condizioni_duso);
 
         Button registrati = findViewById(R.id.RegistratiID);
+        mCondizioniDuso = (CheckBox) findViewById(R.id.CondizioniDusoID);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
@@ -74,33 +77,37 @@ public class CondizioniDuso extends AppCompatActivity {
         registrati.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(CondizioniDuso.this, "Ti sei registrato e hai effettuato il login", Toast.LENGTH_SHORT).show();
-                            userID = fAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("users").document(userID);
-                            Map<String, Object> user = new HashMap<>();
-                            user.put("email",email);
-                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "onSuccess: Registrazione effettuata "+ userID);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: Si è verificato un errore" + e.toString());
-                                }
-                            });
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                if(mCondizioniDuso.isChecked()) {
+                    fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(CondizioniDuso.this, "Ti sei registrato e hai effettuato il login", Toast.LENGTH_SHORT).show();
+                                userID = fAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = fStore.collection("users").document(userID);
+                                Map<String, Object> user = new HashMap<>();
+                                user.put("email", email);
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "onSuccess: Registrazione effettuata " + userID);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "onFailure: Si è verificato un errore" + e.toString());
+                                    }
+                                });
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            } else {
+                                Toast.makeText(CondizioniDuso.this, "Errore! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else{
-                            Toast.makeText(CondizioniDuso.this, "Errore! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                    });
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Devi accettare le condizioni d'uso",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

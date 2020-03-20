@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
@@ -28,6 +30,9 @@ import java.util.Map;
 public class Registrati extends AppCompatActivity {
     EditText mEmail, mPassword, mConfPassword;
     Button mRegisterBtn;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    boolean verifica =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //Inizio onCreate
@@ -39,6 +44,9 @@ public class Registrati extends AppCompatActivity {
         mConfPassword = (EditText)findViewById(R.id.ConfPasswordID);
         mRegisterBtn= (Button) findViewById(R.id.ContinuaID);
 
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+
         mRegisterBtn.setOnClickListener(new View.OnClickListener() { // Inizio Funzionalità pulsante Registrati (quando lo clicchi)
             @Override
             public void onClick(View v) {
@@ -49,6 +57,11 @@ public class Registrati extends AppCompatActivity {
                 // Inizio Messaggi Errore compilazione
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Inserire l'Email");
+                    return;
+                }
+
+                if(checkEmail(mEmail)) {
+                    Toast.makeText(getApplicationContext(), "Utente già esistente", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -81,6 +94,24 @@ public class Registrati extends AppCompatActivity {
 
     }//Fine onCreate
 
+
+    public boolean checkEmail(View v) {
+
+        fAuth.fetchSignInMethodsForEmail(mEmail.getText().toString())
+                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                        boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+
+                        if (!isNewUser)
+                            verifica=true;
+
+                    }
+                });
+        return verifica;
+    }
+
     // Funzionalità per il backbutton (tasto per andare indietro)
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -103,6 +134,7 @@ public class Registrati extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
     public boolean calculate(String password) {
         int score = 0;
         // boolean indicating if password has an upper case

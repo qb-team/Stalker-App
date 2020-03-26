@@ -1,2 +1,0 @@
-rootProject.name='Stalker App PoC Tracciamento'
-include ':app', ':stalker-sdk'

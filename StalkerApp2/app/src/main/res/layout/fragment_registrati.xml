@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ui.main.Registrati"
+    android:background="@android:color/white"
+    >
+
+    <TextView
+        android:text = "Registrati"
+        android:layout_width="wrap_content"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/textview"
+        android:textSize = "35dp"
+        android:layout_alignParentTop = "true"
+        android:layout_centerHorizontal = "true" />
+    <!--
+    <TextView
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/textView"
+        android:layout_below = "@+id/textview"
+        android:layout_centerHorizontal = "true"
+        android:textColor = "#ff7aff24"
+        android:textSize = "35dp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal" />
+    -->
+
+    <EditText
+        android:id="@+id/EmailID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal = "true"
+        android:layout_marginTop="220dp"
+        android:hint="Email"
+        android:maxLines="1"
+        android:lines="1"
+        android:singleLine="true"
+        android:textColorHighlight="#ff7eff15"
+        android:textColorHint="#000000" />
+
+    <!--<ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />-->
+
+    <EditText
+        android:id="@+id/PasswordID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="270dp"
+        android:layout_centerHorizontal = "true"
+        android:hint="Password"
+        android:maxLines="1"
+        android:lines="1"
+        android:singleLine="true"
+        android:inputType="textPassword"
+        android:textColorHint="#000000" />
+
+    <EditText
+        android:id="@+id/ConfPasswordID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="320dp"
+        android:hint="Conferma Password"
+        android:maxLines="1"
+        android:lines="1"
+        android:singleLine="true"
+        android:inputType="textPassword"
+        android:textColorHint="#000000" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="370dp"
+        android:id="@+id/condizioniID"
+        android:text="Leggi condinzioni d'uso"
+        />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="370dp"
+        android:layout_marginLeft="200dp"
+        android:id="@+id/condizionidusoID"
+        android:text="Accetta condizioni d'uso" />
+
+    <Button
+        android:id="@+id/RegistartiID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Registrati" />
+
+
+
+</RelativeLayout>

@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.example.stalkerapp.HomePage;
@@ -27,18 +27,10 @@ import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.Presenter.RegistrazioneContract;
 import com.example.stalkerapp.Presenter.RegistrazionePresenter;
 import com.example.stalkerapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class Registrati extends Fragment implements View.OnClickListener, RegistrazioneContract.View{
     public final static String TAG="Registrati_Fragment";
@@ -92,6 +84,8 @@ public class Registrati extends Fragment implements View.OnClickListener, Regist
         if(!TextUtils.isEmpty(mEmail.getText().toString()) && !TextUtils.isEmpty(mPassword.getText().toString())&&calculate(mPassword.getText().toString())){
             initRegistrati(mEmail.getText().toString(), mPassword.getText().toString());
         }else{
+            if(!calculate(mPassword.getText().toString()))
+                Toast.makeText(getContext(), "Inserire una password che comprenda: una lettera maiuscola e minuscola,un numero, un carattere speciale e una lunghezza minima di 6 caratteri", Toast.LENGTH_LONG).show();
             if(TextUtils.isEmpty(mEmail.getText().toString())){
                 mEmail.setError("Inserisci una email valida");
             }if(TextUtils.isEmpty(mPassword.getText().toString())){

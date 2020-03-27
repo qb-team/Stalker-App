@@ -57,7 +57,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
  *
  */
 public class Organizzazione extends Fragment {
-
+    public final static String TAG = "Organizzazione_FRAGMENT";
     private static Organizzazione instance = null;
     FirebaseAuth fAuth;
     private LocationManager locationManager;
@@ -74,6 +74,7 @@ public class Organizzazione extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
         instance=this;
     }
     public static Organizzazione getInstance() {
@@ -84,11 +85,12 @@ public class Organizzazione extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
+
         View view=inflater.inflate(R.layout.fragment_organizzazione, container, false);
         risultati=view.findViewById(R.id.text_view_result);
         Parse();
-
         locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE); // Ottenimento servizi di localizzazione
         listener = new LocationListener() { // Inizio Inizializzazione listener
             @Override
@@ -99,14 +101,7 @@ public class Organizzazione extends Fragment {
                 boolean isInsideBoundary = builder.build().contains(test); // true se il test point è all'interno del confine
                 boolean isInside = PolyUtil.containsLocation(test, poligono, true); // false se il punto è all'esterno del poligono
                 if (isInsideBoundary == true && isInside == true )
-                {   /*Date date = Calendar.getInstance().getTime();
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-                    String strDate = dateFormat.format(date);
-                    //Accessi.add(strDate);
-                    for(Iterator<String> i = Accessi.iterator(); i.hasNext();) {
-
-                        if(Accessi.size()>1) i.remove();
-                    }*/
+                {
                     risultati.append("\n" + "Sei dentro");
 
                 }

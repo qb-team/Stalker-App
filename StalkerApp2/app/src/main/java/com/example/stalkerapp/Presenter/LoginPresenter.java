@@ -1,7 +1,6 @@
 package com.example.stalkerapp.Presenter;
 
 import androidx.fragment.app.Fragment;
-
 import com.example.stalkerapp.Model.Utente;
 
 public class LoginPresenter implements LoginContract.Presenter, LoginContract.onLoginListener{

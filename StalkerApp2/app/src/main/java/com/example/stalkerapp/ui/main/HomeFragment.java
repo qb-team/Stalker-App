@@ -13,8 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.stalkerapp.HomePage;
@@ -34,7 +32,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
-
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -85,7 +82,19 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                HomePage.fragmentManager.beginTransaction().replace(R.id.HomeFragment, new Organizzazione(), null).addToBackStack("Home_FRAGMENT").commit();
+                if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
+                    HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
+
+                else HomePage.fragmentManager.beginTransaction().add(R.id.fragment_container,new Organizzazione(),"Organizzazione_FRAGMENT").commit();
+
+                if(HomePage.fragmentManager.findFragmentByTag("Home_FRAGMENT")!=null)
+                    HomePage.fragmentManager.beginTransaction().hide(HomePage.fragmentManager.findFragmentByTag("Home_FRAGMENT")).commit();
+
+                if(HomePage.fragmentManager.findFragmentByTag("Preferiti_FRAGMENT")!=null)
+                    HomePage.fragmentManager.beginTransaction().hide(HomePage.fragmentManager.findFragmentByTag("Preferiti_FRAGMENT")).commit();
+
+                if(HomePage.fragmentManager.findFragmentByTag("Settings_FRAGMENT")!=null)
+                    HomePage.fragmentManager.beginTransaction().hide(HomePage.fragmentManager.findFragmentByTag("Settings_FRAGMENT")).commit();
 
 
                 }
@@ -214,10 +223,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
         thread.start();
-
-
 }
 
 

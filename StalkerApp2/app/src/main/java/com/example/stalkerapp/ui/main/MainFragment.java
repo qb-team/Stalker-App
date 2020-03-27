@@ -1,19 +1,15 @@
 package com.example.stalkerapp.ui.main;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.R;
-import com.google.firebase.auth.FirebaseAuth;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,8 +28,6 @@ public class MainFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
     public static MainFragment newInstance() {
         return new MainFragment();
     }
@@ -44,7 +38,6 @@ public class MainFragment extends Fragment {
 
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

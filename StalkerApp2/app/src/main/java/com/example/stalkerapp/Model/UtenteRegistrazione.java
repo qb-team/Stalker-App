@@ -2,7 +2,6 @@ package com.example.stalkerapp.Model;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import com.example.stalkerapp.Presenter.RegistrazioneContract;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

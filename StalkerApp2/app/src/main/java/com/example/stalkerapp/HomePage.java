@@ -6,14 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toolbar;
-
 import com.example.stalkerapp.ui.main.HomeFragment;
 import com.example.stalkerapp.ui.main.ListaPreferiti;
 import com.example.stalkerapp.ui.main.Settings;
@@ -35,12 +32,9 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().addOnBackStackChangedListener(this);
-
-
         //I added this if statement to keep the selected fragment when rotating the device
         if (savedInstanceState == null) {
             HomeFragment fragment  = new HomeFragment();
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(R.id.fragment_container,fragment,"Home_FRAGMENT");
@@ -72,22 +66,24 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
 
                     switch (item.getItemId()) {
                         case R.id.nav_home:
-                            if(fragmentManager.findFragmentByTag("Home_FRAGMENT") != null) {
-                                //if the fragment exists, show it.
-                                fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("Home_FRAGMENT")).commit()
-                                ;
-                            } else {
+                            if(fragmentManager.findFragmentByTag("Home_FRAGMENT") != null && fragmentManager.findFragmentByTag("Settings_FRAGMENT") == null)
+                                fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
+                            else {
                                 //if the fragment does not exist, add it to fragment manager.
                                 fragmentManager.beginTransaction().add(R.id.fragment_container, new HomeFragment(), "Home_FRAGMENT").commit();
                             }
+                            if(fragmentManager.findFragmentByTag("Home_FRAGMENT") != null && fragmentManager.findFragmentByTag("Settings_FRAGMENT") != null) {
+                                //if the fragment exists, show it.
+                                fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("Settings_FRAGMENT")).commit();
+                            }
+
+
                             if(fragmentManager.findFragmentByTag("Preferiti_FRAGMENT") != null){
                                 //if the other fragment is visible, hide it.
                                 fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("Preferiti_FRAGMENT")).commit();
                             }
-                            if(fragmentManager.findFragmentByTag("Settings_FRAGMENT") != null){
-                                //if the other fragment is visible, hide it.
-                                fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("Settings_FRAGMENT")).commit();
-                            }
+
+
                             break;
 
                         case R.id.nav_favorites:
@@ -106,6 +102,7 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
                                 //if the other fragment is visible, hide it.
                                 fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("Settings_FRAGMENT")).commit();
                             }
+
                             break;
 
                         case R.id.nav_settings:
@@ -114,7 +111,7 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
                                 fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("Settings_FRAGMENT")).commit();
                             } else {
                                 //if the fragment does not exist, add it to fragment manager.
-                                fragmentManager.beginTransaction().add(R.id.fragment_container, new Settings(), "Settings_FRAGMENT").commit();
+                                fragmentManager.beginTransaction().add(R.id.fragment_container,new Settings(), "Settings_FRAGMENT").commit();
                             }
                             if(fragmentManager.findFragmentByTag("Home_FRAGMENT") != null){
                                 //if the other fragment is visible, hide it.
@@ -127,16 +124,12 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
 
                             break;
                     }
-
-
-
-
                     return true;
                 }
             };
+
     @Override
     public void onBackPressed() {   // Funzionalità per il backbutton (tasto per andare indietro)
-        // AlertDialog.Builder builder = new AlertDialog.Builder(this);
         AlertDialog alertDialog = new AlertDialog.Builder(HomePage.this).
                 setTitle("Attenzione").setMessage("Sei sicuro di uscire ?").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -157,6 +150,4 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
     public static HomePage getInstance() {
         return instance;
     }
-
-
 }

@@ -6,13 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-
 import com.example.stalkerapp.HomePage;
 import com.example.stalkerapp.R;
 
 public class ListaPreferiti extends Fragment {
     public final static String TAG="Preferiti_FRAGMENT";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

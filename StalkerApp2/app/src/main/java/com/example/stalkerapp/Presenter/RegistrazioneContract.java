@@ -1,8 +1,6 @@
 package com.example.stalkerapp.Presenter;
 
-
 import androidx.fragment.app.Fragment;
-
 import com.google.firebase.auth.FirebaseUser;
 
 public interface RegistrazioneContract {

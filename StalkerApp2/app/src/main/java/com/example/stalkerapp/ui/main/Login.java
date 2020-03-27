@@ -1,4 +1,5 @@
 package com.example.stalkerapp.ui.main;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,17 +34,23 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-       //QUI COSTRUISCO LA VIEW DI LOGIN
+        //QUI COSTRUISCO LA VIEW DI LOGIN
+
         View view=inflater.inflate(R.layout.fragment_login,container,false);
         mEmail = view.findViewById(R.id.Emailtext);
         mPassword = view.findViewById(R.id.passwordtext);
         mLoginBtn = view.findViewById(R.id.buttonAccesso);
+
         //set listener
+
         mLoginBtn.setOnClickListener(this);
+
         //set init
+
         loginPresenter = new LoginPresenter(this);
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Aspetta il completamento del login");
+
         return view;
     }
 
@@ -55,6 +62,7 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
                 break;
         }
     }
+
     private void checkLoginDetails() {
         if(!TextUtils.isEmpty(mEmail.getText().toString()) && !TextUtils.isEmpty(mPassword.getText().toString())){
             initLogin(mEmail.getText().toString(), mPassword.getText().toString());
@@ -66,10 +74,12 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
             }
         }
     }
+
     private void initLogin(String email, String password) {
         mProgressDialog.show();
         loginPresenter.login(this, email, password);
     }
+
     @Override
     public void onLoginSuccess(String message) {
         mProgressDialog.dismiss();
@@ -77,6 +87,7 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
         Intent intent = new Intent(getActivity(), HomePage.class);
         startActivity(intent);
     }
+
     @Override
     public void onLoginFailure(String message) {
         mProgressDialog.dismiss();

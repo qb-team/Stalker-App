@@ -83,9 +83,9 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
-                    HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
+                    HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).addToBackStack( null ).commit();
 
-                else HomePage.fragmentManager.beginTransaction().add(R.id.fragment_container,new Organizzazione(),"Organizzazione_FRAGMENT").commit();
+                else HomePage.fragmentManager.beginTransaction().add(R.id.fragment_container,new Organizzazione(),"Organizzazione_FRAGMENT").addToBackStack( null ).commit();
 
                 if(HomePage.fragmentManager.findFragmentByTag("Home_FRAGMENT")!=null)
                     HomePage.fragmentManager.beginTransaction().hide(HomePage.fragmentManager.findFragmentByTag("Home_FRAGMENT")).commit();

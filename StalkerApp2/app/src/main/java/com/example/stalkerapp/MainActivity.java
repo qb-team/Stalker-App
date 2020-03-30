@@ -26,8 +26,12 @@ public static FragmentManager fragmentManager;
             finish();
         }
         if (savedInstanceState == null) {
-            fragmentManager.beginTransaction().replace(R.id.container,
-                    new MainFragment()).commit();
+
+            fragmentManager.beginTransaction().replace(R.id.container,new MainFragment(),"Main_Fragment").commit();
+
+
+
+
         }
 
     }

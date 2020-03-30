@@ -56,6 +56,7 @@ public class Registrati extends Fragment implements View.OnClickListener, Regist
         mRegisterBtn= view.findViewById(R.id.RegistartiID);
         cond= view.findViewById(R.id.condizioniID);
 
+
         mRegisterPresenter=new RegistrazionePresenter(this);
         mPrgressDialog = new ProgressDialog(getContext());
         mPrgressDialog.setMessage("Stiamo registrando il tuo account sul Database");

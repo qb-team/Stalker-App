@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.stalkerapp.HomePage;
+import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.Presenter.LoginContract;
 import com.example.stalkerapp.Presenter.LoginPresenter;
 import com.example.stalkerapp.R;
@@ -29,6 +30,8 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
     }
     @Override

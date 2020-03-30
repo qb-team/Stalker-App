@@ -11,25 +11,21 @@ import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.R;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MainFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class MainFragment extends Fragment {
     public final static String TAG="Main_Fragment";
 
     Button registrati;
     Button login;
     TextView t;
-
+    private static MainFragment instance = null;
 
     public MainFragment() {
         // Required empty public constructor
     }
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static MainFragment getInstance() {
+        return instance;
     }
 
     @Override
@@ -43,24 +39,37 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        container.removeAllViews();
+
         View view=inflater.inflate(R.layout.fragment_main,container,false);
         registrati= view.findViewById(R.id.buttonRegistrati);
         login= view.findViewById(R.id.buttonLogin);
         t=view.findViewById(R.id.textView);
 
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                MainActivity.fragmentManager.beginTransaction().replace(R.id.mainFragment,new Login(),null).addToBackStack(null).commit();
+                if(MainActivity.fragmentManager.findFragmentByTag("Login_Fragment") != null)
+                    MainActivity.fragmentManager.beginTransaction().show(MainActivity.fragmentManager.findFragmentByTag("Login_Fragment")).addToBackStack(null).commit();
+                else MainActivity.fragmentManager.beginTransaction().add(R.id.container, new Login(), "Login_Fragment").addToBackStack(null).commit();
+                if(MainActivity.fragmentManager.findFragmentByTag("Registrati_Fragment") != null)
+                MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Registrati_Fragment")).commit();
+                if(MainActivity.fragmentManager.findFragmentByTag("Main_Fragment") != null)
+                    MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main_Fragment")).commit();
             }
         });
         registrati.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                MainActivity.fragmentManager.beginTransaction().replace(R.id.mainFragment,new Registrati(),null).addToBackStack(null).commit();
+                if(MainActivity.fragmentManager.findFragmentByTag("Registrati_Fragment") != null)
+                    MainActivity.fragmentManager.beginTransaction().show(MainActivity.fragmentManager.findFragmentByTag("Registrati_Fragment")).addToBackStack(null).commit();
+                else MainActivity.fragmentManager.beginTransaction().add(R.id.container, new Registrati(), "Registrati_Fragment").addToBackStack(null).commit();
+                if(MainActivity.fragmentManager.findFragmentByTag("Login_Fragment") != null)
+                MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Login_Fragment")).commit();
+                if(MainActivity.fragmentManager.findFragmentByTag("Main_Fragment") != null)
+                    MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main_Fragment")).commit();
+
             }
         });
         return view;

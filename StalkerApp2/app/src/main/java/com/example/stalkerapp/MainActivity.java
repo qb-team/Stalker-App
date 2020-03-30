@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
-public static FragmentManager fragmentManager;
+    public static FragmentManager fragmentManager;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     @Override
@@ -26,12 +26,7 @@ public static FragmentManager fragmentManager;
             finish();
         }
         if (savedInstanceState == null) {
-
-            fragmentManager.beginTransaction().replace(R.id.container,new MainFragment(),"Main_Fragment").commit();
-
-
-
-
+            fragmentManager.beginTransaction().replace(R.id.container, new MainFragment(), "Main").commit();
         }
 
     }

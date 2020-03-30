@@ -174,22 +174,25 @@ public class HomeFragment extends Fragment {
                     final int code = resp.code();
                     final ResponseBody body = resp.body();
                     //VEDO SE SONO LE STESSE ORGANIZZAZIONI
+
                     File organizzazioniFile = new File(getContext().getFilesDir()+"/Organizzazioni.txt");
+                    String s=null;
+                    if(organizzazioniFile.exists()){
                     FileInputStream fin=new FileInputStream(organizzazioniFile);
                     byte[] buffer= new byte[(int)organizzazioniFile.length()];
                     new DataInputStream(fin).readFully(buffer);
                     fin.close();
-                    String s=new String(buffer,"UTF-8");
+                    s=new String(buffer,"UTF-8");
+                    return;}
                     inline = body.string();
 
-                    if(inline.equals(s)){
-                       System.out.println("Già scaricate");
-                       body.close();
-                        return;
-                    }
-                    if(code != 200){
-                        body.close();
 
+                    if(code != 200) {
+                        body.close();
+                    }
+                        if(s!=null && s.equals(inline)){
+                            body.close();
+                        return;
                         }
                     else
                     {

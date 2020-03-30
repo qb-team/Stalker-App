@@ -29,8 +29,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity.fragmentManager.beginTransaction().add(R.id.container, Login).hide(Login).commit();
-        MainActivity.fragmentManager.beginTransaction().add(R.id.container, Registrati).hide(Registrati).commit();
+
 
 
     }
@@ -39,7 +38,8 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        container.removeAllViews();
+        MainActivity.fragmentManager.beginTransaction().add(R.id.container, Login).hide(Login).commit();
+        MainActivity.fragmentManager.beginTransaction().add(R.id.container, Registrati).hide(Registrati).commit();
         View view=inflater.inflate(R.layout.fragment_main,container,false);
         registrati= view.findViewById(R.id.buttonRegistrati);
         login= view.findViewById(R.id.buttonLogin);

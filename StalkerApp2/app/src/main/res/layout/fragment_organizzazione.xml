@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:textSize="28sp"
         android:textStyle="bold"
+        android:textAlignment="center"
         />
     <TextView
         android:id="@+id/text_view_result"

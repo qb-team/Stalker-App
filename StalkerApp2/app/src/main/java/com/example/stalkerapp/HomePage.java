@@ -18,11 +18,10 @@ import com.example.stalkerapp.ui.main.Settings;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 public class HomePage extends AppCompatActivity  {
-    final Fragment fragment1 = new HomeFragment();
-    final Fragment fragment2 = new ListaPreferiti();
-    final Fragment fragment3 = new Settings();
-
-    Fragment active = fragment1;
+    final Fragment home = new HomeFragment();
+    final Fragment preferiti = new ListaPreferiti();
+    final Fragment settings = new Settings();
+    Fragment active = home;
     public static FragmentManager fragmentManager;
     public FirebaseAuth fAuth;
     private static HomePage instance = null;
@@ -38,9 +37,9 @@ public class HomePage extends AppCompatActivity  {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         //getSupportFragmentManager().addOnBackStackChangedListener(this);
-        fragmentManager.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
-        fragmentManager.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
-        fragmentManager.beginTransaction().add(R.id.fragment_container,fragment1, "1").commit();
+        fragmentManager.beginTransaction().add(R.id.fragment_container, settings, "3").hide(settings).commit();
+        fragmentManager.beginTransaction().add(R.id.fragment_container, preferiti, "2").hide(preferiti).commit();
+        fragmentManager.beginTransaction().add(R.id.fragment_container,home, "1").commit();
 
     }
   /*  @Override
@@ -64,9 +63,11 @@ public class HomePage extends AppCompatActivity  {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.nav_home:
-//
-                            fragmentManager.beginTransaction().hide(active).show(fragment1).commit();
-                            active = fragment1;
+                            if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
+                            fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
+
+                            fragmentManager.beginTransaction().hide(active).show(home).commit();
+                            active = home;
                             setActionBarTitle("Home");
                             System.out.println("Creato Homefragment");
                             return true;
@@ -74,18 +75,20 @@ public class HomePage extends AppCompatActivity  {
                         case R.id.nav_favorites:
                             if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
                                 fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
-                            fragmentManager.beginTransaction().hide(active).show(fragment2).commit();
+
+                            fragmentManager.beginTransaction().hide(active).show(preferiti).commit();
                             setActionBarTitle("Lista preferiti");
-                            active = fragment2;
+                            active = preferiti;
                             System.out.println("Creato ListaPreferiti");
                             return true;
 
                         case R.id.nav_settings:
                             if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
                                 fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
-                            fragmentManager.beginTransaction().hide(active).show(fragment3).commit();
+
+                            fragmentManager.beginTransaction().hide(active).show(settings).commit();
                             setActionBarTitle("Settings");
-                            active = fragment3;
+                            active = settings;
                             System.out.println("Creato Settings");
                             return true;
                     }

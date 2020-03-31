@@ -140,6 +140,11 @@ public class HomeFragment extends Fragment {
 
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
+        if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
+        {
+            item.setVisible(false);
+            return;
+        }
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

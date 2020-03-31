@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     public final static String TAG = "Home_FRAGMENT";
-    ListView listaOrg;
+
     private RequestQueue mQueue;
     String inline=" ";
     JSONObject jsonObject;
@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
     private static HomeFragment instance = null;
     ArrayAdapter<String> adapter;
     ArrayList<String> listaOrganizzazioni;
-
+    ListView listaOrg;
 
 
 
@@ -82,19 +82,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
-                    HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).addToBackStack( null ).commit();
 
-                else HomePage.fragmentManager.beginTransaction().add(R.id.fragment_container,new Organizzazione(),"Organizzazione_FRAGMENT").addToBackStack( null ).commit();
+               if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
+                    HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).addToBackStack( "1" ).commit();
 
-                if(HomePage.fragmentManager.findFragmentByTag("Home_FRAGMENT")!=null)
-                    HomePage.fragmentManager.beginTransaction().hide(HomePage.fragmentManager.findFragmentByTag("Home_FRAGMENT")).commit();
+                else { Bundle bundle=new Bundle();
+                        Fragment organizzazione=new Organizzazione();
+                        bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
+                        organizzazione.setArguments(bundle);
+                        HomePage.fragmentManager.beginTransaction().replace(R.id.HomeFragment,organizzazione,"Organizzazione_FRAGMENT").addToBackStack( "1" ).commit();
+                }
 
-                if(HomePage.fragmentManager.findFragmentByTag("Preferiti_FRAGMENT")!=null)
-                    HomePage.fragmentManager.beginTransaction().hide(HomePage.fragmentManager.findFragmentByTag("Preferiti_FRAGMENT")).commit();
 
-                if(HomePage.fragmentManager.findFragmentByTag("Settings_FRAGMENT")!=null)
-                    HomePage.fragmentManager.beginTransaction().hide(HomePage.fragmentManager.findFragmentByTag("Settings_FRAGMENT")).commit();
 
 
                 }
@@ -173,27 +172,26 @@ public class HomeFragment extends Fragment {
                     final Response resp = client.newCall(req).execute();
                     final int code = resp.code();
                     final ResponseBody body = resp.body();
-                    //VEDO SE SONO LE STESSE ORGANIZZAZIONI
-
                     File organizzazioniFile = new File(getContext().getFilesDir()+"/Organizzazioni.txt");
                     String s=null;
+
                     if(organizzazioniFile.exists()){
-                    FileInputStream fin=new FileInputStream(organizzazioniFile);
+                        FileInputStream fin=new FileInputStream(organizzazioniFile);
                     byte[] buffer= new byte[(int)organizzazioniFile.length()];
                     new DataInputStream(fin).readFully(buffer);
                     fin.close();
                     s=new String(buffer,"UTF-8");
-                    return;}
+                    }
                     inline = body.string();
 
 
                     if(code != 200) {
                         body.close();
                     }
-                        if(s!=null && s.equals(inline)){
+                    if(s!=null && s.equals(inline)){
                             body.close();
-                        return;
-                        }
+                            return;
+                    }
                     else
                     {
 

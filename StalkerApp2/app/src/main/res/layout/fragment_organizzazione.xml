@@ -5,11 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.Organizzazione"
     android:background="@android:color/white"
-    android:id="@+id/organizzazioneID">
+    android:id="@+id/organizzazioneID"
+    >
 <RelativeLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center">
+
     <TextView
         android:id="@+id/text_view_result"
         android:layout_width="match_parent"

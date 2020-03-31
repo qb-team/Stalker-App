@@ -1,6 +1,7 @@
 package com.example.stalkerapp.ui.main;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,9 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.Settings;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -63,6 +67,7 @@ public class Organizzazione extends Fragment {
     private LocationManager locationManager;
     private LocationListener listener;
     private String risposta;
+
     private RequestQueue mQueue;
     final ArrayList<LatLng> poligono = new ArrayList<>();
     final LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -74,8 +79,27 @@ public class Organizzazione extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         instance=this;
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.aggiungipreferiti,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id= item.getItemId();
+        if(id==R.id.preferitiID){
+            Bundle bundle1=this.getArguments();
+            if(bundle1!=null){
+
+                ListaPreferiti.getInstance().aggiungiPreferiti(bundle1.getString("nomeOrganizzazione"));
+
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
     public static Organizzazione getInstance() {
         return instance;
@@ -89,6 +113,11 @@ public class Organizzazione extends Fragment {
         // Inflate the layout for this fragment
 
         View view=inflater.inflate(R.layout.fragment_organizzazione, container, false);
+        Bundle bundle=this.getArguments();
+        if(bundle!=null){
+
+            ((HomePage) getActivity()).setActionBarTitle(bundle.getString("nomeOrganizzazione"));
+        }
         risultati=view.findViewById(R.id.text_view_result);
         Parse();
         locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE); // Ottenimento servizi di localizzazione

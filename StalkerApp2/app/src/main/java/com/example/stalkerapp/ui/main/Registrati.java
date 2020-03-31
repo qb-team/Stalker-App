@@ -41,6 +41,7 @@ public class Registrati extends Fragment implements View.OnClickListener, Regist
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
     }
 

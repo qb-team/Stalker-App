@@ -43,7 +43,6 @@ public class HomeFragment extends Fragment {
     String inline=" ";
     JSONObject jsonObject;
     JSONArray jsonArray2;
-
     private static HomeFragment instance = null;
     ArrayAdapter<String> adapter;
     ArrayList<String> listaOrganizzazioni;
@@ -70,6 +69,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         System.out.println("Creazione HomeFragment");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
         jsonObject = new JSONObject();
         jsonArray2 = new JSONArray();
         listaOrg = view.findViewById(R.id.ListaOrg);
@@ -83,15 +83,18 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-               if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
-                    HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).addToBackStack( "1" ).commit();
+               if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")==null)
 
-                else { Bundle bundle=new Bundle();
+               {
+                        Bundle bundle=new Bundle();
                         Fragment organizzazione=new Organizzazione();
                         bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
                         organizzazione.setArguments(bundle);
-                        HomePage.fragmentManager.beginTransaction().replace(R.id.HomeFragment,organizzazione,"Organizzazione_FRAGMENT").addToBackStack( "1" ).commit();
+                        HomePage.fragmentManager.beginTransaction().add(R.id.fragment_container,organizzazione,"Organizzazione_FRAGMENT").addToBackStack( "1" ).commit();
                 }
+               else {
+                   HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
+               }
 
 
 

@@ -17,11 +17,11 @@ import com.example.stalkerapp.ui.main.Organizzazione;
 import com.example.stalkerapp.ui.main.Settings;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-public class HomePage extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
+public class HomePage extends AppCompatActivity  {
     final Fragment fragment1 = new HomeFragment();
     final Fragment fragment2 = new ListaPreferiti();
     final Fragment fragment3 = new Settings();
-    final Fragment fragment4= new Organizzazione();
+
     Fragment active = fragment1;
     public static FragmentManager fragmentManager;
     public FirebaseAuth fAuth;
@@ -30,19 +30,20 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        setActionBarTitle("Home");
         instance=this;
         fAuth = FirebaseAuth.getInstance();
         fragmentManager=getSupportFragmentManager();
-        shouldDisplayHomeUp();
+       // shouldDisplayHomeUp();
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        //getSupportFragmentManager().addOnBackStackChangedListener(this);
         fragmentManager.beginTransaction().add(R.id.fragment_container, fragment3, "3").hide(fragment3).commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
         fragmentManager.beginTransaction().add(R.id.fragment_container,fragment1, "1").commit();
-        //I added this if statement to keep the selected fragment when rotating the device
+
     }
-    @Override
+  /*  @Override
     public void onBackStackChanged() {
         shouldDisplayHomeUp();
     }
@@ -56,7 +57,7 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
         //This method is called when the up button is pressed. Just the pop back stack.
         getSupportFragmentManager().popBackStack();
         return true;
-    }
+    }*/
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -66,19 +67,24 @@ public class HomePage extends AppCompatActivity implements FragmentManager.OnBac
 //
                             fragmentManager.beginTransaction().hide(active).show(fragment1).commit();
                             active = fragment1;
+                            setActionBarTitle("Home");
                             System.out.println("Creato Homefragment");
                             return true;
 
                         case R.id.nav_favorites:
-//
+                            if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
+                                fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
                             fragmentManager.beginTransaction().hide(active).show(fragment2).commit();
+                            setActionBarTitle("Lista preferiti");
                             active = fragment2;
                             System.out.println("Creato ListaPreferiti");
                             return true;
 
                         case R.id.nav_settings:
-//
+                            if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
+                                fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
                             fragmentManager.beginTransaction().hide(active).show(fragment3).commit();
+                            setActionBarTitle("Settings");
                             active = fragment3;
                             System.out.println("Creato Settings");
                             return true;

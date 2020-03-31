@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import com.example.stalkerapp.HomePage;
 import com.example.stalkerapp.MainActivity;
@@ -44,6 +45,8 @@ public class Settings extends Fragment {
         logout = view.findViewById(R.id.LogoutID);
         scarica = view.findViewById(R.id.ScaricaID);
         tracciamento = view.findViewById(R.id.TracciamentoID);
+
+
         scarica.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

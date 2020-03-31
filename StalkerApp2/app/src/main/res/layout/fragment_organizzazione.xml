@@ -10,15 +10,21 @@
 <RelativeLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
-
+    >
+    <TextView
+        android:id="@+id/titleID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        />
     <TextView
         android:id="@+id/text_view_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textColor="@color/blackColor"
-
+        android:layout_marginTop="200dp"
         android:textSize="28sp"
         android:textStyle="bold"
         android:gravity="center_horizontal" />

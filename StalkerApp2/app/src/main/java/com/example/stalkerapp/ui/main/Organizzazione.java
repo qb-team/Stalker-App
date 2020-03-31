@@ -67,7 +67,7 @@ public class Organizzazione extends Fragment {
     private LocationManager locationManager;
     private LocationListener listener;
     private String risposta;
-
+private TextView titolo;
     private RequestQueue mQueue;
     final ArrayList<LatLng> poligono = new ArrayList<>();
     final LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -114,9 +114,10 @@ public class Organizzazione extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_organizzazione, container, false);
         Bundle bundle=this.getArguments();
+        titolo=view.findViewById(R.id.titleID);
         if(bundle!=null){
 
-            ((HomePage) getActivity()).setActionBarTitle(bundle.getString("nomeOrganizzazione"));
+            titolo.setText(bundle.getString("nomeOrganizzazione"));
         }
         risultati=view.findViewById(R.id.text_view_result);
         Parse();

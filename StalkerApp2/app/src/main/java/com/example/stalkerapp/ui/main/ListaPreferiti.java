@@ -44,7 +44,6 @@ public class ListaPreferiti extends Fragment {
     JSONArray ja;
     ArrayList<String> preferiti;
     private static ListaPreferiti instance = null;
-
     public final static String TAG="Preferiti_FRAGMENT";
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,7 +120,6 @@ public class ListaPreferiti extends Fragment {
 
 
                     elimina(listaOrg.getItemAtPosition(position).toString());
-
                     return true;
             }
         });
@@ -215,7 +213,6 @@ public class ListaPreferiti extends Fragment {
                 // set message, title, and icon
                 .setTitle("Elimina organizzazione")
                 .setMessage("Sei sicuro di voler eliminare l'organizzazione?")
-                .setIcon(R.drawable.ic_delete_black_24dp)
                 .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         try {
@@ -228,7 +225,7 @@ public class ListaPreferiti extends Fragment {
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton("Anulla", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }

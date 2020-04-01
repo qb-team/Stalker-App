@@ -1,5 +1,7 @@
 package com.example.stalkerapp.ui.main;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.stalkerapp.HomePage;
@@ -102,6 +106,15 @@ public class HomeFragment extends Fragment {
                 }
 
         });  //Fine Indirizzamento layout dell'organizzazione scelta
+        listaOrg.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    aggiungi(listaOrg.getItemAtPosition(position).toString());
+
+                    return true;
+            }
+        });
 
       File organizzazioniFile = new File(getContext().getFilesDir()+"/Organizzazioni.txt");
         if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){
@@ -236,7 +249,36 @@ public class HomeFragment extends Fragment {
         });
         thread.start();
 }
+public void aggiungi(final String s){
 
+    AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())
+            // set message, title, and icon
+            .setTitle("Aggiungi organizzazione")
+            .setMessage("Sei sicuro di voler aggiungere alla tua lista dei preferiti l'organizzazione?")
+            .setIcon(R.drawable.ic_delete_black_24dp)
+            .setPositiveButton("Aggiungi", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+
+                    try {
+                        boolean aggiunto=ListaPreferiti.getInstance().costruisciJSONobject(s);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    dialog.dismiss();
+                }
+            })
+            .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            })
+            .create();
+    myQuittingDialogBox.show();
+
+}
 
 
 public void StampaAschermo() throws IOException {

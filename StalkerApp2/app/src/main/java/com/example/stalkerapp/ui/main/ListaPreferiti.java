@@ -119,15 +119,10 @@ public class ListaPreferiti extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                int count = listaOrg.getCount();
-                for(int item=count-1;item>=0;item--){
 
                     elimina(listaOrg.getItemAtPosition(position).toString());
 
-                }
-
-                //adapter.notifyDataSetChanged();
-                return true;
+                    return true;
             }
         });
         return view;
@@ -165,8 +160,13 @@ public class ListaPreferiti extends Fragment {
         });
         super.onCreateOptionsMenu(menu,inflater);
     }
-    public void costruisciJSONobject(String s) throws JSONException, IOException {
+    public boolean costruisciJSONobject(String s) throws JSONException, IOException {
         //AGGIUNGO OGNI VOLTA UN'ORGANIZZAZIONE ALLA LISTA(INCREMENTALE)
+        for(int i = 0; i<preferiti.size(); i++)
+        {
+            if(preferiti.get(i).equals(s))
+                return false;
+        }
         preferiti.add(s);
         aggiungiPreferiti();
         System.out.println(preferiti + " " + preferiti.size());
@@ -186,6 +186,7 @@ public class ListaPreferiti extends Fragment {
         mainObj.put("listaOrganizzazioni", ja);
         System.out.println("JSON OBJECT COSTRUITO "+" "+ mainObj.toString()+"  ");
         costruisciFile(mainObj);
+        return true;
 
     }
     public void costruisciFile(JSONObject jo) throws  IOException {
@@ -240,6 +241,7 @@ public void eliminaDaArrayList(String s) throws IOException, JSONException {
         preferiti.remove(s);
         aggiungiPreferiti();
         aggiornaFile();
+
 
 }
 public void aggiornaFile() throws JSONException, IOException {

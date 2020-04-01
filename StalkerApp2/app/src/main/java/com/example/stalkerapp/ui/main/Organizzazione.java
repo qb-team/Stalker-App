@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -96,7 +97,13 @@ private TextView titolo;
             if(bundle1!=null){
 
                 try {
-                    ListaPreferiti.getInstance().costruisciJSONobject(bundle1.getString("nomeOrganizzazione"));
+                    boolean aggiunto=ListaPreferiti.getInstance().costruisciJSONobject(bundle1.getString("nomeOrganizzazione"));
+                    if(aggiunto==true)
+
+                        Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
+                    else
+
+                        Toast.makeText(getActivity(),"Organizzazione già aggiunta ai preferiti",Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

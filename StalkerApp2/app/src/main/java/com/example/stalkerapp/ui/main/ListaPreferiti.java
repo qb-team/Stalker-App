@@ -1,6 +1,8 @@
 package com.example.stalkerapp.ui.main;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.SparseBooleanArray;
@@ -14,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -107,9 +110,6 @@ public class ListaPreferiti extends Fragment {
                     HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
                 }
 
-
-
-
             }
 
 
@@ -122,11 +122,11 @@ public class ListaPreferiti extends Fragment {
                 int count = listaOrg.getCount();
                 for(int item=count-1;item>=0;item--){
 
-                        adapter.remove(preferiti.get(item));
+                    elimina(listaOrg.getItemAtPosition(position).toString());
 
                 }
 
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
                 return true;
             }
         });
@@ -208,6 +208,55 @@ public class ListaPreferiti extends Fragment {
 
     }
 
+    private void elimina(final String nomeOrg){
 
+        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())
+                // set message, title, and icon
+                .setTitle("Elimina organizzazione")
+                .setMessage("Sei sicuro di voler eliminare l'organizzazione?")
+                .setIcon(R.drawable.ic_delete_black_24dp)
+                .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            eliminaDaArrayList(nomeOrg);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Anulla", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        myQuittingDialogBox.show();
 
+    }
+public void eliminaDaArrayList(String s) throws IOException, JSONException {
+        preferiti.remove(s);
+        aggiungiPreferiti();
+        aggiornaFile();
+
+}
+public void aggiornaFile() throws JSONException, IOException {
+    String[] array = new String[preferiti.size()];
+    array = preferiti.toArray(array);
+
+    //COSTRUISCO JSONOBJECT
+    ja=new JSONArray();
+    for(int i=0;i<array.length;i++){
+        jo=new JSONObject();
+        jo.put("nome", array[i]);
+        System.out.println(array[i]);
+        ja.put(jo);
+    }
+    mainObj=new JSONObject();
+    mainObj.put("listaOrganizzazioni", ja);
+    System.out.println("JSON OBJECT COSTRUITO "+" "+ mainObj.toString()+"  ");
+    costruisciFile(mainObj);
+}
 }

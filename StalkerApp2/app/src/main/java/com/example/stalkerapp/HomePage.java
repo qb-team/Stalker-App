@@ -1,5 +1,23 @@
 package com.example.stalkerapp;
-import androidx.annotation.NonNull;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
+
+import com.example.stalkerapp.ui.main.HomeFragment;
+import com.example.stalkerapp.ui.main.ListaPreferiti;
+import com.example.stalkerapp.ui.main.Settings;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+
+/*import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -42,21 +60,7 @@ public class HomePage extends AppCompatActivity  {
         fragmentManager.beginTransaction().add(R.id.fragment_container,home, "1").commit();
 
     }
-  /*  @Override
-    public void onBackStackChanged() {
-        shouldDisplayHomeUp();
-    }
-    public void shouldDisplayHomeUp(){
-        //Enable Up button only  if there are entries in the back stack
-        boolean canGoBack = getSupportFragmentManager().getBackStackEntryCount()>0;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(canGoBack);
-    }
-    @Override
-    public boolean onSupportNavigateUp() {
-        //This method is called when the up button is pressed. Just the pop back stack.
-        getSupportFragmentManager().popBackStack();
-        return true;
-    }*/
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -95,26 +99,7 @@ public class HomePage extends AppCompatActivity  {
                     return false;
                 }
             };
-   /* @Override
-public void onBackPressed() {   // Funzionalità per il backbutton (tasto per andare indietro)
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-     AlertDialog alertDialog = new AlertDialog.Builder(HomePage.this).
-             setTitle("Attenzione").setMessage("Sei sicuro di uscire ?").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-               Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-               startActivity(intent);
-               dialog.dismiss();
-            }
-        }).
-                setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener(){
-                  public void onClick(DialogInterface dialog, int which) {
 
-                       dialog.dismiss();
-                   }
-               }).show();
-    }*/
 
 
     public void setActionBarTitle(String title) {
@@ -124,4 +109,56 @@ public void onBackPressed() {   // Funzionalità per il backbutton (tasto per an
     public static HomePage getInstance() {
         return instance;
     }
+}*/
+public class HomePage extends AppCompatActivity {
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ArrayList<Fragment> fragments;
+    private ActionTabs myViewPageAdapter;
+    public static FragmentManager fragmentManager;
+    public FirebaseAuth fAuth;
+    private static HomePage instance = null;
+
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_page);
+        instance=this;
+        fAuth = FirebaseAuth.getInstance();
+        fragmentManager=getSupportFragmentManager();
+        // Define SlidingTabLayout (shown at top)
+        // and ViewPager (shown at bottom) in the layout.
+        // Get their instances.
+        tabLayout = findViewById(R.id.tab);
+        viewPager = findViewById(R.id.viewpager);
+
+        // create a fragment list in order.
+        fragments = new ArrayList<>();
+        fragments.add(new HomeFragment());
+        fragments.add(new ListaPreferiti());
+        fragments.add(new Settings());
+
+
+        // use FragmentPagerAdapter to bind the TabLayout (tabs with different titles)
+        // and ViewPager (different pages of fragment) together.
+        myViewPageAdapter =new ActionTabs(this.getSupportFragmentManager(),
+                fragments);
+        // add the PagerAdapter to the viewPager
+        viewPager.setAdapter(myViewPageAdapter);
+
+        // The one-stop shop for setting up this TabLayout with a ViewPager.
+        tabLayout.setupWithViewPager(viewPager);
+        // Fixed tabs display all tabs concurrently
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+
+    }
+
+    public static HomePage getInstance() {
+        return instance;
+    }
+
+
+
+
 }

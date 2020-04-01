@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         instance = this;
-        setHasOptionsMenu(true);
+
 
 
     }
@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         System.out.println("Creazione HomeFragment");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        setHasOptionsMenu(true);
         jsonObject = new JSONObject();
         jsonArray2 = new JSONArray();
         listaOrg = view.findViewById(R.id.ListaOrg);
@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
                         Fragment organizzazione=new Organizzazione();
                         bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
                         organizzazione.setArguments(bundle);
-                        HomePage.fragmentManager.beginTransaction().add(R.id.fragment_container,organizzazione,"Organizzazione_FRAGMENT").addToBackStack( "1" ).commit();
+                        HomePage.fragmentManager.beginTransaction().add(R.id.container,organizzazione,"Organizzazione_FRAGMENT").addToBackStack( "1" ).commit();
                 }
                else {
                    HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
@@ -154,7 +154,9 @@ public class HomeFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                if(listaOrganizzazioni.size()!=0){
+                    adapter.getFilter().filter(newText);
+                }
                 return false;
             }
         });

@@ -46,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -94,7 +95,13 @@ private TextView titolo;
             Bundle bundle1=this.getArguments();
             if(bundle1!=null){
 
-                ListaPreferiti.getInstance().aggiungiPreferiti(bundle1.getString("nomeOrganizzazione"));
+                try {
+                    ListaPreferiti.getInstance().costruisciJSONobject(bundle1.getString("nomeOrganizzazione"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         }

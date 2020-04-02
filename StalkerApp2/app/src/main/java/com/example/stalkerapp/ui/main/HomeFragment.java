@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,7 +62,7 @@ public class HomeFragment extends RootFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         instance = this;
 
 
@@ -77,7 +78,7 @@ public class HomeFragment extends RootFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         System.out.println("Creazione HomeFragment");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        setHasOptionsMenu(true);
+
         jsonObject = new JSONObject();
         jsonArray2 = new JSONArray();
         listaOrg = view.findViewById(R.id.ListaOrg);
@@ -141,6 +142,27 @@ public class HomeFragment extends RootFragment {
             System.out.println("File is not empty ...");
 
         }
+        final SwipeRefreshLayout aggiornamento = view.findViewById(R.id.swiperefresh);
+        aggiornamento.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                System.out.println("ciao ho refreshato");
+                try {
+                    HomeFragment.getInstance().StampaAschermo();
+                    System.out.println("ho stampato a schermo");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("sono un fallimento");
+                }
+                aggiornamento.setRefreshing(false);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        aggiornamento.setRefreshing(false);
+//                    }
+//                }, 4000);
+            }
+        });
 
         return view;
     }
@@ -149,7 +171,6 @@ public class HomeFragment extends RootFragment {
 
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
-
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

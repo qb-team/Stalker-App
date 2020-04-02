@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -41,7 +44,7 @@ public class ActionTab extends Fragment {
 
         indicator = (TabLayout) view.findViewById(R.id.tab);
         pager = (ViewPager) view.findViewById(R.id.viewpager);
-
+        setHasOptionsMenu(true);
         return view;
     }
 

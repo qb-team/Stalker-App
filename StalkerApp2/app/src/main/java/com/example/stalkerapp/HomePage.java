@@ -1,5 +1,7 @@
 package com.example.stalkerapp;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -7,6 +9,7 @@ import com.example.stalkerapp.ui.main.ActionTab;
 public class HomePage extends AppCompatActivity {
 
     private ActionTab actionTab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class HomePage extends AppCompatActivity {
      * If the container Fragment or any of its Tab Fragments and/or Tab child Fragments couldn't
      * handle the onBackPressed propagated call then this Activity will handle the callback itself
      */
+
     @Override
     public void onBackPressed() {
 
@@ -65,4 +69,5 @@ public class HomePage extends AppCompatActivity {
             // do not call super
         }
     }
+
 }

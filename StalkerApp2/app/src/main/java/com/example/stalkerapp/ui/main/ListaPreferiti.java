@@ -52,7 +52,7 @@ public class ListaPreferiti extends RootFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         instance = this;
 
     }
@@ -60,7 +60,7 @@ public class ListaPreferiti extends RootFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View view= inflater.inflate(R.layout.fragment_lista_preferiti, container, false);
-        setHasOptionsMenu(true);
+
         listaOrg = view.findViewById(R.id.ListaOrg);
         listaOrg.setLongClickable(true);
         preferiti=new ArrayList<>();
@@ -129,12 +129,12 @@ public class ListaPreferiti extends RootFragment {
         return instance;
     }
 
-    @Override
+   @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
-        item.setVisible(true);
+
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

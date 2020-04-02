@@ -70,11 +70,12 @@ public class Organizzazione extends RootFragment {
     private LocationManager locationManager;
     private LocationListener listener;
     private String risposta;
-private TextView titolo;
+    private TextView titolo;
     private RequestQueue mQueue;
     final ArrayList<LatLng> poligono = new ArrayList<>();
     final LatLngBounds.Builder builder = new LatLngBounds.Builder();
     TextView risultati;
+
     public Organizzazione() {
         // Required empty public constructor
     }
@@ -83,17 +84,14 @@ private TextView titolo;
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
         instance=this;
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.aggiungipreferiti,menu);
-         FragmentManager fragmentManager=getFragmentManager();
-        if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null){
-            MenuItem item= menu.findItem(R.id.cercaID);
-            item.setVisible(false);
-        }
 
+        inflater.inflate(R.menu.aggiungipreferiti, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
     @Override
@@ -134,7 +132,6 @@ private TextView titolo;
         // Inflate the layout for this fragment
 
         View view=inflater.inflate(R.layout.fragment_organizzazione, container, false);
-        setHasOptionsMenu(true);
         Bundle bundle=this.getArguments();
         titolo=view.findViewById(R.id.titleID);
         if(bundle!=null){

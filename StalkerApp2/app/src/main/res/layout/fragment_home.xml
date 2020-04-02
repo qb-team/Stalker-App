@@ -4,13 +4,18 @@
     android:layout_height="match_parent"
     android:background="@color/whiteColor"
     android:id="@+id/HomeFragment">
-
-    <ListView
-        android:id="@+id/ListaOrg"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:divider="@color/grayColor"
-        />
+        android:layout_height="match_parent"
+        android:id="@+id/swiperefresh">
+        <ListView
+            android:id="@+id/ListaOrg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:divider="@color/grayColor"
+            />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

@@ -15,7 +15,7 @@ import com.example.stalkerapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import java.io.IOException;
 
-public class Settings extends Fragment {
+public class Settings extends RootFragment {
     public final static String TAG="Settings_FRAGMENT";
 
     Button logout;

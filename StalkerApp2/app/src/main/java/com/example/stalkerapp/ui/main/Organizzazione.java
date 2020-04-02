@@ -82,19 +82,18 @@ private TextView titolo;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
         instance=this;
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.aggiungipreferiti,menu);
-        MenuItem item= menu.findItem(R.id.cercaID);
-        FragmentManager fragmentManager=getFragmentManager();
-        if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null&&fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT").isVisible())
-        {
+         FragmentManager fragmentManager=getFragmentManager();
+        if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null){
+            MenuItem item= menu.findItem(R.id.cercaID);
             item.setVisible(false);
-            return;
         }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
     @Override
@@ -135,6 +134,7 @@ private TextView titolo;
         // Inflate the layout for this fragment
 
         View view=inflater.inflate(R.layout.fragment_organizzazione, container, false);
+        setHasOptionsMenu(true);
         Bundle bundle=this.getArguments();
         titolo=view.findViewById(R.id.titleID);
         if(bundle!=null){

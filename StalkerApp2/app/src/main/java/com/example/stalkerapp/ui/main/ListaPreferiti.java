@@ -103,10 +103,10 @@ public class ListaPreferiti extends RootFragment {
                    Bundle bundle=new Bundle();
                    bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
                    organizzazione.setArguments(bundle);
-                FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
-                // Store the Fragment in stack
-                transaction.addToBackStack(null);
-                transaction.replace(R.id.HomeFragment, organizzazione).commit();
+                   FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
+                   // Store the Fragment in stack
+                   transaction.addToBackStack(null);
+                   transaction.replace(R.id.ListaPreferiti, organizzazione).commit();
             }
 
 
@@ -134,13 +134,7 @@ public class ListaPreferiti extends RootFragment {
 
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
-        MenuItem item1=menu.findItem(R.id.preferitiID);
-        FragmentManager fragmentManager=getFragmentManager();
-        if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null && fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT").isVisible())
-        {
-            item1.setVisible(false);
-            return;
-        }
+        item.setVisible(true);
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

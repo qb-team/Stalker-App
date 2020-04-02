@@ -6,6 +6,7 @@
     tools:context=".ui.main.Organizzazione"
     android:background="@android:color/white"
     android:id="@+id/organizzazioneID"
+    android:clickable="true"
     >
 <RelativeLayout
     android:layout_width="wrap_content"

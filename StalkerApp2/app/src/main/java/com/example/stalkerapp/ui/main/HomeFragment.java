@@ -86,6 +86,7 @@ public class HomeFragment extends RootFragment {
 
 
 
+
         listaOrg.setOnItemClickListener(new AdapterView.OnItemClickListener() {    // Inizio Indirizzamento layout dell'organizzazione scelta
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -148,13 +149,7 @@ public class HomeFragment extends RootFragment {
 
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
-        MenuItem item1=menu.findItem(R.id.preferitiID);
-        FragmentManager fragmentManager=getFragmentManager();
-        if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null && fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT").isVisible())
-        {
-            item1.setVisible(false);
-            return;
-        }
+
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

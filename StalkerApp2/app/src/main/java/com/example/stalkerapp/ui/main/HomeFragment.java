@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +43,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends RootFragment {
     public final static String TAG = "Home_FRAGMENT";
 
     private RequestQueue mQueue;
@@ -51,8 +54,9 @@ public class HomeFragment extends Fragment {
     ArrayAdapter<String> adapter;
     ArrayList<String> listaOrganizzazioni;
     ListView listaOrg;
+    private boolean aggiunto;
 
-
+    public void HomeFragment(){}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,24 +90,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-               if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")==null)
-
-               {
-                        Bundle bundle=new Bundle();
-                        Fragment organizzazione=new Organizzazione();
-                        bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
-                        organizzazione.setArguments(bundle);
-                        HomePage.fragmentManager.beginTransaction().add(R.id.container,organizzazione,"Organizzazione_FRAGMENT").addToBackStack( "1" ).commit();
-                }
-               else {
-                   HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
-               }
-
-
-
-
-                }
+                Organizzazione organizzazione=new Organizzazione();
+                Bundle bundle=new Bundle();
+                bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
+                organizzazione.setArguments(bundle);
+                FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.HomeFragment, organizzazione).commit();
+            }
 
         });  //Fine Indirizzamento layout dell'organizzazione scelta
         listaOrg.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -153,9 +148,11 @@ public class HomeFragment extends Fragment {
 
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
-        if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
+        MenuItem item1=menu.findItem(R.id.preferitiID);
+        FragmentManager fragmentManager=getFragmentManager();
+        if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null && fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT").isVisible())
         {
-            item.setVisible(false);
+            item1.setVisible(false);
             return;
         }
         SearchView searchView= (SearchView) item.getActionView();
@@ -254,13 +251,16 @@ public void aggiungi(final String s){
     AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())
             // set message, title, and icon
             .setTitle("Aggiungi organizzazione")
-            .setMessage("Sei sicuro di voler aggiungere alla tua lista dei preferiti l'organizzazione?")
-            .setIcon(R.drawable.ic_delete_black_24dp)
+            .setMessage("Vuoi aggiungere questa organizzazione alla tua lista dei preferiti?")
             .setPositiveButton("Aggiungi", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
 
                     try {
-                        boolean aggiunto=ListaPreferiti.getInstance().costruisciJSONobject(s);
+                        aggiunto=ListaPreferiti.getInstance().costruisciJSONobject(s);
+                        if(aggiunto)
+                            Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getActivity(),"Hai già aggiutno questa organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch (IOException e) {

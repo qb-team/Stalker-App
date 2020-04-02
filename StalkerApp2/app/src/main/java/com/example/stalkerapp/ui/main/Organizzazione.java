@@ -2,6 +2,7 @@ package com.example.stalkerapp.ui.main;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.FragmentManagerNonConfig;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -62,10 +64,9 @@ import static androidx.core.content.ContextCompat.getSystemService;
  * A simple {@link Fragment} subclass.
  *
  */
-public class Organizzazione extends Fragment {
+public class Organizzazione extends RootFragment {
     public final static String TAG = "Organizzazione_FRAGMENT";
     private static Organizzazione instance = null;
-    FirebaseAuth fAuth;
     private LocationManager locationManager;
     private LocationListener listener;
     private String risposta;
@@ -87,6 +88,13 @@ private TextView titolo;
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.aggiungipreferiti,menu);
+        MenuItem item= menu.findItem(R.id.cercaID);
+        FragmentManager fragmentManager=getFragmentManager();
+        if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null&&fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT").isVisible())
+        {
+            item.setVisible(false);
+            return;
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
     @Override
@@ -103,7 +111,7 @@ private TextView titolo;
                         Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
                     else
 
-                        Toast.makeText(getActivity(),"Organizzazione già aggiunta ai preferiti",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Hai già aggiunto questa organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -244,4 +252,5 @@ private TextView titolo;
         poligono.add(new LatLng(lat, lon));
         System.out.println(lat+" "+lon);
     }
+
 }

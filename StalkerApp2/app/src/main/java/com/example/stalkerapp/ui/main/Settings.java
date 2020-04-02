@@ -41,7 +41,7 @@ public class Settings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        HomePage.getInstance().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        //HomePage.getInstance().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         logout = view.findViewById(R.id.LogoutID);
         scarica = view.findViewById(R.id.ScaricaID);
         tracciamento = view.findViewById(R.id.TracciamentoID);

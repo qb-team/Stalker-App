@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.stalkerapp.HomePage;
 import com.example.stalkerapp.R;
 
@@ -37,7 +40,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ListaPreferiti extends Fragment {
+public class ListaPreferiti extends RootFragment {
     ArrayAdapter<String> adapter;
     ListView listaOrg;
     JSONObject jo,mainObj;
@@ -45,6 +48,7 @@ public class ListaPreferiti extends Fragment {
     ArrayList<String> preferiti;
     private static ListaPreferiti instance = null;
     public final static String TAG="Preferiti_FRAGMENT";
+    public void ListaPreferiti(){}
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,21 +99,16 @@ public class ListaPreferiti extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-                if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")==null)
-
-                {
-                    Bundle bundle=new Bundle();
-                    Fragment organizzazione=new Organizzazione();
-                    bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
-                    organizzazione.setArguments(bundle);
-                    HomePage.fragmentManager.beginTransaction().add(R.id.container,organizzazione,"Organizzazione_FRAGMENT").addToBackStack( "1" ).commit();
-                }
-                else {
-                    HomePage.fragmentManager.beginTransaction().show(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")).commit();
-                }
-
+                   Organizzazione organizzazione=new Organizzazione();
+                   Bundle bundle=new Bundle();
+                   bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
+                   organizzazione.setArguments(bundle);
+                FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.HomeFragment, organizzazione).commit();
             }
+
 
 
         });
@@ -135,9 +134,11 @@ public class ListaPreferiti extends Fragment {
 
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
-        if(HomePage.fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null)
+        MenuItem item1=menu.findItem(R.id.preferitiID);
+        FragmentManager fragmentManager=getFragmentManager();
+        if(fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT")!=null && fragmentManager.findFragmentByTag("Organizzazione_FRAGMENT").isVisible())
         {
-            item.setVisible(false);
+            item1.setVisible(false);
             return;
         }
         SearchView searchView= (SearchView) item.getActionView();

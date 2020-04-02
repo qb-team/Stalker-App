@@ -27,7 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-public class Registrati extends Fragment implements View.OnClickListener, RegistrazioneContract.View{
+public class Registrati extends RootFragment implements View.OnClickListener, RegistrazioneContract.View{
     public final static String TAG="Registrati_Fragment";
     private MainViewModel mViewModel;
     EditText mEmail, mPassword, mConfPassword;

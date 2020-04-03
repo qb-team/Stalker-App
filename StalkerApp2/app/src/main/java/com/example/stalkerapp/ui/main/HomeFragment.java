@@ -148,12 +148,14 @@ public class HomeFragment extends RootFragment {
             public void onRefresh() {
                 System.out.println("ciao ho refreshato");
                 try {
-                    HomeFragment.getInstance().StampaAschermo();
-                    System.out.println("ho stampato a schermo");
+                    HomeFragment.getInstance().Parse2();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    System.out.println("sono un fallimento");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+
+                System.out.println("ho stampato a schermo");
                 aggiornamento.setRefreshing(false);
 //                new Handler().postDelayed(new Runnable() {
 //                    @Override
@@ -196,13 +198,17 @@ public class HomeFragment extends RootFragment {
     }
 
 
-    public void Parse2() {
+    public void Parse2() throws IOException, InterruptedException {
         Thread thread = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try  {
-                    URL url=new URL( "https://api.myjson.com/bins/skt66");
+                    URL url=new URL( "https://api.jsonbin.io/b/5e873ea993960d63f0782fcf/1");
+                    if(url==null) {
+                        Toast.makeText(getActivity(), "Errore nello scaricamento", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     OkHttpClient client = new OkHttpClient();
                     final Request req = new Request.Builder().url(url).get().build();
                     final Response resp = client.newCall(req).execute();
@@ -222,10 +228,13 @@ public class HomeFragment extends RootFragment {
 
 
                     if(code != 200) {
+                        Toast.makeText(getActivity(),"Errore nello scaricamento",Toast.LENGTH_SHORT).show();
                         body.close();
+
                     }
                     if(s!=null && s.equals(inline)){
                             body.close();
+
                             return;
                     }
                     else
@@ -251,9 +260,8 @@ public class HomeFragment extends RootFragment {
                                 System.out.println(st);
                             listaOrganizzazioni.add(nomeOrganizzazione);
 
-                        body.close();
+                            body.close();
                         }
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -261,6 +269,8 @@ public class HomeFragment extends RootFragment {
             }
         });
         thread.start();
+        thread.join();
+        StampaAschermo();
 }
 public void aggiungi(final String s){
 
@@ -298,7 +308,7 @@ public void aggiungi(final String s){
 
 
 public void StampaAschermo() throws IOException {
-    Parse2();
+
     adapter=new ArrayAdapter<>(getContext(),R.layout.row,R.id.textView2,listaOrganizzazioni);
     listaOrg.setAdapter(adapter);
 }

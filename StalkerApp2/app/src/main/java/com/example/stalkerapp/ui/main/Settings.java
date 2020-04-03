@@ -53,8 +53,10 @@ public class Settings extends RootFragment {
             public void onClick(View v) {
 
                 try {
-                    HomeFragment.getInstance().StampaAschermo();
+                    HomeFragment.getInstance().Parse2();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 

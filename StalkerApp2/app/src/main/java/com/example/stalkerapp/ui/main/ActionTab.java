@@ -44,7 +44,7 @@ public class ActionTab extends Fragment {
 
         indicator = (TabLayout) view.findViewById(R.id.tab);
         pager = (ViewPager) view.findViewById(R.id.viewpager);
-        setHasOptionsMenu(true);
+
         return view;
     }
 

@@ -9,6 +9,8 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.example.stalkerapp.HomePage;
 import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.R;
@@ -72,7 +74,9 @@ public class Settings extends RootFragment {
         logout.setOnClickListener(new View.OnClickListener() {  // Inizio Funzionalità pulsante Login (quando lo clicchi)
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();   //logout
+                MainActivity.getInstance().clearStack();
+                getActivity().finish();
+                FirebaseAuth.getInstance().signOut();//logout
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
 

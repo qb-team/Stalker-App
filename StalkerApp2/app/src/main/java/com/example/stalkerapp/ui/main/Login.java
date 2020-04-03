@@ -86,6 +86,7 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
     @Override
     public void onLoginSuccess(String message) {
         mProgressDialog.dismiss();
+
         Toast.makeText(getActivity(), "Login effettuato con successo" , Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), HomePage.class);
         startActivity(intent);

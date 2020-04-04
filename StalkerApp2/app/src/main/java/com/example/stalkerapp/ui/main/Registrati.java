@@ -31,9 +31,7 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
     public final static String TAG="Registrati_Fragment";
     private MainViewModel mViewModel;
     EditText mEmail, mPassword, mConfPassword;
-    String userID;
     Button mRegisterBtn;
-    FirebaseAuth fAuth;
     Button cond;
     private RegistrazionePresenter mRegisterPresenter;
     ProgressDialog mPrgressDialog;
@@ -56,12 +54,9 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
         mCondizioniDuso = view.findViewById(R.id.condizionidusoID);
         mRegisterBtn= view.findViewById(R.id.RegistartiID);
         cond= view.findViewById(R.id.condizioniID);
-
-
         mRegisterPresenter=new RegistrazionePresenter(this);
         mPrgressDialog = new ProgressDialog(getContext());
         mPrgressDialog.setMessage("Stiamo registrando il tuo account sul Database");
-
         mRegisterBtn.setOnClickListener(this);
         cond.setOnClickListener(this);
         return view;
@@ -77,6 +72,7 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
                 break;
         }
     }
+    //CONTROOLA I DATI INSERITI NELLA VISTA
     private void checkRegistrationDetails() {
         if(!TextUtils.isEmpty(mEmail.getText().toString()) && !TextUtils.isEmpty(mPassword.getText().toString())&&calculate(mPassword.getText().toString())){
             initRegistrati(mEmail.getText().toString(), mPassword.getText().toString());

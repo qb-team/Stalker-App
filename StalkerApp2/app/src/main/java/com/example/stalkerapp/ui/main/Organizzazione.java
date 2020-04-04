@@ -217,6 +217,7 @@ public class Organizzazione extends RootFragment {
                         risposta = response;
                     //  Parsing e creazione del poligono
                     try {
+
                         JSONObject jObject = new JSONObject(risposta);
                         JSONArray jsonArray = jObject.getJSONArray("Organizzazioni");
                         for (int i = 0; i < jsonArray.length(); i++) {
@@ -226,6 +227,7 @@ public class Organizzazione extends RootFragment {
                             double o1 = Double.parseDouble(organizzazione1);
                             double o2 = Double.parseDouble(organizzazione2);
                             setCoordinate(o1, o2);
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.stalkerapp.HomePage;
+import com.example.stalkerapp.Presenter.ListaPreferitiContract;
+import com.example.stalkerapp.Presenter.ListaPreferitiPresenter;
 import com.example.stalkerapp.R;
 
 import org.json.JSONArray;
@@ -46,6 +48,7 @@ public class ListaPreferiti extends RootFragment {
     JSONObject jo,mainObj;
     JSONArray ja;
     ArrayList<String> preferiti;
+    private ListaPreferitiPresenter preferitiPresenter;
     private static ListaPreferiti instance = null;
     public final static String TAG="Preferiti_FRAGMENT";
     public void ListaPreferiti(){}
@@ -54,7 +57,6 @@ public class ListaPreferiti extends RootFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         instance = this;
-
     }
     @Nullable
     @Override
@@ -64,37 +66,8 @@ public class ListaPreferiti extends RootFragment {
         listaOrg = view.findViewById(R.id.ListaOrg);
         listaOrg.setLongClickable(true);
         preferiti=new ArrayList<>();
-
-       //CONTROLLO ESISTENZA DEL FILE
-        File organizzazioniFile = new File(getContext().getFilesDir()+"/Preferiti.txt");
-        if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){
-            System.out.println("File is empty ...");
-        }
-        else {
-            try {
-                FileInputStream fin=new FileInputStream(organizzazioniFile);
-                byte[] buffer= new byte[(int)organizzazioniFile.length()];
-                new DataInputStream(fin).readFully(buffer);
-                fin.close();
-                String s=new String(buffer,"UTF-8");
-                JSONObject jsonObject = new JSONObject(s);
-                JSONArray jsonArray = (JSONArray) jsonObject.get("listaOrganizzazioni");
-                for(int i=0;i<jsonArray.length();i++){
-                    JSONObject organizzazione= jsonArray.getJSONObject(i);
-                    String nomeOrganizzazione= organizzazione.getString("nome");
-                    preferiti.add(nomeOrganizzazione);
-
-                }
-            } catch (JSONException | FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            adapter=new ArrayAdapter<>(getContext(),R.layout.row,R.id.textView2,preferiti);
-            listaOrg.setAdapter(adapter);
-            System.out.println("File is not empty ...");
-
-        }
+        preferitiPresenter=new ListaPreferitiPresenter();
+        controllaFile();
         listaOrg.setOnItemClickListener(new AdapterView.OnItemClickListener() {    // Inizio Indirizzamento layout dell'organizzazione scelta
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -253,4 +226,17 @@ public void aggiornaFile() throws JSONException, IOException {
     System.out.println("JSON OBJECT COSTRUITO "+" "+ mainObj.toString()+"  ");
     costruisciFile(mainObj);
 }
+
+public void controllaFile(){
+     if(preferitiPresenter.controlla(this)!=null){
+         preferiti=preferitiPresenter.controlla(this);
+         adapter=new ArrayAdapter<>(getContext(),R.layout.row,R.id.textView2,preferiti);
+         listaOrg.setAdapter(adapter);
+     }
+     else Toast.makeText(getActivity(),"Lista preferiti ancora vuota",Toast.LENGTH_SHORT).show();
+}
+
+
+
+
 }

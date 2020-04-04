@@ -110,7 +110,8 @@ public class HomeFragment extends RootFragment {
 
       File organizzazioniFile = new File(getContext().getFilesDir()+"/Organizzazioni.txt");
         if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){
-            System.out.println("File is empty ...");
+            Toast.makeText(getActivity(),"Lista organizzazioni ancora vuota, vai a scaricarla!",Toast.LENGTH_SHORT).show();
+
         }
         else {
             try {
@@ -134,8 +135,6 @@ public class HomeFragment extends RootFragment {
             }
             adapter=new ArrayAdapter<>(getContext(),R.layout.row,R.id.textView2,listaOrganizzazioni);
             listaOrg.setAdapter(adapter);
-            System.out.println("File is not empty ...");
-
         }
         aggiornamento.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -217,7 +216,7 @@ public class Organizzazioni extends AsyncTask<Void,Void,Void>{
             @Override
             public void run() {
                 try  {
-                    URL url=new URL( "https://api.jsonbin.io/b/5e873ea993960d63f0782fcf/8");
+                    URL url=new URL( "https://api.jsonbin.io/b/5e873ea993960d63f0782fcf/2");
                     if(url==null) {
                         Toast.makeText(getActivity(), "Errore nello scaricamento", Toast.LENGTH_SHORT).show();
                         return;

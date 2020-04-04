@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseUser;
 
 public interface RegistrazioneContract {
+
     interface View {
         void onRegistrationSuccess(FirebaseUser firebaseUser);
 

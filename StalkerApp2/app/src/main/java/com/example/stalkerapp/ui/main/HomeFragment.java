@@ -2,13 +2,11 @@ package com.example.stalkerapp.ui.main;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.example.stalkerapp.HomePage;
 import com.example.stalkerapp.R;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +51,7 @@ public class HomeFragment extends RootFragment {
     ArrayAdapter<String> adapter;
     ArrayList<String> listaOrganizzazioni;
     ListView listaOrg;
+    private SwipeRefreshLayout aggiornamento;
     private boolean aggiunto;
 
     public void HomeFragment(){}
@@ -84,9 +81,7 @@ public class HomeFragment extends RootFragment {
         listaOrg = view.findViewById(R.id.ListaOrg);
         listaOrganizzazioni= new ArrayList<>();
         mQueue= Volley.newRequestQueue(getContext());
-
-
-
+        aggiornamento=view.findViewById(R.id.swiperefresh);
 
         listaOrg.setOnItemClickListener(new AdapterView.OnItemClickListener() {    // Inizio Indirizzamento layout dell'organizzazione scelta
             @Override
@@ -123,7 +118,7 @@ public class HomeFragment extends RootFragment {
                 byte[] buffer= new byte[(int)organizzazioniFile.length()];
                 new DataInputStream(fin).readFully(buffer);
                 fin.close();
-                 String s=new String(buffer,"UTF-8");
+                String s=new String(buffer,"UTF-8");
                 JSONObject jsonObject = new JSONObject(s);
                 JSONArray jsonArray = (JSONArray) jsonObject.get("listaOrganizzazioni");
                 for(int i=0;i<jsonArray.length();i++){
@@ -142,32 +137,50 @@ public class HomeFragment extends RootFragment {
             System.out.println("File is not empty ...");
 
         }
-        final SwipeRefreshLayout aggiornamento = view.findViewById(R.id.swiperefresh);
         aggiornamento.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                System.out.println("ciao ho refreshato");
-                try {
-                    HomeFragment.getInstance().Parse2();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-                System.out.println("ho stampato a schermo");
-                aggiornamento.setRefreshing(false);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        aggiornamento.setRefreshing(false);
-//                    }
-//                }, 4000);
-            }
+                        new Organizzazioni().execute();
+                    }
         });
 
         return view;
     }
+
+public class Organizzazioni extends AsyncTask<Void,Void,Void>{
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+    }
+    @Override
+    protected Void doInBackground(Void... params) {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+
+            e.printStackTrace();
+
+        }
+        return null;
+    }
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+        //Here you can update the view
+        try {
+            Parse2();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Notify swipeRefreshLayout that the refresh has finished
+        aggiornamento.setRefreshing(false);
+    }
+}
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
@@ -204,7 +217,7 @@ public class HomeFragment extends RootFragment {
             @Override
             public void run() {
                 try  {
-                    URL url=new URL( "https://api.jsonbin.io/b/5e873ea993960d63f0782fcf/1");
+                    URL url=new URL( "https://api.jsonbin.io/b/5e873ea993960d63f0782fcf/8");
                     if(url==null) {
                         Toast.makeText(getActivity(), "Errore nello scaricamento", Toast.LENGTH_SHORT).show();
                         return;

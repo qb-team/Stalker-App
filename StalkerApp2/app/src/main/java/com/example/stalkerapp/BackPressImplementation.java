@@ -1,7 +1,5 @@
 package com.example.stalkerapp;
 
-import android.content.Intent;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -20,7 +18,8 @@ public class BackPressImplementation implements OnBackPressListener {
         int childCount = parentFragment.getChildFragmentManager().getBackStackEntryCount();
 
         if (childCount == 0) {
-           
+            // it has no child Fragment
+            // can not handle the onBackPressed task by itself
             return false;
 
         } else {

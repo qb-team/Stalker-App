@@ -1,15 +1,10 @@
 package com.example.stalkerapp.ui.main;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,34 +14,31 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.stalkerapp.HomePage;
-import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.Presenter.RegistrazioneContract;
 import com.example.stalkerapp.Presenter.RegistrazionePresenter;
 import com.example.stalkerapp.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
+//Parte visiva (View) di Registrati
 public class Registrati extends RootFragment implements View.OnClickListener, RegistrazioneContract.View{
     public final static String TAG="Registrati_Fragment";
     private MainViewModel mViewModel;
+
     EditText mEmail, mPassword, mConfPassword;
     Button mRegisterBtn;
     Button cond;
+
     private RegistrazionePresenter mRegisterPresenter;
     ProgressDialog mPrgressDialog;
     CheckBox mCondizioniDuso;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_registrati,container,false);
         mEmail = view.findViewById(R.id.EmailID);
         mPassword = view.findViewById(R.id.PasswordID);
@@ -72,7 +64,8 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
                 break;
         }
     }
-    //CONTROOLA I DATI INSERITI NELLA VISTA
+
+    //Controlla le credenziali inserite dall'utente nella vista della registrazione
     private void checkRegistrationDetails() {
         if(!TextUtils.isEmpty(mEmail.getText().toString()) && !TextUtils.isEmpty(mPassword.getText().toString())&&calculate(mPassword.getText().toString())){
             initRegistrati(mEmail.getText().toString(), mPassword.getText().toString());
@@ -86,6 +79,8 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
             }
         }
     }
+
+    //Controllo se l'utente ha spuntato il checkbox delle condizioni d'uso e avvia il metodo del Registrati nel Presenter
     private void initRegistrati(String email, String password) {
         if(mCondizioniDuso.isChecked()) {
             mPrgressDialog.show();
@@ -93,6 +88,8 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
         }
         else Toast.makeText(getContext(), "Per poterti registrare devi accettare le condizioni d'uso", Toast.LENGTH_SHORT).show();
     }
+
+    //Popup che mostra il contenuto testuale delle condizioni d'uso
     private void showCondizioniDuso(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Condizioni d'uso")
@@ -102,44 +99,37 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
                 });
-
         builder.show();
     }
+
+    //Se la registrazione ha avuto esito positivo l'utente viene notificato e indirizzato nella schermata di HomePage dedicata agli utenti autenticati
     @Override
     public void onRegistrationSuccess(FirebaseUser firebaseUser) {
         mPrgressDialog.dismiss();
         Toast.makeText(getActivity(), "Registarzione effettuato con successo" , Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), HomePage.class);
         startActivity(intent);
-
     }
 
+    //Se la registrazione non ha avuto esito positivo l'utente viene notificato
     @Override
     public void onRegistrationFailure(String message) {
         mPrgressDialog.dismiss();
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
+    //Controllo che la password sia sicura
    public boolean calculate(String password) {
-
-
         boolean upper = false;
-
         boolean lower = false;
-
         boolean numeri = false;
-
         boolean specialChar = false;
-
         for (int i = 0; i < password.length(); i++) {
             char c = password.charAt(i);
-
             if (!specialChar  &&  !Character.isLetterOrDigit(c)) {
-
                 specialChar = true;
             } else {
                 if (!numeri  &&  Character.isDigit(c)) {
-
                     numeri = true;
                 } else {
                     if (!upper || !lower) {
@@ -162,6 +152,4 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
         else
             return false;
     }
-
-
 }

@@ -4,15 +4,12 @@ import androidx.fragment.app.Fragment;
 import com.example.stalkerapp.Model.UtenteRegistrazione;
 import com.google.firebase.auth.FirebaseUser;
 
-/**
- * Created by Ashish on 27-09-2017.
- */
-import com.example.stalkerapp.Model.Utente;
-
+//Presenter di Registrati
 public class RegistrazionePresenter implements RegistrazioneContract.Presenter, RegistrazioneContract.onRegistrationListener {
     private RegistrazioneContract.View mRegisterView;
     private UtenteRegistrazione mRegistrationInteractor;
 
+    //Costruttore che chiede come parametro un'istanza della vista
     public RegistrazionePresenter(RegistrazioneContract.View registerView){
         this.mRegisterView = registerView;
         mRegistrationInteractor = new UtenteRegistrazione(this);

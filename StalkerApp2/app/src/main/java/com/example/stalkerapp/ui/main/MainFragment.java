@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.R;
 
-
+//Schermata iniziale per gli utenti non autenticati
 public class MainFragment extends Fragment {
     public final static String TAG="Main_Fragment";
 
@@ -21,48 +21,34 @@ public class MainFragment extends Fragment {
     Button login;
     TextView t;
 
-
-    public MainFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         MainActivity.fragmentManager.beginTransaction().add(R.id.container, Login).hide(Login).commit();
         MainActivity.fragmentManager.beginTransaction().add(R.id.container, Registrati).hide(Registrati).commit();
-        View view=inflater.inflate(R.layout.fragment_main,container,false);
-        registrati= view.findViewById(R.id.buttonRegistrati);
-        login= view.findViewById(R.id.buttonLogin);
-        t=view.findViewById(R.id.textView);
+        View view = inflater.inflate(R.layout.fragment_main,container,false);
+        registrati = view.findViewById(R.id.buttonRegistrati);
+        login = view.findViewById(R.id.buttonLogin);
+        t = view.findViewById(R.id.textView);
 
-        login.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {//Dopo aver clickato il pulsante "Login" l'utente viene indirizzato nell'apposita schermata di login
             @Override
             public void onClick(View v) {
-
                 MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main")).show(Login).addToBackStack(null).commit();
             }
         });
-        registrati.setOnClickListener(new View.OnClickListener() {
+
+        registrati.setOnClickListener(new View.OnClickListener() {//Dopo aver clickato il pulsante "Registrati" l'utente viene indirizzato nell'apposita schermata di registrazione
             @Override
             public void onClick(View v) {
-
                 MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main")).show(Registrati).addToBackStack(null).commit();
-                
             }
         });
         return view;
     }
-
-
 }
 

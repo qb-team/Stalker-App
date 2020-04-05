@@ -14,11 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.stalkerapp.HomePage;
-import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.Presenter.LoginContract;
 import com.example.stalkerapp.Presenter.LoginPresenter;
 import com.example.stalkerapp.R;
 
+//Parte visiva (View) di Login
 public class Login extends Fragment implements LoginContract.View, View.OnClickListener {
     public final static String TAG="Login_Fragment";
     private LoginPresenter loginPresenter;
@@ -26,19 +26,12 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
     private EditText mEmail,mPassword;
     private Button mLoginBtn;
 
-
-
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //QUI COSTRUISCO LA VIEW DI LOGIN
-
         View view=inflater.inflate(R.layout.fragment_login,container,false);
         mEmail = view.findViewById(R.id.Emailtext);
         mPassword = view.findViewById(R.id.passwordtext);
@@ -66,6 +59,7 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
         }
     }
 
+    //Controlla le credenziali inserite dall'utente nella vista del Login
     private void checkLoginDetails() {
         if(!TextUtils.isEmpty(mEmail.getText().toString()) && !TextUtils.isEmpty(mPassword.getText().toString())){
             initLogin(mEmail.getText().toString(), mPassword.getText().toString());
@@ -78,6 +72,7 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
         }
     }
 
+    //Avvia il metodo del Login nel Presenter
     private void initLogin(String email, String password) {
         mProgressDialog.show();
         loginPresenter.login(this, email, password);

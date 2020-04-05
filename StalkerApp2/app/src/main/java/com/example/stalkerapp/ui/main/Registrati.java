@@ -80,7 +80,7 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
         }
     }
 
-    //Controllo se l'utente ha spuntato il checkbox delle condizioni d'uso e avvia il metodo del Registrati nel Presenter
+    //Controllo se l'utente ha spuntato il checkbox delle condizioni d'uso e avvia il metodo "register" nel Presenter
     private void initRegistrati(String email, String password) {
         if(mCondizioniDuso.isChecked()) {
             mPrgressDialog.show();

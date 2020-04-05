@@ -29,24 +29,18 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
+    //Costruzione della vista
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //QUI COSTRUISCO LA VIEW DI LOGIN
         View view=inflater.inflate(R.layout.fragment_login,container,false);
         mEmail = view.findViewById(R.id.Emailtext);
         mPassword = view.findViewById(R.id.passwordtext);
         mLoginBtn = view.findViewById(R.id.buttonAccesso);
-
-        //set listener
-
         mLoginBtn.setOnClickListener(this);
-
-        //set init
-
         loginPresenter = new LoginPresenter(this);
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Aspetta il completamento del login");
-
         return view;
     }
 
@@ -78,6 +72,7 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
         loginPresenter.login(this, email, password);
     }
 
+    //Se il login ha avuto esito positivo l'utente viene notificato e indirizzato nella schermata di HomePage dedicata agli utenti autenticati
     @Override
     public void onLoginSuccess(String message) {
         mProgressDialog.dismiss();
@@ -86,10 +81,10 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
         startActivity(intent);
     }
 
+    //Se il login non ha avuto esito positivo l'utente viene notificato
     @Override
     public void onLoginFailure(String message) {
         mProgressDialog.dismiss();
         Toast.makeText(getActivity(),message , Toast.LENGTH_SHORT).show();
     }
-
 }

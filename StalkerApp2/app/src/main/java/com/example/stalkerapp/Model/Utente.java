@@ -8,7 +8,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-//Modello di
+//Modello di Login
 public class Utente implements LoginContract.Intractor {
 
     private LoginContract.onLoginListener mOnLoginListener;
@@ -22,7 +22,7 @@ public class Utente implements LoginContract.Intractor {
     @Override
     public void performFirebaseLogin(Fragment activity, String email, String password) {
         FirebaseAuth.getInstance()
-                .signInWithEmailAndPassword(email,password)
+            .signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

@@ -2,6 +2,7 @@ package com.example.stalkerapp.Model;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.stalkerapp.Presenter.ListaOrganizzazioniContract;
 import com.example.stalkerapp.Presenter.ListaPreferitiContract;
 
 import org.json.JSONArray;
@@ -18,12 +19,14 @@ import java.util.ArrayList;
 public class ListaPreferitiModel implements ListaPreferitiContract.Intractor {
 
 
+
     public ListaPreferitiModel(){
+
 
 }
     @Override
     public ArrayList<String> performControllaLista(Fragment fragment) {
-//CONTROLLO ESISTENZA DEL FILE
+        //CONTROLLO ESISTENZA DEL FILE
         ArrayList<String>aux=new ArrayList<>();
         File organizzazioniFile = new File(fragment.getContext().getFilesDir()+"/Preferiti.txt");
         if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){

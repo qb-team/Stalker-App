@@ -1,11 +1,8 @@
 package com.example.stalkerapp.ui.main;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,40 +14,30 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.stalkerapp.HomePage;
-import com.example.stalkerapp.Presenter.ListaPreferitiContract;
 import com.example.stalkerapp.Presenter.ListaPreferitiPresenter;
 import com.example.stalkerapp.R;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class ListaPreferiti extends RootFragment {
-    ArrayAdapter<String> adapter;
-    ListView listaOrg;
-    JSONObject jo,mainObj;
-    JSONArray ja;
-    ArrayList<String> preferiti;
+    private ArrayAdapter<String> adapter;
+    private ListView listaOrg;
+    private JSONObject jo,mainObj;
+    private JSONArray ja;
+    private ArrayList<String> preferiti;
     private ListaPreferitiPresenter preferitiPresenter;
     private static ListaPreferiti instance = null;
     public final static String TAG="Preferiti_FRAGMENT";
+
     public void ListaPreferiti(){}
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,9 +68,6 @@ public class ListaPreferiti extends RootFragment {
                    transaction.addToBackStack(null);
                    transaction.replace(R.id.ListaPreferiti, organizzazione).commit();
             }
-
-
-
         });
 
         listaOrg.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

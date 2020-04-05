@@ -2,10 +2,11 @@ package com.example.stalkerapp.ui.main;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,40 +21,35 @@ import android.widget.SearchView;
 import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.stalkerapp.MyAdapter;
+import com.example.stalkerapp.Organizzazioni;
+import com.example.stalkerapp.Presenter.ListaOrganizzazioniContract;
+import com.example.stalkerapp.Presenter.ListaOrganizzazioniPresenter;
 import com.example.stalkerapp.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
 import java.io.IOException;
-import java.io.FileWriter;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import java.net.URL;
 import java.util.ArrayList;
 
 
-public class HomeFragment extends RootFragment {
+public class HomeFragment extends RootFragment implements ListaOrganizzazioniContract.View, MyAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener{
     public final static String TAG = "Home_FRAGMENT";
 
-    private RequestQueue mQueue;
-    String inline=" ";
     JSONObject jsonObject;
     JSONArray jsonArray2;
     private static HomeFragment instance = null;
-    ArrayAdapter<String> adapter;
-    ArrayList<String> listaOrganizzazioni;
     ListView listaOrg;
     private SwipeRefreshLayout aggiornamento;
     private boolean aggiunto;
-
+    private ListaOrganizzazioniPresenter listaOrganizzazioniPresenter;
+    //NUOVA VERSIONE DI ADAPTER
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private MyAdapter myAdapter;
+    private ArrayList<Organizzazioni> listOrganizzazioni;
+    //---------------------------
     public void HomeFragment(){}
 
     @Override
@@ -79,25 +75,18 @@ public class HomeFragment extends RootFragment {
         jsonObject = new JSONObject();
         jsonArray2 = new JSONArray();
         listaOrg = view.findViewById(R.id.ListaOrg);
-        listaOrganizzazioni= new ArrayList<>();
-        mQueue= Volley.newRequestQueue(getContext());
         aggiornamento=view.findViewById(R.id.swiperefresh);
+        listaOrganizzazioniPresenter=new ListaOrganizzazioniPresenter(this);
+        recyclerView=view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        listOrganizzazioni=new ArrayList<>();
+        adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+        recyclerView.setAdapter(adapter);
 
-        listaOrg.setOnItemClickListener(new AdapterView.OnItemClickListener() {    // Inizio Indirizzamento layout dell'organizzazione scelta
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Organizzazione organizzazione=new Organizzazione();
-                Bundle bundle=new Bundle();
-                bundle.putString("nomeOrganizzazione",listaOrg.getItemAtPosition(position).toString());
-                organizzazione.setArguments(bundle);
-                FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
-                // Store the Fragment in stack
-                transaction.addToBackStack(null);
-                transaction.replace(R.id.HomeFragment, organizzazione).commit();
-            }
-
-        });  //Fine Indirizzamento layout dell'organizzazione scelta
+        //CONTROLLO PER VEDERE SE ESISTE GIA' UN FILE CONTENENTE LA LISTA DELLE ORGANIZZAZIONI
+        controllaFile();
+        /*
         listaOrg.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -108,100 +97,37 @@ public class HomeFragment extends RootFragment {
             }
         });
 
-      File organizzazioniFile = new File(getContext().getFilesDir()+"/Organizzazioni.txt");
-        if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){
-            Toast.makeText(getActivity(),"Lista organizzazioni ancora vuota, vai a scaricarla!",Toast.LENGTH_SHORT).show();
+*/
+        return view;
+    }
 
-        }
-        else {
-            try {
-                FileInputStream fin=new FileInputStream(organizzazioniFile);
-                byte[] buffer= new byte[(int)organizzazioniFile.length()];
-                new DataInputStream(fin).readFully(buffer);
-                fin.close();
-                String s=new String(buffer,"UTF-8");
-                JSONObject jsonObject = new JSONObject(s);
-                JSONArray jsonArray = (JSONArray) jsonObject.get("listaOrganizzazioni");
-                for(int i=0;i<jsonArray.length();i++){
-                    JSONObject organizzazione= jsonArray.getJSONObject(i);
-                    String nomeOrganizzazione= organizzazione.getString("nome");
-                    listaOrganizzazioni.add(nomeOrganizzazione);
+    @Override
+    public void onViewCreated(View rootView, Bundle savedInstanceState){
+        super.onViewCreated(rootView, savedInstanceState);
 
-                }
-            } catch (JSONException | FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            adapter=new ArrayAdapter<>(getContext(),R.layout.row,R.id.textView2,listaOrganizzazioni);
-            listaOrg.setAdapter(adapter);
-        }
         aggiornamento.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
-                        new Organizzazioni().execute();
-                    }
+                try {
+                    listOrganizzazioni.clear();
+                    aggiornaLista();
+                    aggiornamento.setRefreshing(false);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         });
-
-        return view;
     }
 
-public class Organizzazioni extends AsyncTask<Void,Void,Void>{
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-    }
-    @Override
-    protected Void doInBackground(Void... params) {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-
-            e.printStackTrace();
-
-        }
-        return null;
-    }
-    @Override
-    protected void onPostExecute(Void result) {
-        super.onPostExecute(result);
-        //Here you can update the view
-        try {
-            Parse2();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Notify swipeRefreshLayout that the refresh has finished
-        aggiornamento.setRefreshing(false);
-    }
-}
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
         SearchView searchView= (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+        searchView.setOnQueryTextListener(this);}
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if(listaOrganizzazioni.size()!=0){
-                    adapter.getFilter().filter(newText);
-                }
-                return false;
-            }
-        });
-        super.onCreateOptionsMenu(menu,inflater);
-    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
@@ -209,120 +135,91 @@ public class Organizzazioni extends AsyncTask<Void,Void,Void>{
 
     }
 
+    public void controllaFile(){
+    if(listaOrganizzazioniPresenter.controlla(this)!=null){
+        listOrganizzazioni=listaOrganizzazioniPresenter.controlla(this);
+        adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+        recyclerView.setAdapter(adapter);
 
-    public void Parse2() throws IOException, InterruptedException {
-        Thread thread = new Thread(new Runnable() {
+    }
+}
+    @Override
+    public void onLoadListFailure(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
 
-            @Override
-            public void run() {
-                try  {
-                    URL url=new URL( "https://api.jsonbin.io/b/5e873ea993960d63f0782fcf/2");
-                    if(url==null) {
-                        Toast.makeText(getActivity(), "Errore nello scaricamento", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    OkHttpClient client = new OkHttpClient();
-                    final Request req = new Request.Builder().url(url).get().build();
-                    final Response resp = client.newCall(req).execute();
-                    final int code = resp.code();
-                    final ResponseBody body = resp.body();
-                    File organizzazioniFile = new File(getContext().getFilesDir()+"/Organizzazioni.txt");
-                    String s=null;
+    public void aggiornaLista() throws InterruptedException {
+        if(listaOrganizzazioniPresenter.aggiorna(this,listOrganizzazioni)!=null)
+            listOrganizzazioni=listaOrganizzazioniPresenter.aggiorna(this,listOrganizzazioni);
+            adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
+    }
+    public void aggiungi(final String s){
 
-                    if(organizzazioniFile.exists()){
-                        FileInputStream fin=new FileInputStream(organizzazioniFile);
-                    byte[] buffer= new byte[(int)organizzazioniFile.length()];
-                    new DataInputStream(fin).readFully(buffer);
-                    fin.close();
-                    s=new String(buffer,"UTF-8");
-                    }
-                    inline = body.string();
+        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())
+                // set message, title, and icon
+                .setTitle("Aggiungi organizzazione")
+                .setMessage("Vuoi aggiungere questa organizzazione alla tua lista dei preferiti?")
+                .setPositiveButton("Aggiungi", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
 
-
-                    if(code != 200) {
-                        Toast.makeText(getActivity(),"Errore nello scaricamento",Toast.LENGTH_SHORT).show();
-                        body.close();
-
-                    }
-                    if(s!=null && s.equals(inline)){
-                            body.close();
-
-                            return;
-                    }
-                    else
-                    {
-
-                        System.out.println("\nJSON data in string format");
-                        System.out.println(inline);
-                        JSONObject jsonObject = new JSONObject(inline);
-                        JSONArray jsonArray = (JSONArray) jsonObject.get("listaOrganizzazioni");
-                        for(int i=0;i<jsonArray.length();i++){
-                            JSONObject organizzazione= jsonArray.getJSONObject(i);
-                            String nomeOrganizzazione= organizzazione.getString("nome");
-                            System.out.println(nomeOrganizzazione);
-                            FileWriter w;
-                            w=new FileWriter(getContext().getFilesDir()+"/Organizzazioni.txt");
-                            w.write(inline);
-                            w.flush();
-                            w.close();
-                            BufferedReader fileReader = new BufferedReader(new FileReader(getContext().getFilesDir() + "/Organizzazioni.txt"));
-                            String st;
-                            System.out.println(getContext().getFilesDir());
-                            while ((st = fileReader.readLine()) != null)
-                                System.out.println(st);
-                            listaOrganizzazioni.add(nomeOrganizzazione);
-
-                            body.close();
+                        try {
+                            aggiunto=ListaPreferiti.getInstance().costruisciJSONobject(s);
+                            if(aggiunto)
+                                Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(getActivity(),"Hai già aggiutno questa organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
+
+                        dialog.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                })
+                .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        myQuittingDialogBox.show();
+
+    }
+
+    @Override
+    public void organizzazioneClick(int position) {
+        Organizzazione organizzazione=new Organizzazione();
+
+        Bundle bundle=new Bundle();
+        bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
+        organizzazione.setArguments(bundle);
+        FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.HomeFragment, organizzazione).commit();
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String userInput= newText.toLowerCase();
+        ArrayList<Organizzazioni> newList= new ArrayList<>();
+        if(listOrganizzazioni.size()!=0){
+            for(int i=0;i<listOrganizzazioni.size();i++){
+                if(listOrganizzazioni.get(i).getNome().toLowerCase().contains(userInput))
+                    newList.add(listOrganizzazioni.get(i));
             }
-        });
-        thread.start();
-        thread.join();
-        StampaAschermo();
-}
-public void aggiungi(final String s){
+            adapter=new MyAdapter(newList,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
 
-    AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())
-            // set message, title, and icon
-            .setTitle("Aggiungi organizzazione")
-            .setMessage("Vuoi aggiungere questa organizzazione alla tua lista dei preferiti?")
-            .setPositiveButton("Aggiungi", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-
-                    try {
-                        aggiunto=ListaPreferiti.getInstance().costruisciJSONobject(s);
-                        if(aggiunto)
-                            Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(getActivity(),"Hai già aggiutno questa organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    dialog.dismiss();
-                }
-            })
-            .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            })
-            .create();
-    myQuittingDialogBox.show();
-
-}
-
-
-public void StampaAschermo() throws IOException {
-
-    adapter=new ArrayAdapter<>(getContext(),R.layout.row,R.id.textView2,listaOrganizzazioni);
-    listaOrg.setAdapter(adapter);
-}
-
+        }
+        return false;
+    }
 }

@@ -51,18 +51,12 @@ public class Settings extends RootFragment {
             public void onClick(View v) {
 
                 try {
-                    HomeFragment.getInstance().Parse2();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    HomeFragment.getInstance().aggiornaLista();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-            }
-
-
-
-        });
+            }});
         tracciamento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

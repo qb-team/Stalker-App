@@ -1,15 +1,10 @@
 package com.example.stalkerapp.ui.main;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +14,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.stalkerapp.HomePage;
-import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.Presenter.RegistrazioneContract;
 import com.example.stalkerapp.Presenter.RegistrazionePresenter;
 import com.example.stalkerapp.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 

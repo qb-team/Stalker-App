@@ -9,6 +9,7 @@ import com.example.stalkerapp.ui.main.MainFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+
 //Activity principale che ti porta nella seconda activity (HomePage) se si è autenticati, altrimenti ti indirizza al MainFragment
 public class MainActivity extends AppCompatActivity {
     public static FragmentManager fragmentManager;

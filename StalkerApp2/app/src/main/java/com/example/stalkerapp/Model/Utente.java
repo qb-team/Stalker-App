@@ -8,15 +8,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-
+//Modello di
 public class Utente implements LoginContract.Intractor {
 
     private LoginContract.onLoginListener mOnLoginListener;
 
+    //Costruttore
     public Utente(LoginContract.onLoginListener onLoginListener){
         this.mOnLoginListener=onLoginListener;
     }
 
+    //Metodo (di Firebase) che permette di effettuare il login sul server Firebase
     @Override
     public void performFirebaseLogin(Fragment activity, String email, String password) {
         FirebaseAuth.getInstance()

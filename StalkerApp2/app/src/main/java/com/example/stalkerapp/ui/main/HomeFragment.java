@@ -32,6 +32,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class HomeFragment extends RootFragment implements ListaOrganizzazioniContract.View, MyAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener{
@@ -61,6 +63,7 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
 
 
     }
+
 
     public static HomeFragment getInstance() {
         return instance;
@@ -151,9 +154,11 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
     public void aggiornaLista() throws InterruptedException {
         if(listaOrganizzazioniPresenter.aggiorna(this,listOrganizzazioni)!=null)
             listOrganizzazioni=listaOrganizzazioniPresenter.aggiorna(this,listOrganizzazioni);
-            adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
-            recyclerView.setAdapter(adapter);
+            recyclerView.getAdapter().notifyDataSetChanged();
+//            adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+//            recyclerView.setAdapter(adapter);
     }
+
     public void aggiungi(final String s){
 
         AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())
@@ -221,5 +226,21 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
 
         }
         return false;
+    }
+
+    public void OrdinamentoAlfabetico(){
+
+
+        Collections.sort(listOrganizzazioni, new Comparator<Organizzazioni>() {
+            @Override
+            public int compare(Organizzazioni lhs, Organizzazioni rhs) {
+                return lhs.getNome().compareTo(rhs.getNome());
+            }
+        });
+        recyclerView.getAdapter().notifyDataSetChanged();
+//        adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+//        recyclerView.setAdapter(adapter);
+        System.out.println("List after the use of" +
+                " Collection.sort() :\n" + listOrganizzazioni.get(0).getNome() + listOrganizzazioni.get(1).getNome() + listOrganizzazioni.get(2).getNome());
     }
 }

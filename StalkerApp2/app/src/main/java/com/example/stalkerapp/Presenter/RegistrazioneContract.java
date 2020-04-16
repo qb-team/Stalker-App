@@ -1,6 +1,8 @@
 package com.example.stalkerapp.Presenter;
 
 import androidx.fragment.app.Fragment;
+
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseUser;
 
 //Interfaccia del presenter di Registrati che comunica con il Model e la View
@@ -9,7 +11,7 @@ public interface RegistrazioneContract {
     //Interfaccia che fa comunicare la View con il Presenter
     interface View {
         void onRegistrationSuccess(FirebaseUser firebaseUser);
-        void onRegistrationFailure(String message);
+        void onRegistrationFailure(FirebaseException e);
     }
 
     //Interfaccia vera e propria del Presenter
@@ -25,6 +27,6 @@ public interface RegistrazioneContract {
     //Interfaccia che fa comunicare il Model con il Presenter
     interface onRegistrationListener {
         void onSuccess(FirebaseUser firebaseUser);
-        void onFailure(String message);
+        void onFailure(FirebaseException e);
     }
 }

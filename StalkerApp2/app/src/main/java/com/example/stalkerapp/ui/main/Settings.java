@@ -14,37 +14,39 @@ import com.example.stalkerapp.MainActivity;
 import com.example.stalkerapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import java.io.IOException;
+import java.util.Collections;
 
 public class Settings extends RootFragment {
     public final static String TAG="Settings_FRAGMENT";
-
+    private static Settings instance = null;
     Button logout;
     Button scarica;
     Button tracciamento;
+    Button alfabetico;
 
 
     public Settings() {
         //require empty constructor
     }
 
-    public static Settings newInstance() {
-        return new Settings();
-    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
+        instance = this;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        System.out.println("Creazione Settings");
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         logout = view.findViewById(R.id.LogoutID);
         scarica = view.findViewById(R.id.ScaricaID);
         tracciamento = view.findViewById(R.id.TracciamentoID);
-
+        alfabetico = view.findViewById(R.id.VisualizzazioneID);
 
         scarica.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +77,20 @@ public class Settings extends RootFragment {
             }
 
         });
+
+        alfabetico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HomeFragment.getInstance().OrdinamentoAlfabetico();
+            }
+        });
+
+
         return view;
     }
+
+    public static Settings getInstance() {
+        return instance;
+    }
+
 }

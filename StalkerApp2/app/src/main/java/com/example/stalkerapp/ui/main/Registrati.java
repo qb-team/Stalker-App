@@ -17,6 +17,10 @@ import com.example.stalkerapp.HomePage;
 import com.example.stalkerapp.Presenter.RegistrazioneContract;
 import com.example.stalkerapp.Presenter.RegistrazionePresenter;
 import com.example.stalkerapp.R;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 //Parte visiva (View) di Registrati
@@ -106,16 +110,21 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
     @Override
     public void onRegistrationSuccess(FirebaseUser firebaseUser) {
         mPrgressDialog.dismiss();
-        Toast.makeText(getActivity(), "Registarzione effettuato con successo" , Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Registrazione effettuato con successo" , Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), HomePage.class);
         startActivity(intent);
     }
 
     //Se la registrazione non ha avuto esito positivo l'utente viene notificato
     @Override
-    public void onRegistrationFailure(String message) {
+    public void onRegistrationFailure(FirebaseException e) {
         mPrgressDialog.dismiss();
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        if (e instanceof FirebaseAuthInvalidCredentialsException) {
+            Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();
+        }
+        if (e instanceof FirebaseAuthUserCollisionException){ //Credo che sia quello in caso l'utente esista già --> registrazione
+            Toast.makeText(getActivity(), "L'e-mail è già presente nel sistema" , Toast.LENGTH_LONG).show();
+        }
     }
 
     //Controllo che la password sia sicura

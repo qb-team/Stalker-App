@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/whiteColor"
-    android:orientation="vertical"
     android:padding="8dp"
-    tools:context=".ui.main.Settings">
+    android:id="@+id/HomeFragment">
 
     <Button
-    android:id="@+id/LogoutID"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Logout"
-        />
+        android:id="@+id/LogoutID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout"/>
+
     <Button
         android:id="@+id/ScaricaID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Scarica lista organizzazioni"
-        android:layout_marginTop="100dp"/>
+        android:layout_below="@+id/LogoutID"
+        android:layout_marginTop="5dp"
+        android:text="Scarica lista organizzazioni" />
+
     <Button
         android:id="@+id/TracciamentoID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Attiva tracciamento"
-        android:layout_marginTop="200dp"/>
+        android:layout_below="@+id/ScaricaID"
+        android:layout_marginTop="5dp"
+        android:text="Attiva tracciamento" />
+
+    <Button
+        android:id="@+id/VisualizzazioneID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TracciamentoID"
+        android:layout_marginTop="5dp"
+        android:text="Ordine alfabetico" />
 </RelativeLayout>

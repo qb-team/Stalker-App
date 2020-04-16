@@ -76,7 +76,7 @@ public class ListaOrganizzazioniModel implements ListaOrganizzazioniContract.Int
 
             @Override
             public void run() { try {
-            URL url = new URL("https://api.jsonbin.io/b/5e873ea993960d63f0782fcf/8");
+            URL url = new URL("https://api.jsonbin.io/b/5e873f30dd6c3c63eaed8ed8/1");
             //URL NON VALIDO
             if (url == null) {
                 //Toast.makeText(getActivity(), "Errore nello scaricamento", Toast.LENGTH_SHORT).show();

@@ -1,12 +1,15 @@
 package com.example.stalkerapp.Presenter;
 
 import androidx.fragment.app.Fragment;
+
+import com.google.firebase.FirebaseException;
+
 public interface LoginContract {
 
     //Interfaccia che fa comunicare la View con il Presenter
     interface View{
         void onLoginSuccess(String message);
-        void onLoginFailure(String message);
+        void onLoginFailure(FirebaseException e);
     }
 
     //Interfaccia vera e propria del Presenter
@@ -22,7 +25,7 @@ public interface LoginContract {
     //Interfaccia che fa comunicare il Model con il Presenter
     interface onLoginListener{
         void onSuccess(String message);
-        void onFailure(String message);
+        void onFailure(FirebaseException e);
     }
 }
 

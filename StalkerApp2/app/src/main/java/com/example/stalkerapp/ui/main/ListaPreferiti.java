@@ -48,6 +48,7 @@ public class ListaPreferiti extends RootFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        System.out.println("Creazione Listapreferiti");
        View view= inflater.inflate(R.layout.fragment_lista_preferiti, container, false);
 
         listaOrg = view.findViewById(R.id.ListaOrg);
@@ -82,6 +83,8 @@ public class ListaPreferiti extends RootFragment {
         return view;
 
     }
+
+
     public static ListaPreferiti getInstance() {
         return instance;
     }

@@ -1,12 +1,18 @@
 package com.example.stalkerapp.Model;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.stalkerapp.Presenter.LoginContract;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 //Modello di Login
 public class Utente implements LoginContract.Intractor {
@@ -30,7 +36,19 @@ public class Utente implements LoginContract.Intractor {
                             mOnLoginListener.onSuccess(task.getResult().toString());
                         }
                         else {
-                            mOnLoginListener.onFailure(task.getException().toString());
+//                            try {
+//                                throw task.getException();
+////                            } catch(FirebaseAuthWeakPasswordException e) {
+//////                                //do somethig
+//                            } catch(FirebaseAuthInvalidCredentialsException e) {
+//                                System.out.println("FirebaseAuthInvalidCredentialsException");
+//                            } catch(FirebaseAuthUserCollisionException e) {
+//                                System.out.println("FirebaseAuthUserCollisionException");
+//                            }
+//                            catch(Exception e) {
+//                                Log.e("TAG", e.getMessage());
+//                            }
+                            mOnLoginListener.onFailure((FirebaseException) task.getException());
                         }
                     }
                 });

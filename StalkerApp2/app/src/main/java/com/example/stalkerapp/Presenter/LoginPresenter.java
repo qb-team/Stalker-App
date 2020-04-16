@@ -2,6 +2,7 @@ package com.example.stalkerapp.Presenter;
 
 import androidx.fragment.app.Fragment;
 import com.example.stalkerapp.Model.Utente;
+import com.google.firebase.FirebaseException;
 
 //Presenter di Login
 public class LoginPresenter implements LoginContract.Presenter, LoginContract.onLoginListener{
@@ -28,8 +29,8 @@ public class LoginPresenter implements LoginContract.Presenter, LoginContract.on
 
     //Metodo invocato nel Model tramite il Contract e chiama il metodo onLoginFailure nella View
     @Override
-    public void onFailure(String message) {
-        mLoginView.onLoginFailure(message);
+    public void onFailure(FirebaseException e) {
+        mLoginView.onLoginFailure(e);
     }
 }
 

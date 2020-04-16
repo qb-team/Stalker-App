@@ -2,6 +2,7 @@ package com.example.stalkerapp.Presenter;
 
 import androidx.fragment.app.Fragment;
 import com.example.stalkerapp.Model.UtenteRegistrazione;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseUser;
 
 //Presenter di Registrati
@@ -29,8 +30,8 @@ public class RegistrazionePresenter implements RegistrazioneContract.Presenter, 
 
     //Metodo invocato nel Model tramite il Contract e chiama il metodo onRegistrationFailure nella View
     @Override
-    public void onFailure(String message) {
-        mRegisterView.onRegistrationFailure(message);
+    public void onFailure(FirebaseException e) {
+        mRegisterView.onRegistrationFailure(e);
 
     }
 }

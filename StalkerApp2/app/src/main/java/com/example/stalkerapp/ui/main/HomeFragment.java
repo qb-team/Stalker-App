@@ -63,7 +63,6 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
         aggiornamento=view.findViewById(R.id.swiperefresh);
         recyclerView=view.findViewById(R.id.recyclerView);
         ////////////////////////////////////////////////////////////
-        scarico.setVisibility(View.INVISIBLE);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         listaOrganizzazioniPresenter=new ListaOrganizzazioniPresenter(this);
@@ -126,10 +125,6 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
         else{
             scarico.setVisibility(View.VISIBLE);
             System.out.println("è vuota");
-//            mProgressDialog = new ProgressDialog(getContext());
-//            mProgressDialog.setMessage("Sto scaricando la lista delle organizzazioni");
-//            aggiornaLista();
-//            mProgressDialog.dismiss();
         }
     }
 

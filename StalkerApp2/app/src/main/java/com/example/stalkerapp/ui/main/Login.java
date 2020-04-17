@@ -18,6 +18,8 @@ import com.example.stalkerapp.Presenter.LoginContract;
 import com.example.stalkerapp.Presenter.LoginPresenter;
 import com.example.stalkerapp.R;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -88,12 +90,13 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
     //Se il login non ha avuto esito positivo l'utente viene notificato
     @Override
     public void onLoginFailure(FirebaseException e) {
+        System.out.println("Non funziona niente");
         mProgressDialog.dismiss();
         if (e instanceof FirebaseAuthInvalidCredentialsException) {
             Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();
         }
-        if (e instanceof FirebaseAuthUserCollisionException){ //Credo che sia quello in caso l'utente esista già --> registrazione
-            Toast.makeText(getActivity(), "Non so bene cosa fa" , Toast.LENGTH_LONG).show();
+        if (e instanceof FirebaseNetworkException){ //Credo che sia quello in caso l'utente esista già --> registrazione
+            Toast.makeText(getActivity(), "Non sei connesso a internet" , Toast.LENGTH_LONG).show();
         }
         if (e instanceof FirebaseAuthInvalidUserException) {
             Toast.makeText(getActivity(), "L'e-mail non esiste" , Toast.LENGTH_LONG).show();

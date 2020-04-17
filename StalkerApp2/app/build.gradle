@@ -54,7 +54,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'javax.json:javax.json-api:1.0'
     implementation 'com.android.support:design:28.0.0'
-   // implementation project(path: ':stalker-sdk')
+    // implementation project(path: ':stalker-sdk')
     // implementation files('/Users/riccardo/Download/json-simple-1.1.1.jar')
 
 

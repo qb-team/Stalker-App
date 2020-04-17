@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     android:background="@color/whiteColor"
     android:id="@+id/HomeFragmentID">
-    
+
 
     <Button
         android:id="@+id/scaricoID"
+        android:visibility="invisible"
         android:layout_width="214dp"
         android:layout_height="67dp"
         android:text="Scarico"

@@ -36,18 +36,6 @@ public class Utente implements LoginContract.Intractor {
                             mOnLoginListener.onSuccess(task.getResult().toString());
                         }
                         else {
-//                            try {
-//                                throw task.getException();
-////                            } catch(FirebaseAuthWeakPasswordException e) {
-//////                                //do somethig
-//                            } catch(FirebaseAuthInvalidCredentialsException e) {
-//                                System.out.println("FirebaseAuthInvalidCredentialsException");
-//                            } catch(FirebaseAuthUserCollisionException e) {
-//                                System.out.println("FirebaseAuthUserCollisionException");
-//                            }
-//                            catch(Exception e) {
-//                                Log.e("TAG", e.getMessage());
-//                            }
                             mOnLoginListener.onFailure((FirebaseException) task.getException());
                         }
                     }

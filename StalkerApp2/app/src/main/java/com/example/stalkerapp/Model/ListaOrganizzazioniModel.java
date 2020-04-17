@@ -38,7 +38,6 @@ public class ListaOrganizzazioniModel implements ListaOrganizzazioniContract.Int
         ArrayList<Organizzazioni> aux = new ArrayList<>();
         File organizzazioniFile = new File(fragment.getContext().getFilesDir()+"/Organizzazioni.txt");
         if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){
-            //listaOrganizzazioniListener.onFailure("Lista organizzazioni ancora vuota, vai a scaricarla!");
             return null;
         }
         else {
@@ -80,7 +79,7 @@ public class ListaOrganizzazioniModel implements ListaOrganizzazioniContract.Int
 
             @Override
             public void run() { try {
-                URL url = new URL("https://api.jsonbin.io/b/5e873f30dd6c3c63eaed8ed8/7");
+                URL url = new URL("https://api.jsonbin.io/b/5e873f30dd6c3c63eaed8ed8/1");
                 //URL NON VALIDO
                 if (url == null) {
                     //Toast.makeText(getActivity(), "Errore nello scaricamento", Toast.LENGTH_SHORT).show();
@@ -94,6 +93,16 @@ public class ListaOrganizzazioniModel implements ListaOrganizzazioniContract.Int
                 String inline=" ";
                 String s=null;
                 inline = body.string();
+
+                //ERRORE DAL SERVER
+                if (code != 200) {
+                    //Toast.makeText(getActivity(),"Errore nello scaricamento",Toast.LENGTH_SHORT).show();
+                    body.close();
+                    return ;
+
+                }
+
+
                 System.out.println(inline);
                 JSONObject jsonObject = new JSONObject(inline);
                 JSONArray jsonArray = (JSONArray) jsonObject.get("listaOrganizzazioni");

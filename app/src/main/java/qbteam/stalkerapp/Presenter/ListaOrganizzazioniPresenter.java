@@ -21,8 +21,8 @@ public class ListaOrganizzazioniPresenter implements ListaOrganizzazioniContract
     }
 
     @Override
-    public void aggiorna( Fragment fragment,  ArrayList<Organizzazioni> listaAttuale) throws InterruptedException {
-        listaOrganizzazioniModel.performAggiornaLista(fragment,listaAttuale);
+    public void scarica( Fragment fragment,  ArrayList<Organizzazioni> listaAttuale) throws InterruptedException {
+        listaOrganizzazioniModel.performScaricaLista(fragment,listaAttuale);
     }
 
     @Override

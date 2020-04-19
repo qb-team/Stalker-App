@@ -73,7 +73,7 @@ public class ListaOrganizzazioniModel implements ListaOrganizzazioniContract.Int
     }
 
     @Override
-    public void performAggiornaLista(final Fragment fragment, final ArrayList<Organizzazioni> listaAttuale) throws InterruptedException {
+    public void performScaricaLista(final Fragment fragment, final ArrayList<Organizzazioni> listaAttuale) throws InterruptedException {
 
         Thread thread = new Thread(new Runnable() {
 

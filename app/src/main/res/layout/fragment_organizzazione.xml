@@ -8,29 +8,45 @@
     android:id="@+id/organizzazioneID"
     android:clickable="true"
     >
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/titleID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/text_view_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/blackColor"
+            android:layout_marginTop="200dp"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal" />
+    </RelativeLayout>
+
     <TextView
-        android:id="@+id/titleID"
+        android:id="@+id/coordinateID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textAlignment="center"
+        android:layout_marginTop="150dp"
         />
-    <TextView
-        android:id="@+id/text_view_result"
-        android:layout_width="match_parent"
+
+    <Button
+        android:id="@+id/mostraID"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textColor="@color/blackColor"
+        android:text="Mostra"
         android:layout_marginTop="200dp"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:gravity="center_horizontal" />
-</RelativeLayout>
+        android:layout_marginLeft="100dp"/>
 
 
 </FrameLayout>

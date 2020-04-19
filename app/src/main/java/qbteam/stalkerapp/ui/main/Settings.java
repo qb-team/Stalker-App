@@ -48,7 +48,7 @@ public class Settings extends RootFragment {
         tracciamento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Organizzazione.getInstance().mostraCoordinate();
+                // Organizzazione.getInstance().mostraCoordinate();
             }
         });
 

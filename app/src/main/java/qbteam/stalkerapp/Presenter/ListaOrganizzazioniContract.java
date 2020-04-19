@@ -16,13 +16,13 @@ public interface ListaOrganizzazioniContract {
     //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' INTRACTOR DEL MODELLO
     interface Presenter {
         ArrayList<Organizzazioni> controlla(Fragment fragment);
-        void aggiorna(Fragment fragment, ArrayList<Organizzazioni> listaAttuale) throws InterruptedException;
+        void scarica(Fragment fragment, ArrayList<Organizzazioni> listaAttuale) throws InterruptedException;
     }
 
     //METODO DEL MODELLO
     interface Intractor {
         ArrayList<Organizzazioni> performControllaLista(Fragment fragment);
-        void performAggiornaLista(Fragment fragment, ArrayList<Organizzazioni> listaAttuale) throws InterruptedException;
+        void performScaricaLista(Fragment fragment, ArrayList<Organizzazioni> listaAttuale) throws InterruptedException;
     }
 
     interface ListaOrganizzazioniListener {

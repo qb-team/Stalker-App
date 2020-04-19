@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,27 +47,21 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- *
- */
 public class Organizzazione extends RootFragment {
-    public final static String TAG = "Organizzazione_FRAGMENT";
     private static Organizzazione instance = null;
+    final ArrayList<LatLng> poligono = new ArrayList<>();
     private LocationManager locationManager;
     private LocationListener listener;
-    private String risposta;
-    private TextView titolo;
-    private RequestQueue mQueue;
-    final ArrayList<LatLng> poligono = new ArrayList<>();
-    final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+    ///////////////////////////////////////////////////////
+    TextView titolo;
     TextView risultati;
-
+    Button mostra;
+    //////////////////////////////////////////////////////
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
         instance=this;
     }
@@ -77,6 +72,7 @@ public class Organizzazione extends RootFragment {
         inflater.inflate(R.menu.aggiungipreferiti, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id= item.getItemId();
@@ -91,7 +87,7 @@ public class Organizzazione extends RootFragment {
                         Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
                     else
 
-                        Toast.makeText(getActivity(),"Hai già aggiunto questa organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Hai già aggiunto questa organizzazione ai preferiti", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -103,44 +99,68 @@ public class Organizzazione extends RootFragment {
 
         return super.onOptionsItemSelected(item);
     }
-    public static Organizzazione getInstance() {
-        return instance;
-    }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("Creata organizzazione");
         View view=inflater.inflate(R.layout.fragment_organizzazione, container, false);
-        Bundle bundle=this.getArguments();
+        /////////////////////////////////////////////////////////////////////////////////////
         titolo=view.findViewById(R.id.titleID);
-        if(bundle!=null){
+        risultati=view.findViewById(R.id.coordinateID);
+        mostra=view.findViewById(R.id.mostraID);
+        ////////////////////////////////////////////////////////////////////////
 
-            titolo.setText(bundle.getString("nomeOrganizzazione"));
+        MostraNome();
+        checkPermission();
+        InserisciCoordinate();
+
+
+        /////////// LISTENER ////////////////
+        mostra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                localizzazione();
+                posizione();
+            }
+        });
+        /////////// FINE LISTENER ////////////////
+
+        return view;
+    }
+
+    public void posizione() {
+        System.out.println("poligono");
+        try {
+            locationManager.requestLocationUpdates("gps", 15000, 0, listener);
+        } catch (SecurityException e) {
+            e.getMessage();
         }
-        risultati=view.findViewById(R.id.text_view_result);
-        Parse();
+    }
+
+    public void localizzazione(){
+        System.out.println("è entrato dentro localizzazione");
         locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE); // Ottenimento servizi di localizzazione
         listener = new LocationListener() { // Inizio Inizializzazione listener
             @Override
             public void onLocationChanged(Location location) { // Viene invocato ogni volta che c'è un cambio della posizione o ogni tot millisecondi
+                System.out.println("il poligono sta facendo cose");
                 risultati.setText(" ");
                 risultati.append("\n " + location.getLongitude() + " " + location.getLatitude());   //Stampa le tue coordinate attuali
                 LatLng test = new LatLng(location.getLatitude(), location.getLongitude());
+                System.out.println(poligono);
                 boolean isInsideBoundary = builder.build().contains(test); // true se il test point è all'interno del confine
                 boolean isInside = PolyUtil.containsLocation(test, poligono, true); // false se il punto è all'esterno del poligono
-                if (isInsideBoundary == true && isInside == true )
+                if (isInsideBoundary && isInside == true )
                 {
                     risultati.append("\n" + "Sei dentro");
+                    System.out.println("Sei dentro");
 
                 }
-                else
+                else {
                     risultati.append("\n" + "Sei fuori");
-
-
+                    System.out.println("Sei fuori");
+                }
             }
 
             // Metodi utili a listener
@@ -159,10 +179,22 @@ public class Organizzazione extends RootFragment {
             }
 
         };
-        checkPermission();
-        return view;
     }
-    // Chiede il permesso per la localizzazione e gestisci la funzionalità del bottone "Scarica coordinate"
+
+    public void InserisciCoordinate(){  // Aggiunge le coordinate dei vertici del poligono
+        System.out.println("è entrato qui dentro");
+        poligono.add(new LatLng(45.4139244815,11.8809040336));
+        poligono.add(new LatLng(45.4137732038,11.8812763624));
+        poligono.add(new LatLng(45.4134925404,11.8810503718));
+        poligono.add(new LatLng(45.4136378199,11.8806753327));
+
+
+        for (LatLng point : poligono) {
+            builder.include(point);
+        }
+        System.out.println("creo builder:  " + builder);
+    }
+
     void checkPermission() {//DA CAPIRE GLI IF!!!!
         // Gestisce i permessi (come prima cosa chiede il permesso)
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -172,18 +204,19 @@ public class Organizzazione extends RootFragment {
             }
             return;
         }}
-        // questo codice non sarà eseguito se i permessi non sono accettati, perchè nella riga precedente c'è un return.
-       public void mostraCoordinate() {
 
-            try {
-
-                locationManager.requestLocationUpdates("gps", 15, 0, listener);
-            } catch (SecurityException e) {
-                e.getMessage();
-            }
+    public void MostraNome(){
+        Bundle bundle=this.getArguments();
+        if(bundle!=null){
+            titolo.setText(bundle.getString("nomeOrganizzazione"));
         }
+    }
 
-    // Legge il contenuto del file Json e crea un poligono
+    public static Organizzazione getInstance() {
+        return instance;
+    }
+
+    /*
     public void Parse() {
         Cache cache = new DiskBasedCache(getContext().getCacheDir(), 1024 * 1024); // 1MB cap
         Network network = new BasicNetwork(new HurlStack());
@@ -198,34 +231,34 @@ public class Organizzazione extends RootFragment {
                     @Override
                     public void onResponse(String response) {
                         risposta = response;
-                    //  Parsing e creazione del poligono
-                    try {
+                        //  Parsing e creazione del poligono
+                        try {
 
-                        JSONObject jObject = new JSONObject(risposta);
-                        JSONArray jsonArray = jObject.getJSONArray("Organizzazioni");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject org = jsonArray.getJSONObject(i);
-                            String organizzazione1 = org.getString("lat");
-                            String organizzazione2 = org.getString("long");
-                            double o1 = Double.parseDouble(organizzazione1);
-                            double o2 = Double.parseDouble(organizzazione2);
-                            setCoordinate(o1, o2);
+                            JSONObject jObject = new JSONObject(risposta);
+                            JSONArray jsonArray = jObject.getJSONArray("Organizzazioni");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject org = jsonArray.getJSONObject(i);
+                                String organizzazione1 = org.getString("lat");
+                                String organizzazione2 = org.getString("long");
+                                double o1 = Double.parseDouble(organizzazione1);
+                                double o2 = Double.parseDouble(organizzazione2);
+                                setCoordinate(o1, o2);
 
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    for (LatLng point : poligono) {
-                        builder.include(point);
-                    }
+                        for (LatLng point : poligono) {
+                            builder.include(point);
+                        }
                     }
                 },
-                            new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // Handle error
-                        }
-                    });
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error
+                    }
+                });
         mQueue.add(stringRequest);
 
 
@@ -234,5 +267,7 @@ public class Organizzazione extends RootFragment {
         poligono.add(new LatLng(lat, lon));
         System.out.println(lat+" "+lon);
     }
+    */
+
 
 }

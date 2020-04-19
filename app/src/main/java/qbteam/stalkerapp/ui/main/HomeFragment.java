@@ -74,7 +74,7 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
             @Override
             public void onRefresh() {
                 try {
-                    aggiornaLista();
+                    scaricaLista();
                     aggiornamento.setRefreshing(false);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -86,7 +86,7 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
             @Override
             public void onClick(View view) {
                 try {
-                    aggiornaLista();
+                    scaricaLista();
                     scarico.setVisibility(View.INVISIBLE);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -94,23 +94,20 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
             }
         });
 
-
-
-
         //////////// FINE LISTENER  ///////////////
-
         try {
             controllaFile();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+
         return view;
     }
 
-
-    public void aggiornaLista() throws InterruptedException {
-        listaOrganizzazioniPresenter.aggiorna(this,listOrganizzazioni);
+    //Avvia lo scaricamento della lista
+    public void scaricaLista() throws InterruptedException {
+        listaOrganizzazioniPresenter.scarica(this,listOrganizzazioni);
         controllaFile();
     }
 

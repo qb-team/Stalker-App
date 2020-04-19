@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "594170683009",
+    "firebase_url": "https://stalker-imola-informatica.firebaseio.com",
+    "project_id": "stalker-imola-informatica",
+    "storage_bucket": "stalker-imola-informatica.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594170683009:android:eb831bca409a432adfb780",
+        "android_client_info": {
+          "package_name": "qbteam.stalkerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594170683009-5p0gts5nrm2qrmua92o7j93icki86lvk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQKwuecDY_brNHnQgPd2WQpp6pO1epfpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594170683009-5p0gts5nrm2qrmua92o7j93icki86lvk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

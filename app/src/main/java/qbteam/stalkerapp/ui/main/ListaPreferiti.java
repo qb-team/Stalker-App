@@ -38,7 +38,7 @@ public class ListaPreferiti extends RootFragment {
     private static ListaPreferiti instance = null;
     public final static String TAG="Preferiti_FRAGMENT";
 
-    public void ListaPreferiti(){}
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +88,15 @@ public class ListaPreferiti extends RootFragment {
     public static ListaPreferiti getInstance() {
         return instance;
     }
-
+    //nascondo il menu della organizzazione
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem menuItem = menu.findItem(R.id.preferitiID);
+        if(menuItem!=null)
+        menuItem.setVisible(false);
+    }
+//creo il menu
    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 

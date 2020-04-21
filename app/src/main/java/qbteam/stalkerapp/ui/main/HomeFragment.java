@@ -43,7 +43,7 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
     ///////////////////////////
 
     //---------------------------
-    public void HomeFragment() {}
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

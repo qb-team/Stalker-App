@@ -24,15 +24,14 @@ public class Settings extends RootFragment {
     Button alfabetico;
 
 
-    public Settings() {
-        //require empty constructor
-    }
+
 
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
     }
 
     @Nullable

@@ -96,7 +96,7 @@ public class ListaPreferiti extends RootFragment {
         if(menuItem!=null)
         menuItem.setVisible(false);
     }
-//creo il menu
+//creo il menu Lista preferiti
    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 

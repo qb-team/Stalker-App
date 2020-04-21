@@ -65,7 +65,13 @@ public class Organizzazione extends RootFragment {
         setHasOptionsMenu(true);
         instance=this;
     }
-
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem menuItem = menu.findItem(R.id.cercaID);
+        if(menuItem!=null)
+            menuItem.setVisible(false);
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
 

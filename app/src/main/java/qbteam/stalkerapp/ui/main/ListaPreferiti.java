@@ -16,7 +16,6 @@ import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
-
 import qbteam.stalkerapp.Presenter.ListaPreferitiPresenter;
 import qbteam.stalkerapp.R;
 import org.json.JSONArray;
@@ -94,10 +93,14 @@ public class ListaPreferiti extends RootFragment {
         super.onPrepareOptionsMenu(menu);
         MenuItem menuItem = menu.findItem(R.id.preferitiID);
         MenuItem menuItem2 = menu.findItem(R.id.cercaID);
+        MenuItem menuItem3 = menu.findItem(R.id.ordina);
         if(menuItem!=null)
-        menuItem.setVisible(false);
+            menuItem.setVisible(false);
         if(menuItem2!=null)
-        menuItem2.setVisible(true);
+            menuItem2.setVisible(true);
+        if(menuItem3!=null)
+            menuItem3.setVisible(true);
+
     }
 //creo il menu Lista preferiti
    @Override

@@ -6,6 +6,8 @@
     android:icon="@drawable/ic_search_black_24dp"
     app:showAsAction="always"
     app:actionViewClass="android.widget.SearchView" />
-
+    <item
+        android:id="@+id/ordina"
+        android:title="Ordine alfabetico"/>
 
 </menu>

@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+
    private  ArrayList<Organizzazioni> listaOrganizzazioni;
    private Context context;
    private OnOrganizzazioneListener onOrganizzazioneListener;
+
    public MyAdapter(ArrayList<Organizzazioni> listaOrganizzazioni, Context context,OnOrganizzazioneListener onOrganizzazioneListener){
        this.listaOrganizzazioni=listaOrganizzazioni;
        this.context=context;

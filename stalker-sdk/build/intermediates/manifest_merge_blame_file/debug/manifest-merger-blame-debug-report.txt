@@ -4,18 +4,18 @@
 4
 5    <uses-sdk
 6        android:minSdkVersion="15"
-6-->C:\Users\enric\Documents\GitHub\Stalker-App\stalker-sdk\src\main\AndroidManifest.xml
+6-->/Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
 7        android:targetSdkVersion="28" />
-7-->C:\Users\enric\Documents\GitHub\Stalker-App\stalker-sdk\src\main\AndroidManifest.xml
+7-->/Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
 8
 9    <uses-permission android:name="android.permission.INTERNET" />
-9-->C:\Users\enric\Documents\GitHub\Stalker-App\stalker-sdk\src\main\AndroidManifest.xml:2:5-67
-9-->C:\Users\enric\Documents\GitHub\Stalker-App\stalker-sdk\src\main\AndroidManifest.xml:2:22-64
+9-->/Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:2:5-67
+9-->/Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:2:22-64
 10    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-10-->C:\Users\enric\Documents\GitHub\Stalker-App\stalker-sdk\src\main\AndroidManifest.xml:3:5-79
-10-->C:\Users\enric\Documents\GitHub\Stalker-App\stalker-sdk\src\main\AndroidManifest.xml:3:22-76
+10-->/Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:3:5-79
+10-->/Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:3:22-76
 11
 12    <application />
-12-->C:\Users\enric\Documents\GitHub\Stalker-App\stalker-sdk\src\main\AndroidManifest.xml:4:5-20
+12-->/Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:4:5-20
 13
 14</manifest>

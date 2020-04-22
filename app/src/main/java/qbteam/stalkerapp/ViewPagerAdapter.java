@@ -8,19 +8,22 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import qbteam.stalkerapp.ui.main.HomeFragment;
 import qbteam.stalkerapp.ui.main.ListaPreferiti;
 import qbteam.stalkerapp.ui.main.Settings;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private final Resources resources;//IN RELATA' NON LO USO, DEVO IMPLEMENTARE
+    private final Resources resources;//IN REALTA' NON LO USO, DEVO IMPLEMENTARE
 
-    SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
-
+    private final List<Fragment> registeredFragments = new ArrayList();
+    private final List<String> titolo= new ArrayList<>();
     /**
      * Create pager adapter
-     *
+
      * @param resources
      * @param fm
      */
@@ -31,45 +34,20 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        final Fragment result;
-        switch (position) {
-            case 0:
-                // First Fragment of First Tab
-                result = new HomeFragment();
-                break;
-            case 1:
-                // First Fragment of Second Tab
-                result = new ListaPreferiti();
-                break;
-            case 2:
-                // First Fragment of Third Tab
-                result = new Settings();
-                break;
-            default:
-                result = null;
-                break;
-        }
 
-        return result;
+      return registeredFragments.get(position);
+
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return registeredFragments.size();
     }
 
     @Override
-    public CharSequence getPageTitle(final int position) {
-        switch (position) {
-            case 0:
-                return "Home";
-            case 1:
-                return "Lista preferiti";
-            case 2:
-                return "Impostazioni";
-            default:
-                return null;
-        }
+    public CharSequence getPageTitle( int position) {
+
+        return titolo.get(position);
     }
 
     /**
@@ -80,12 +58,17 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
      * @param position
      * @return
      */
-    @Override
+    public void addFragment(Fragment fragment, String title){
+
+        registeredFragments.add(fragment);
+        titolo.add(title);
+    }
+   /* @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Fragment fragment = (Fragment) super.instantiateItem(container, position);
         registeredFragments.put(position, fragment);
         return fragment;
-    }
+    }*/
 
     /**
      * Remove the saved reference from our Map on the Fragment destroy
@@ -94,11 +77,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
      * @param position
      * @param object
      */
-    @Override
+  /*  @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         registeredFragments.remove(position);
         super.destroyItem(container, position, object);
-    }
+    }*/
 
 
     /**
@@ -107,7 +90,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
      * @param position tab position of the fragment
      * @return
      */
-    public Fragment getRegisteredFragment(int position) {
+   /* public Fragment getRegisteredFragment(int position) {
         return registeredFragments.get(position);
-    }
+    }*/
 }

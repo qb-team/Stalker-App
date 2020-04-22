@@ -77,8 +77,8 @@ public class Organizzazione extends RootFragment {
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-
-        inflater.inflate(R.menu.aggiungipreferiti, menu);
+        menu.clear();
+        inflater.inflate(R.menu.cerca_organizzazione, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

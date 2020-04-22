@@ -24,9 +24,9 @@ public class ActionTab extends Fragment {
      *
      * Please refer to ViewPagerIndicator library
      */
-    protected TabLayout indicator;
+    protected TabLayout tabLayout;
 
-    protected ViewPager pager;
+    protected ViewPager viewPager;
 
     private ViewPagerAdapter adapter;
 
@@ -42,9 +42,9 @@ public class ActionTab extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_action_tab, container, false);
 
-        indicator = (TabLayout) view.findViewById(R.id.tab);
-        pager = (ViewPager) view.findViewById(R.id.viewpager);
-        setHasOptionsMenu(true);
+        tabLayout = (TabLayout) view.findViewById(R.id.tab);
+        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        //setHasOptionsMenu(true);
         return view;
     }
 
@@ -54,12 +54,21 @@ public class ActionTab extends Fragment {
 
         // Note that we are passing childFragmentManager, not FragmentManager
         adapter = new ViewPagerAdapter(getResources(),getChildFragmentManager());
+        //add fragment
+        adapter.addFragment(new HomeFragment(),"");
+        adapter.addFragment(new ListaPreferiti(),"");
+        adapter.addFragment(new Settings(),"");
 
-        pager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);
         // The one-stop shop for setting up this TabLayout with a ViewPager.
-        indicator.setupWithViewPager(pager);
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_star_black_24dp);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_black_24dp);
+
         // Fixed tabs display all tabs concurrently
-        indicator.setTabMode(TabLayout.MODE_FIXED);
+       // tabLayout.setTabMode(TabLayout.MODE_FIXED);
     }
 
     /**
@@ -70,7 +79,7 @@ public class ActionTab extends Fragment {
 
     public boolean onBackPressed() {
         // currently visible tab Fragment
-        OnBackPressListener currentFragment = (OnBackPressListener) adapter.getRegisteredFragment(pager.getCurrentItem());
+        OnBackPressListener currentFragment = (OnBackPressListener) adapter.getItem(viewPager.getCurrentItem());
 
         if (currentFragment != null) {
             // lets see if the currentFragment or any of its childFragment can handle onBackPressed

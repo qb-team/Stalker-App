@@ -88,12 +88,14 @@ public class ListaPreferiti extends RootFragment {
         return instance;
     }
     //nascondo il menu della organizzazione
-    @Override
+   /* @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+
         MenuItem menuItem = menu.findItem(R.id.preferitiID);
         MenuItem menuItem2 = menu.findItem(R.id.cercaID);
         MenuItem menuItem3 = menu.findItem(R.id.ordina);
+
         if(menuItem!=null)
             menuItem.setVisible(false);
         if(menuItem2!=null)
@@ -101,11 +103,11 @@ public class ListaPreferiti extends RootFragment {
         if(menuItem3!=null)
             menuItem3.setVisible(true);
 
-    }
+    }*/
 //creo il menu Lista preferiti
    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
+        menu.clear();
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
 
@@ -125,7 +127,7 @@ public class ListaPreferiti extends RootFragment {
 
             }
         });
-        super.onCreateOptionsMenu(menu,inflater);
+        //super.onCreateOptionsMenu(menu,inflater);
     }
     public boolean costruisciJSONobject(String s) throws JSONException, IOException {
         //AGGIUNGO OGNI VOLTA UN'ORGANIZZAZIONE ALLA LISTA(INCREMENTALE)

@@ -1,4 +1,6 @@
 package it.qbteam.stalkerapp.view.authentication;
 
-public class SignUpFragment {
+import androidx.fragment.app.Fragment;
+
+public class SignUpFragment extends Fragment {
 }

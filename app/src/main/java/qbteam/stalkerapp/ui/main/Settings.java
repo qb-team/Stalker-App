@@ -3,6 +3,8 @@ package qbteam.stalkerapp.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,9 +33,15 @@ public class Settings extends RootFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
         instance = this;
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
 
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

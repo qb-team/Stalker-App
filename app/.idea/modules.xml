@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../StalkerApp.iml" filepath="$PROJECT_DIR$/../StalkerApp.iml" group="StalkerApp" />
       <module fileurl="file://$PROJECT_DIR$/app.iml" filepath="$PROJECT_DIR$/app.iml" group="StalkerApp/app" />
+      <module fileurl="file://$PROJECT_DIR$/../stalker-sdk/stalker-sdk.iml" filepath="$PROJECT_DIR$/../stalker-sdk/stalker-sdk.iml" group="StalkerApp/stalker-sdk" />
     </modules>
   </component>
 </project>

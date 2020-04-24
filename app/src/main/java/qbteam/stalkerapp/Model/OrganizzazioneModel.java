@@ -1,6 +1,6 @@
-package com.example.stalkerapp.Model;
+package qbteam.stalkerapp.Model;
 
-import com.example.stalkerapp.Presenter.OrganizzazioneContract;
+import qbteam.stalkerapp.Presenter.OrganizzazioneContract;
 
 public class OrganizzazioneModel implements OrganizzazioneContract.Intractor {
 }

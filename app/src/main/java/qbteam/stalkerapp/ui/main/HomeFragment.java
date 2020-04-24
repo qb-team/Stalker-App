@@ -1,7 +1,10 @@
 package qbteam.stalkerapp.ui.main;
 
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView;
 
@@ -19,15 +24,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import org.json.JSONException;
+
 import qbteam.stalkerapp.MyAdapter;
 import qbteam.stalkerapp.Organizzazioni;
 import qbteam.stalkerapp.Presenter.ListaOrganizzazioniContract;
 import qbteam.stalkerapp.Presenter.ListaOrganizzazioniPresenter;
 import qbteam.stalkerapp.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class HomeFragment extends RootFragment implements ListaOrganizzazioniContract.View, MyAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener {
 
@@ -36,9 +43,11 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private SwipeRefreshLayout aggiornamento;
-
+    Dialog myDialog;
     ////////////////////////////////////
     Button scarico;
+    Button dialog_info;
+    Button dialog_agg_Preferiti;
     ProgressDialog mProgressDialog;
     ///////////////////////////
 
@@ -60,6 +69,7 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
 
         ////////////////////////////////////////////////////////
         scarico = view.findViewById(R.id.scaricoID);
+
         aggiornamento=view.findViewById(R.id.swiperefresh);
         recyclerView=view.findViewById(R.id.recyclerView);
         ////////////////////////////////////////////////////////////
@@ -94,6 +104,8 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
             }
         });
 
+
+
         //////////// FINE LISTENER  ///////////////
         try {
             controllaFile();
@@ -113,9 +125,9 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
 
 
     public void controllaFile() throws InterruptedException {
-        if(listaOrganizzazioniPresenter.controlla(this)!=null){
+        if(listaOrganizzazioniPresenter.controlla(this, "/Organizzazioni.txt")!=null){
             System.out.println("non è vuota");
-            listOrganizzazioni=listaOrganizzazioniPresenter.controlla(this);
+            listOrganizzazioni=listaOrganizzazioniPresenter.controlla(this,"/Organizzazioni.txt" );
             adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
             recyclerView.setAdapter(adapter);
         }
@@ -147,6 +159,60 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
         transaction.replace(R.id.HomeFragmentID, organizzazione).commit();
     }
 
+    @Override
+    public void organizzazioneLongClick(int position) {
+        myDialog=new Dialog(getContext());
+        myDialog.setContentView(R.layout.dialog_organizzazione);
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView dialog_nomeOrganizzazione=myDialog.findViewById(R.id.dialog_nomeOrganizzazione);
+        TextView dialog_tracciamento=myDialog.findViewById(R.id.dialog_tracciamento);
+        ImageView dialog_immage=myDialog.findViewById(R.id.dialog_immage);
+        dialog_nomeOrganizzazione.setText(listOrganizzazioni.get(position).getNome());
+        myDialog.show();
+        Button moreInfo=myDialog.findViewById(R.id.Button_moreInfo);
+        Button aggPref=myDialog.findViewById(R.id.Button_aggiungiPreferiti);
+        moreInfo.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                organizzazioneClick(position);
+                myDialog.dismiss();
+            }
+        });
+        aggPref.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean aggiunto= false;
+                try {
+                    ListaPreferiti.getInstance().aggiungiOrganizzazione(listOrganizzazioni.get(position).getNome());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(aggiunto==true)
+
+                    Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
+                else
+
+                    Toast.makeText(getActivity(),"Hai già aggiunto questa organizzazione ai preferiti", Toast.LENGTH_SHORT).show();
+                myDialog.dismiss();
+            }
+        });
+
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu){
+
+
+        if(menu.findItem(R.id.preferitiID)!=null){
+            menu.findItem(R.id.preferitiID).setVisible(false);
+        }
+
+        super.onPrepareOptionsMenu(menu);
+
+    }
 
     //Quando viene invocato?
     @Override
@@ -156,8 +222,26 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
         MenuItem item= menu.findItem(R.id.cercaID);
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
-    }
 
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id= item.getItemId();
+        if(id==R.id.ordina){
+            Collections.sort(listOrganizzazioni);
+            try {
+                adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+                recyclerView.setAdapter(adapter);
+                listaOrganizzazioniPresenter.updateFile(listOrganizzazioni,this,"/Organizzazioni.txt");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
     // SearchView.OnQueryTextListener
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -198,39 +282,5 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
 
  */
 
-/*  Aggiungi da implementare
-    public void aggiungi(final String s){
 
-        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())
-                // set message, title, and icon
-                .setTitle("Aggiungi organizzazione")
-                .setMessage("Vuoi aggiungere questa organizzazione alla tua lista dei preferiti?")
-                .setPositiveButton("Aggiungi", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                        try {
-                            aggiunto=ListaPreferiti.getInstance().costruisciJSONobject(s);
-                            if(aggiunto)
-                                Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(getActivity(),"Hai già aggiutno questa organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        myQuittingDialogBox.show();
-
-    }
-*/
 }

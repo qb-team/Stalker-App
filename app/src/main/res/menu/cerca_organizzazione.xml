@@ -9,5 +9,8 @@
     <item
         android:id="@+id/ordina"
         android:title="Ordine alfabetico"/>
+    <item
+        android:id="@+id/preferitiID"
+        android:title="Aggiungi ai preferiti"/>
 
 </menu>

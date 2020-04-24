@@ -77,8 +77,8 @@ public class Organizzazione extends RootFragment {
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-
-        inflater.inflate(R.menu.aggiungipreferiti, menu);
+        menu.clear();
+        inflater.inflate(R.menu.cerca_organizzazione, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -87,10 +87,11 @@ public class Organizzazione extends RootFragment {
         int id= item.getItemId();
         if(id==R.id.preferitiID){
             Bundle bundle1=this.getArguments();
+            boolean aggiunto=true;
             if(bundle1!=null){
 
                 try {
-                    boolean aggiunto=ListaPreferiti.getInstance().costruisciJSONobject(bundle1.getString("nomeOrganizzazione"));
+                   ListaPreferiti.getInstance().aggiungiOrganizzazione(bundle1.getString("nomeOrganizzazione"));
                     if(aggiunto==true)
 
                         Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();

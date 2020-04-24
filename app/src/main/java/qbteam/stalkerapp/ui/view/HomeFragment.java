@@ -2,7 +2,7 @@ package qbteam.stalkerapp.ui.view;
 
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,41 +19,37 @@ import android.widget.Toast;
 import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.json.JSONException;
 
-import qbteam.stalkerapp.MyAdapter;
-import qbteam.stalkerapp.Organizzazioni;
-import qbteam.stalkerapp.Presenter.ListaOrganizzazioniContract;
-import qbteam.stalkerapp.Presenter.ListaOrganizzazioniPresenter;
+import qbteam.stalkerapp.MainActivity;
+import qbteam.stalkerapp.tools.BackPressImplementation;
+import qbteam.stalkerapp.tools.OnBackPressListener;
+import qbteam.stalkerapp.model.data.Organization;
+import qbteam.stalkerapp.presenter.ListaOrganizzazioniContract;
+import qbteam.stalkerapp.presenter.ListaOrganizzazioniPresenter;
 import qbteam.stalkerapp.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HomeFragment extends RootFragment implements ListaOrganizzazioniContract.View, MyAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener {
+public class HomeFragment extends Fragment implements ListaOrganizzazioniContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
     private ListaOrganizzazioniPresenter listaOrganizzazioniPresenter;
-    private ArrayList<Organizzazioni> listOrganizzazioni;
+    private ArrayList<Organization> listOrganizzazioni;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private SwipeRefreshLayout aggiornamento;
     Dialog myDialog;
-    ////////////////////////////////////
     Button scarico;
-    Button dialog_info;
-    Button dialog_agg_Preferiti;
-    ProgressDialog mProgressDialog;
-    ///////////////////////////
-
-    //---------------------------
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,18 +63,13 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
         System.out.println("Creazione HomeFragment");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        ////////////////////////////////////////////////////////
         scarico = view.findViewById(R.id.scaricoID);
-
         aggiornamento=view.findViewById(R.id.swiperefresh);
         recyclerView=view.findViewById(R.id.recyclerView);
-        ////////////////////////////////////////////////////////////
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         listaOrganizzazioniPresenter=new ListaOrganizzazioniPresenter(this);
         listOrganizzazioni=new ArrayList<>();
-
-        //////////// LISTENER  ///////////////
 
         aggiornamento.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -105,8 +96,6 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
         });
 
 
-
-        //////////// FINE LISTENER  ///////////////
         try {
             controllaFile();
         } catch (InterruptedException e) {
@@ -128,7 +117,7 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
         if(listaOrganizzazioniPresenter.controlla(this, "/Organizzazioni.txt")!=null){
             System.out.println("non è vuota");
             listOrganizzazioni=listaOrganizzazioniPresenter.controlla(this,"/Organizzazioni.txt" );
-            adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+            adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
             recyclerView.setAdapter(adapter);
         }
         else{
@@ -231,7 +220,7 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
         if(id==R.id.ordina){
             Collections.sort(listOrganizzazioni);
             try {
-                adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+                adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
                 recyclerView.setAdapter(adapter);
                 listaOrganizzazioniPresenter.updateFile(listOrganizzazioni,this,"/Organizzazioni.txt");
             } catch (IOException e) {
@@ -240,6 +229,14 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
                 e.printStackTrace();
             }
         }
+        if(id==R.id.logoutID){
+            FirebaseAuth.getInstance().signOut();   //logout
+
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
         return super.onOptionsItemSelected(item);
     }
     // SearchView.OnQueryTextListener
@@ -252,35 +249,22 @@ public class HomeFragment extends RootFragment implements ListaOrganizzazioniCon
     @Override
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
-        ArrayList<Organizzazioni> newList= new ArrayList<>();
+        ArrayList<Organization> newList= new ArrayList<>();
         if(listOrganizzazioni.size()!=0){
             for(int i=0;i<listOrganizzazioni.size();i++){
                 if(listOrganizzazioni.get(i).getNome().toLowerCase().contains(userInput))
                     newList.add(listOrganizzazioni.get(i));
             }
-            adapter=new MyAdapter(newList,this.getContext(),this);
+            adapter=new OrganizationViewAdapter(newList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
 
         }
         return false;
     }
 
-/*    // Ordinamento Alfabetico non completamente funzionante
-    public void OrdinamentoAlfabetico(){
-        Collections.sort(listOrganizzazioni, new Comparator<Organizzazioni>() {
-            @Override
-            public int compare(Organizzazioni lhs, Organizzazioni rhs) {
-                return lhs.getNome().compareTo(rhs.getNome());
-            }
-        });
-        recyclerView.getAdapter().notifyDataSetChanged();
-//        adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
-//        recyclerView.setAdapter(adapter);
-        System.out.println("List after the use of" +
-                " Collection.sort() :\n" + listOrganizzazioni.get(0).getNome() + listOrganizzazioni.get(1).getNome() + listOrganizzazioni.get(2).getNome());
+
+    @Override
+    public boolean onBackPressed() {
+        return new BackPressImplementation(this).onBackPressed();
     }
-
- */
-
-
 }

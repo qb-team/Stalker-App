@@ -2,6 +2,7 @@ package qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,27 +12,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import qbteam.stalkerapp.MyAdapter;
-import qbteam.stalkerapp.Organizzazioni;
-import qbteam.stalkerapp.Presenter.ListaPreferitiContract;
-import qbteam.stalkerapp.Presenter.ListaPreferitiPresenter;
+
+import com.google.firebase.auth.FirebaseAuth;
+
+import qbteam.stalkerapp.MainActivity;
+import qbteam.stalkerapp.tools.BackPressImplementation;
+import qbteam.stalkerapp.tools.OnBackPressListener;
+import qbteam.stalkerapp.model.data.Organization;
+import qbteam.stalkerapp.presenter.ListaPreferitiContract;
+import qbteam.stalkerapp.presenter.ListaPreferitiPresenter;
 import qbteam.stalkerapp.R;
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ListaPreferiti extends RootFragment implements ListaPreferitiContract.View, MyAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener {
+public class ListaPreferiti extends Fragment implements ListaPreferitiContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
 
     private ListaPreferitiPresenter listaPreferitiPresenter;
-    private ArrayList<Organizzazioni> listOrganizzazioni;
+    private ArrayList<Organization> listOrganizzazioni;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private ArrayList<Organizzazioni> listaAggiornata;
+    private ArrayList<Organization> listaAggiornata;
     private static ListaPreferiti instance = null;
 
     @Override
@@ -67,7 +74,7 @@ public class ListaPreferiti extends RootFragment implements ListaPreferitiContra
         if(listaPreferitiPresenter.controlla(this, "/Preferiti.txt")!=null){
             System.out.println("non è vuota");
             listOrganizzazioni=listaPreferitiPresenter.controlla(this,"/Preferiti.txt");
-            adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+            adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
             recyclerView.setAdapter(adapter);
         }
 
@@ -116,21 +123,21 @@ public class ListaPreferiti extends RootFragment implements ListaPreferitiContra
     public void elimina(int position) throws IOException, JSONException {
 
         listaPreferitiPresenter.rimuovi(listOrganizzazioni.get(position).getNome(),listOrganizzazioni);
-        adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+        adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
         recyclerView.setAdapter(adapter);
         aggiornaFileLocale(listOrganizzazioni);
 
     }
     public void aggiungiOrganizzazione(String nameOrg) throws IOException, JSONException {
-        Organizzazioni aux=new Organizzazioni(nameOrg);
+        Organization aux=new Organization(nameOrg);
         listOrganizzazioni.add(aux);
-        adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+        adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
         recyclerView.setAdapter(adapter);
         aggiornaFileLocale(listOrganizzazioni);
 
     }
 
-    public void aggiornaFileLocale(ArrayList<Organizzazioni> list) throws IOException, JSONException {
+    public void aggiornaFileLocale(ArrayList<Organization> list) throws IOException, JSONException {
         listaPreferitiPresenter.updateFile(list,this,"/Preferiti.txt");
     }
 
@@ -160,7 +167,7 @@ public class ListaPreferiti extends RootFragment implements ListaPreferitiContra
             case R.id.ordina:
                 Collections.sort(listOrganizzazioni);
                 try {
-                    adapter=new MyAdapter(listOrganizzazioni,this.getContext(),this);
+                    adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
                     recyclerView.setAdapter(adapter);
                     listaPreferitiPresenter.updateFile(listOrganizzazioni,this,"/Preferiti.txt");
                 } catch (IOException e) {
@@ -172,6 +179,13 @@ public class ListaPreferiti extends RootFragment implements ListaPreferitiContra
 
             case R.id.preferitiID:
                 return false;
+            case R.id.logoutID:
+                FirebaseAuth.getInstance().signOut();   //logout
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                return true;
+
             default:
                 break;
         }
@@ -188,13 +202,13 @@ public class ListaPreferiti extends RootFragment implements ListaPreferitiContra
     @Override
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
-        ArrayList<Organizzazioni> newList= new ArrayList<>();
+        ArrayList<Organization> newList= new ArrayList<>();
         if(listOrganizzazioni.size()!=0){
             for(int i=0;i<listOrganizzazioni.size();i++){
                 if(listOrganizzazioni.get(i).getNome().toLowerCase().contains(userInput))
                     newList.add(listOrganizzazioni.get(i));
             }
-            adapter=new MyAdapter(newList,this.getContext(),this);
+            adapter=new OrganizationViewAdapter(newList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
 
         }
@@ -206,6 +220,11 @@ public class ListaPreferiti extends RootFragment implements ListaPreferitiContra
     @Override
     public void onLoadListFailure(String message) {
 
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return new BackPressImplementation(this).onBackPressed();
     }
 
 

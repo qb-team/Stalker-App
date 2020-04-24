@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import qbteam.stalkerapp.ui.view.MainFragment;
+import qbteam.stalkerapp.ui.view.AuthenticationFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -16,23 +16,30 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        fStore = FirebaseFirestore.getInstance();
+        fAuth = FirebaseAuth.getInstance();
+
+        if (fAuth.getCurrentUser() != null ) {
+            goToHomePage();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {// Inizializzazione dei comandi supportati da Firebase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         fragmentManager=getSupportFragmentManager();
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
+        fragmentManager.beginTransaction().replace(R.id.container, new AuthenticationFragment(), "Main").commit();
 
-        if(fAuth.getCurrentUser() != null){ // Verifica se sei autenticato
-            Intent intent = new Intent(getApplicationContext(),HomePage.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            //finish();
-        }
-        if (savedInstanceState == null) {
-            fragmentManager.beginTransaction().replace(R.id.container, new MainFragment(), "Main").commit();
-        }
 
+    }
+    public void goToHomePage(){
+        Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 

@@ -13,9 +13,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-import qbteam.stalkerapp.HomePage;
-import qbteam.stalkerapp.Presenter.RegistrazioneContract;
-import qbteam.stalkerapp.Presenter.RegistrazionePresenter;
+import qbteam.stalkerapp.HomePageActivity;
+import qbteam.stalkerapp.presenter.RegistrazioneContract;
+import qbteam.stalkerapp.presenter.RegistrazionePresenter;
 import qbteam.stalkerapp.R;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 //Parte visiva (View) di Registrati
 public class Registrati extends RootFragment implements View.OnClickListener, RegistrazioneContract.View{
     public final static String TAG="Registrati_Fragment";
-    private MainViewModel mViewModel;
+
 
     EditText mEmail, mPassword, mConfPassword;
     Button mRegisterBtn;
@@ -110,7 +110,7 @@ public class Registrati extends RootFragment implements View.OnClickListener, Re
     public void onRegistrationSuccess(FirebaseUser firebaseUser) {
         mPrgressDialog.dismiss();
         Toast.makeText(getActivity(), "Registrazione effettuato con successo" , Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(),HomePage.class);
+        Intent intent = new Intent(getActivity(), HomePageActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

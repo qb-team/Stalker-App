@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import qbteam.stalkerapp.OnBackPressListener;
+import qbteam.stalkerapp.tools.OnBackPressListener;
 import qbteam.stalkerapp.R;
-import qbteam.stalkerapp.ViewPagerAdapter;
+import qbteam.stalkerapp.tools.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -54,15 +54,15 @@ public class ActionTab extends Fragment {
         //add fragment
         adapter.addFragment(new HomeFragment(),"");
         adapter.addFragment(new ListaPreferiti(),"");
-        adapter.addFragment(new Settings(),"");
+       //adapter.addFragment(new Settings(),"");
 
         viewPager.setAdapter(adapter);
         // The one-stop shop for setting up this TabLayout with a ViewPager.
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_star_black_24dp);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_black_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_stalkericon);
+        //tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_black_24dp);
 
         // Fixed tabs display all tabs concurrently
        // tabLayout.setTabMode(TabLayout.MODE_FIXED);

@@ -12,5 +12,9 @@
     <item
         android:id="@+id/preferitiID"
         android:title="Aggiungi ai preferiti"/>
+    <item
+        android:id="@+id/logoutID"
+        android:title="Logout"
+        />
 
 </menu>

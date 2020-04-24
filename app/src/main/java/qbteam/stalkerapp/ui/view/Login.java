@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import qbteam.stalkerapp.HomePage;
-import qbteam.stalkerapp.Presenter.LoginContract;
-import qbteam.stalkerapp.Presenter.LoginPresenter;
+import qbteam.stalkerapp.HomePageActivity;
+import qbteam.stalkerapp.presenter.LoginContract;
+import qbteam.stalkerapp.presenter.LoginPresenter;
 import qbteam.stalkerapp.R;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
@@ -81,7 +81,7 @@ public class Login extends Fragment implements LoginContract.View, View.OnClickL
     public void onLoginSuccess(String message) {
         mProgressDialog.dismiss();
         Toast.makeText(getActivity(), "Login effettuato con successo" , Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(),HomePage.class);
+        Intent intent = new Intent(getActivity(), HomePageActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

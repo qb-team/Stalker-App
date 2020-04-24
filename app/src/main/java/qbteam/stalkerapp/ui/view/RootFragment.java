@@ -5,8 +5,8 @@ package qbteam.stalkerapp.ui.view;
 import androidx.fragment.app.Fragment;
 
 
-import qbteam.stalkerapp.BackPressImplementation;
-import qbteam.stalkerapp.OnBackPressListener;
+import qbteam.stalkerapp.tools.BackPressImplementation;
+import qbteam.stalkerapp.tools.OnBackPressListener;
 
 
 /**

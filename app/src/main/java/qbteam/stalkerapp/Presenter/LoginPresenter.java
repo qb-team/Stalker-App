@@ -1,18 +1,18 @@
 package qbteam.stalkerapp.Presenter;
 
 import androidx.fragment.app.Fragment;
-import qbteam.stalkerapp.Model.Utente;
+import qbteam.stalkerapp.Model.LoginModel;
 import com.google.firebase.FirebaseException;
 
 //Presenter di Login
 public class LoginPresenter implements LoginContract.Presenter, LoginContract.onLoginListener{
     private LoginContract.View mLoginView;
-    private Utente mLoginInteractor;
+    private LoginModel mLoginInteractor;
 
     //Costruttore che chiede come parametro un'istanza della vista
     public LoginPresenter(LoginContract.View mLoginView){
         this.mLoginView = mLoginView;
-        mLoginInteractor = new Utente(this);
+        mLoginInteractor = new LoginModel(this);
     }
 
     //Metodo invocato dalla View per passare le credenziali al Model per fare il login all'utente

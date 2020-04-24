@@ -1,4 +1,4 @@
-package qbteam.stalkerapp.ui.main;
+package qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -19,11 +19,8 @@ import qbteam.stalkerapp.Presenter.RegistrazionePresenter;
 import qbteam.stalkerapp.R;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
-
-import qbteam.stalkerapp.Presenter.RegistrazionePresenter;
 
 //Parte visiva (View) di Registrati
 public class Registrati extends RootFragment implements View.OnClickListener, RegistrazioneContract.View{

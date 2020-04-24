@@ -1,4 +1,4 @@
-package qbteam.stalkerapp.ui.main;
+package qbteam.stalkerapp.ui.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -19,10 +19,8 @@ import qbteam.stalkerapp.Presenter.LoginPresenter;
 import qbteam.stalkerapp.R;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 //Parte visiva (View) di Login
 public class Login extends Fragment implements LoginContract.View, View.OnClickListener {

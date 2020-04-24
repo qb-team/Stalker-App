@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.Organizzazione"
+    tools:context=".ui.view.Organizzazione"
     android:background="@android:color/white"
     android:id="@+id/organizzazioneID"
     android:clickable="true"

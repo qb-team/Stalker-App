@@ -15,12 +15,12 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 //Modello di Login
-public class Utente implements LoginContract.Intractor {
+public class LoginModel implements LoginContract.Intractor {
 
     private LoginContract.onLoginListener mOnLoginListener;
 
     //Costruttore
-    public Utente(LoginContract.onLoginListener onLoginListener){
+    public LoginModel(LoginContract.onLoginListener onLoginListener){
         this.mOnLoginListener=onLoginListener;
     }
 

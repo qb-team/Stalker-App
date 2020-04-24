@@ -1,4 +1,4 @@
-package qbteam.stalkerapp.ui.main;
+package qbteam.stalkerapp.ui.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,14 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
-import qbteam.stalkerapp.HomePage;
+
 import qbteam.stalkerapp.MainActivity;
 import qbteam.stalkerapp.R;
 import com.google.firebase.auth.FirebaseAuth;
-import java.io.IOException;
-import java.util.Collections;
 
 public class Settings extends RootFragment {
     public final static String TAG="Settings_FRAGMENT";

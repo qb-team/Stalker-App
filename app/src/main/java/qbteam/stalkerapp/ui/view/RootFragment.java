@@ -1,4 +1,4 @@
-package qbteam.stalkerapp.ui.main;
+package qbteam.stalkerapp.ui.view;
 
 
 

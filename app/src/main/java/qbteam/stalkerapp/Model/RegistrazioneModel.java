@@ -10,12 +10,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 //Modello di Registrati
-public class UtenteRegistrazione implements RegistrazioneContract.Intractor {
+public class RegistrazioneModel implements RegistrazioneContract.Intractor {
     //private static final String TAG = UtenteRegistrazione.class.getSimpleName();
     private RegistrazioneContract.onRegistrationListener mOnRegistrationListener;//
 
     //Costruttore
-    public UtenteRegistrazione(RegistrazioneContract.onRegistrationListener onRegistrationListener){
+    public RegistrazioneModel(RegistrazioneContract.onRegistrationListener onRegistrationListener){
         this.mOnRegistrationListener = onRegistrationListener;
     }
 

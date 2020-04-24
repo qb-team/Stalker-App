@@ -1,8 +1,6 @@
 package qbteam.stalkerapp;
 
 import android.content.res.Resources;
-import android.util.SparseArray;
-import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -10,10 +8,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import qbteam.stalkerapp.ui.main.HomeFragment;
-import qbteam.stalkerapp.ui.main.ListaPreferiti;
-import qbteam.stalkerapp.ui.main.Settings;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 

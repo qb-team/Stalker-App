@@ -1,0 +1,35 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:1:1-5:12
+INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:1:1-5:12
+INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:1:1-5:12
+	package
+		ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:1:71-90
+		INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+		INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:1:12-70
+uses-permission#android.permission.INTERNET
+ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:2:5-67
+	android:name
+		ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:2:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:3:5-79
+	android:name
+		ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:3:22-76
+application
+ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml:4:5-20
+uses-sdk
+INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+		ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+		INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+		ADDED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml
+		INJECTED from /Users/riccardo/Documents/GitHub/Stalker-App/stalker-sdk/src/main/AndroidManifest.xml

@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        app:tabGravity="fill"
         app:tabMode="fixed"
-        app:tabTextColor="#fff"
-        app:tabGravity="fill"></com.google.android.material.tabs.TabLayout>
+        app:tabTextColor="#fff"></com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
@@ -22,4 +22,6 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         ></androidx.viewpager.widget.ViewPager>
+
+
 </LinearLayout>

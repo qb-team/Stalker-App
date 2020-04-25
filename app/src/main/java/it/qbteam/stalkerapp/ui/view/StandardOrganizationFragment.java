@@ -72,17 +72,12 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         int id= item.getItemId();
         if(id==R.id.preferitiID){
             Bundle bundle1=this.getArguments();
-            boolean aggiunto=true;
+
             if(bundle1!=null){
 
                 try {
                    MyStalkersListFragment.getInstance().aggiungiOrganizzazione(bundle1.getString("nomeOrganizzazione"));
-                    if(aggiunto==true)
 
-                        Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
-                    else
-
-                        Toast.makeText(getActivity(),"Hai già aggiunto questa organizzazione ai preferiti", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -103,7 +98,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
 
         titolo=view.findViewById(R.id.titleID);
         risultati=view.findViewById(R.id.coordinateID);
-        mostra=view.findViewById(R.id.mostraID);
+
 
 
         MostraNome();
@@ -111,14 +106,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         InserisciCoordinate();
 
 
-        /////////// LISTENER ////////////////
-        mostra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                localizzazione();
-                posizione();
-            }
-        });
+
         /////////// FINE LISTENER ////////////////
 
         return view;

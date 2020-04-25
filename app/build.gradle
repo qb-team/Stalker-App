@@ -66,11 +66,11 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "io.swagger:swagger-annotations:$swagger_annotations_version"
     implementation "com.google.code.findbugs:jsr305:3.0.2"
-    implementation ("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:$oltu_version"){
-        exclude group:'org.apache.oltu.oauth2' , module: 'org.apache.oltu.oauth2.common'
+    implementation 'com.unboundid:unboundid-ldapsdk:4.0.14'
+    implementation("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:$oltu_version") {
+        exclude group: 'org.apache.oltu.oauth2', module: 'org.apache.oltu.oauth2.common'
     }
     implementation "io.gsonfire:gson-fire:$json_fire_version"
-
 
 
 }

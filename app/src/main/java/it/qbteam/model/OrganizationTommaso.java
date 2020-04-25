@@ -14,7 +14,7 @@
 package it.qbteam.model;
 
 import java.util.Objects;
-import java.util.Arrays;
+
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -31,7 +31,7 @@ import javax.validation.Valid;
  * Subject interested in tracking people&#39;s presence inside its own places, in either an anonymous or authenticated way.
  */
 @ApiModel(description = "Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.")
-public class Organization {
+public class OrganizationTommaso {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private Long id;
@@ -136,7 +136,7 @@ public class Organization {
   private TrackingModeEnum trackingMode;
 
 
-  public Organization id(Long id) {
+  public OrganizationTommaso id(Long id) {
     
     this.id = id;
     return this;
@@ -159,7 +159,7 @@ public class Organization {
   }
 
 
-  public Organization name(String name) {
+  public OrganizationTommaso name(String name) {
     
     this.name = name;
     return this;
@@ -182,7 +182,7 @@ public class Organization {
   }
 
 
-  public Organization description(String description) {
+  public OrganizationTommaso description(String description) {
     
     this.description = description;
     return this;
@@ -205,7 +205,7 @@ public class Organization {
   }
 
 
-  public Organization image(String image) {
+  public OrganizationTommaso image(String image) {
     
     this.image = image;
     return this;
@@ -228,7 +228,7 @@ public class Organization {
   }
 
 
-  public Organization street(String street) {
+  public OrganizationTommaso street(String street) {
     
     this.street = street;
     return this;
@@ -251,7 +251,7 @@ public class Organization {
   }
 
 
-  public Organization number(String number) {
+  public OrganizationTommaso number(String number) {
     
     this.number = number;
     return this;
@@ -274,7 +274,7 @@ public class Organization {
   }
 
 
-  public Organization postCode(Integer postCode) {
+  public OrganizationTommaso postCode(Integer postCode) {
     
     this.postCode = postCode;
     return this;
@@ -297,7 +297,7 @@ public class Organization {
   }
 
 
-  public Organization city(String city) {
+  public OrganizationTommaso city(String city) {
     
     this.city = city;
     return this;
@@ -320,7 +320,7 @@ public class Organization {
   }
 
 
-  public Organization country(String country) {
+  public OrganizationTommaso country(String country) {
     
     this.country = country;
     return this;
@@ -343,7 +343,7 @@ public class Organization {
   }
 
 
-  public Organization authenticationServerURL(String authenticationServerURL) {
+  public OrganizationTommaso authenticationServerURL(String authenticationServerURL) {
     
     this.authenticationServerURL = authenticationServerURL;
     return this;
@@ -366,7 +366,7 @@ public class Organization {
   }
 
 
-  public Organization creationDate(OffsetDateTime creationDate) {
+  public OrganizationTommaso creationDate(OffsetDateTime creationDate) {
     
     this.creationDate = creationDate;
     return this;
@@ -390,7 +390,7 @@ public class Organization {
   }
 
 
-  public Organization lastChangeDate(OffsetDateTime lastChangeDate) {
+  public OrganizationTommaso lastChangeDate(OffsetDateTime lastChangeDate) {
     
     this.lastChangeDate = lastChangeDate;
     return this;
@@ -414,7 +414,7 @@ public class Organization {
   }
 
 
-  public Organization trackingArea(String trackingArea) {
+  public OrganizationTommaso trackingArea(String trackingArea) {
     
     this.trackingArea = trackingArea;
     return this;
@@ -437,7 +437,7 @@ public class Organization {
   }
 
 
-  public Organization trackingMode(TrackingModeEnum trackingMode) {
+  public OrganizationTommaso trackingMode(TrackingModeEnum trackingMode) {
     
     this.trackingMode = trackingMode;
     return this;
@@ -468,7 +468,7 @@ public class Organization {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Organization organization = (Organization) o;
+    OrganizationTommaso organization = (OrganizationTommaso) o;
     return Objects.equals(this.id, organization.id) &&
         Objects.equals(this.name, organization.name) &&
         Objects.equals(this.description, organization.description) &&

@@ -35,6 +35,13 @@ public class HomePresenter implements HomeContract.Presenter {
         storage.performUpdateFile(list,fragment,nameFile);
     }
 
+    @Override
+    public String getOrganizationType(Organization organization) {
+        return organization.getType();
+    }
+
+
+
    /* @Override
     public void onFailure(String message) {
         listaOrganizzazioniView.onLoadListFailure(message);

@@ -38,6 +38,11 @@ public MyStalkersListPresenter(MyStalkersListContract.View listaPreferitiView){
    storage.performUpdateFile(list,fragment , nameFile);
     }
 
+    @Override
+    public String getOrganizationType(Organization organization) {
+        return organization.getType();
+    }
+
 
     @Override
     public void onFailure(String message) {

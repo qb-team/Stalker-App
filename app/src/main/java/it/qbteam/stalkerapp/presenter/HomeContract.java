@@ -22,6 +22,7 @@ public interface HomeContract {
         ArrayList<Organization> controlla(Fragment fragment, String nameFile);
         void scarica(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
         void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
+        String getOrganizationType(Organization organization);
     }
 
     //METODO DEL MODELLO

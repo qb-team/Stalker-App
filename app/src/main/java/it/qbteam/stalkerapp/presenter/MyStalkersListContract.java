@@ -20,6 +20,7 @@ public interface MyStalkersListContract {
         ArrayList<Organization> controlla(Fragment fragment, String nameFile);
         ArrayList<Organization> rimuovi(String name, ArrayList<Organization> list);
         void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
+        String getOrganizationType(Organization organization);
     }
 
     //METODO DEL MODELLO

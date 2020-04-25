@@ -84,15 +84,28 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizzazioneClick(int position) {
-       StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
-
+        String type=myStalkersListPresenter.getOrganizationType(listOrganizzazioni.get(position));
         Bundle bundle=new Bundle();
+
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
-        standardOrganizationFragment.setArguments(bundle);
-        FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
-        // Store the Fragment in stack
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
+
+        if(type=="LDAP"){
+            LDAPorganizationFragment ldaPorganizationFragment=new LDAPorganizationFragment();
+            ldaPorganizationFragment.setArguments(bundle);
+            FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
+            // Store the Fragment in stack
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.HomeFragmentID, ldaPorganizationFragment).commit();
+
+        }
+        else{
+            StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
+            standardOrganizationFragment.setArguments(bundle);
+            FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
+            // Store the Fragment in stack
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
+        }
     }
     @Override
     public void organizzazioneLongClick(int position) {
@@ -177,12 +190,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
             case R.id.preferitiID:
                 return false;
-            case R.id.logoutID:
-                FirebaseAuth.getInstance().signOut();   //logout
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                return true;
+
 
             default:
                 break;

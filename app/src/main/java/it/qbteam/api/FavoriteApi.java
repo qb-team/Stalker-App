@@ -1,21 +1,12 @@
 package it.qbteam.api;
 
-import it.qbteam.CollectionFormats.*;
-
 import retrofit2.Call;
 import retrofit2.http.*;
 
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import okhttp3.MultipartBody;
-
 import it.qbteam.model.Favorite;
-import it.qbteam.model.Organization;
+import it.qbteam.model.OrganizationTommaso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface FavoriteApi {
   /**
@@ -39,7 +30,7 @@ public interface FavoriteApi {
    * @return Call&lt;List&lt;Organization&gt;&gt;
    */
   @GET("favorite/{userId}")
-  Call<List<Organization>> getFavoriteOrganizationList(
+  Call<List<OrganizationTommaso>> getFavoriteOrganizationList(
     @retrofit2.http.Path("userId") String userId
   );
 

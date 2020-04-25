@@ -138,15 +138,32 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizzazioneClick(int position) {
-        StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
-
+        String type=listaOrganizzazioniPresenter.getOrganizationType(listOrganizzazioni.get(position));
         Bundle bundle=new Bundle();
+
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
-        standardOrganizationFragment.setArguments(bundle);
-        FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
-        // Store the Fragment in stack
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
+
+        if(type=="LDAP"){
+            LDAPorganizationFragment ldaPorganizationFragment=new LDAPorganizationFragment();
+            ldaPorganizationFragment.setArguments(bundle);
+            FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
+            // Store the Fragment in stack
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.HomeFragmentID, ldaPorganizationFragment).commit();
+
+        }
+        else{
+            StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
+            standardOrganizationFragment.setArguments(bundle);
+            FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
+            // Store the Fragment in stack
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
+        }
+
+
+
+
     }
 
     @Override
@@ -226,13 +243,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 e.printStackTrace();
             }
         }
-        if(id==R.id.logoutID){
-            FirebaseAuth.getInstance().signOut();   //logout
 
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -4,7 +4,7 @@ package it.qbteam.api;
 
 import retrofit2.Call;
 import retrofit2.http.*;
-import it.qbteam.model.Organization;
+import it.qbteam.model.OrganizationTommaso;
 import java.util.List;
 
 
@@ -16,7 +16,7 @@ public interface OrganizationApi {
    * @return Call&lt;Organization&gt;
    */
   @GET("organization/{organizationId}")
-  Call<Organization> getOrganization(
+  Call<OrganizationTommaso> getOrganization(
     @retrofit2.http.Path("organizationId") Long organizationId
   );
 
@@ -26,6 +26,6 @@ public interface OrganizationApi {
    * @return Call&lt;List&lt;Organization&gt;&gt;
    */
   @GET("organization")
-  Call<List<Organization>> getOrganizationList();
+  Call<List<OrganizationTommaso>> getOrganizationList();
 
 }

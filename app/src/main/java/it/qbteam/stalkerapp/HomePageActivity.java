@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -24,38 +25,25 @@ import androidx.navigation.ui.NavigationUI;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 public class HomePageActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, NavigationView.OnNavigationItemSelectedListener {
 
-    /*private static final String TAG = MainActivity.class.getSimpleName();
-    // Used in checking for runtime permissions.
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-    // A reference to the service used to get location updates.
-     private LocationUpdatesService mService = null;
-
-    // Tracks the bound state of the service.
-    private boolean mBound = false;
-    */
     private  AppBarConfiguration mAppBarConfiguration;
     private ActionTabFragment actionTabFragment;
-
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
     //private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
 
-    // Monitors the state of the connection to the service.
-  /*  private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
-            ((mService = binder.getService();
-            mBound = true;
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        fStore = FirebaseFirestore.getInstance();
+        fAuth = FirebaseAuth.getInstance();
+
+        if (fAuth.getCurrentUser() == null ) {
+            goToMainActivity();
         }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-            mBound = false;
-        }
-    };*/
-
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,13 +56,8 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-       NavigationView navigationView = findViewById(R.id.nav_view);
-       navigationView.setNavigationItemSelectedListener( this);
-
-
-
-
-
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener( this);
 
         if (savedInstanceState == null) {
 
@@ -99,20 +82,6 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 .replace(R.id.nav_host_fragment, actionTabFragment)
                 .commit();
     }
-
-    /**
-     * Only Activity has this special callback method
-     * Fragment doesn't have any onBackPressed callback
-     *
-     * Logic:
-     * Each time when the back button is pressed, this Activity will propagate the call to the
-     * container Fragment and that Fragment will propagate the call to its each tab Fragment
-     * those Fragments will propagate this method call to their child Fragments and
-     * eventually all the propagated calls will get back to this initial method
-     *
-     * If the container Fragment or any of its Tab Fragments and/or Tab child Fragments couldn't
-     * handle the onBackPressed propagated call then this Activity will handle the callback itself
-     */
 
 
     @Override
@@ -148,5 +117,9 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    public void goToMainActivity(){
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 }

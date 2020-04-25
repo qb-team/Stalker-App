@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import it.qbteam.stalkerapp.model.data.Organization;
 
 
-public interface ListaPreferitiContract {
+public interface MyStalkersListContract {
     interface View {
 
         void onLoadListFailure(String message);

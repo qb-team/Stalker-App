@@ -9,7 +9,7 @@ import java.util.Date;
 
 import it.qbteam.stalkerapp.R;
 
-class Utils {
+public class Utils {
 
     static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_location_updates";
 
@@ -18,7 +18,7 @@ class Utils {
      *
      * @param context The {@link Context}.
      */
-    static boolean requestingLocationUpdates(Context context) {
+    public static boolean requestingLocationUpdates(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(KEY_REQUESTING_LOCATION_UPDATES, false);
     }

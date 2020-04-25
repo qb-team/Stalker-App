@@ -1,17 +1,13 @@
-package it.qbteam.stalkerapp.ui.view;
+package it.qbteam.stalkerapp.tools;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
-
 import it.qbteam.stalkerapp.model.data.Organization;
 import it.qbteam.stalkerapp.R;
 
@@ -20,7 +16,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
    private  ArrayList<Organization> listaOrganizzazioni;
    private Context context;
    private OnOrganizzazioneListener onOrganizzazioneListener;
-   Dialog myDialog;
+
 
    public OrganizationViewAdapter(ArrayList<Organization> listaOrganizzazioni, Context context, OnOrganizzazioneListener onOrganizzazioneListener){
        this.listaOrganizzazioni=listaOrganizzazioni;

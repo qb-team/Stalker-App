@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.Registration"
+    tools:context=".ui.view.SignUpFragment"
     android:background="@android:color/white"
     >
 
@@ -15,18 +15,7 @@
         android:textSize = "35dp"
         android:layout_alignParentTop = "true"
         android:layout_centerHorizontal = "true" />
-    <!--
-    <TextView
-        android:layout_width = "wrap_content"
-        android:layout_height = "wrap_content"
-        android:id = "@+id/textView"
-        android:layout_below = "@+id/textview"
-        android:layout_centerHorizontal = "true"
-        android:textColor = "#ff7aff24"
-        android:textSize = "35dp"
-        android:textAlignment="center"
-        android:gravity="center_horizontal" />
-    -->
+
 
     <EditText
         android:id="@+id/EmailID"
@@ -43,12 +32,6 @@
         android:textColorHighlight="#ff7eff15"
         android:textColorHint="#000000" />
 
-    <!--<ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />-->
 
     <EditText
         android:id="@+id/PasswordID"

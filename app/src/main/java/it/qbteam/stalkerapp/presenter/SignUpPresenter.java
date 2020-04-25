@@ -1,19 +1,19 @@
 package it.qbteam.stalkerapp.presenter;
 
 import androidx.fragment.app.Fragment;
-import it.qbteam.stalkerapp.model.RegistrationModel;
+import it.qbteam.stalkerapp.model.SignUpModel;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseUser;
 
 //Presenter di Registrati
-public class RegistrationPresenter implements RegistrationContract.Presenter, RegistrationContract.onRegistrationListener {
-    private RegistrationContract.View mRegisterView;
-    private RegistrationModel mRegistrationInteractor;
+public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract.onRegistrationListener {
+    private SignUpContract.View mRegisterView;
+    private SignUpModel mRegistrationInteractor;
 
     //Costruttore che chiede come parametro un'istanza della View
-    public RegistrationPresenter(RegistrationContract.View registerView){
+    public SignUpPresenter(SignUpContract.View registerView){
         this.mRegisterView = registerView;
-        mRegistrationInteractor = new RegistrationModel(this);
+        mRegistrationInteractor = new SignUpModel(this);
     }
 
     //Metodo invocato dalla View per passare le credenziali al Model per registrare un nuovo utente

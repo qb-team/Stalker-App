@@ -17,8 +17,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.presenter.RegistrationContract;
-import it.qbteam.stalkerapp.presenter.RegistrationPresenter;
+import it.qbteam.stalkerapp.presenter.SignUpContract;
+import it.qbteam.stalkerapp.presenter.SignUpPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
@@ -29,7 +29,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 //Parte visiva (View) di Registrati
-public class Registration extends Fragment implements View.OnClickListener, RegistrationContract.View, OnBackPressListener {
+public class SignUpFragment extends Fragment implements View.OnClickListener, SignUpContract.View, OnBackPressListener {
     public final static String TAG="Registrati_Fragment";
 
 
@@ -37,7 +37,7 @@ public class Registration extends Fragment implements View.OnClickListener, Regi
     Button mRegisterBtn;
     Button cond;
 
-    private RegistrationPresenter mRegisterPresenter;
+    private SignUpPresenter mRegisterPresenter;
     ProgressDialog mPrgressDialog;
     CheckBox mCondizioniDuso;
 
@@ -55,7 +55,7 @@ public class Registration extends Fragment implements View.OnClickListener, Regi
         mCondizioniDuso = view.findViewById(R.id.condizionidusoID);
         mRegisterBtn= view.findViewById(R.id.RegistartiID);
         cond= view.findViewById(R.id.condizioniID);
-        mRegisterPresenter=new RegistrationPresenter(this);
+        mRegisterPresenter=new SignUpPresenter(this);
         mPrgressDialog = new ProgressDialog(getContext());
         mPrgressDialog.setMessage("Stiamo registrando il tuo account sul Database");
         mRegisterBtn.setOnClickListener(this);

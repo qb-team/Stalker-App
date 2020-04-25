@@ -10,12 +10,12 @@ import it.qbteam.stalkerapp.model.data.Organization;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class OrganizationsListPresenter implements OrganizationsListContract.Presenter {
+public class HomePresenter implements HomeContract.Presenter {
 
-    private OrganizationsListContract.View listaOrganizzazioniView;
+    private HomeContract.View listaOrganizzazioniView;
     private Storage storage;
 
-    public OrganizationsListPresenter(OrganizationsListContract.View listaOrganizzazioniView){
+    public HomePresenter(HomeContract.View listaOrganizzazioniView){
         this.listaOrganizzazioniView=listaOrganizzazioniView;
 
         storage=new Storage();

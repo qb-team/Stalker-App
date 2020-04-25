@@ -9,7 +9,7 @@ import it.qbteam.stalkerapp.model.data.Organization;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public interface OrganizationsListContract {
+public interface HomeContract {
 
     interface View {
 

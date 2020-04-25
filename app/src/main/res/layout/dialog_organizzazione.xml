@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nome organizzazione"
+            android:text="Nome standardOrganizationFragment"
             android:id="@+id/dialog_nomeOrganizzazione"
             android:textColor="@color/whiteColor"
             android:textStyle="bold"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:background="@color/whiteColor"
             android:layout_gravity="start"
-            android:text="Aggiungi ai preferiti"/>
+            android:text="Aggiungi a MyStalkers"/>
     </LinearLayout>
 
     <ImageView

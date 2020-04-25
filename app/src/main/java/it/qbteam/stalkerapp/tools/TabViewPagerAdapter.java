@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class TabViewPagerAdapter extends FragmentPagerAdapter {
 
     private final Resources resources;//IN REALTA' NON LO USO, DEVO IMPLEMENTARE
 
@@ -21,7 +21,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
      * @param resources
      * @param fm
      */
-    public ViewPagerAdapter(final Resources resources, FragmentManager fm) {
+    public TabViewPagerAdapter(final Resources resources, FragmentManager fm) {
         super(fm);
         this.resources = resources;
     }
@@ -44,14 +44,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return titolo.get(position);
     }
 
-    /**
-     * On each Fragment instantiation we are saving the reference of that Fragment in a Map
-     * It will help us to retrieve the Fragment by position
-     *
-     * @param container
-     * @param position
-     * @return
-     */
+
     public void addFragment(Fragment fragment, String title){
 
         registeredFragments.add(fragment);

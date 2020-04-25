@@ -1,44 +1,82 @@
 package it.qbteam.stalkerapp;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-//-------------------
-import android.os.Bundle;
-import android.view.View;
-import android.view.Menu;
+import android.view.MenuItem;
+import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import it.qbteam.stalkerapp.R;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import com.google.firebase.auth.FirebaseAuth;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-//-------------------
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import it.qbteam.stalkerapp.ui.view.ActionTab;
-public class HomePageActivity extends AppCompatActivity {
 
-    private ActionTab actionTab;
-    private AppBarConfiguration mAppBarConfiguration;
+import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
+public class HomePageActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, NavigationView.OnNavigationItemSelectedListener {
+
+    /*private static final String TAG = MainActivity.class.getSimpleName();
+    // Used in checking for runtime permissions.
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    // A reference to the service used to get location updates.
+     private LocationUpdatesService mService = null;
+
+    // Tracks the bound state of the service.
+    private boolean mBound = false;
+    */
+    private ActionTabFragment actionTabFragment;
+
+    //private AppBarConfiguration mAppBarConfiguration;
+    private DrawerLayout drawer;
+
+    // Monitors the state of the connection to the service.
+  /*  private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
+            ((mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+         drawer = findViewById(R.id.drawer_layout);
+
+
+         NavigationView navigationView = findViewById(R.id.nav_view);
+      // ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, getActionBar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+       // drawer.addDrawerListener(actionBarDrawerToggle);
+
+        // Check that the user hasn't revoked permissions by going to Settings.
+       /* if (Utils.requestingLocationUpdates(this)) {
+            if (!checkPermissions()) {
+                requestPermissions();
+            }
+        }*/
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.logout)
-                .setDrawerLayout(drawer)
-                .build();
-       /* NavController navController = Navigation.findNavController(this, R.id.container);
+       // mAppBarConfiguration = new AppBarConfiguration.Builder(
+           //     R.id.logout)
+           //     .setDrawerLayout(drawer)
+           //     .build();
+        navigationView.setNavigationItemSelectedListener( this);
+        /*NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);*/
 
@@ -52,17 +90,17 @@ public class HomePageActivity extends AppCompatActivity {
         } else {
             // restoring the previously created fragment
             // and getting the reference
-            actionTab = (ActionTab) getSupportFragmentManager().getFragments().get(0);
+            actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
     }
 
     private void initScreen() {
         // Creating the ViewPager container fragment once
-        actionTab = new ActionTab();
+        actionTabFragment = new ActionTabFragment();
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, actionTab)
+                .replace(R.id.nav_host_fragment, actionTabFragment)
                 .commit();
     }
 
@@ -80,17 +118,21 @@ public class HomePageActivity extends AppCompatActivity {
      * handle the onBackPressed propagated call then this Activity will handle the callback itself
      */
 
-    @Override
+   /* @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
-
-        if (!actionTab.onBackPressed()) {
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }else {
+            super.onBackPressed();
+        }
+        if (!actionTabFragment.onBackPressed()) {
             // container Fragment or its associates couldn't handle the back pressed task
             // delegating the task to super class
             super.onBackPressed();
@@ -101,4 +143,23 @@ public class HomePageActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case  R.id.logout:
+                FirebaseAuth.getInstance().signOut();   //logout
+
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }

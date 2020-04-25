@@ -9,13 +9,13 @@ import it.qbteam.stalkerapp.model.data.Organization;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ListaPreferitiPresenter implements ListaPreferitiContract.Presenter,ListaPreferitiContract.ListaPreferitiListener{
+public class MyStalkersListPresenter implements MyStalkersListContract.Presenter, MyStalkersListContract.ListaPreferitiListener{
 
 
-private ListaPreferitiContract.View listaPreferitiView;
+private MyStalkersListContract.View listaPreferitiView;
 private Storage storage;
 
-public ListaPreferitiPresenter(ListaPreferitiContract.View listaPreferitiView){
+public MyStalkersListPresenter(MyStalkersListContract.View listaPreferitiView){
     this.listaPreferitiView=listaPreferitiView;
 
     storage= new Storage();

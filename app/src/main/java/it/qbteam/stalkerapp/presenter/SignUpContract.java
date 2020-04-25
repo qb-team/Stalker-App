@@ -6,7 +6,7 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseUser;
 
 //Interfaccia del presenter di Registrati che comunica con il Model e la View
-public interface RegistrationContract {
+public interface SignUpContract {
 
     //Interfaccia che fa comunicare la View con il Presenter
     interface View {

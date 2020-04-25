@@ -7,10 +7,9 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="qbteam.stalkerapp.ui.view.HomeFragment"
+        android:name="it.qbteam.stalkerapp.ui.view.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_organizations_list">
-
 
     </fragment>
 

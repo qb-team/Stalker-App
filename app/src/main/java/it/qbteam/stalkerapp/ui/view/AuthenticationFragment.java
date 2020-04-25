@@ -14,8 +14,8 @@ import it.qbteam.stalkerapp.R;
 public class AuthenticationFragment extends Fragment {
     public final static String TAG="Main_Fragment";
 
-    final Fragment Login = new Login();
-    final Fragment Registrati = new Registration();
+    final Fragment Login = new LoginFragment();
+    final Fragment Registrati = new SignUpFragment();
 
     Button registrati;
     Button login;

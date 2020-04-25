@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.R;
-import it.qbteam.stalkerapp.tools.ViewPagerAdapter;
+import it.qbteam.stalkerapp.tools.TabViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class ActionTab extends Fragment {
+public class ActionTabFragment extends Fragment {
     /**
      * TabPagerIndicator
      *
@@ -25,10 +25,11 @@ public class ActionTab extends Fragment {
 
     protected ViewPager viewPager;
 
-    private ViewPagerAdapter adapter;
+    private TabViewPagerAdapter adapter;
 
 
-    public ActionTab() {
+    public ActionTabFragment() {
+
         // Required empty public constructor
     }
 
@@ -50,10 +51,10 @@ public class ActionTab extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // Note that we are passing childFragmentManager, not FragmentManager
-        adapter = new ViewPagerAdapter(getResources(),getChildFragmentManager());
+        adapter = new TabViewPagerAdapter(getResources(),getChildFragmentManager());
         //add fragment
         adapter.addFragment(new HomeFragment(),"");
-        adapter.addFragment(new ListaPreferiti(),"");
+        adapter.addFragment(new MyStalkersListFragment(),"");
        //adapter.addFragment(new Settings(),"");
 
         viewPager.setAdapter(adapter);
@@ -62,10 +63,9 @@ public class ActionTab extends Fragment {
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_stalkericon);
-        //tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_black_24dp);
 
         // Fixed tabs display all tabs concurrently
-       // tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
     }
 
     /**

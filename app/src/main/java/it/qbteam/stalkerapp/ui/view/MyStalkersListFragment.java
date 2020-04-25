@@ -23,23 +23,25 @@ import it.qbteam.stalkerapp.MainActivity;
 import it.qbteam.stalkerapp.model.data.Organization;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-import it.qbteam.stalkerapp.presenter.ListaPreferitiContract;
-import it.qbteam.stalkerapp.presenter.ListaPreferitiPresenter;
+import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
+import it.qbteam.stalkerapp.presenter.MyStalkersListPresenter;
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
+
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ListaPreferiti extends Fragment implements ListaPreferitiContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
+public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
 
-    private ListaPreferitiPresenter listaPreferitiPresenter;
+    private MyStalkersListPresenter myStalkersListPresenter;
     private ArrayList<Organization> listOrganizzazioni;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ArrayList<Organization> listaAggiornata;
-    private static ListaPreferiti instance = null;
+    private static MyStalkersListFragment instance = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class ListaPreferiti extends Fragment implements ListaPreferitiContract.V
         recyclerView=view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        listaPreferitiPresenter=new ListaPreferitiPresenter(this);
+        myStalkersListPresenter =new MyStalkersListPresenter(this);
         listOrganizzazioni=new ArrayList<>();
 
         controllaFile();
@@ -66,14 +68,14 @@ public class ListaPreferiti extends Fragment implements ListaPreferitiContract.V
 
         return view;
     }
-    public static ListaPreferiti getInstance() {
+    public static MyStalkersListFragment getInstance() {
         return instance;
     }
 
     public void controllaFile() {
-        if(listaPreferitiPresenter.controlla(this, "/Preferiti.txt")!=null){
+        if(myStalkersListPresenter.controlla(this, "/Preferiti.txt")!=null){
             System.out.println("non è vuota");
-            listOrganizzazioni=listaPreferitiPresenter.controlla(this,"/Preferiti.txt");
+            listOrganizzazioni= myStalkersListPresenter.controlla(this,"/Preferiti.txt");
             adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
             recyclerView.setAdapter(adapter);
         }
@@ -82,15 +84,15 @@ public class ListaPreferiti extends Fragment implements ListaPreferitiContract.V
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizzazioneClick(int position) {
-        Organizzazione organizzazione=new Organizzazione();
+        StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
 
         Bundle bundle=new Bundle();
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
-        organizzazione.setArguments(bundle);
+        standardOrganizationFragment.setArguments(bundle);
         FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, organizzazione).commit();
+        transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
     }
     @Override
     public void organizzazioneLongClick(int position) {
@@ -122,7 +124,7 @@ public class ListaPreferiti extends Fragment implements ListaPreferitiContract.V
     }
     public void elimina(int position) throws IOException, JSONException {
 
-        listaPreferitiPresenter.rimuovi(listOrganizzazioni.get(position).getNome(),listOrganizzazioni);
+        myStalkersListPresenter.rimuovi(listOrganizzazioni.get(position).getNome(),listOrganizzazioni);
         adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
         recyclerView.setAdapter(adapter);
         aggiornaFileLocale(listOrganizzazioni);
@@ -138,7 +140,7 @@ public class ListaPreferiti extends Fragment implements ListaPreferitiContract.V
     }
 
     public void aggiornaFileLocale(ArrayList<Organization> list) throws IOException, JSONException {
-        listaPreferitiPresenter.updateFile(list,this,"/Preferiti.txt");
+        myStalkersListPresenter.updateFile(list,this,"/Preferiti.txt");
     }
 
     @Override
@@ -165,7 +167,7 @@ public class ListaPreferiti extends Fragment implements ListaPreferitiContract.V
                 try {
                     adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
                     recyclerView.setAdapter(adapter);
-                    listaPreferitiPresenter.updateFile(listOrganizzazioni,this,"/Preferiti.txt");
+                    myStalkersListPresenter.updateFile(listOrganizzazioni,this,"/Preferiti.txt");
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {

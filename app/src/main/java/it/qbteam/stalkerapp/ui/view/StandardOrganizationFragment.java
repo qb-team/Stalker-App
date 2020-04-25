@@ -38,8 +38,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Organizzazione extends Fragment implements OnBackPressListener {
-    private static Organizzazione instance = null;
+public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
+    private static StandardOrganizationFragment instance = null;
     final ArrayList<LatLng> poligono = new ArrayList<>();
     private LocationManager locationManager;
     private LocationListener listener;
@@ -76,7 +76,7 @@ public class Organizzazione extends Fragment implements OnBackPressListener {
             if(bundle1!=null){
 
                 try {
-                   ListaPreferiti.getInstance().aggiungiOrganizzazione(bundle1.getString("nomeOrganizzazione"));
+                   MyStalkersListFragment.getInstance().aggiungiOrganizzazione(bundle1.getString("nomeOrganizzazione"));
                     if(aggiunto==true)
 
                         Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
@@ -207,7 +207,7 @@ public class Organizzazione extends Fragment implements OnBackPressListener {
         }
     }
 
-    public static Organizzazione getInstance() {
+    public static StandardOrganizationFragment getInstance() {
         return instance;
     }
 

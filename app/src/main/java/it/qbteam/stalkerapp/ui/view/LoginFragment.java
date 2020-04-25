@@ -26,7 +26,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
 //Parte visiva (View) di Login
-public class Login extends Fragment implements LoginContract.View, View.OnClickListener, OnBackPressListener {
+public class LoginFragment extends Fragment implements LoginContract.View, View.OnClickListener, OnBackPressListener {
     public final static String TAG="Login_Fragment";
     private LoginPresenter loginPresenter;
     ProgressDialog mProgressDialog;

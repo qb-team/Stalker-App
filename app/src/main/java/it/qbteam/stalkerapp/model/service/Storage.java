@@ -2,7 +2,7 @@ package it.qbteam.stalkerapp.model.service;
 
 import androidx.fragment.app.Fragment;
 import it.qbteam.stalkerapp.model.data.Organization;
-import it.qbteam.stalkerapp.presenter.OrganizationsListContract;
+import it.qbteam.stalkerapp.presenter.HomeContract;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,9 +19,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import it.qbteam.stalkerapp.presenter.ListaPreferitiContract;
+import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 
-public class Storage implements OrganizationsListContract.Model, ListaPreferitiContract.Model {
+public class Storage implements HomeContract.Model, MyStalkersListContract.Model {
 
 
     public Storage(){

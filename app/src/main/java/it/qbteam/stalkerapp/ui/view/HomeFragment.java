@@ -33,17 +33,18 @@ import it.qbteam.stalkerapp.MainActivity;
 import it.qbteam.stalkerapp.model.data.Organization;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-import it.qbteam.stalkerapp.presenter.OrganizationsListContract;
-import it.qbteam.stalkerapp.presenter.OrganizationsListPresenter;
+import it.qbteam.stalkerapp.presenter.HomeContract;
+import it.qbteam.stalkerapp.presenter.HomePresenter;
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HomeFragment extends Fragment implements OrganizationsListContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
+public class HomeFragment extends Fragment implements HomeContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
-    private OrganizationsListPresenter listaOrganizzazioniPresenter;
+    private HomePresenter listaOrganizzazioniPresenter;
     private ArrayList<Organization> listOrganizzazioni;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -68,7 +69,7 @@ public class HomeFragment extends Fragment implements OrganizationsListContract.
         recyclerView=view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        listaOrganizzazioniPresenter=new OrganizationsListPresenter(this);
+        listaOrganizzazioniPresenter=new HomePresenter(this);
         listOrganizzazioni=new ArrayList<>();
 
         aggiornamento.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -137,15 +138,15 @@ public class HomeFragment extends Fragment implements OrganizationsListContract.
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizzazioneClick(int position) {
-        Organizzazione organizzazione=new Organizzazione();
+        StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
 
         Bundle bundle=new Bundle();
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
-        organizzazione.setArguments(bundle);
+        standardOrganizationFragment.setArguments(bundle);
         FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, organizzazione).commit();
+        transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
     }
 
     @Override
@@ -174,7 +175,7 @@ public class HomeFragment extends Fragment implements OrganizationsListContract.
             public void onClick(View v) {
                 boolean aggiunto= false;
                 try {
-                    ListaPreferiti.getInstance().aggiungiOrganizzazione(listOrganizzazioni.get(position).getNome());
+                    MyStalkersListFragment.getInstance().aggiungiOrganizzazione(listOrganizzazioni.get(position).getNome());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

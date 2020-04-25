@@ -92,7 +92,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.ListaPreferitiID, standardOrganizationFragment).commit();
+        transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
     }
     @Override
     public void organizzazioneLongClick(int position) {

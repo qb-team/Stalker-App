@@ -15,6 +15,10 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 public class HomePageActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, NavigationView.OnNavigationItemSelectedListener {
@@ -28,6 +32,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     // Tracks the bound state of the service.
     private boolean mBound = false;
     */
+    private  AppBarConfiguration mAppBarConfiguration;
     private ActionTabFragment actionTabFragment;
 
     //private AppBarConfiguration mAppBarConfiguration;
@@ -55,30 +60,23 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
          drawer = findViewById(R.id.drawer_layout);
-
-
-         NavigationView navigationView = findViewById(R.id.nav_view);
-      // ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, getActionBar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-       // drawer.addDrawerListener(actionBarDrawerToggle);
-
-        // Check that the user hasn't revoked permissions by going to Settings.
-       /* if (Utils.requestingLocationUpdates(this)) {
-            if (!checkPermissions()) {
-                requestPermissions();
-            }
-        }*/
-
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-       // mAppBarConfiguration = new AppBarConfiguration.Builder(
-           //     R.id.logout)
-           //     .setDrawerLayout(drawer)
-           //     .build();
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener( this);
-        /*NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+
+
+
+    // Passing each menu ID as a set of Ids because each
+    // menu should be considered as top level destinations.
+         mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home)
+                .setDrawerLayout(drawer)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);*/
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+
 
         if (savedInstanceState == null) {
 
@@ -118,12 +116,6 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
      * handle the onBackPressed propagated call then this Activity will handle the callback itself
      */
 
-   /* @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -161,5 +153,11 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 }

@@ -84,7 +84,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizzazioneClick(int position) {
-        StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
+       StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
 
         Bundle bundle=new Bundle();
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
@@ -92,7 +92,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
+        transaction.replace(R.id.ListaPreferitiID, standardOrganizationFragment).commit();
     }
     @Override
     public void organizzazioneLongClick(int position) {

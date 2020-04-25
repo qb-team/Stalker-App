@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/white"
-    android:id="@+id/ListaPreferiti">
+    tools:context=".ui.view.MyStalkersListFragment"
+    android:id="@+id/ListaPreferitiID">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

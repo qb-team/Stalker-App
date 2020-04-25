@@ -100,11 +100,11 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         System.out.println("Creata organizzazione");
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
-        /////////////////////////////////////////////////////////////////////////////////////
+
         titolo=view.findViewById(R.id.titleID);
         risultati=view.findViewById(R.id.coordinateID);
         mostra=view.findViewById(R.id.mostraID);
-        ////////////////////////////////////////////////////////////////////////
+
 
         MostraNome();
         checkPermission();

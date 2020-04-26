@@ -73,6 +73,14 @@ public class TrackingStalker extends Service {
     private static final String TAG = TrackingStalker.class.getSimpleName();
 
     /**
+     * Switch per aggiornare il Locationrequest
+     * 0 -> Massima accuretazza
+     * 1 -> Acurattezza bilanciata
+     * 2 -> Bassa accuratezza
+     */
+
+
+    /**
      * The name of the channel for notifications.
      */
     private static final String CHANNEL_ID = "channel_01";
@@ -192,6 +200,40 @@ public class TrackingStalker extends Service {
 //        mLocationRequest.setSmallestDisplacement(2);
     }
 
+    /**
+     * Switch per aggiornare il Locationrequest
+     * 0 -> Massima accuretazza
+     * 1 -> Acurattezza bilanciata
+     * 2 -> Bassa accuratezza
+     */
+    public void switchPriority(int i) {
+        switch (i){
+            case 0:
+                System.out.println("Massima accuretazza");
+                mLocationRequest.setInterval(1000);
+                mLocationRequest.setFastestInterval(10000);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                mLocationRequest.setSmallestDisplacement(2);
+                break;
+            case 1:
+                System.out.println("Acurattezza bilanciata");
+                mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(5000000);
+//                mLocationRequest.setFastestInterval(60000);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                break;
+            case 2:
+                System.out.println("Bassa accuratezza");
+                mLocationRequest.setInterval(500000);
+                mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+                break;
+        }
+
+
+    }
+
+
 
     /** Creazione FusedLocation
      * https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient
@@ -224,6 +266,7 @@ public class TrackingStalker extends Service {
         Utils.setRequestingLocationUpdates(this, true);
         startService(new Intent(getApplicationContext(), TrackingStalker.class));
         try {
+            System.out.println("RequestLocationUpdates è partito ");
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
         } catch (SecurityException unlikely) {  // Se i permessi non sono stati accettati (???)
             Utils.setRequestingLocationUpdates(this, false);

@@ -1,21 +1,14 @@
-package it.qbteam.api;
+package it.qbteam.stalkerapp.model.backend.api;
 
-import it.qbteam.CollectionFormats.*;
+import it.qbteam.stalkerapp.model.backend.CollectionFormats.*;
 
 import retrofit2.Call;
 import retrofit2.http.*;
 
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import okhttp3.MultipartBody;
+import it.qbteam.stalkerapp.model.backend.model.OrganizationAccess;
+import it.qbteam.stalkerapp.model.backend.model.PlaceAccess;
 
-import it.qbteam.model.OrganizationAccess;
-import it.qbteam.model.PlaceAccess;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface AccessApi {
   /**

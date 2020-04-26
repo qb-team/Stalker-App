@@ -11,7 +11,7 @@
  */
 
 
-package it.qbteam;
+package it.qbteam.stalkerapp.model.backend;
 
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-04-22T17:49:39.315+02:00[Europe/Rome]")
 public class StringUtil {

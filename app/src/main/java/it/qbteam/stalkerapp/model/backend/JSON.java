@@ -11,7 +11,7 @@
  */
 
 
-package it.qbteam;
+package it.qbteam.stalkerapp.model.backend;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,13 +22,8 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.JsonElement;
 import io.gsonfire.GsonFireBuilder;
-import io.gsonfire.TypeSelector;
-
-import it.qbteam.model.*;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -38,7 +33,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.HashMap;
 
 public class JSON {
     private Gson gson;

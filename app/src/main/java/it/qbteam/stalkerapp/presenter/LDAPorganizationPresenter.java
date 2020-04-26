@@ -21,6 +21,11 @@ public class LDAPorganizationPresenter implements LDAPorganizationContract.Prese
     }
 
     @Override
+    public StalkerLDAP getLDAP() {
+        return this.stalkerLDAP;
+    }
+
+    @Override
     public void setLDAP(String host, int port, String bindDN, String password) {
         this.stalkerLDAP=new StalkerLDAP(host,  port, bindDN, password);
     }

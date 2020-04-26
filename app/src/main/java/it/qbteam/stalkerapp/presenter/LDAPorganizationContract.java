@@ -4,6 +4,8 @@ import com.unboundid.ldap.sdk.LDAPException;
 
 import java.util.concurrent.ExecutionException;
 
+import it.qbteam.stalkerapp.model.service.StalkerLDAP;
+
 public interface LDAPorganizationContract {
     interface View {
 
@@ -16,6 +18,7 @@ public interface LDAPorganizationContract {
         public void setLDAP(String host, int port, String bindDN, String password);
         public void bind() throws InterruptedException, LDAPException, ExecutionException;
         public void search() throws ExecutionException, InterruptedException;
+        StalkerLDAP getLDAP();
     }
 
     //METODO DEL MODELLO

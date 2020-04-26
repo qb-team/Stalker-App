@@ -25,7 +25,9 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-
+    <string name="connection_to_ldap_failed">Connessione al server LDAP fallita, riprovare più tardi!</string>
+    <string name="ldap_login_failed_check_credentials">Login fallito, verificare di aver inserito le credenziali corrette e riprovare</string>
+    <string name="something_went_wrong">Qualcosa è andato storto, riprovare più tardi!</string>
     <string name="home_second">Home Second</string>
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -8,8 +8,14 @@
             android:id="@+id/logout"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:title="Logout" />
+    </group>
 
-
+<item android:title="Tracciamento">
+    <menu>
+        <item
+            android:id="@+id/nav_item1"
+            android:actionLayout="@layout/switch_tracciamento"
+            android:title="tracciamento" />
         <item
             android:id="@+id/StartTrackingID"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
@@ -18,8 +24,11 @@
             android:id="@+id/StopTrackingID"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:title="Ferma tracciamento" />
+    </menu>
+</item>
 
 
 
-    </group>
+
+
 </menu>

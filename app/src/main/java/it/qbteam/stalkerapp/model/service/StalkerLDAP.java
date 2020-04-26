@@ -1,4 +1,6 @@
 package it.qbteam.stalkerapp.model.service;
+import android.os.AsyncTask;
+
 import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.LDAPException;
@@ -26,7 +28,21 @@ public class StalkerLDAP implements LDAPorganizationContract.Model {
         this.password=password;
 
     }
+    public String getHost(){
+        return this.host;
+    }
+    public int getPort(){
+        return this.port;
+    }
+    public String getBindDN(){
+        return this.bindDN;
+    }
+    public String getPassword(){
+        return this.password;
+    }
     public void performBind() throws LDAPException, ExecutionException, InterruptedException {
+        System.out.println("performBind"+this.host+this.port);
+
         this.ldapConnection=new LDAPConnection(host,port);
         FutureTask<BindResult> bindFutureTask = new FutureTask<>(new Callable<BindResult>() {
             @Override
@@ -41,6 +57,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Model {
 
 
     public void performSearch() throws ExecutionException, InterruptedException {
+        System.out.println("performSearch");
         FutureTask<SearchResultEntry> searchFutureTask = new FutureTask<>(new Callable<SearchResultEntry>() {
             @Override
             public SearchResultEntry call() throws Exception {
@@ -52,6 +69,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Model {
         this.ldapConnection.close();
 
     }
+
 
 
 }

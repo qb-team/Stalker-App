@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.model.service.StalkerLDAP;
 import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
@@ -97,20 +98,25 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         access.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"Hai fatto l'accesso", Toast.LENGTH_SHORT).show();
-
                 userNameLDAP=myDialog.findViewById(R.id.userNameID);
                 passwordLDAP=myDialog.findViewById(R.id.passwordID);
+                StalkerLDAP stalkerLDAP=new StalkerLDAP("10.9.130.113:667",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
                 try {
-                    ldaPorganizationPresenter.setLDAP("ldap.forumsys.com",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
-                    ldaPorganizationPresenter.bind();
-                    ldaPorganizationPresenter.search();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    stalkerLDAP.performBind();
+                    stalkerLDAP.performSearch();
+
+                    //ldaPorganizationPresenter.setLDAP("ldap.forumsys.com",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
+                    //System.out.println(ldaPorganizationPresenter.getLDAP().getHost()+ldaPorganizationPresenter.getLDAP().getPort()+ldaPorganizationPresenter.getLDAP().getBindDN()+ldaPorganizationPresenter.getLDAP().getPassword());
+
+                    //ldaPorganizationPresenter.bind();
+                    //ldaPorganizationPresenter.search();
                 } catch (LDAPException e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
+                    Toast.makeText(getActivity(), R.string.connection_to_ldap_failed, Toast.LENGTH_SHORT).show();
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.ldap_login_failed_check_credentials, Toast.LENGTH_SHORT).show();
+                } catch (InterruptedException e) {
+                    Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 }
                 authentication.setVisibility(View.INVISIBLE);
                 anonimous.setVisibility(View.VISIBLE);

@@ -1,4 +1,4 @@
-package it.qbteam.auth;
+package it.qbteam.stalkerapp.model.backend.auth;
 
 import java.io.IOException;
 

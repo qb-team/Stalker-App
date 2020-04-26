@@ -1,4 +1,4 @@
-package it.qbteam;
+package it.qbteam.stalkerapp.model.backend;
 
 import java.util.Arrays;
 import java.util.List;

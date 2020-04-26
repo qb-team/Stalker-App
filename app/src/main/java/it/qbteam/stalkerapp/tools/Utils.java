@@ -6,6 +6,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.maps.android.PolyUtil;
 
 import java.text.DateFormat;
@@ -85,5 +86,10 @@ public class Utils {
         }
 
         return isInsideString;
+    }
+
+    public static int checkDistance(Location location){
+        int i=1;
+        return i;
     }
 }

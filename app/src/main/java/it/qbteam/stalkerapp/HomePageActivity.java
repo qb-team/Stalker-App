@@ -92,10 +92,15 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
             goToMainActivity();
         }
 
+
+
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
         bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
+
+
+        requestPermissions();
 
 
     }
@@ -181,6 +186,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
+                // Dopo togliere
             case R.id.StartTrackingID:
                 if (!checkPermissions()) {
                     requestPermissions();
@@ -327,11 +333,13 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 //            }
             // Ti dice se sei dentro un organizzazione oppure no
             if (location != null ){
-
                 Toast.makeText(HomePageActivity.this, Utils.isInside(location),Toast.LENGTH_LONG).show();
+
+//                mService.switchPriority(Utils.checkDistance(location));
             }
         }
     }
+
 
 
 

@@ -13,14 +13,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.unboundid.ldap.sdk.LDAPException;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
@@ -29,9 +34,15 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
  */
 public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener{
     private TextView title,description,position;
-    private Button access;
+    private Button authentication;
     private ImageView image;
+    private TextView trackingText;
+    private Switch anonimous;
+    private EditText userNameLDAP, passwordLDAP;
+    private LDAPorganizationPresenter ldaPorganizationPresenter;
     Dialog myDialog;
+
+
     public LDAPorganizationFragment() {
         // Required empty public constructor
     }
@@ -46,9 +57,15 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         title=view.findViewById(R.id.titleID);
         description=view.findViewById(R.id.descriptionID);
         position=view.findViewById(R.id.positionID);
-        access=view.findViewById(R.id.LDAPaccessID);
+        authentication=view.findViewById(R.id.LDAPaccessID);
         image=view.findViewById(R.id.imageID);
-        access.setOnClickListener(this);
+        anonimous=view.findViewById(R.id.switchAnonimousID);
+        anonimous.setVisibility(View.INVISIBLE);
+        trackingText=view.findViewById(R.id.trackingTextID);
+        trackingText.setVisibility(View.INVISIBLE);
+        ldaPorganizationPresenter=new LDAPorganizationPresenter();
+        authentication.setOnClickListener(this);
+
         return view;
 
     }
@@ -81,6 +98,24 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(),"Hai fatto l'accesso", Toast.LENGTH_SHORT).show();
+
+                userNameLDAP=myDialog.findViewById(R.id.userNameID);
+                passwordLDAP=myDialog.findViewById(R.id.passwordID);
+                try {
+                    ldaPorganizationPresenter.setLDAP("ldap.forumsys.com",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
+                    ldaPorganizationPresenter.bind();
+                    ldaPorganizationPresenter.search();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (LDAPException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                authentication.setVisibility(View.INVISIBLE);
+                anonimous.setVisibility(View.VISIBLE);
+                anonimous.setChecked(true);
+                trackingText.setVisibility(View.VISIBLE);
                 myDialog.dismiss();
             }
         });

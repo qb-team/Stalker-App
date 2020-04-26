@@ -1,81 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:background="@color/whiteColor"
-    android:clickable="true"
-    >
-    <TextView
-        android:id="@+id/titleID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TITOLO"
-        android:textAlignment="center"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:gravity="center_horizontal" />
-    <ImageView
-        android:id="@+id/imageID"
-        android:padding="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/torre_archimede"
-        android:layout_gravity="center"
-        />
-    <TextView
+    android:clickable="true">
 
-        android:id="@+id/descriptionID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textColor="@color/blackColor"
-        android:layout_marginTop="20dp"
-        android:textSize="18sp"
-        android:text="Torre archimede è un posto bello dove si studia Informatica e ci sono persone brutte come Tommado Azzalin"
-        android:gravity="center_horizontal" />
-
-
-    <TextView
-        android:id="@+id/positionID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:text="Sei dentro"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal" />
-    <Button
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/LDAPaccessID"
-        android:text="Autenticazione"/>
-    
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/titleID"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:text="Tracciamento autenticato:" />
-
-        <Switch
-            android:id="@+id/switchAB"
-            android:layout_marginTop="60dp"
-            android:layout_width="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_height="wrap_content" />
-
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center_horizontal"
+            android:text="TITOLO"
+            android:textAlignment="center"
+            android:textSize="28sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        >
 
-</LinearLayout>
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/imageID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/torre_archimede" />
+
+            <TextView
+
+                android:id="@+id/descriptionID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="center_horizontal"
+                android:text="Torre archimede è un posto bello dove si studia Informatica e ci sono persone brutte come Tommado Azzalin"
+                android:textAlignment="center"
+                android:textColor="@color/blackColor"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/positionID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:text="Sei dentro"
+                android:textAlignment="center"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/LDAPaccessID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="Autenticazione" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/trackingTextID"
+                    android:text="Tracciamento autenticato:" />
+
+                <Switch
+                    android:id="@+id/switchAnonimousID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
+
+
+
+

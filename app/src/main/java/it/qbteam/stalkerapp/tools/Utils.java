@@ -2,7 +2,7 @@ package it.qbteam.stalkerapp.tools;
 
 import android.content.Context;
 import android.location.Location;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;

@@ -60,7 +60,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/whiteColor"
                 android:text="Annull"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:gravity="center_horizontal" />
 
 
             <Button
@@ -71,7 +72,8 @@
                 android:background="@color/whiteColor"
                 android:text="Access"
                 android:textAlignment="center"
-                />
+                android:gravity="center_horizontal" />
+
 
 
         </LinearLayout>

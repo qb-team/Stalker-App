@@ -9,5 +9,17 @@
             android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:title="Logout" />
 
+
+        <item
+            android:id="@+id/StartTrackingID"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="Inizia tracciamento" />
+        <item
+            android:id="@+id/StopTrackingID"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="Ferma tracciamento" />
+
+
+
     </group>
 </menu>

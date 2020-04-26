@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.qbteam.stalkerapp">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
@@ -25,6 +24,13 @@
         <activity android:name="it.qbteam.stalkerapp.MainActivity">
 
         </activity>
+
+        <!-- Foreground services in Q+ require type. -->
+        <service
+        android:name=".model.Tracking.TrackingStalker"
+        android:enabled="true"
+        android:exported="true"
+        android:foregroundServiceType="location"/>
     </application>
 
 </manifest>

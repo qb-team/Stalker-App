@@ -15,4 +15,5 @@ public class StalkerLDAP {
     private String bindDN;
     private String password;
     private int port;
+
 }

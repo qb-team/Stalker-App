@@ -18,14 +18,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.appcompat.widget.Toolbar;
-
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
@@ -35,10 +32,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
-
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.model.Tracking.TrackingStalker;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
+
 public class HomePageActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -53,7 +50,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 
     // Tracks the bound state of the service.
     private boolean mBound = false;
-
+    static boolean active=false;
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -86,7 +83,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     @Override
     protected void onStart() {
         super.onStart();
-
+        active= true;
         fStore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
 
@@ -179,7 +176,6 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         switch (menuItem.getItemId()){
             case  R.id.logout:
                 FirebaseAuth.getInstance().signOut();   //logout
-
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -308,6 +304,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
             unbindService(mServiceConnection);
             mBound = false;
         }
+
         super.onStop();
     }
     ///////////// FINE INDAGARE //////////////////////
@@ -328,7 +325,8 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 //                        Toast.LENGTH_SHORT).show();
 //            }
             // Ti dice se sei dentro un organizzazione oppure no
-            if (location != null){
+            if (location != null ){
+
                 Toast.makeText(HomePageActivity.this, Utils.isInside(location),Toast.LENGTH_LONG).show();
             }
         }

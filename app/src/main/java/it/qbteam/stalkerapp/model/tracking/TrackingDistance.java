@@ -1,4 +1,4 @@
-package it.qbteam.stalkerapp.model.Tracking;
+package it.qbteam.stalkerapp.model.tracking;
 
 import android.location.Location;
 import android.util.Log;

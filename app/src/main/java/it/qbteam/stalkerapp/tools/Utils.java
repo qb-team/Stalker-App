@@ -2,16 +2,20 @@ package it.qbteam.stalkerapp.tools;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
+
 import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.maps.android.PolyUtil;
+import com.google.maps.android.SphericalUtil;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import it.qbteam.stalkerapp.R;
 
@@ -88,8 +92,6 @@ public class Utils {
         return isInsideString;
     }
 
-    public static int checkDistance(Location location){
-        int i=1;
-        return i;
-    }
+
+
 }

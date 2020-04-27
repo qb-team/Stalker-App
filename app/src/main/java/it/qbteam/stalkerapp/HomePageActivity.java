@@ -33,6 +33,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
+
+import it.qbteam.stalkerapp.model.Tracking.TrackingDistance;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.model.Tracking.TrackingStalker;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
@@ -52,6 +54,8 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     // Tracks the bound state of the service.
     private boolean mBound = false;
     static boolean active=false;
+
+    private Location mlocation;
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -197,6 +201,10 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
             case R.id.StopTrackingID:
                 mService.removeLocationUpdates();
                 break;
+            case R.id.cambianumero:
+                mService.setNumero(TrackingDistance.checkDistance(mlocation));
+                System.out.println(mService.getNUMERO());
+                break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -333,6 +341,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 //            }
             // Ti dice se sei dentro un organizzazione oppure no
             if (location != null ){
+                mlocation=location;
                 Toast.makeText(HomePageActivity.this, Utils.isInside(location),Toast.LENGTH_LONG).show();
 
 //                mService.switchPriority(Utils.checkDistance(location));

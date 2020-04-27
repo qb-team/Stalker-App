@@ -44,6 +44,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import it.qbteam.stalkerapp.HomePageActivity;
@@ -78,7 +79,7 @@ public class TrackingStalker extends Service {
      * 1 -> Acurattezza bilanciata
      * 2 -> Bassa accuratezza
      */
-
+    public int NUMERO = 0;
 
     /**
      * The name of the channel for notifications.
@@ -87,7 +88,7 @@ public class TrackingStalker extends Service {
 
 //    static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
 
-//    static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
+    //    static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
             ".started_from_notification";
 
@@ -159,7 +160,7 @@ public class TrackingStalker extends Service {
             }
         };
 
-        createLocationRequest();    // Istanziazione LocationRequest
+        switchPriority(0);    // Istanziazione LocationRequest
         getLastLocation();          // Istanziazione FusedLocationListener
 
         HandlerThread handlerThread = new HandlerThread("il tag:  " + TAG);
@@ -193,6 +194,7 @@ public class TrackingStalker extends Service {
      *
      */
     private void createLocationRequest() {
+        System.out.println("creato locationrequest");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
@@ -207,30 +209,45 @@ public class TrackingStalker extends Service {
      * 2 -> Bassa accuratezza
      */
     public void switchPriority(int i) {
+        System.out.println("Switch priority avvenuto");
         switch (i){
             case 0:
+                mLocationRequest = new LocationRequest();
                 System.out.println("Massima accuretazza");
-                mLocationRequest.setInterval(1000);
-                mLocationRequest.setFastestInterval(10000);
+                mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+                mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                mLocationRequest.setSmallestDisplacement(2);
+//                mLocationRequest.setSmallestDisplacement(2);
                 break;
             case 1:
-                System.out.println("Acurattezza bilanciata");
                 mLocationRequest = new LocationRequest();
-                mLocationRequest.setInterval(5000000);
-//                mLocationRequest.setFastestInterval(60000);
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                System.out.println("Acurattezza bilanciata");
+                mLocationRequest.setInterval(20000);
+                mLocationRequest.setFastestInterval(10000);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                 break;
             case 2:
+                mLocationRequest = new LocationRequest();
                 System.out.println("Bassa accuratezza");
-                mLocationRequest.setInterval(500000);
-                mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+                mLocationRequest.setInterval(30000);
+                mLocationRequest.setFastestInterval(15000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
                 break;
         }
 
 
+    }
+
+
+    public void setNumero(int i){
+        NUMERO=i;           // --> Questa variabile è inutile per ora, ma potrebbe servire in seguito, in caso togliere
+        removeLocationUpdates();
+        switchPriority(NUMERO);
+        requestLocationUpdates();
+    }
+
+    public int getNUMERO(){
+        return NUMERO;
     }
 
 
@@ -411,6 +428,8 @@ public class TrackingStalker extends Service {
     private void onNewLocation(Location location) {
         Log.i(TAG, "New location: " + location);
 
+        System.out.println("L'intervallo è questo:  " + mLocationRequest.getInterval());
+        System.out.println("L'intervallo veloce è questo:  " + mLocationRequest.getFastestInterval());
         mLocation = location;
 
         // Notify anyone listening for broadcasts about the new location.

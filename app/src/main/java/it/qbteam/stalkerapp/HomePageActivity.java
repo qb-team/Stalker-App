@@ -34,7 +34,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
 import it.qbteam.stalkerapp.tools.Utils;
-import it.qbteam.stalkerapp.model.Tracking.TrackingStalker;
+import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 
 public class HomePageActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, NavigationView.OnNavigationItemSelectedListener {
@@ -143,7 +143,6 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         }
 
 
-
     }
 
 
@@ -187,7 +186,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 startActivity(intent);
                 break;
                 // Dopo togliere
-            case R.id.StartTrackingID:
+            case R.id.nav_switch:
                 if (!checkPermissions()) {
                     requestPermissions();
                 } else {
@@ -262,7 +261,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                mService.requestLocationUpdates();
+               // mService.requestLocationUpdates();
             } else {
                 // Permission denied.
                 Snackbar.make(

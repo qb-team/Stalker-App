@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
@@ -12,10 +13,9 @@
 
 <item android:title="Tracciamento">
     <menu>
-        <item
-            android:id="@+id/nav_item1"
-            android:actionLayout="@layout/switch_tracciamento"
-            android:title="tracciamento" />
+        <item android:id="@+id/nav_switch"
+            app:actionLayout="@layout/switch_tracciamento"
+            android:title="Tracciamento" />
         <item
             android:id="@+id/StartTrackingID"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
@@ -26,7 +26,6 @@
             android:title="Ferma tracciamento" />
     </menu>
 </item>
-
 
 
 

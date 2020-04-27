@@ -1,8 +1,7 @@
 package it.qbteam.stalkerapp.presenter;
+
 import androidx.fragment.app.Fragment;
-
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 

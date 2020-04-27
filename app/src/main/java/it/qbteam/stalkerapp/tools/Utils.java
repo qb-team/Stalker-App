@@ -3,16 +3,13 @@ package it.qbteam.stalkerapp.tools;
 import android.content.Context;
 import android.location.Location;
 import androidx.preference.PreferenceManager;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.maps.android.PolyUtil;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import it.qbteam.stalkerapp.R;
 
 public class Utils {

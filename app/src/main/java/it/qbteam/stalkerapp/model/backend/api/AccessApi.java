@@ -4,10 +4,8 @@ import it.qbteam.stalkerapp.model.backend.CollectionFormats.*;
 
 import retrofit2.Call;
 import retrofit2.http.*;
-
 import it.qbteam.stalkerapp.model.backend.model.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.model.PlaceAccess;
-
 import java.util.List;
 
 public interface AccessApi {

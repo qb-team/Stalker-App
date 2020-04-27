@@ -1,7 +1,6 @@
 package it.qbteam.stalkerapp.presenter;
 
 import androidx.fragment.app.Fragment;
-
 import com.google.firebase.FirebaseException;
 
 public interface LoginContract {
@@ -16,7 +15,6 @@ public interface LoginContract {
     interface Presenter{
         void login(Fragment fragment, String email, String password);
     }
-
     //Interfaccia del Model
     interface Model{
         void performFirebaseLogin(Fragment fragment, String email, String password);

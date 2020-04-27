@@ -1,7 +1,6 @@
 package it.qbteam.stalkerapp.presenter;
 
 import androidx.fragment.app.Fragment;
-
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseUser;
 

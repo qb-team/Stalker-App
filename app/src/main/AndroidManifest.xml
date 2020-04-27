@@ -29,7 +29,7 @@
 
         <!-- Foreground services in Q+ require type. -->
         <service
-        android:name=".model.Tracking.TrackingStalker"
+        android:name=".model.tracking.TrackingStalker"
         android:enabled="true"
         android:exported="true"
         android:foregroundServiceType="location"/>

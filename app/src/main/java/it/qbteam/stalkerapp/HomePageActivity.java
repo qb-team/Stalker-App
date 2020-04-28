@@ -26,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.BuildConfig;
 import com.google.firebase.firestore.FirebaseFirestore;
 import androidx.annotation.NonNull;
@@ -64,6 +65,13 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     static boolean active=false;
     private SwitchCompat switcher;
     private Location mlocation;
+    private FirebaseAuth fAuth;
+    private FirebaseFirestore fStore;
+    private FirebaseUser firebaseUser;
+    private  AppBarConfiguration mAppBarConfiguration;
+    private ActionTabFragment actionTabFragment;
+    private DrawerLayout drawer;
+    private static String userEmail;
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -82,27 +90,15 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     };
 
 
-
-    private  AppBarConfiguration mAppBarConfiguration;
-    private ActionTabFragment actionTabFragment;
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-    //private AppBarConfiguration mAppBarConfiguration;
-    private DrawerLayout drawer;
-
-
-
-
     @Override
     protected void onStart() {
         super.onStart();
         active= true;
-        fStore = FirebaseFirestore.getInstance();
-        fAuth = FirebaseAuth.getInstance();
 
-        if (fAuth.getCurrentUser() == null ) {
+        /*if (fAuth.getCurrentUser() == null ) {
             goToMainActivity();
-        }
+        }*/
+
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
         bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
@@ -110,18 +106,26 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         //requestPermissions();
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+        fStore = FirebaseFirestore.getInstance();
+        fAuth = FirebaseAuth.getInstance();
+
+        if(fAuth.getCurrentUser()!=null){
+            userEmail=fAuth.getCurrentUser().getEmail();
+        }
+        else goToMainActivity();
+
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
-
         ActionBarDrawerToggle actionBarDrawerToggle= new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener( this);
         //setting switch button in drawer menu
@@ -160,10 +164,13 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         else
             switcher.setChecked(false);
 
+
+
+
         //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);
-        TextView userEmail=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
-        userEmail.setText(getIntent().getStringExtra("email"));
+        TextView userEmailText=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
+        userEmailText.setText(userEmail);
 
 
         switcher.setOnClickListener(new View.OnClickListener() {

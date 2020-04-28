@@ -61,16 +61,21 @@ public class StandardOrganizationFragment extends AbstractOrganizationFragment i
         return view;
     }
 
-
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(Menu menu){
 
+
+      
     }
-    @Override
+
+
+
+   @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        menu.clear();
-        inflater.inflate(R.menu.aggiungipreferiti, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.cerca_organizzazione, menu);
+        MenuItem cerca= menu.findItem(R.id.cercaID);
+        cerca.setVisible(false);
     }
 
     @Override

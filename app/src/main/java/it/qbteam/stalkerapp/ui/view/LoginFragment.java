@@ -85,7 +85,6 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
         mProgressDialog.dismiss();
         Toast.makeText(getActivity(), "Login effettuato con successo" , Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), HomePageActivity.class);
-        intent.putExtra("email",mEmail.getText().toString());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

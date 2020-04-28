@@ -44,9 +44,10 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
         instance=this;
-        setHasOptionsMenu(true);
+
     }
     @Nullable
     @Override
@@ -129,13 +130,20 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         myStalkersListPresenter.updateFile(list,this,"/Preferiti.txt");
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu){
+
+
+        MenuItem preferiti= menu.findItem(R.id.preferitiID);
+        if (preferiti!=null)
+            menu.findItem(R.id.preferitiID).setVisible(false);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
+
         inflater.inflate(R.menu.cerca_organizzazione, menu);
         MenuItem item= menu.findItem(R.id.cercaID);
-        menu.removeItem(R.id.preferitiID);
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
     }

@@ -55,9 +55,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     Button scarico;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
         instance=this;
-        setHasOptionsMenu(true);
+
     }
     public static HomeFragment getInstance() {
         return instance;
@@ -68,7 +69,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         System.out.println("Creazione HomeFragment");
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
-
         scarico = view.findViewById(R.id.scaricoID);
         aggiornamento=view.findViewById(R.id.swiperefresh);
         recyclerView=view.findViewById(R.id.recyclerView);
@@ -189,19 +189,21 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public void onPrepareOptionsMenu(Menu menu){
 
-
-
+        MenuItem preferiti= menu.findItem(R.id.preferitiID);
+        if (preferiti!=null)
+           menu.findItem(R.id.preferitiID).setVisible(false);
     }
 
     //Quando viene invocato?
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
+
         inflater.inflate(R.menu.cerca_organizzazione, menu);
-        menu.removeItem(R.id.preferitiID);
+
         MenuItem item= menu.findItem(R.id.cercaID);
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
+
     }
 
 

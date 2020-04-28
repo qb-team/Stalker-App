@@ -66,15 +66,15 @@ public class Utils {
 
     public static String isInside(Location location) {
         //Polygon Torre; --> come si usa Polygon?
-        final ArrayList<LatLng> poligono = new ArrayList<>();
+        final ArrayList<LatLng> polygon = new ArrayList<>();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        poligono.add(new LatLng(45.4139244815,11.8809040336));
-        poligono.add(new LatLng(45.4137732038,11.8812763624));
-        poligono.add(new LatLng(45.4134925404,11.8810503718));
-        poligono.add(new LatLng(45.4136378199,11.8806753327));
+        polygon.add(new LatLng(45.4139244815,11.8809040336));
+        polygon.add(new LatLng(45.4137732038,11.8812763624));
+        polygon.add(new LatLng(45.4134925404,11.8810503718));
+        polygon.add(new LatLng(45.4136378199,11.8806753327));
 
-        for (LatLng point : poligono) {
+        for (LatLng point : polygon) {
             builder.include(point);
         }
         System.out.println("creo builder:  " + builder);
@@ -83,7 +83,7 @@ public class Utils {
         String isInsideString;
 
         boolean isInsideBoundary = builder.build().contains(test); // true se il test point è all'interno del confine
-        boolean isInsideBoolean = PolyUtil.containsLocation(test, poligono, true); // false se il punto è all'esterno del poligono
+        boolean isInsideBoolean = PolyUtil.containsLocation(test, polygon, true); // false se il punto è all'esterno del polygon
 
         if (isInsideBoundary && isInsideBoolean == true )
         {

@@ -12,22 +12,22 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
     private final Resources resources;//IN REALTA' NON LO USO, DEVO IMPLEMENTARE
 
     private final List<Fragment> registeredFragments = new ArrayList();
-    private final List<String> titolo= new ArrayList<>();
+    private final List<String> titol = new ArrayList<>();
     /**
      * Create pager adapter
 
      * @param resources
-     * @param fm
+     * @param fragmentManagerm
      */
-    public TabViewPagerAdapter(final Resources resources, FragmentManager fm) {
-        super(fm);
+    public TabViewPagerAdapter(final Resources resources, FragmentManager fragmentManagerm) {
+        super(fragmentManagerm);
         this.resources = resources;
     }
 
     @Override
     public Fragment getItem(int position) {
 
-      return registeredFragments.get(position);
+        return registeredFragments.get(position);
 
     }
 
@@ -39,14 +39,14 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle( int position) {
 
-        return titolo.get(position);
+        return titol.get(position);
     }
 
 
     public void addFragment(Fragment fragment, String title){
 
         registeredFragments.add(fragment);
-        titolo.add(title);
+        titol.add(title);
     }
    /* @Override
     public Object instantiateItem(ViewGroup container, int position) {

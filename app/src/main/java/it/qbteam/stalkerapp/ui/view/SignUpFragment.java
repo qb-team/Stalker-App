@@ -28,18 +28,18 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
-//Parte visiva (View) di Registrati
+//Parte visiva (View) di SignUp
 public class SignUpFragment extends Fragment implements View.OnClickListener, SignUpContract.View, OnBackPressListener {
     public final static String TAG="Registrati_Fragment";
 
 
-    EditText mEmail, mPassword, mConfPassword;
-    Button mRegisterBtn;
-    Button cond;
+    EditText emailEditText, passwordEditText, confPasswordEditText;
+    Button signUpButton;
+    Button conditionUseButton;
 
-    private SignUpPresenter mRegisterPresenter;
-    ProgressDialog mPrgressDialog;
-    CheckBox mCondizioniDuso;
+    private SignUpPresenter signUpPresenter;
+    ProgressDialog progressDialog;
+    CheckBox conditionUseCheckBox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,51 +49,51 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_registrati,container,false);
-        mEmail = view.findViewById(R.id.EmailID);
-        mPassword = view.findViewById(R.id.PasswordID);
-        mConfPassword = view.findViewById(R.id.ConfPasswordID);
-        mCondizioniDuso = view.findViewById(R.id.condizionidusoID);
-        mRegisterBtn= view.findViewById(R.id.RegistartiID);
-        cond= view.findViewById(R.id.condizioniID);
-        mRegisterPresenter=new SignUpPresenter(this);
-        mPrgressDialog = new ProgressDialog(getContext());
-        mPrgressDialog.setMessage("Stiamo registrando il tuo account sul Database");
-        mRegisterBtn.setOnClickListener(this);
-        cond.setOnClickListener(this);
+        emailEditText = view.findViewById(R.id.emailID);
+        passwordEditText = view.findViewById(R.id.passwordID);
+        confPasswordEditText = view.findViewById(R.id.confPasswordID);
+        conditionUseCheckBox = view.findViewById(R.id.conditionUseID);
+        signUpButton= view.findViewById(R.id.signUpButtonID);
+        conditionUseButton= view.findViewById(R.id.conditionButtonID);
+        signUpPresenter=new SignUpPresenter(this);
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Stiamo registrando il tuo account sul Database");
+        signUpButton.setOnClickListener(this);
+        conditionUseButton.setOnClickListener(this);
         return view;
     }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.RegistartiID:
-                checkRegistrationDetails();
+            case R.id.signUpButtonID:
+                checkSignUpDetails();
                 break;
-            case R.id.condizioniID:
+            case R.id.conditionButtonID:
                 showCondizioniDuso();
                 break;
         }
     }
 
     //Controlla le credenziali inserite dall'utente nella vista della registrazione
-    private void checkRegistrationDetails() {
-        if(!TextUtils.isEmpty(mEmail.getText().toString()) && !TextUtils.isEmpty(mPassword.getText().toString())&&calculate(mPassword.getText().toString())){
-            initRegistrati(mEmail.getText().toString(), mPassword.getText().toString());
+    private void checkSignUpDetails() {
+        if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())&&calculate(passwordEditText.getText().toString())){
+            controllSignUp(emailEditText.getText().toString(), passwordEditText.getText().toString());
         }else{
-            if(!calculate(mPassword.getText().toString()))
+            if(!calculate(passwordEditText.getText().toString()))
                 Toast.makeText(getContext(), "Inserire una password che comprenda: una lettera maiuscola e minuscola,un numero, un carattere speciale e una lunghezza minima di 6 caratteri", Toast.LENGTH_LONG).show();
-            if(TextUtils.isEmpty(mEmail.getText().toString())){
-                mEmail.setError("Inserisci una email valida");
-            }if(TextUtils.isEmpty(mPassword.getText().toString())){
-                mPassword.setError("Inserisci una password valida");
+            if(TextUtils.isEmpty(emailEditText.getText().toString())){
+                emailEditText.setError("Inserisci una email valida");
+            }if(TextUtils.isEmpty(passwordEditText.getText().toString())){
+                passwordEditText.setError("Inserisci una password valida");
             }
         }
     }
 
-    //Controllo se l'utente ha spuntato il checkbox delle condizioni d'uso e avvia il metodo "register" nel Presenter
-    private void initRegistrati(String email, String password) {
-        if(mCondizioniDuso.isChecked()) {
-            mPrgressDialog.show();
-            mRegisterPresenter.register(this, email, password);
+    //Controllo se l'utente ha spuntato il checkbox delle condizioni d'uso e avvia il metodo "signUp" nel Presenter
+    private void controllSignUp(String email, String password) {
+        if(conditionUseCheckBox.isChecked()) {
+            progressDialog.show();
+            signUpPresenter.register(this, email, password);
         }
         else Toast.makeText(getContext(), "Per poterti registrare devi accettare le condizioni d'uso", Toast.LENGTH_SHORT).show();
     }
@@ -114,11 +114,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     //Se la registrazione ha avuto esito positivo l'utente viene notificato e indirizzato nella schermata di HomePage dedicata agli utenti autenticati
     @Override
     public void onRegistrationSuccess(FirebaseUser firebaseUser) {
-        mPrgressDialog.dismiss();
+        progressDialog.dismiss();
 
         Toast.makeText(getActivity(), "Registrazione effettuato con successo" , Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), HomePageActivity.class);
-        intent.putExtra("email",mEmail.getText().toString());
+        intent.putExtra("email",emailEditText.getText().toString());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -126,7 +126,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     //Se la registrazione non ha avuto esito positivo l'utente viene notificato
     @Override
     public void onRegistrationFailure(FirebaseException e) {
-        mPrgressDialog.dismiss();
+        progressDialog.dismiss();
         if (e instanceof FirebaseAuthInvalidCredentialsException) {
             Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();
         }
@@ -136,18 +136,18 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     }
 
     //Controllo che la password sia sicura
-   public boolean calculate(String password) {
+    public boolean calculate(String password) {
         boolean upper = false;
         boolean lower = false;
-        boolean numeri = false;
+        boolean number = false;
         boolean specialChar = false;
         for (int i = 0; i < password.length(); i++) {
             char c = password.charAt(i);
             if (!specialChar  &&  !Character.isLetterOrDigit(c)) {
                 specialChar = true;
             } else {
-                if (!numeri  &&  Character.isDigit(c)) {
-                    numeri = true;
+                if (!number  &&  Character.isDigit(c)) {
+                    number = true;
                 } else {
                     if (!upper || !lower) {
                         if (Character.isUpperCase(c)) {
@@ -164,7 +164,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
             }
         }
 
-        if(upper && lower && numeri && specialChar && password.length()>=6)
+        if(upper && lower && number && specialChar && password.length()>=6)
             return true;
         else
             return false;

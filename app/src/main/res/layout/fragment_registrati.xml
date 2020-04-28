@@ -18,7 +18,7 @@
 
 
     <EditText
-        android:id="@+id/EmailID"
+        android:id="@+id/emailID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
@@ -34,7 +34,7 @@
 
 
     <EditText
-        android:id="@+id/PasswordID"
+        android:id="@+id/passwordID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="270dp"
@@ -47,7 +47,7 @@
         android:textColorHint="#000000" />
 
     <EditText
-        android:id="@+id/ConfPasswordID"
+        android:id="@+id/confPasswordID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="320dp"
@@ -57,29 +57,30 @@
         android:singleLine="true"
         android:inputType="textPassword"
         android:textColorHint="#000000" />
+
     <Button
+        android:id="@+id/conditionButtonID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="370dp"
-        android:id="@+id/condizioniID"
-        android:text="Leggi condinzioni d'uso"
+        android:text="Leggi le condizioni d'uso"
         />
 
     <CheckBox
+        android:id="@+id/conditionUseID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="370dp"
         android:layout_marginLeft="200dp"
-        android:id="@+id/condizionidusoID"
-        android:text="Accetta condizioni d'uso" />
+        android:text="Accetta le condizioni d'uso" />
 
     <Button
-        android:id="@+id/RegistartiID"
+        android:id="@+id/signUpButtonID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Registrati" />
+        android:text="Sign Up" />
 
 
 

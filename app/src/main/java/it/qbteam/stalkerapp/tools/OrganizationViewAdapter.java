@@ -13,54 +13,54 @@ import it.qbteam.stalkerapp.R;
 
 public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationViewAdapter.ViewHolder> {
 
-   private  ArrayList<Organization> listaOrganizzazioni;
-   private Context context;
-   private OnOrganizzazioneListener onOrganizzazioneListener;
+    private  ArrayList<Organization> listOrganization;
+    private Context context;
+    private OrganizationListener OrganizationListener;
+
+    public interface OrganizationListener{
+        void organizationClick(int position);
+        void organizationLongClick(int position);
+    }
 
 
-   public OrganizationViewAdapter(ArrayList<Organization> listaOrganizzazioni, Context context, OnOrganizzazioneListener onOrganizzazioneListener){
-       this.listaOrganizzazioni=listaOrganizzazioni;
-       this.context=context;
-       this.onOrganizzazioneListener=onOrganizzazioneListener;
-   }
+    public OrganizationViewAdapter(ArrayList<Organization> listOrganization, Context context, OrganizationListener OrganizationListener){
+        this.listOrganization=listOrganization;
+        this.context=context;
+        this.OrganizationListener=OrganizationListener;
+    }
 
 
     @NonNull
     @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       View v= LayoutInflater.from(parent.getContext())
-               .inflate(R.layout.organization_row,parent,false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v= LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.organization_row,parent,false);
 
 
-       return new ViewHolder(v,onOrganizzazioneListener);
+        return new ViewHolder(v,OrganizationListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-       Organization organizzazione= listaOrganizzazioni.get(position);
-       holder.textNome.setText(organizzazione.getNome());
+        Organization organization= listOrganization.get(position);
+        holder.textNome.setText(organization.getNome());
     }
 
     @Override
     public int getItemCount() {
-        return listaOrganizzazioni.size();
-    }
-
-    public  interface OnOrganizzazioneListener{
-        void organizzazioneClick(int position);
-        void organizzazioneLongClick(int position);
+        return listOrganization.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public TextView textNome;
 
-        OnOrganizzazioneListener onOrganizzazioneListener;
+        OrganizationListener OrganizationListener;
 
-        public ViewHolder(@NonNull View itemView, OnOrganizzazioneListener onOrganizzazioneListener) {
+        public ViewHolder(@NonNull View itemView, OrganizationListener OrganizationListener) {
             super(itemView);
-            this.onOrganizzazioneListener=onOrganizzazioneListener;
+            this.OrganizationListener=OrganizationListener;
             textNome = itemView.findViewById(R.id.textView2);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -68,12 +68,12 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
         @Override
         public void onClick(View v) {
-            onOrganizzazioneListener.organizzazioneClick(getAdapterPosition());
+            OrganizationListener.organizationClick(getAdapterPosition());
         }
 
         @Override
         public boolean onLongClick(View v) {
-            onOrganizzazioneListener.organizzazioneLongClick(getAdapterPosition());
+            OrganizationListener.organizationLongClick(getAdapterPosition());
             return true;
         }
     }

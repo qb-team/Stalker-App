@@ -38,24 +38,30 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
+public class StandardOrganizationFragment extends AbstractOrganizationFragment implements OnBackPressListener {
     private static StandardOrganizationFragment instance = null;
     final ArrayList<LatLng> poligono = new ArrayList<>();
     private LocationManager locationManager;
     private LocationListener listener;
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
-    ///////////////////////////////////////////////////////
+
     TextView titolo;
     TextView risultati;
     Button mostra;
-    //////////////////////////////////////////////////////
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        instance=this;
+    public View provideYourFragmentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view=inflater.inflate(R.layout.fragment_organization, container, false);
+        titolo=view.findViewById(R.id.titleID);
+        risultati=view.findViewById(R.id.coordinateID);
+        MostraNome();
+        checkPermission();
+        InserisciCoordinate();
+        return view;
     }
+
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
 
@@ -91,26 +97,6 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("Creata organizzazione");
-        View view=inflater.inflate(R.layout.fragment_organization, container, false);
-
-        titolo=view.findViewById(R.id.titleID);
-        risultati=view.findViewById(R.id.coordinateID);
-
-
-
-        MostraNome();
-        checkPermission();
-        InserisciCoordinate();
-
-
-
-        /////////// FINE LISTENER ////////////////
-
-        return view;
-    }
 
     public void posizione() {
         System.out.println("poligono");

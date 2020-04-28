@@ -138,36 +138,18 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizzazioneClick(int position) {
-        String type=listaOrganizzazioniPresenter.getOrganizationType(listOrganizzazioni.get(position));
+
         Bundle bundle=new Bundle();
-
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
-
-        if(type=="LDAP"){
-
-            LDAPorganizationFragment ldaPorganizationFragment=new LDAPorganizationFragment();
-            ldaPorganizationFragment.setArguments(bundle);
-            FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
-            // Store the Fragment in stack
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.HomeFragmentID, ldaPorganizationFragment).commit();
+        Fragment aux=listOrganizzazioni.get(position).getFragment();
+        aux.setArguments(bundle);
+        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.HomeFragmentID, aux).commit();
 
         }
-        else{
-            StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
-            standardOrganizationFragment.setArguments(bundle);
-            FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
-            // Store the Fragment in stack
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
-        }
 
-
-
-
-    }
-
-    @Override
+        @Override
     public void organizzazioneLongClick(int position) {
         myDialog=new Dialog(getContext());
         myDialog.setContentView(R.layout.dialog_organizzazione);

@@ -75,31 +75,15 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //  MyAdapter.OnOrganizzazioneListener DA METTERE ALTRI 2 METODI LDAP E STANDARD COME RISPOSTE
     @Override
     public void organizzazioneClick(int position) {
-        String type=myStalkersListPresenter.getOrganizationType(listOrganizzazioni.get(position));
 
         Bundle bundle=new Bundle();
-
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
+        Fragment aux=listOrganizzazioni.get(position).getFragment();
+        aux.setArguments(bundle);
+        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.HomeFragmentID, aux).commit();
 
-        if(type=="LDAP"){
-            LDAPorganizationFragment ldaPorganizationFragment=new LDAPorganizationFragment();
-            ldaPorganizationFragment.setArguments(bundle);
-            FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
-            // Store the Fragment in stack
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.HomeFragmentID, ldaPorganizationFragment).commit();
-
-        }
-
-
-        else{
-            StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
-            standardOrganizationFragment.setArguments(bundle);
-            FragmentTransaction transaction =getChildFragmentManager().beginTransaction();
-            // Store the Fragment in stack
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
-        }
     }
 
     @Override

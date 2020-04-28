@@ -33,7 +33,7 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener{
+public class LDAPorganizationFragment extends AbstractOrganizationFragment implements OnBackPressListener , View.OnClickListener{
     private TextView title,description,position;
     private Button authentication;
     private ImageView image;
@@ -48,11 +48,8 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View provideYourFragmentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ldap_organization, container, false);
 
         title=view.findViewById(R.id.titleID);
@@ -66,10 +63,9 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         trackingText.setVisibility(View.INVISIBLE);
         ldaPorganizationPresenter=new LDAPorganizationPresenter();
         authentication.setOnClickListener(this);
-
         return view;
-
     }
+
 
     @Override
     public boolean onBackPressed() {
@@ -123,4 +119,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             }
         });
     }
+
+
 }

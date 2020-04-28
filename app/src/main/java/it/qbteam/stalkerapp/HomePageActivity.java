@@ -284,7 +284,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                         @Override
                         public void onClick(View view) {
                             // Request permission
-                            switcher.setChecked(true);
+                            switcher.setChecked(false);
                             ActivityCompat.requestPermissions(HomePageActivity.this,
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                     REQUEST_PERMISSIONS_REQUEST_CODE);
@@ -306,6 +306,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     /**
      * Callback received when a permissions request has been completed.
      */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionResult");
@@ -316,7 +317,8 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-               mService.requestLocationUpdates();
+                switcher.setChecked(true);
+                mService.requestLocationUpdates();
             } else {
                 // Permission denied.
                 Snackbar.make(

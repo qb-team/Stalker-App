@@ -40,6 +40,15 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
         return organization.getType();
     }
 
+    @Override
+    public void findOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException {
+        storage.performFindOrganization(organization, list);
+    }
+
+    @Override
+    public void addOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException {
+        storage.performAddOrganization(organization, list);
+    }
 
     @Override
     public void onSuccessFile(ArrayList<Organization> list) {
@@ -49,5 +58,25 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     @Override
     public void onFailureFile(String message) {
         myStalkersView.onFailureCheckFile(message);
+    }
+
+    @Override
+    public void onSuccessSearch(String message) {
+        myStalkersView.onSuccessSearchOrganization(message);
+    }
+
+    @Override
+    public void onFailureSearch(Organization organization) throws IOException, JSONException {
+        myStalkersView.onFailureSearchOrganization(organization);
+    }
+
+    @Override
+    public void onSuccessAdd(String message) throws IOException, JSONException {
+        myStalkersView.onSuccessAddOrganization(message);
+    }
+
+    @Override
+    public void onFailureAdd(String message) {
+        myStalkersView.onFailureAddOrganization(message);
     }
 }

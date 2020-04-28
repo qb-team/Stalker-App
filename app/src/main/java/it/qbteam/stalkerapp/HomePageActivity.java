@@ -247,7 +247,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 HomeFragment.getInstance().alphabeticalOrder();
                 MyStalkersListFragment.getInstance().alphabeticalOrder();
             case R.id.cambianumero:
-                mService.setNumero(TrackingDistance.checkDistance(mlocation));
+                //mService.setNumero(TrackingDistance.checkDistance(mlocation));
                 System.out.println(mService.getNUMERO());
                 break;
         }

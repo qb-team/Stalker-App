@@ -124,12 +124,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
     //SPLITTARE MEGLIO
     public void aggiungiOrganizzazione(String nameOrg) throws IOException, JSONException {
-        Organization aux=new Organization(nameOrg);
-        listOrganizzazioni.add(aux);
-        adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
-        recyclerView.setAdapter(adapter);
-        aggiornaFileLocale(listOrganizzazioni);
-
+        Organization aux = new Organization(nameOrg);
+        myStalkersListPresenter.findOrganization(aux, listOrganizzazioni);
     }
 
     public void aggiornaFileLocale(ArrayList<Organization> list) throws IOException, JSONException {
@@ -197,6 +193,29 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     @Override
     public void onFailureCheckFile(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSuccessSearchOrganization(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFailureSearchOrganization(Organization organization) throws IOException, JSONException {
+        myStalkersListPresenter.addOrganization(organization, listOrganizzazioni);
+    }
+
+    @Override
+    public void onSuccessAddOrganization(String message) throws IOException, JSONException {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+        adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
+        recyclerView.setAdapter(adapter);
+        aggiornaFileLocale(listOrganizzazioni);
+    }
+
+    @Override
+    public void onFailureAddOrganization(String message) {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
 }

@@ -124,6 +124,28 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
+    public void performFindOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException {
+        boolean trovato = false;
+        for (Iterator<Organization> iterator = list.iterator(); !trovato; iterator.hasNext()) {
+            Organization o = iterator.next();
+            if (o.getNome().equals(organization.getNome())) {
+                trovato = true;
+            }
+        }
+
+        if(trovato)
+            myStalkerListener.onSuccessSearch("L'organizzazione è già presente nella lista MyStalker");
+        else
+            myStalkerListener.onFailureSearch(organization);
+    }
+
+    @Override
+    public void performAddOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException {
+        list.add(organization);
+        myStalkerListener.onSuccessAdd("L'organizzazione è stata aggiunta alla lista MyStalker");
+    }
+
+    @Override
     public void performDownloadFile(final Fragment fragment, final ArrayList<Organization> actualList) throws InterruptedException {
 
         Thread thread = new Thread(new Runnable() {

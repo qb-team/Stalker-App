@@ -15,9 +15,14 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -28,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -54,7 +60,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     // Tracks the bound state of the service.
     private boolean mBound = false;
     static boolean active=false;
-
+    private SwitchCompat switcher;
     private Location mlocation;
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -145,7 +151,27 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 requestPermissions();
             }
         }
+       Menu menu = navigationView.getMenu();
+        MenuItem menuItem = menu.findItem(R.id.nav_switch);
+        View actionView = MenuItemCompat.getActionView(menuItem);
+        switcher = (SwitchCompat) actionView.findViewById(R.id.switcher);
+        switcher.setChecked(true);
+        switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(switcher.isChecked()){
+                    if (!checkPermissions()) {
+                        requestPermissions();
+                    } else {
+                        mService.requestLocationUpdates();
+                    }
+                }
 
+                else{
+                    mService.removeLocationUpdates();
+                }
+            }
+        });
 
     }
 
@@ -190,7 +216,22 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 startActivity(intent);
                 break;
                 // Dopo togliere
-            case R.id.StartTrackingID:
+            case R.id.nav_switch:
+                switcher.setChecked(!switcher.isChecked());
+                if(switcher.isChecked()){
+                    if (!checkPermissions()) {
+                        requestPermissions();
+                    } else {
+                        mService.requestLocationUpdates();
+                    }
+                }
+
+                    else{
+                    mService.removeLocationUpdates();
+                }
+
+                    break;
+            /*case R.id.StartTrackingID:
                 if (!checkPermissions()) {
                     requestPermissions();
                 } else {
@@ -199,7 +240,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 break;
             case R.id.StopTrackingID:
                 mService.removeLocationUpdates();
-                break;
+                break;*/
             case R.id.cambianumero:
                 mService.setNumero(TrackingDistance.checkDistance(mlocation));
                 System.out.println(mService.getNUMERO());

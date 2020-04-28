@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switcher"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         />

@@ -103,12 +103,12 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         if (fAuth.getCurrentUser() == null ) {
             goToMainActivity();
         }
-
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
         bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
-        requestPermissions();
+        //requestPermissions();
+
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +157,8 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         MenuItem menuItem = menu.findItem(R.id.nav_switch);
         View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcher);
-        switcher.setChecked(true);
+
+        switcher.setChecked(false);
         switcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,6 +174,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 }
             }
         });
+
 
     }
 

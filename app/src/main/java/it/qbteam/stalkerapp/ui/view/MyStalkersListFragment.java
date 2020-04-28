@@ -29,14 +29,12 @@ import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 import it.qbteam.stalkerapp.presenter.MyStalkersListPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
-
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
-
 
     private MyStalkersListPresenter myStalkersListPresenter;
     private ArrayList<Organization> listOrganizzazioni;

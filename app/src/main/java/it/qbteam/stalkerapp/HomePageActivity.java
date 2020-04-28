@@ -120,19 +120,19 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         }
         else goToMainActivity();
 
-        Toolbar toolbar=findViewById(R.id.toolbar);
+        Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
-        drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layoutID);
         ActionBarDrawerToggle actionBarDrawerToggle= new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_viewID);
         navigationView.setNavigationItemSelectedListener( this);
         //setting switch button in drawer menu
         Menu menu = navigationView.getMenu();
-        MenuItem menuItem = menu.findItem(R.id.nav_switch);
+        MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         View actionView = MenuItemCompat.getActionView(menuItem);
-        switcher = (SwitchCompat) actionView.findViewById(R.id.switcher);
+        switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
 
 
 
@@ -169,8 +169,8 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 
         //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);
-        TextView userEmailText=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
-        userEmailText.setText(userEmail);
+        TextView emailTextView=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
+        emailTextView.setText(userEmail);
 
 
         switcher.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +200,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, actionTabFragment)
+                .replace(R.id.nav_host_fragmentID, actionTabFragment)
                 .commit();
     }
 
@@ -227,14 +227,14 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
-            case  R.id.logout:
+            case  R.id.logoutID:
                 FirebaseAuth.getInstance().signOut();   //logout
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
                 // Dopo togliere
-            case R.id.nav_switch:
+            case R.id.nav_switchID:
                 switcher.setChecked(!switcher.isChecked());
                 if(switcher.isChecked()){
                     if (!checkPermissions()) {
@@ -250,7 +250,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 
                     break;
 
-            case R.id.ordineAlfabetico:
+            case R.id.alphabeticalOrderID:
                 HomeFragment.getInstance().alphabeticalOrder();
                 MyStalkersListFragment.getInstance().alphabeticalOrder();
             case R.id.cambianumero:
@@ -286,7 +286,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.");
-            Snackbar.make(findViewById(R.id.drawer_layout),"Devi avere i permessi",Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(findViewById(R.id.drawer_layoutID),"Devi avere i permessi",Snackbar.LENGTH_INDEFINITE)
                     .setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -329,7 +329,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
             } else {
                 // Permission denied.
                 Snackbar.make(
-                        findViewById(R.id.drawer_layout),
+                        findViewById(R.id.drawer_layoutID),
                         R.string.permission_denied_explanation,
                         Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.settings, new View.OnClickListener() {

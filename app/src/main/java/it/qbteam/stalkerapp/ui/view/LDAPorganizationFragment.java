@@ -34,11 +34,11 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
  * A simple {@link Fragment} subclass.
  */
 public class LDAPorganizationFragment extends AbstractOrganizationFragment implements OnBackPressListener , View.OnClickListener{
-    private TextView title,description,position;
+    private TextView titleTextView,descriptionTextView,positionTextView;
     private Button authentication;
-    private ImageView image;
-    private TextView trackingText;
-    private Switch anonimous;
+    private ImageView mImageView;
+    private TextView trackingTextView;
+    private Switch anonimousSwitch;
     private EditText userNameLDAP, passwordLDAP;
     private LDAPorganizationPresenter ldaPorganizationPresenter;
     Dialog myDialog;
@@ -52,15 +52,15 @@ public class LDAPorganizationFragment extends AbstractOrganizationFragment imple
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ldap_organization, container, false);
 
-        title=view.findViewById(R.id.titleID);
-        description=view.findViewById(R.id.descriptionID);
-        position=view.findViewById(R.id.positionID);
+        titleTextView=view.findViewById(R.id.titleID);
+        descriptionTextView=view.findViewById(R.id.descriptionID);
+        positionTextView=view.findViewById(R.id.positionID);
         authentication=view.findViewById(R.id.LDAPaccessID);
-        image=view.findViewById(R.id.imageID);
-        anonimous=view.findViewById(R.id.switchAnonimousID);
-        anonimous.setVisibility(View.INVISIBLE);
-        trackingText=view.findViewById(R.id.trackingTextID);
-        trackingText.setVisibility(View.INVISIBLE);
+        mImageView=view.findViewById(R.id.imageID);
+        anonimousSwitch=view.findViewById(R.id.switchAnonimousID);
+        anonimousSwitch.setVisibility(View.INVISIBLE);
+        trackingTextView=view.findViewById(R.id.trackingTextID);
+        trackingTextView.setVisibility(View.INVISIBLE);
         ldaPorganizationPresenter=new LDAPorganizationPresenter();
         authentication.setOnClickListener(this);
         return view;
@@ -112,9 +112,9 @@ public class LDAPorganizationFragment extends AbstractOrganizationFragment imple
                     Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 }
                 authentication.setVisibility(View.INVISIBLE);
-                anonimous.setVisibility(View.VISIBLE);
-                anonimous.setChecked(true);
-                trackingText.setVisibility(View.VISIBLE);
+                anonimousSwitch.setVisibility(View.VISIBLE);
+                anonimousSwitch.setChecked(true);
+                trackingTextView.setVisibility(View.VISIBLE);
                 myDialog.dismiss();
             }
         });

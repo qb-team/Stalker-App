@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/relativeLayoutUserInfo"
+    android:id="@+id/relativeLayoutUserInfoID"
     tools:context=".ui.view.LoginFragment"
     android:background="@android:color/white"
     >
 
     <TextView android:text = "Login" android:layout_width="wrap_content"
         android:layout_height = "wrap_content"
-        android:id = "@+id/textview"
         android:textSize = "35dp"
         android:layout_alignParentTop = "true"
         android:layout_centerHorizontal = "true" />
@@ -21,7 +20,6 @@
         android:id="@+id/Emailtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
         android:layout_centerHorizontal = "true"
         android:inputType="textEmailAddress"
         android:maxLines="1"
@@ -41,7 +39,7 @@
 
 
     <EditText
-        android:id="@+id/passwordtext"
+        android:id="@+id/passwordtextID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal = "true"
@@ -54,7 +52,7 @@
         android:textColorHint="#000000" />
 
     <Button
-        android:id="@+id/buttonAccesso"
+        android:id="@+id/loginButtonID"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

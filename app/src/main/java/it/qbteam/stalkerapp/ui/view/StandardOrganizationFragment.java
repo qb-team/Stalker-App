@@ -87,7 +87,7 @@ public class StandardOrganizationFragment extends AbstractOrganizationFragment i
             if(bundle1!=null){
 
                 try {
-                   MyStalkersListFragment.getInstance().aggiungiOrganizzazione(bundle1.getString("nomeOrganizzazione"));
+                   MyStalkersListFragment.getInstance().addOrganization(bundle1.getString("nomeOrganizzazione"));
 
                 } catch (JSONException e) {
                     e.printStackTrace();

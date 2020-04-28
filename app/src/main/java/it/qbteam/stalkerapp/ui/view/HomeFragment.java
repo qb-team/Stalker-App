@@ -44,15 +44,15 @@ import java.util.Collections;
 
 public class HomeFragment extends Fragment implements HomeContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
-    private HomePresenter listaOrganizzazioniPresenter;
-    private ArrayList<Organization> listOrganizzazioni;
+    private HomePresenter OrganizationListPresenter;
+    private ArrayList<Organization> organizationList;
     private RecyclerView recyclerView;
     private static HomeFragment instance = null;
     private RecyclerView.Adapter adapter;
-    private SwipeRefreshLayout aggiornamento;
+    private SwipeRefreshLayout refresh;
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
-    Button scarico;
+    Button downloadButton;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -69,32 +69,32 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         System.out.println("Creazione HomeFragment");
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
-        scarico = view.findViewById(R.id.scaricoID);
-        aggiornamento=view.findViewById(R.id.swiperefresh);
-        recyclerView=view.findViewById(R.id.recyclerView);
+        downloadButton = view.findViewById(R.id.scaricoID);
+        refresh=view.findViewById(R.id.swiperefreshID);
+        recyclerView=view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        listaOrganizzazioniPresenter=new HomePresenter(this);
-        listOrganizzazioni=new ArrayList<>();
+        OrganizationListPresenter=new HomePresenter(this);
+        organizationList=new ArrayList<>();
 
-        aggiornamento.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 try {
                     downloadList();
-                    aggiornamento.setRefreshing(false);
+                    refresh.setRefreshing(false);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        scarico.setOnClickListener(new View.OnClickListener() {
+        downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     downloadList();
-                    scarico.setVisibility(View.INVISIBLE);
+                    downloadButton.setVisibility(View.INVISIBLE);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         });
 
 
-        controllaFile();
+        checkFile();
 
 
         return view;
@@ -110,43 +110,38 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //Avvia lo scaricamento della lista
     public void downloadList() throws InterruptedException {
-        listaOrganizzazioniPresenter.downloadFile(this,listOrganizzazioni);
-        controllaFile();
+        OrganizationListPresenter.downloadFile(this,organizationList);
+        checkFile();
     }
 
 
-    public void controllaFile()  {
-
-        listaOrganizzazioniPresenter.checkFile(this, "/Organizzazioni.txt");
-
+    public void checkFile()  {
+        OrganizationListPresenter.checkFile(this, "/Organizzazioni.txt");
     }
 
      public void onSuccessCheckFile(ArrayList<Organization> list){
-
-         listOrganizzazioni=list;
-         adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
+         organizationList=list;
+         adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
          recyclerView.setAdapter(adapter);
      }
 
     @Override
     public void onFailureCheckFile(String message) {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-        scarico.setVisibility(View.VISIBLE);
+        downloadButton.setVisibility(View.VISIBLE);
     }
 
 
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizationClick(int position) {
-
         Bundle bundle=new Bundle();
-        bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
-        Fragment aux=listOrganizzazioni.get(position).getFragment();
+        bundle.putString("nomeOrganizzazione",organizationList.get(position).getNome());
+        Fragment aux=organizationList.get(position).getFragment();
         aux.setArguments(bundle);
         FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
         transaction.replace(R.id.HomeFragmentID, aux).commit();
-
         }
 
         @Override
@@ -156,7 +151,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView dialog_nomeOrganizzazione=myDialog.findViewById(R.id.dialog_nomeOrganizzazione);
         TextView dialog_tracciamento=myDialog.findViewById(R.id.dialog_tracciamento);
-        dialog_nomeOrganizzazione.setText(listOrganizzazioni.get(position).getNome());
+        dialog_nomeOrganizzazione.setText(organizationList.get(position).getNome());
         myDialog.show();
         Button moreInfo=myDialog.findViewById(R.id.Button_moreInfo);
         Button aggPref=myDialog.findViewById(R.id.Button_aggiungiPreferiti);
@@ -174,7 +169,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             public void onClick(View v) {
 
                 try {
-                    MyStalkersListFragment.getInstance().aggiungiOrganizzazione(listOrganizzazioni.get(position).getNome());
+                    MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position).getNome());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -210,11 +205,11 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
 
     public void alphabeticalOrder(){
-        Collections.sort(listOrganizzazioni);
+        Collections.sort(organizationList);
         try {
-            adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
+            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
-            listaOrganizzazioniPresenter.updateFile(listOrganizzazioni,this,"/Organizzazioni.txt");
+            OrganizationListPresenter.updateFile(organizationList,this,"/Organizzazioni.txt");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -232,10 +227,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
         ArrayList<Organization> newList= new ArrayList<>();
-        if(listOrganizzazioni.size()!=0){
-            for(int i=0;i<listOrganizzazioni.size();i++){
-                if(listOrganizzazioni.get(i).getNome().toLowerCase().contains(userInput))
-                    newList.add(listOrganizzazioni.get(i));
+        if(organizationList.size()!=0){
+            for(int i=0;i<organizationList.size();i++){
+                if(organizationList.get(i).getNome().toLowerCase().contains(userInput))
+                    newList.add(organizationList.get(i));
             }
             adapter=new OrganizationViewAdapter(newList,this.getContext(),this);
             recyclerView.setAdapter(adapter);

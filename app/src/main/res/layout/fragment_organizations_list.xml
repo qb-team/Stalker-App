@@ -19,12 +19,12 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh"
+        android:id="@+id/swiperefreshID"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/recyclerViewID"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/organization_row"

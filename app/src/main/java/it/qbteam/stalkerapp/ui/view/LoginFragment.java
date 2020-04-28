@@ -30,8 +30,8 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
     public final static String TAG="Login_Fragment";
     private LoginPresenter loginPresenter;
     ProgressDialog mProgressDialog;
-    private EditText mEmail,mPassword;
-    private Button mLoginBtn;
+    private EditText emailEditText,passwordEditText;
+    private Button loginButton;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +41,10 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_login,container,false);
-        mEmail = view.findViewById(R.id.Emailtext);
-        mPassword = view.findViewById(R.id.passwordtext);
-        mLoginBtn = view.findViewById(R.id.buttonAccesso);
-        mLoginBtn.setOnClickListener(this);
+        emailEditText = view.findViewById(R.id.Emailtext);
+        passwordEditText = view.findViewById(R.id.passwordtextID);
+        loginButton = view.findViewById(R.id.loginButtonID);
+        loginButton.setOnClickListener(this);
         loginPresenter = new LoginPresenter(this);
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Aspetta il completamento del login");
@@ -54,7 +54,7 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.buttonAccesso:
+            case R.id.loginButtonID:
                 checkLoginDetails();
                 break;
         }
@@ -62,13 +62,13 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
 
     //Controlla le credenziali inserite dall'utente nella vista del Login
     private void checkLoginDetails() {
-        if(!TextUtils.isEmpty(mEmail.getText().toString()) && !TextUtils.isEmpty(mPassword.getText().toString())){
-            initLogin(mEmail.getText().toString(), mPassword.getText().toString());
+        if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())){
+            initLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
         }else{
-            if(TextUtils.isEmpty(mEmail.getText().toString())){
-                mEmail.setError("Inserisci una email valida");
-            }if(TextUtils.isEmpty(mPassword.getText().toString())){
-                mPassword.setError("Inserisci una password valida");
+            if(TextUtils.isEmpty(emailEditText.getText().toString())){
+                emailEditText.setError("Inserisci una email valida");
+            }if(TextUtils.isEmpty(passwordEditText.getText().toString())){
+                passwordEditText.setError("Inserisci una password valida");
             }
         }
     }

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         fragmentManager=getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, new AuthenticationFragment(), "Main").commit();
+        fragmentManager.beginTransaction().replace(R.id.containerID, new AuthenticationFragment(), "Main").commit();
 
 
     }

@@ -35,11 +35,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
 
     EditText emailEditText, passwordEditText, confPasswordEditText;
     Button signUpButton;
-    Button conditionUseButton;
+    Button termsofUseButton;
 
     private SignUpPresenter signUpPresenter;
     ProgressDialog progressDialog;
-    CheckBox conditionUseCheckBox;
+    CheckBox termsofUseCheckBox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,14 +52,14 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         emailEditText = view.findViewById(R.id.emailID);
         passwordEditText = view.findViewById(R.id.passwordID);
         confPasswordEditText = view.findViewById(R.id.confPasswordID);
-        conditionUseCheckBox = view.findViewById(R.id.conditionUseID);
+        termsofUseCheckBox = view.findViewById(R.id.TermsofUseID);
         signUpButton= view.findViewById(R.id.signUpButtonID);
-        conditionUseButton= view.findViewById(R.id.conditionButtonID);
+        termsofUseButton= view.findViewById(R.id.TermsofUseButtonID);
         signUpPresenter=new SignUpPresenter(this);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Stiamo registrando il tuo account sul Database");
         signUpButton.setOnClickListener(this);
-        conditionUseButton.setOnClickListener(this);
+        termsofUseButton.setOnClickListener(this);
         return view;
     }
     @Override
@@ -68,8 +68,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
             case R.id.signUpButtonID:
                 checkSignUpDetails();
                 break;
-            case R.id.conditionButtonID:
-                showCondizioniDuso();
+            case R.id.TermsofUseButtonID:
+                showTermsofUse();
                 break;
         }
     }
@@ -91,7 +91,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
 
     //Controllo se l'utente ha spuntato il checkbox delle condizioni d'uso e avvia il metodo "signUp" nel Presenter
     private void controllSignUp(String email, String password) {
-        if(conditionUseCheckBox.isChecked()) {
+        if(termsofUseCheckBox.isChecked()) {
             progressDialog.show();
             signUpPresenter.signUp(this, email, password);
         }
@@ -99,7 +99,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     }
 
     //Popup che mostra il contenuto testuale delle condizioni d'uso
-    private void showCondizioniDuso(){
+    private void showTermsofUse(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Condizioni d'uso")
                 .setMessage("I Contenuti dei Servizi sono destinati esclusivamente ad un utilizzo personale. Ogni diverso utilizzo è vietato in ogni forma. L’Istituto detiene tutti i diritti di sfruttamento dei marchi utilizzati in collegamento ai Servizi. I Servizi e i suoi Contenuti sono protetti dalle norme sul diritto d’autore vigente in Italia e dalle norme internazionali sul diritto d’autore. L’Utente non è autorizzato a modificare, pubblicare, trasmettere, condividere, cedere in uso a qualsiasi titolo, riprodurre (oltre i limiti di seguito precisati), tradurre, rielaborare, distribuire, eseguire, dare accesso o sfruttare commercialmente in qualsiasi modo i Servizi e i loro Contenuti (incluso il software) anche solo parzialmente. L’Istituto non assume alcuna responsabilità in relazione a danni o limitazioni d’uso di siti internet, computer o altri strumenti che abbiano utilizzato i Servizi e i loro Contenuti.")

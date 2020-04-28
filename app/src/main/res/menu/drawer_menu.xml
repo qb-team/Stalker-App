@@ -20,12 +20,20 @@
     </menu>
 </item>
 
+    <item android:title="Altro">
+        <menu>
+            <item
+                android:id="@+id/ordineAlfabetico"
+                android:title="Ordinamento alfabetico" />
+            <item
+                android:id="@+id/cambianumero"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Cambia numero" />
 
 
-        <item
-            android:id="@+id/cambianumero"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="Cambia numero" />
+        </menu>
+    </item>
+
 
 
 </menu>

@@ -7,7 +7,7 @@ import it.qbteam.stalkerapp.model.data.Organization;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MyStalkersListPresenter implements MyStalkersListContract.Presenter, MyStalkersListContract.ListaPreferitiListener{
+public class MyStalkersListPresenter implements MyStalkersListContract.Presenter, MyStalkersListContract.MyStalkerListener{
 
 
 private MyStalkersListContract.View listaPreferitiView;
@@ -15,16 +15,13 @@ private Storage storage;
 
 public MyStalkersListPresenter(MyStalkersListContract.View listaPreferitiView){
     this.listaPreferitiView=listaPreferitiView;
-
-    storage= new Storage();
+    storage= new Storage(null,this);
 }
 
     @Override
-    public ArrayList<Organization> controlla(Fragment fragment, String nameFile) {
-       return storage.performControllaLista(fragment, nameFile);
-
-    }
-
+    public void  controlla(Fragment fragment, String nameFile) {
+        storage.performControllaLista(fragment, nameFile);
+     }
 
     @Override
     public ArrayList<Organization> rimuovi(String name, ArrayList<Organization> list) {
@@ -43,7 +40,12 @@ public MyStalkersListPresenter(MyStalkersListContract.View listaPreferitiView){
 
 
     @Override
-    public void onFailure(String message) {
+    public void onSuccessFile(ArrayList<Organization> list) {
+        listaPreferitiView.onSuccessCheckFile(list);
+    }
 
+    @Override
+    public void onFailureFile(String message) {
+        listaPreferitiView.onFailureCheckFile(message);
     }
 }

@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -54,18 +56,12 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         System.out.println("Creazione HomeFragment");
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
-
-
         recyclerView=view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         myStalkersListPresenter =new MyStalkersListPresenter(this);
         listOrganizzazioni=new ArrayList<>();
-
         controllaFile();
-
-
-
         return view;
     }
     public static MyStalkersListFragment getInstance() {
@@ -73,13 +69,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     public void controllaFile() {
-        if(myStalkersListPresenter.controlla(this, "/Preferiti.txt")!=null){
-            System.out.println("non è vuota");
-            listOrganizzazioni= myStalkersListPresenter.controlla(this,"/Preferiti.txt");
-            adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
-            recyclerView.setAdapter(adapter);
-        }
-
+        myStalkersListPresenter.controlla(this, "/Preferiti.txt");
     }
     //  MyAdapter.OnOrganizzazioneListener
     @Override
@@ -156,12 +146,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         myStalkersListPresenter.updateFile(list,this,"/Preferiti.txt");
     }
 
-    @Override
-        public void onPrepareOptionsMenu(Menu menu){
-
-
-
-        }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -172,30 +156,17 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()) {
-            case R.id.ordina:
-                Collections.sort(listOrganizzazioni);
-                try {
-                    adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
-                    recyclerView.setAdapter(adapter);
-                    myStalkersListPresenter.updateFile(listOrganizzazioni,this,"/Preferiti.txt");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return true;
-
-            case R.id.preferitiID:
-                return false;
-
-
-            default:
-                break;
+    public void alphabeticalOrder(){
+        Collections.sort(listOrganizzazioni);
+        try {
+            adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
+            myStalkersListPresenter.updateFile(listOrganizzazioni,this,"/Organizzazioni.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return false;
     }
 
     // SearchView.OnQueryTextListener
@@ -223,10 +194,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
 
 
-    @Override
-    public void onLoadListFailure(String message) {
 
-    }
 
     @Override
     public boolean onBackPressed() {
@@ -234,6 +202,15 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
 
+    @Override
+    public void onSuccessCheckFile(ArrayList<Organization> list) {
+        listOrganizzazioni=list;
+        adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
+        recyclerView.setAdapter(adapter);
+    }
 
-
+    @Override
+    public void onFailureCheckFile(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
 }

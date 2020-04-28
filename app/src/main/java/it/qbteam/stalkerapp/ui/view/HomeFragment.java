@@ -47,16 +47,21 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private HomePresenter listaOrganizzazioniPresenter;
     private ArrayList<Organization> listOrganizzazioni;
     private RecyclerView recyclerView;
+    private static HomeFragment instance = null;
     private RecyclerView.Adapter adapter;
     private SwipeRefreshLayout aggiornamento;
+    public final static String TAG="Home_Fragment";
     Dialog myDialog;
     Button scarico;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance=this;
         setHasOptionsMenu(true);
     }
-
+    public static HomeFragment getInstance() {
+        return instance;
+    }
 
     @Nullable
     @Override
@@ -97,11 +102,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         });
 
 
-        try {
-            controllaFile();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        controllaFile();
 
 
         return view;
@@ -114,25 +115,23 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
 
 
-    public void controllaFile() throws InterruptedException {
-        if(listaOrganizzazioniPresenter.controlla(this, "/Organizzazioni.txt")!=null){
-            System.out.println("non è vuota");
-            listOrganizzazioni=listaOrganizzazioniPresenter.controlla(this,"/Organizzazioni.txt" );
-            adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
-            recyclerView.setAdapter(adapter);
-        }
-        else{
-            scarico.setVisibility(View.VISIBLE);
-            System.out.println("è vuota");
-        }
-    }
+    public void controllaFile()  {
 
-    // ListaOrganizzazioniContract.View
+        listaOrganizzazioniPresenter.controlla(this, "/Organizzazioni.txt");
+
+    }
+     public void onSuccessCheckFile(ArrayList<Organization> list){
+
+         listOrganizzazioni=list;
+         adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
+         recyclerView.setAdapter(adapter);
+     }
+
     @Override
-    public void onLoadListFailure(String message) {
+    public void onFailureCheckFile(String message) {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+        scarico.setVisibility(View.VISIBLE);
     }
-
 
 
     //  MyAdapter.OnOrganizzazioneListener
@@ -224,27 +223,22 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         MenuItem item= menu.findItem(R.id.cercaID);
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
-
-
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id= item.getItemId();
-        if(id==R.id.ordina){
-            Collections.sort(listOrganizzazioni);
-            try {
-                adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
-                recyclerView.setAdapter(adapter);
-                listaOrganizzazioniPresenter.updateFile(listOrganizzazioni,this,"/Organizzazioni.txt");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+
+
+
+    public void alphabeticalOrder(){
+        Collections.sort(listOrganizzazioni);
+        try {
+            adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
+            listaOrganizzazioniPresenter.updateFile(listOrganizzazioni,this,"/Organizzazioni.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-
-        return super.onOptionsItemSelected(item);
     }
     // SearchView.OnQueryTextListener
     @Override

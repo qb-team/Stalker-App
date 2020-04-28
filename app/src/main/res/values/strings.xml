@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StalkerApp</string>
+    <string name="app_name">Stalker</string>
 
     <string name="launch_activity">Launch activity</string>
     <string name="location_unknown">Location unknown</string>

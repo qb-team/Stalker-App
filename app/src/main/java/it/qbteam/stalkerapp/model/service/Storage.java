@@ -23,18 +23,21 @@ import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 
 public class Storage implements HomeContract.Model, MyStalkersListContract.Model {
 
-
-    public Storage(){
-
+    HomeContract.HomeListener homeListener;
+    MyStalkersListContract.MyStalkerListener myStalkerListener;
+    public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener){
+         this.homeListener=homeListener;
+         this.myStalkerListener=myStalkerListener;
     }
 
     @Override
-    public ArrayList<Organization> performControllaLista(Fragment fragment, String nameFile) {
+    public void performControllaLista(Fragment fragment, String nameFile) {
         //CONTROLLO ESISTENZA DEL FILE
         ArrayList<Organization> aux = new ArrayList<>();
         File organizzazioniFile = new File(fragment.getContext().getFilesDir()+nameFile);
         if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){
-            return null;
+            homeListener.onFailureFile("Local file empty");
+            return;
         }
         else {
             try {
@@ -62,9 +65,12 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
             } catch (IOException e) {
                 e.printStackTrace();
             }
+             if(nameFile=="/Organizzazioni.txt")
+                 homeListener.onSuccessFile(aux);
+             else{
+                 myStalkerListener.onSuccessFile(aux);
+             }
 
-
-            return aux;
         }
     }
 

@@ -46,6 +46,8 @@ import it.qbteam.stalkerapp.presenter.HomeContract;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
+import it.qbteam.stalkerapp.ui.view.HomeFragment;
+import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
 public class HomePageActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -239,7 +241,10 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 }
 
                     break;
-          
+
+            case R.id.ordineAlfabetico:
+                HomeFragment.getInstance().alphabeticalOrder();
+                MyStalkersListFragment.getInstance().alphabeticalOrder();
             case R.id.cambianumero:
                 mService.setNumero(TrackingDistance.checkDistance(mlocation));
                 System.out.println(mService.getNUMERO());

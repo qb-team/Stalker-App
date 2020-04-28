@@ -8,7 +8,7 @@ import it.qbteam.stalkerapp.model.data.Organization;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class HomePresenter implements HomeContract.Presenter {
+public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeListener {
 
     private HomeContract.View listaOrganizzazioniView;
     private Storage storage;
@@ -16,11 +16,11 @@ public class HomePresenter implements HomeContract.Presenter {
     public HomePresenter(HomeContract.View listaOrganizzazioniView){
         this.listaOrganizzazioniView=listaOrganizzazioniView;
 
-        storage=new Storage();
+        storage=new Storage(this,null);
     }
     @Override
-    public ArrayList<Organization> controlla(Fragment fragment, String nameFile) {
-        return storage.performControllaLista(fragment, nameFile);
+    public void controlla(Fragment fragment, String nameFile) {
+        storage.performControllaLista(fragment, nameFile);
     }
 
     @Override
@@ -38,10 +38,15 @@ public class HomePresenter implements HomeContract.Presenter {
         return organization.getType();
     }
 
+    @Override
+    public void onSuccessFile(ArrayList<Organization> list) {
+        listaOrganizzazioniView.onSuccessCheckFile(list);
+    }
+
+    @Override
+    public void onFailureFile(String message) {
+        listaOrganizzazioniView.onFailureCheckFile(message);
+    }
 
 
-   /* @Override
-    public void onFailure(String message) {
-        listaOrganizzazioniView.onLoadListFailure(message);
-    }*/
 }

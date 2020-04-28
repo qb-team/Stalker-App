@@ -10,13 +10,14 @@ public interface HomeContract {
 
     interface View {
 
-        void onLoadListFailure(String message);
+        void onSuccessCheckFile(ArrayList<Organization> list);
+        void onFailureCheckFile(String message);
 
     }
 
     //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
     interface Presenter {
-        ArrayList<Organization> controlla(Fragment fragment, String nameFile);
+        void controlla(Fragment fragment, String nameFile);
         void scarica(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
         void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
@@ -24,13 +25,14 @@ public interface HomeContract {
 
     //METODO DEL MODELLO
     interface Model {
-        ArrayList<Organization>  performControllaLista(Fragment fragment, String nameFile);
+        void performControllaLista(Fragment fragment, String nameFile);
         void performScaricaLista(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
         void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
     }
 
-    interface ListaOrganizzazioniListener {
+    interface HomeListener {
 
-        void onFailure(String message);
+        void onSuccessFile(ArrayList<Organization> list);
+        void onFailureFile(String message);
     }
 }

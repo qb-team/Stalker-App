@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -41,6 +42,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import it.qbteam.stalkerapp.model.tracking.TrackingDistance;
+import it.qbteam.stalkerapp.presenter.HomeContract;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
@@ -151,7 +153,13 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 requestPermissions();
             }
         }
-       Menu menu = navigationView.getMenu();
+        //setting user email in drawer menu
+        View headerView= navigationView.getHeaderView(0);
+        TextView userEmail=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
+        userEmail.setText(getIntent().getStringExtra("email"));
+
+        //setting switch button in drawer menu
+        Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switch);
         View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcher);

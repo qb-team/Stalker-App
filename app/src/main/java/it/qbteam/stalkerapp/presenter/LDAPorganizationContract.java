@@ -26,7 +26,7 @@ public interface LDAPorganizationContract {
 
     }
 
-    interface ListaOrganizzazioniListener {
+    interface OrganizationListListener {
 
         void onFailure(String message);
     }

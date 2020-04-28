@@ -7,31 +7,31 @@ import com.google.firebase.auth.FirebaseUser;
 
 //Presenter di Registrati
 public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract.onRegistrationListener {
-    private SignUpContract.View mRegisterView;
-    private SignUpModel mRegistrationInteractor;
+    private SignUpContract.View mSignUpView;
+    private SignUpModel mSignUpInteractor;
 
     //Costruttore che chiede come parametro un'istanza della View
-    public SignUpPresenter(SignUpContract.View registerView){
-        this.mRegisterView = registerView;
-        mRegistrationInteractor = new SignUpModel(this);
+    public SignUpPresenter(SignUpContract.View signUpView){
+        this.mSignUpView = signUpView;
+        mSignUpInteractor = new SignUpModel(this);
     }
 
     //Metodo invocato dalla View per passare le credenziali al Model per registrare un nuovo utente
     @Override
-    public void register(Fragment fragment, String email, String password) {
-        mRegistrationInteractor.performFirebaseRegistration(fragment,email,password);
+    public void signUp(Fragment fragment, String email, String password) {
+        mSignUpInteractor.performFirebaseRegistration(fragment,email,password);
     }
 
     //Metodo invocato nel Model tramite il Contract e chiama il metodo onRegistrationSuccess nella View
     @Override
     public void onSuccess(FirebaseUser firebaseUser) {
-        mRegisterView.onRegistrationSuccess(firebaseUser);
+        mSignUpView.onSignUpSuccess(firebaseUser);
     }
 
     //Metodo invocato nel Model tramite il Contract e chiama il metodo onRegistrationFailure nella View
     @Override
     public void onFailure(FirebaseException e) {
-        mRegisterView.onRegistrationFailure(e);
+        mSignUpView.onSignUpFailure(e);
 
     }
 }

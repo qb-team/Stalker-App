@@ -36,8 +36,8 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
         //CONTROLLO ESISTENZA DEL FILE
         ArrayList<Organization> aux = new ArrayList<>();
-        File organizzazioniFile = new File(fragment.getContext().getFilesDir()+nameFile);
-        if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){
+        File organizationFile = new File(fragment.getContext().getFilesDir()+nameFile);
+        if(organizationFile.length()==0 || !organizationFile.exists()){
             if(nameFile=="/Organizzazioni.txt")
                 homeListener.onFailureFile("Local file empty");
             else{
@@ -48,10 +48,10 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         }
         else {
             try {
-                System.out.println("OrganizzazioniFile:  " + organizzazioniFile);
-                FileInputStream fin=new FileInputStream(organizzazioniFile);
+                System.out.println("organizationFile:  " + organizationFile);
+                FileInputStream fin=new FileInputStream(organizationFile);
                 System.out.println("fin:  " + fin);
-                byte[] buffer= new byte[(int)organizzazioniFile.length()];
+                byte[] buffer= new byte[(int)organizationFile.length()];
                 System.out.println("buffer:  " + buffer);
                 new DataInputStream(fin).readFully(buffer);
                 fin.close();
@@ -60,12 +60,12 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                 System.out.println("jsonObject:  " + jsonObject);
                 JSONArray jsonArray = (JSONArray) jsonObject.get("listaOrganizzazioni");
                 for(int i=0;i<jsonArray.length();i++){
-                    JSONObject organizzazione= jsonArray.getJSONObject(i);
+                    JSONObject organization= jsonArray.getJSONObject(i);
 
-                    String nomeOrganizzazione= organizzazione.getString("nome");
-                    Organization organizzazione1=new Organization(nomeOrganizzazione);
-                    System.out.println("organizzazione1:  " + organizzazione1);
-                    aux.add(organizzazione1);
+                    String organizationName= organization.getString("nome");
+                    Organization organization1=new Organization(organizationName);
+                    System.out.println("organization1:  " + organization1);
+                    aux.add(organization1);
                 }
             } catch (JSONException | FileNotFoundException e) {
                 e.printStackTrace();
@@ -82,7 +82,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public ArrayList<Organization> performRimuovi(String name, ArrayList<Organization>list) {
+    public ArrayList<Organization> performRemove(String name, ArrayList<Organization>list) {
 
         for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext(); ) {
             Organization o = iterator.next();
@@ -96,7 +96,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
     @Override
     public void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile ) throws JSONException, IOException {
-
         JSONArray ja;
         JSONObject jo,mainObj;
         //CONVERTO LA LISTA DINAMICA IN UN NUOVO ARRAY
@@ -125,7 +124,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public void performDownloadFile(final Fragment fragment, final ArrayList<Organization> listaAttuale) throws InterruptedException {
+    public void performDownloadFile(final Fragment fragment, final ArrayList<Organization> actualList) throws InterruptedException {
 
         Thread thread = new Thread(new Runnable() {
 

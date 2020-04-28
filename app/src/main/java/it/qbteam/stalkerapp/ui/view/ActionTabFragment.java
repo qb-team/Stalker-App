@@ -40,8 +40,8 @@ public class ActionTabFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_action_tab, container, false);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tab);
-        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabID);
+        viewPager = (ViewPager) view.findViewById(R.id.viewpagerID);
         //setHasOptionsMenu(true);
         return view;
     }

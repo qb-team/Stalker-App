@@ -26,8 +26,8 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
      }
 
     @Override
-    public ArrayList<Organization> rimuovi(String name, ArrayList<Organization> list) {
-        return storage.performRimuovi(name,list);
+    public ArrayList<Organization> remove(String name, ArrayList<Organization> list) {
+        return storage.performRemove(name,list);
     }
 
     @Override

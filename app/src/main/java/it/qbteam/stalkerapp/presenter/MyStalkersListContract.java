@@ -18,7 +18,7 @@ public interface MyStalkersListContract {
     //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
     interface Presenter {
         void checkFile(Fragment fragment, String nameFile);
-        ArrayList<Organization> rimuovi(String name, ArrayList<Organization> list);
+        ArrayList<Organization> remove(String name, ArrayList<Organization> list);
         void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
     }
@@ -26,7 +26,7 @@ public interface MyStalkersListContract {
     //METODO DEL MODELLO
     interface Model {
         void performCheckFile(Fragment fragment, String nameFile);
-        ArrayList<Organization> performRimuovi(String name, ArrayList<Organization> list);
+        ArrayList<Organization> performRemove(String name, ArrayList<Organization> list);
         void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
     }
 

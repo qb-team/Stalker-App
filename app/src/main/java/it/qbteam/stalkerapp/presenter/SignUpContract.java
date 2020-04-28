@@ -9,13 +9,13 @@ public interface SignUpContract {
 
     //Interfaccia che fa comunicare la View con il Presenter
     interface View {
-        void onRegistrationSuccess(FirebaseUser firebaseUser);
-        void onRegistrationFailure(FirebaseException e);
+        void onSignUpSuccess(FirebaseUser firebaseUser);
+        void onSignUpFailure(FirebaseException e);
     }
 
     //Interfaccia del Presenter
     interface Presenter {
-        void register(Fragment fragment, String email, String password);
+        void signUp(Fragment fragment, String email, String password);
     }
 
     //Interfaccia del Model

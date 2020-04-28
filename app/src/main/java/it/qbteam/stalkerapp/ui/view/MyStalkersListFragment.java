@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
+public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
     private MyStalkersListPresenter myStalkersListPresenter;
     private ArrayList<Organization> listOrganizzazioni;
@@ -72,7 +72,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //  MyAdapter.OnOrganizzazioneListener DA METTERE ALTRI 2 METODI LDAP E STANDARD COME RISPOSTE
     @Override
-    public void organizzazioneClick(int position) {
+    public void organizationClick(int position) {
 
         Bundle bundle=new Bundle();
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
@@ -85,7 +85,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     @Override
-    public void organizzazioneLongClick(int position) {
+    public void organizationLongClick(int position) {
         AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())
                 // set message, title, and icon
                 .setTitle("Elimina organizzazione")
@@ -94,7 +94,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         try {
-                            elimina(position);
+                            removeorganization(position);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (JSONException e) {
@@ -114,9 +114,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //DA AGGIUNGERE 2 METODI COME RISPOSTA
-    public void elimina(int position) throws IOException, JSONException {
+    public void removeorganization(int position) throws IOException, JSONException {
 
-        myStalkersListPresenter.rimuovi(listOrganizzazioni.get(position).getNome(),listOrganizzazioni);
+        myStalkersListPresenter.remove(listOrganizzazioni.get(position).getNome(),listOrganizzazioni);
         adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
         recyclerView.setAdapter(adapter);
         aggiornaFileLocale(listOrganizzazioni);

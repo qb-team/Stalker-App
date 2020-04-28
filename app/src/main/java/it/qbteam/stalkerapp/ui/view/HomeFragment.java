@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HomeFragment extends Fragment implements HomeContract.View, OrganizationViewAdapter.OnOrganizzazioneListener, SearchView.OnQueryTextListener, OnBackPressListener {
+public class HomeFragment extends Fragment implements HomeContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
     private HomePresenter listaOrganizzazioniPresenter;
     private ArrayList<Organization> listOrganizzazioni;
@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //  MyAdapter.OnOrganizzazioneListener
     @Override
-    public void organizzazioneClick(int position) {
+    public void organizationClick(int position) {
 
         Bundle bundle=new Bundle();
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         }
 
         @Override
-    public void organizzazioneLongClick(int position) {
+    public void organizationLongClick(int position) {
         myDialog=new Dialog(getContext());
         myDialog.setContentView(R.layout.dialog_organizzazione);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -165,7 +165,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             @Override
             public void onClick(View v) {
 
-                organizzazioneClick(position);
+                organizationClick(position);
                 myDialog.dismiss();
             }
         });

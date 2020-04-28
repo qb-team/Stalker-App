@@ -20,7 +20,7 @@ public interface HomeContract {
     interface Presenter {
 
         void checkFile(Fragment fragment, String nameFile);
-        void downloadFile(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
+        void downloadFile(Fragment fragment, ArrayList<Organization> actualList) throws InterruptedException;
         void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
 
@@ -30,7 +30,7 @@ public interface HomeContract {
     interface Model {
 
         void performCheckFile(Fragment fragment, String nameFile);
-        void performDownloadFile(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
+        void performDownloadFile(Fragment fragment, ArrayList<Organization> actualList) throws InterruptedException;
         void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
 
     }

@@ -10,11 +10,11 @@ import java.util.ArrayList;
 
 public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeListener {
 
-    private HomeContract.View listaOrganizzazioniView;
+    private HomeContract.View OrganizationListView;
     private Storage storage;
 
-    public HomePresenter(HomeContract.View listaOrganizzazioniView){
-        this.listaOrganizzazioniView=listaOrganizzazioniView;
+    public HomePresenter(HomeContract.View OrganizationListView){
+        this.OrganizationListView=OrganizationListView;
 
         storage=new Storage(this,null);
     }
@@ -24,8 +24,8 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     }
 
     @Override
-    public void downloadFile( Fragment fragment,  ArrayList<Organization> listaAttuale) throws InterruptedException {
-        storage.performDownloadFile(fragment,listaAttuale);
+    public void downloadFile( Fragment fragment,  ArrayList<Organization> actualList) throws InterruptedException {
+        storage.performDownloadFile(fragment,actualList);
     }
 
     @Override
@@ -40,12 +40,12 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     @Override
     public void onSuccessFile(ArrayList<Organization> list) {
-        listaOrganizzazioniView.onSuccessCheckFile(list);
+        OrganizationListView.onSuccessCheckFile(list);
     }
 
     @Override
     public void onFailureFile(String message) {
-        listaOrganizzazioniView.onFailureCheckFile(message);
+        OrganizationListView.onFailureCheckFile(message);
     }
 
 

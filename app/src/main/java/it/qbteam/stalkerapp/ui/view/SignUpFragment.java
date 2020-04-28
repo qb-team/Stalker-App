@@ -93,7 +93,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     private void controllSignUp(String email, String password) {
         if(conditionUseCheckBox.isChecked()) {
             progressDialog.show();
-            signUpPresenter.register(this, email, password);
+            signUpPresenter.signUp(this, email, password);
         }
         else Toast.makeText(getContext(), "Per poterti registrare devi accettare le condizioni d'uso", Toast.LENGTH_SHORT).show();
     }
@@ -113,7 +113,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
 
     //Se la registrazione ha avuto esito positivo l'utente viene notificato e indirizzato nella schermata di HomePage dedicata agli utenti autenticati
     @Override
-    public void onRegistrationSuccess(FirebaseUser firebaseUser) {
+    public void onSignUpSuccess(FirebaseUser firebaseUser) {
         progressDialog.dismiss();
 
         Toast.makeText(getActivity(), "Registrazione effettuato con successo" , Toast.LENGTH_SHORT).show();
@@ -125,7 +125,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
 
     //Se la registrazione non ha avuto esito positivo l'utente viene notificato
     @Override
-    public void onRegistrationFailure(FirebaseException e) {
+    public void onSignUpFailure(FirebaseException e) {
         progressDialog.dismiss();
         if (e instanceof FirebaseAuthInvalidCredentialsException) {
             Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();

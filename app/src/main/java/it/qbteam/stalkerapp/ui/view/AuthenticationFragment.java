@@ -14,12 +14,11 @@ import it.qbteam.stalkerapp.R;
 public class AuthenticationFragment extends Fragment {
     public final static String TAG="Main_Fragment";
 
-    final Fragment Login = new LoginFragment();
-    final Fragment Registrati = new SignUpFragment();
+    final Fragment loginFragment = new LoginFragment();
+    final Fragment signUpFragment = new SignUpFragment();
 
-    Button registrati;
-    Button login;
-    TextView t;
+    Button signUpButton;
+    Button loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,24 +27,23 @@ public class AuthenticationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        MainActivity.fragmentManager.beginTransaction().add(R.id.container, Login).hide(Login).commit();
-        MainActivity.fragmentManager.beginTransaction().add(R.id.container, Registrati).hide(Registrati).commit();
+        MainActivity.fragmentManager.beginTransaction().add(R.id.container, loginFragment).hide(loginFragment).commit();
+        MainActivity.fragmentManager.beginTransaction().add(R.id.container, signUpFragment).hide(signUpFragment).commit();
         View view = inflater.inflate(R.layout.fragment_authentication,container,false);
-        registrati = view.findViewById(R.id.buttonRegistrati);
-        login = view.findViewById(R.id.buttonLogin);
-        t = view.findViewById(R.id.textView);
+        signUpButton = view.findViewById(R.id.buttonSignUpID);
+        loginButton = view.findViewById(R.id.buttonLoginID);
 
-        login.setOnClickListener(new View.OnClickListener() {//Dopo aver clickato il pulsante "Login" l'utente viene indirizzato nell'apposita schermata di login
+        loginButton.setOnClickListener(new View.OnClickListener() {//Dopo aver clickato il pulsante "loginFragment" l'utente viene indirizzato nell'apposita schermata di loginButton
             @Override
             public void onClick(View v) {
-                MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main")).show(Login).addToBackStack(null).commit();
+                MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main")).show(loginFragment).addToBackStack(null).commit();
             }
         });
 
-        registrati.setOnClickListener(new View.OnClickListener() {//Dopo aver clickato il pulsante "Registrati" l'utente viene indirizzato nell'apposita schermata di registrazione
+        signUpButton.setOnClickListener(new View.OnClickListener() {//Dopo aver clickato il pulsante "signUpFragment" l'utente viene indirizzato nell'apposita schermata di registrazione
             @Override
             public void onClick(View v) {
-                MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main")).show(Registrati).addToBackStack(null).commit();
+                MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main")).show(signUpFragment).addToBackStack(null).commit();
             }
         });
         return view;

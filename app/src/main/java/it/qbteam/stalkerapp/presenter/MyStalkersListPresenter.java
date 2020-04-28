@@ -9,13 +9,15 @@ import java.util.ArrayList;
 
 public class MyStalkersListPresenter implements MyStalkersListContract.Presenter, MyStalkersListContract.MyStalkerListener{
 
+    MyStalkersListContract.View myStalkersView;
+    private Storage storage;
 
-private MyStalkersListContract.View listaPreferitiView;
-private Storage storage;
+public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
 
-public MyStalkersListPresenter(MyStalkersListContract.View listaPreferitiView){
-    this.listaPreferitiView=listaPreferitiView;
+    this.myStalkersView=myStalkersView;
     storage= new Storage(null,this);
+
+
 }
 
     @Override
@@ -41,11 +43,11 @@ public MyStalkersListPresenter(MyStalkersListContract.View listaPreferitiView){
 
     @Override
     public void onSuccessFile(ArrayList<Organization> list) {
-        listaPreferitiView.onSuccessCheckFile(list);
+        myStalkersView.onSuccessCheckFile(list);
     }
 
     @Override
     public void onFailureFile(String message) {
-        listaPreferitiView.onFailureCheckFile(message);
+        myStalkersView.onFailureCheckFile(message);
     }
 }

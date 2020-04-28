@@ -199,6 +199,12 @@ public class TrackingStalker extends Service {
 //        mLocationRequest.setSmallestDisplacement(2);
     }
 
+    public void setNumero(int i){
+        removeLocationUpdates();
+        switchPriority(i);
+        requestLocationUpdates();
+    }
+
     /**
      * Switch per aggiornare il Locationrequest
      * 0 -> Massima accuretazza
@@ -236,12 +242,7 @@ public class TrackingStalker extends Service {
     }
 
 
-    public void setNumero(int i){
-        NUMERO=i;           // --> Questa variabile è inutile per ora, ma potrebbe servire in seguito, in caso togliere
-        removeLocationUpdates();
-        switchPriority(NUMERO);
-        requestLocationUpdates();
-    }
+
 
     public int getNUMERO(){
         return NUMERO;

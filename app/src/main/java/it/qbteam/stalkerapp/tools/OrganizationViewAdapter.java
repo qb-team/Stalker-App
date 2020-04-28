@@ -27,7 +27,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
        View v= LayoutInflater.from(parent.getContext())
                .inflate(R.layout.organization_row,parent,false);
 
@@ -47,12 +47,17 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
         return listaOrganizzazioni.size();
     }
 
+    public  interface OnOrganizzazioneListener{
+        void organizzazioneClick(int position);
+        void organizzazioneLongClick(int position);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public TextView textNome;
 
         OnOrganizzazioneListener onOrganizzazioneListener;
+
         public ViewHolder(@NonNull View itemView, OnOrganizzazioneListener onOrganizzazioneListener) {
             super(itemView);
             this.onOrganizzazioneListener=onOrganizzazioneListener;
@@ -72,8 +77,5 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
             return true;
         }
     }
-    public  interface OnOrganizzazioneListener{
-       void organizzazioneClick(int position);
-       void organizzazioneLongClick(int position);
-    }
+
 }

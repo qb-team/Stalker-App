@@ -36,7 +36,12 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         ArrayList<Organization> aux = new ArrayList<>();
         File organizzazioniFile = new File(fragment.getContext().getFilesDir()+nameFile);
         if(organizzazioniFile.length()==0 || !organizzazioniFile.exists()){
-            homeListener.onFailureFile("Local file empty");
+            if(nameFile=="/Organizzazioni.txt")
+                homeListener.onFailureFile("Local file empty");
+            else{
+                myStalkerListener.onFailureFile("Local file empty");
+            }
+
             return;
         }
         else {

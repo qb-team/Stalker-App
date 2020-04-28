@@ -28,10 +28,13 @@ public interface MyStalkersListContract {
         ArrayList<Organization> performRimuovi(String name, ArrayList<Organization> list);
         void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
     }
+
     interface MyStalkerListener {
 
         void onSuccessFile(ArrayList<Organization> list);
         void onFailureFile(String message);
+
     }
+
 
 }

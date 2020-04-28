@@ -230,16 +230,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 }
 
                     break;
-            /*case R.id.StartTrackingID:
-                if (!checkPermissions()) {
-                    requestPermissions();
-                } else {
-                    mService.requestLocationUpdates();
-                }
-                break;
-            case R.id.StopTrackingID:
-                mService.removeLocationUpdates();
-                break;*/
+          
             case R.id.cambianumero:
                 mService.setNumero(TrackingDistance.checkDistance(mlocation));
                 System.out.println(mService.getNUMERO());

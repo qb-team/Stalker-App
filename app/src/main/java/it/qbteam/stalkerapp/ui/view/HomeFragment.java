@@ -173,7 +173,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView dialog_nomeOrganizzazione=myDialog.findViewById(R.id.dialog_nomeOrganizzazione);
         TextView dialog_tracciamento=myDialog.findViewById(R.id.dialog_tracciamento);
-        ImageView dialog_immage=myDialog.findViewById(R.id.dialog_immage);
         dialog_nomeOrganizzazione.setText(listOrganizzazioni.get(position).getNome());
         myDialog.show();
         Button moreInfo=myDialog.findViewById(R.id.Button_moreInfo);

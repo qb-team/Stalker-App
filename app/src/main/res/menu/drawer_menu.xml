@@ -16,14 +16,7 @@
         <item android:id="@+id/nav_switch"
             app:actionLayout="@layout/switch_tracciamento"
             android:title="Tracciamento" />
-        <!--<item
-            android:id="@+id/StartTrackingID"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="Inizia tracciamento" />
-        <item
-            android:id="@+id/StopTrackingID"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="Ferma tracciamento" /> -->
+
     </menu>
 </item>
 

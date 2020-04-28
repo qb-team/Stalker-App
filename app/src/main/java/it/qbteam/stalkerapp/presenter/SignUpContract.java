@@ -13,7 +13,7 @@ public interface SignUpContract {
         void onRegistrationFailure(FirebaseException e);
     }
 
-    //Interfaccia vera e propria del Presenter
+    //Interfaccia del Presenter
     interface Presenter {
         void register(Fragment fragment, String email, String password);
     }

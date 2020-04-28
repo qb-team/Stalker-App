@@ -69,13 +69,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     public void controllaFile() {
-        myStalkersListPresenter.controlla(this, "/Preferiti.txt");
+        myStalkersListPresenter.checkFile(this, "/Preferiti.txt");
     }
 
-    //  MyAdapter.OnOrganizzazioneListener
+    //  MyAdapter.OnOrganizzazioneListener DA METTERE ALTRI 2 METODI LDAP E STANDARD COME RISPOSTE
     @Override
     public void organizzazioneClick(int position) {
         String type=myStalkersListPresenter.getOrganizationType(listOrganizzazioni.get(position));
+
         Bundle bundle=new Bundle();
 
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
@@ -89,6 +90,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             transaction.replace(R.id.HomeFragmentID, ldaPorganizationFragment).commit();
 
         }
+
+
         else{
             StandardOrganizationFragment standardOrganizationFragment =new StandardOrganizationFragment();
             standardOrganizationFragment.setArguments(bundle);
@@ -127,6 +130,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                 .create();
         myQuittingDialogBox.show();
     }
+
+    //DA AGGIUNGERE 2 METODI COME RISPOSTA
     public void elimina(int position) throws IOException, JSONException {
 
         myStalkersListPresenter.rimuovi(listOrganizzazioni.get(position).getNome(),listOrganizzazioni);
@@ -135,6 +140,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         aggiornaFileLocale(listOrganizzazioni);
 
     }
+    //SPLITTARE MEGLIO
     public void aggiungiOrganizzazione(String nameOrg) throws IOException, JSONException {
         Organization aux=new Organization(nameOrg);
         listOrganizzazioni.add(aux);
@@ -193,10 +199,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         }
         return false;
     }
-
-
-
-
 
     @Override
     public boolean onBackPressed() {

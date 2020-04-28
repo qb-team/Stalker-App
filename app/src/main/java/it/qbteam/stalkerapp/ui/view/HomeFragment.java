@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             @Override
             public void onRefresh() {
                 try {
-                    scaricaLista();
+                    downloadList();
                     aggiornamento.setRefreshing(false);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             @Override
             public void onClick(View view) {
                 try {
-                    scaricaLista();
+                    downloadList();
                     scarico.setVisibility(View.INVISIBLE);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -109,17 +109,18 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
 
     //Avvia lo scaricamento della lista
-    public void scaricaLista() throws InterruptedException {
-        listaOrganizzazioniPresenter.scarica(this,listOrganizzazioni);
+    public void downloadList() throws InterruptedException {
+        listaOrganizzazioniPresenter.downloadFile(this,listOrganizzazioni);
         controllaFile();
     }
 
 
     public void controllaFile()  {
 
-        listaOrganizzazioniPresenter.controlla(this, "/Organizzazioni.txt");
+        listaOrganizzazioniPresenter.checkFile(this, "/Organizzazioni.txt");
 
     }
+
      public void onSuccessCheckFile(ArrayList<Organization> list){
 
          listOrganizzazioni=list;
@@ -143,6 +144,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         bundle.putString("nomeOrganizzazione",listOrganizzazioni.get(position).getNome());
 
         if(type=="LDAP"){
+
             LDAPorganizationFragment ldaPorganizationFragment=new LDAPorganizationFragment();
             ldaPorganizationFragment.setArguments(bundle);
             FragmentTransaction transaction =getChildFragmentManager().beginTransaction();

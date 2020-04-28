@@ -53,6 +53,9 @@ public class ActionTabFragment extends Fragment {
         // Note that we are passing childFragmentManager, not FragmentManager
         adapter = new TabViewPagerAdapter(getResources(),getChildFragmentManager());
         //add fragment
+
+
+
         adapter.addFragment(new HomeFragment(),"");
         adapter.addFragment(new MyStalkersListFragment(),"");
        //adapter.addFragment(new Settings(),"");

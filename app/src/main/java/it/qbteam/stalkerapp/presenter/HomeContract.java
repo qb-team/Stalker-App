@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public interface HomeContract {
 
+    //interfaccia view
     interface View {
 
         void onSuccessCheckFile(ArrayList<Organization> list);
@@ -15,24 +16,29 @@ public interface HomeContract {
 
     }
 
-    //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
+    //interfaccia presenter
     interface Presenter {
-        void controlla(Fragment fragment, String nameFile);
-        void scarica(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
+
+        void checkFile(Fragment fragment, String nameFile);
+        void downloadFile(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
         void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
+
     }
 
-    //METODO DEL MODELLO
+    //interfaccia model
     interface Model {
-        void performControllaLista(Fragment fragment, String nameFile);
-        void performScaricaLista(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
+
+        void performCheckFile(Fragment fragment, String nameFile);
+        void performDownloadFile(Fragment fragment, ArrayList<Organization> listaAttuale) throws InterruptedException;
         void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
+
     }
 
     interface HomeListener {
 
         void onSuccessFile(ArrayList<Organization> list);
         void onFailureFile(String message);
+
     }
 }

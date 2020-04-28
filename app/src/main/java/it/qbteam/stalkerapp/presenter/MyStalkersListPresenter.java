@@ -21,8 +21,8 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
 }
 
     @Override
-    public void  controlla(Fragment fragment, String nameFile) {
-        storage.performControllaLista(fragment, nameFile);
+    public void  checkFile(Fragment fragment, String nameFile) {
+        storage.performCheckFile(fragment, nameFile);
      }
 
     @Override

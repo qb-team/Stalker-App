@@ -19,13 +19,13 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
         storage=new Storage(this,null);
     }
     @Override
-    public void controlla(Fragment fragment, String nameFile) {
-        storage.performControllaLista(fragment, nameFile);
+    public void checkFile(Fragment fragment, String nameFile) {
+        storage.performCheckFile(fragment, nameFile);
     }
 
     @Override
-    public void scarica( Fragment fragment,  ArrayList<Organization> listaAttuale) throws InterruptedException {
-        storage.performScaricaLista(fragment,listaAttuale);
+    public void downloadFile( Fragment fragment,  ArrayList<Organization> listaAttuale) throws InterruptedException {
+        storage.performDownloadFile(fragment,listaAttuale);
     }
 
     @Override

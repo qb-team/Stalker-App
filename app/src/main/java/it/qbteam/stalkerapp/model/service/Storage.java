@@ -25,13 +25,15 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
     HomeContract.HomeListener homeListener;
     MyStalkersListContract.MyStalkerListener myStalkerListener;
+
     public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener){
          this.homeListener=homeListener;
          this.myStalkerListener=myStalkerListener;
     }
 
     @Override
-    public void performControllaLista(Fragment fragment, String nameFile) {
+    public void performCheckFile(Fragment fragment, String nameFile) {
+
         //CONTROLLO ESISTENZA DEL FILE
         ArrayList<Organization> aux = new ArrayList<>();
         File organizzazioniFile = new File(fragment.getContext().getFilesDir()+nameFile);
@@ -123,7 +125,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public void performScaricaLista(final Fragment fragment, final ArrayList<Organization> listaAttuale) throws InterruptedException {
+    public void performDownloadFile(final Fragment fragment, final ArrayList<Organization> listaAttuale) throws InterruptedException {
 
         Thread thread = new Thread(new Runnable() {
 
@@ -171,8 +173,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         });
         thread.start();
         thread.join();
-
-
 
     }
 

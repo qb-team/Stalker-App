@@ -40,7 +40,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private ArrayList<Organization> listOrganizzazioni;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private ArrayList<Organization> listaAggiornata;
     private static MyStalkersListFragment instance = null;
 
     @Override
@@ -68,6 +67,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
         return view;
     }
+
     public static MyStalkersListFragment getInstance() {
         return instance;
     }
@@ -81,6 +81,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         }
 
     }
+
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizzazioneClick(int position) {
@@ -107,6 +108,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             transaction.replace(R.id.HomeFragmentID, standardOrganizationFragment).commit();
         }
     }
+
     @Override
     public void organizzazioneLongClick(int position) {
         AlertDialog myQuittingDialogBox = new AlertDialog.Builder(getContext())

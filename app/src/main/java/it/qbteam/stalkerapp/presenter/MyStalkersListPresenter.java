@@ -10,11 +10,9 @@ import java.util.ArrayList;
 public class MyStalkersListPresenter implements MyStalkersListContract.Presenter, MyStalkersListContract.ListaPreferitiListener{
 
 
-private MyStalkersListContract.View listaPreferitiView;
-private Storage storage;
+    private Storage storage;
 
 public MyStalkersListPresenter(MyStalkersListContract.View listaPreferitiView){
-    this.listaPreferitiView=listaPreferitiView;
 
     storage= new Storage();
 }

@@ -18,8 +18,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,17 +102,11 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
             goToMainActivity();
         }
 
-
-
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
         bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
-
-
         requestPermissions();
-
-
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +166,6 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                         mService.requestLocationUpdates();
                     }
                 }
-
                 else{
                     mService.removeLocationUpdates();
                 }

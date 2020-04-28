@@ -152,11 +152,14 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         if (Utils.requestingLocationUpdates(this)) {
             if (!checkPermissions()) {
                 requestPermissions();
-                switcher.setChecked(false);
+
             }
             else
                 switcher.setChecked(true);
         }
+        else
+            switcher.setChecked(false);
+
         //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);
         TextView userEmail=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
@@ -169,6 +172,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                 if(switcher.isChecked()){
                     if (!checkPermissions()) {
                         requestPermissions();
+                        switcher.setChecked(false);
                     } else {
                         mService.requestLocationUpdates();
                     }
@@ -280,6 +284,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                         @Override
                         public void onClick(View view) {
                             // Request permission
+                            switcher.setChecked(true);
                             ActivityCompat.requestPermissions(HomePageActivity.this,
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                     REQUEST_PERMISSIONS_REQUEST_CODE);

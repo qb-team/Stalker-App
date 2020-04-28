@@ -172,7 +172,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         aggPref.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean aggiunto= false;
+
                 try {
                     MyStalkersListFragment.getInstance().aggiungiOrganizzazione(listOrganizzazioni.get(position).getNome());
                 } catch (JSONException e) {
@@ -180,12 +180,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(aggiunto==true)
 
-                    Toast.makeText(getActivity(),"Aggiunta organizzazione ai preferiti",Toast.LENGTH_SHORT).show();
-                else
-
-                    Toast.makeText(getActivity(),"Hai già aggiunto questa organizzazione ai preferiti", Toast.LENGTH_SHORT).show();
                 myDialog.dismiss();
             }
         });

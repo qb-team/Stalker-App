@@ -26,8 +26,8 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
      }
 
     @Override
-    public ArrayList<Organization> remove(String name, ArrayList<Organization> list) {
-        return storage.performRemove(name,list);
+    public void remove(String name, ArrayList<Organization> list) throws IOException, JSONException {
+        storage.performRemove(name,list);
     }
 
     @Override
@@ -76,7 +76,9 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     }
 
     @Override
-    public void onFailureAdd(String message) {
-        myStalkersView.onFailureAddOrganization(message);
+    public void onSuccesRemove(ArrayList<Organization> list) throws IOException, JSONException {
+        myStalkersView.onSuccessRemoveOrganization(list);
     }
+
+
 }

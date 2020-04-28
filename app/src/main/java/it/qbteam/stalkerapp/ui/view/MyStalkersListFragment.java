@@ -94,7 +94,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         try {
-                            removeorganization(position);
+                            removeOrganization(position);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (JSONException e) {
@@ -113,19 +113,16 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         myQuittingDialogBox.show();
     }
 
-    //DA AGGIUNGERE 2 METODI COME RISPOSTA
-    public void removeorganization(int position) throws IOException, JSONException {
+
+    public void removeOrganization(int position) throws IOException, JSONException {
 
         myStalkersListPresenter.remove(listOrganizzazioni.get(position).getNome(),listOrganizzazioni);
-        adapter=new OrganizationViewAdapter(listOrganizzazioni,this.getContext(),this);
-        recyclerView.setAdapter(adapter);
-        aggiornaFileLocale(listOrganizzazioni);
 
     }
-    //SPLITTARE MEGLIO
+
     public void aggiungiOrganizzazione(String nameOrg) throws IOException, JSONException {
-        Organization aux = new Organization(nameOrg);
-        myStalkersListPresenter.findOrganization(aux, listOrganizzazioni);
+
+        myStalkersListPresenter.findOrganization(new Organization(nameOrg), listOrganizzazioni);
     }
 
     public void aggiornaFileLocale(ArrayList<Organization> list) throws IOException, JSONException {
@@ -155,13 +152,11 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         }
     }
 
-    // SearchView.OnQueryTextListener
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
-    // SearchView.OnQueryTextListener
     @Override
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
@@ -215,7 +210,11 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     @Override
-    public void onFailureAddOrganization(String message) {
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    public void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException {
+        adapter=new OrganizationViewAdapter(list,this.getContext(),this);
+        recyclerView.setAdapter(adapter);
+        aggiornaFileLocale(listOrganizzazioni);
     }
+
+
 }

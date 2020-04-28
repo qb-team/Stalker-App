@@ -82,7 +82,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public ArrayList<Organization> performRemove(String name, ArrayList<Organization>list) {
+    public void performRemove(String name, ArrayList<Organization>list) throws IOException, JSONException {
 
         for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext(); ) {
             Organization o = iterator.next();
@@ -91,7 +91,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                 iterator.remove();
             }
         }
-    return list;
+           myStalkerListener.onSuccesRemove(list);
     }
 
     @Override
@@ -126,13 +126,12 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     @Override
     public void performFindOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException {
         boolean trovato = false;
-        for (Iterator<Organization> iterator = list.iterator(); !trovato; iterator.hasNext()) {
+        for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
             Organization o = iterator.next();
             if (o.getNome().equals(organization.getNome())) {
                 trovato = true;
             }
         }
-
         if(trovato)
             myStalkerListener.onSuccessSearch("L'organizzazione è già presente nella lista MyStalker");
         else

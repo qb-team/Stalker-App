@@ -15,13 +15,13 @@ public interface MyStalkersListContract {
         void onSuccessSearchOrganization(String message);
         void onFailureSearchOrganization(Organization organization) throws IOException, JSONException;
         void onSuccessAddOrganization(String message) throws IOException, JSONException;
-        void onFailureAddOrganization(String message);
+        void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException;
     }
 
     //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
     interface Presenter {
         void checkFile(Fragment fragment, String nameFile);
-        ArrayList<Organization> remove(String name, ArrayList<Organization> list);
+        void remove(String name, ArrayList<Organization> list) throws IOException, JSONException;
         void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
         void findOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException;
@@ -31,7 +31,7 @@ public interface MyStalkersListContract {
     //METODO DEL MODELLO
     interface Model {
         void performCheckFile(Fragment fragment, String nameFile);
-        ArrayList<Organization> performRemove(String name, ArrayList<Organization> list);
+        void performRemove(String name, ArrayList<Organization> list) throws IOException, JSONException;
         void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
         void performFindOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException;
         void performAddOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException;
@@ -43,7 +43,7 @@ public interface MyStalkersListContract {
         void onSuccessSearch(String message);
         void onFailureSearch(Organization organization) throws IOException, JSONException;
         void onSuccessAdd(String message) throws IOException, JSONException;
-        void onFailureAdd(String message);
+        void onSuccesRemove(ArrayList<Organization> list) throws IOException, JSONException;
 
     }
 }

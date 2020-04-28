@@ -11,7 +11,7 @@
             android:title="Logout" />
     </group>
 
-<item android:title="Tracciamento">
+<item android:title="Impostazioni tracciamento">
     <menu>
         <item android:id="@+id/nav_switch"
             app:actionLayout="@layout/switch_tracciamento"
@@ -27,7 +27,6 @@
                 android:title="Ordinamento alfabetico" />
             <item
                 android:id="@+id/cambianumero"
-                android:icon="@drawable/ic_exit_to_app_black_24dp"
                 android:title="Cambia numero" />
 
 

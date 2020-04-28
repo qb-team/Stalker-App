@@ -124,6 +124,13 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener( this);
+        //setting switch button in drawer menu
+        Menu menu = navigationView.getMenu();
+        MenuItem menuItem = menu.findItem(R.id.nav_switch);
+        View actionView = MenuItemCompat.getActionView(menuItem);
+        switcher = (SwitchCompat) actionView.findViewById(R.id.switcher);
+
+
 
         if (savedInstanceState == null) {
 
@@ -145,20 +152,17 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         if (Utils.requestingLocationUpdates(this)) {
             if (!checkPermissions()) {
                 requestPermissions();
+                switcher.setChecked(false);
             }
+            else
+                switcher.setChecked(true);
         }
         //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);
         TextView userEmail=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
         userEmail.setText(getIntent().getStringExtra("email"));
 
-        //setting switch button in drawer menu
-        Menu menu = navigationView.getMenu();
-        MenuItem menuItem = menu.findItem(R.id.nav_switch);
-        View actionView = MenuItemCompat.getActionView(menuItem);
-        switcher = (SwitchCompat) actionView.findViewById(R.id.switcher);
 
-        switcher.setChecked(false);
         switcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

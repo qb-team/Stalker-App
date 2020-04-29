@@ -31,6 +31,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.BuildConfig;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -47,7 +48,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import it.qbteam.stalkerapp.model.backend.ApiClient;
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.tracking.TrackingDistance;
 import it.qbteam.stalkerapp.presenter.HomeContract;
 import it.qbteam.stalkerapp.tools.Utils;
@@ -173,25 +181,6 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
             switcher.setChecked(false);
 
 
-
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-
-                        // Log and toast
-                         System.out.println("TOKEN:"+token);
-
-                        Toast.makeText(HomePageActivity.this, token, Toast.LENGTH_SHORT).show();
-                    }
-                });
 
          //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);

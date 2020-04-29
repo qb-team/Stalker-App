@@ -3,6 +3,8 @@ package it.qbteam.stalkerapp.presenter;
 import androidx.fragment.app.Fragment;
 
 import org.json.JSONException;
+
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.data.Organization;
 import java.io.IOException;
@@ -24,8 +26,8 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     }
 
     @Override
-    public void downloadFile( Fragment fragment,  ArrayList<Organization> actualList) throws InterruptedException {
-        storage.performDownloadFile(fragment,actualList);
+    public void downloadFile( Fragment fragment,  ArrayList<Organization> actualList, User user) throws InterruptedException, IOException {
+        storage.performDownloadFile(fragment,actualList, user);
     }
 
     @Override

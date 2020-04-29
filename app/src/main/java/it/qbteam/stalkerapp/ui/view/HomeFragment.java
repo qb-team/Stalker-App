@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,12 +26,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
 import org.json.JSONException;
 
 import it.qbteam.stalkerapp.MainActivity;
 import it.qbteam.stalkerapp.model.data.Organization;
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.HomeContract;
@@ -50,6 +56,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private static HomeFragment instance = null;
     private RecyclerView.Adapter adapter;
     private SwipeRefreshLayout refresh;
+    private User user;
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
     Button downloadButton;
@@ -57,6 +64,21 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+                            String idToken = task.getResult().getToken();
+                            user=new User(idToken);
+                            System.out.println("ECCO IL TOKEN:  " + idToken);
+
+                        } else {
+                            // Handle error -> task.getException();
+                        }
+                    }
+                });
         instance=this;
 
     }
@@ -83,7 +105,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 try {
                     downloadList();
                     refresh.setRefreshing(false);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -95,7 +117,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 try {
                     downloadList();
                     downloadButton.setVisibility(View.INVISIBLE);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -105,12 +127,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         checkFile();
 
 
+
         return view;
     }
 
     //Avvia lo scaricamento della lista
-    public void downloadList() throws InterruptedException {
-        OrganizationListPresenter.downloadFile(this,organizationList);
+    public void downloadList() throws InterruptedException, IOException {
+        OrganizationListPresenter.downloadFile(this,organizationList, user);
+
         checkFile();
     }
 

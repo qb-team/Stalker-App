@@ -3,6 +3,9 @@ package it.qbteam.stalkerapp.presenter;
 import androidx.fragment.app.Fragment;
 import org.json.JSONException;
 import it.qbteam.stalkerapp.model.data.Organization;
+import it.qbteam.stalkerapp.model.data.User;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,7 +23,7 @@ public interface HomeContract {
     interface Presenter {
 
         void checkFile(Fragment fragment, String nameFile);
-        void downloadFile(Fragment fragment, ArrayList<Organization> actualList) throws InterruptedException;
+        void downloadFile(Fragment fragment, ArrayList<Organization> actualList, User user) throws InterruptedException, IOException;
         void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
 
@@ -30,7 +33,7 @@ public interface HomeContract {
     interface Model {
 
         void performCheckFile(Fragment fragment, String nameFile);
-        void performDownloadFile(Fragment fragment, ArrayList<Organization> actualList) throws InterruptedException;
+        void performDownloadFile(Fragment fragment, ArrayList<Organization> actualList, User user) throws InterruptedException, IOException;
         void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
 
     }

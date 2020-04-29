@@ -6,14 +6,18 @@ import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
 import it.qbteam.stalkerapp.model.backend.model.OrganizationTommaso;
 import it.qbteam.stalkerapp.model.data.Organization;
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.presenter.HomeContract;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -42,7 +46,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
          this.homeListener=homeListener;
          this.myStalkerListener=myStalkerListener;
     }
-
     @Override
     public void performCheckFile(Fragment fragment, String nameFile) {
 
@@ -158,18 +161,36 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public void performDownloadFile(final Fragment fragment, final ArrayList<Organization> actualList) throws InterruptedException {
+    public void performDownloadFile(final Fragment fragment, final ArrayList<Organization> actualList, User user) throws InterruptedException, IOException {
 
-        ApiClient ac = new ApiClient("bearerAuth").setBearerToken("fNtVI0OgXpg:APA91bFKGULIQmovMIhyBOqtYFJS2NfOGefU1Qor_qLY4OBVLxezP7TplHBPQQ-5vCf50wd9xRuKFU8dhqAUtfpkVRpW2870P7qzTS5PmRympTADprtFOiDt2pTxGoStDeQPow86xX3f");
+
+
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
         OrganizationApi service = ac.createService(OrganizationApi.class);
         Call<List<OrganizationTommaso>> orgList = service.getOrganizationList();
         orgList.enqueue(new Callback<List<OrganizationTommaso>>() {
             @Override
             public void onResponse(@NotNull Call<List<OrganizationTommaso>> call, @NotNull Response<List<OrganizationTommaso>> response) {
-                   System.out.println(response.body());
-                String inline=" ";
+                    ArrayList<OrganizationTommaso> org=new ArrayList<>();
+                    String inline=response.body().toString();
 
-                System.out.println(inline);
+                   for(int i=0;i<response.body().size();i++){
+                       org.add(new OrganizationTommaso());
+                       org.get(i).setName(response.body().get(i).getName());
+                       System.out.println(org.get(i).getName());
+
+
+
+
+
+                   }
+
+                FileWriter w;
+                w = new FileWriter(fragment.getContext().getFilesDir() + "/Organizzazioni.txt");
+                w.write(inline);
+                w.flush();
+                w.close();
+
 
             }
 

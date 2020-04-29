@@ -65,21 +65,23 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
 
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        if (task.isSuccessful()) {
-                            String idToken = task.getResult().getToken();
-                            user=new User(idToken);
-                            System.out.println("ECCO IL TOKEN:  " + idToken);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
+            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                        } else {
-                            // Handle error -> task.getException();
+            mUser.getIdToken(true)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+                                user = new User(task.getResult().getToken());
+                                System.out.println("ECCO IL TOKEN:  " + user.getToken());
+                                // Send token to your backend via HTTPS
+                                // ...
+                            } else {
+                                // Handle error -> task.getException();
+                            }
                         }
-                    }
-                });
-        instance=this;
+                    });
+        }
 
     }
     public static HomeFragment getInstance() {

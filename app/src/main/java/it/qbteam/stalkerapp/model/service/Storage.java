@@ -162,9 +162,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
     @Override
     public void performDownloadFile(final Fragment fragment, final ArrayList<Organization> actualList, User user) throws InterruptedException, IOException {
-
-
-
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
         OrganizationApi service = ac.createService(OrganizationApi.class);
         Call<List<OrganizationTommaso>> orgList = service.getOrganizationList();
@@ -185,11 +182,11 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
                    }
 
-                FileWriter w;
+                /*FileWriter w;
                 w = new FileWriter(fragment.getContext().getFilesDir() + "/Organizzazioni.txt");
                 w.write(inline);
                 w.flush();
-                w.close();
+                w.close();*/
 
 
             }

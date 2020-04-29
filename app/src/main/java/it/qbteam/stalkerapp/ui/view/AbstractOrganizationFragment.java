@@ -10,7 +10,8 @@ import androidx.fragment.app.Fragment;
 public abstract class AbstractOrganizationFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState)
-    {   setHasOptionsMenu(true);
+    {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 

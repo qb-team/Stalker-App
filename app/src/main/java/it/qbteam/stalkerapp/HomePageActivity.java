@@ -23,12 +23,19 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.BuildConfig;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
@@ -40,6 +47,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.tracking.TrackingDistance;
 import it.qbteam.stalkerapp.presenter.HomeContract;
 import it.qbteam.stalkerapp.tools.Utils;
@@ -166,8 +174,26 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 
 
 
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
 
-        //setting user email in drawer menu
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        // Log and toast
+                         System.out.println("TOKEN:"+token);
+
+                        Toast.makeText(HomePageActivity.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+         //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);
         TextView emailTextView=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
         emailTextView.setText(userEmail);

@@ -1,6 +1,10 @@
 package it.qbteam.stalkerapp.model.service;
 
 import androidx.fragment.app.Fragment;
+
+import it.qbteam.stalkerapp.model.backend.ApiClient;
+import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
+import it.qbteam.stalkerapp.model.backend.model.OrganizationTommaso;
 import it.qbteam.stalkerapp.model.data.Organization;
 import it.qbteam.stalkerapp.presenter.HomeContract;
 import org.json.JSONArray;
@@ -15,11 +19,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Storage implements HomeContract.Model, MyStalkersListContract.Model {
 
@@ -142,16 +154,39 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     public void performAddOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException {
         list.add(organization);
         myStalkerListener.onSuccessAdd("L'organizzazione è stata aggiunta alla lista MyStalker");
+
     }
 
     @Override
     public void performDownloadFile(final Fragment fragment, final ArrayList<Organization> actualList) throws InterruptedException {
 
-        Thread thread = new Thread(new Runnable() {
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken("fNtVI0OgXpg:APA91bFKGULIQmovMIhyBOqtYFJS2NfOGefU1Qor_qLY4OBVLxezP7TplHBPQQ-5vCf50wd9xRuKFU8dhqAUtfpkVRpW2870P7qzTS5PmRympTADprtFOiDt2pTxGoStDeQPow86xX3f");
+        OrganizationApi service = ac.createService(OrganizationApi.class);
+        Call<List<OrganizationTommaso>> orgList = service.getOrganizationList();
+        orgList.enqueue(new Callback<List<OrganizationTommaso>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<OrganizationTommaso>> call, @NotNull Response<List<OrganizationTommaso>> response) {
+                   System.out.println(response.body());
+                String inline=" ";
+
+                System.out.println(inline);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<OrganizationTommaso>> call, Throwable t) {
+
+            }});
+    }
+
+       /* Thread thread = new Thread(new Runnable() {
 
             @Override
             public void run() { try {
-                URL url = new URL("https://api.jsonbin.io/b/5e873f30dd6c3c63eaed8ed8/1");
+
+              //  URL url = new URL("https://api.jsonbin.io/b/5e873f30dd6c3c63eaed8ed8/1");
+
+                URL url = new URL("http://2.234.128.81:8080/organization");
                 //URL NON VALIDO
                 if (url == null) {
 
@@ -168,7 +203,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
                 //ERRORE DAL SERVER
                 if (code != 200) {
-
                     body.close();
                     return ;
 
@@ -192,8 +226,9 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
             }
         });
         thread.start();
-        thread.join();
+        thread.join();*/
 
-    }
+
+
 
 }

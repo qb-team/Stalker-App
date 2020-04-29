@@ -27,8 +27,8 @@ public class AuthenticationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        MainActivity.fragmentManager.beginTransaction().add(R.id.container, loginFragment).hide(loginFragment).commit();
-        MainActivity.fragmentManager.beginTransaction().add(R.id.container, signUpFragment).hide(signUpFragment).commit();
+        MainActivity.fragmentManager.beginTransaction().add(R.id.containerID, loginFragment).hide(loginFragment).commit();
+        MainActivity.fragmentManager.beginTransaction().add(R.id.containerID, signUpFragment).hide(signUpFragment).commit();
         View view = inflater.inflate(R.layout.fragment_authentication,container,false);
         signUpButton = view.findViewById(R.id.buttonSignUpID);
         loginButton = view.findViewById(R.id.buttonLoginID);

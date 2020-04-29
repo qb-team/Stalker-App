@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +14,10 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.unboundid.ldap.sdk.LDAPException;
-
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.service.StalkerLDAP;
 import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
@@ -96,7 +90,7 @@ public class LDAPorganizationFragment extends AbstractOrganizationFragment imple
             public void onClick(View v) {
                 userNameLDAP=myDialog.findViewById(R.id.userNameID);
                 passwordLDAP=myDialog.findViewById(R.id.passwordID);
-                StalkerLDAP stalkerLDAP=new StalkerLDAP("ldap.forumsys.com",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
+                StalkerLDAP stalkerLDAP=new StalkerLDAP("2.234.128.81",8080,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
                 try {
                     stalkerLDAP.execute();
                     stalkerLDAP.performSearch();

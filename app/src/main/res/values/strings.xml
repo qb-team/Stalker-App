@@ -4,7 +4,7 @@
     <string name="launch_activity">Launch activity</string>
     <string name="location_unknown">Location unknown</string>
     <string name="location_updates_label">Location Updates</string>
-
+    <string name="msg_token_fmt">token</string>
     <string name="permission_rationale">Location permission is needed for core functionality</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>

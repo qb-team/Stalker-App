@@ -28,7 +28,9 @@ public class LoginModel implements LoginContract.Model {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+
                             mOnLoginListener.onSuccess(task.getResult().toString());
+
                         }
                         else {
                             mOnLoginListener.onFailure((FirebaseException) task.getException());

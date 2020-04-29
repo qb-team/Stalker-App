@@ -20,10 +20,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         fStore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
-
         if (fAuth.getCurrentUser() != null ) {
             goToHomePage();
         }

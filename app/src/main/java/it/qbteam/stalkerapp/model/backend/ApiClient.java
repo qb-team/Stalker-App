@@ -44,7 +44,7 @@ public class ApiClient {
         auth = new HttpBearerAuth("bearer");
         
       } else {
-        throw new RuntimeException("auth name \"" + authName + "\" not found in available auth names");
+        throw new RuntimeException("auth name \" " + authName + "\" not found in available auth names");
       }
 
       addAuthorization(authName, auth);
@@ -84,7 +84,7 @@ public class ApiClient {
     json = new JSON();
     okBuilder = new OkHttpClient.Builder();
 
-    String baseUrl = "http://localhost:8080";
+    String baseUrl = "http://2.234.128.81:8080";
     if (!baseUrl.endsWith("/"))
       baseUrl = baseUrl + "/";
 

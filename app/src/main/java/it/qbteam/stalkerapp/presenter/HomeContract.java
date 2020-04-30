@@ -2,10 +2,11 @@ package it.qbteam.stalkerapp.presenter;
 
 import androidx.fragment.app.Fragment;
 import org.json.JSONException;
-import it.qbteam.stalkerapp.model.data.Organization;
+
+import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import it.qbteam.stalkerapp.model.data.User;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -16,15 +17,17 @@ public interface HomeContract {
 
         void onSuccessCheckFile(ArrayList<Organization> list);
         void onFailureCheckFile(String message);
+        void onSuccessDownloadFile(ArrayList<Organization> list);
+        void onFailureDownloadFile(String message);
 
     }
 
     //interfaccia presenter
     interface Presenter {
 
-        void checkFile(Fragment fragment, String nameFile);
-        void downloadFile(Fragment fragment, ArrayList<Organization> actualList, User user) throws InterruptedException, IOException;
-        void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
+        ArrayList<Organization> checkFile(String path);
+        void downloadFile(String path, User user) throws InterruptedException, IOException;
+        void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
 
     }
@@ -32,9 +35,9 @@ public interface HomeContract {
     //interfaccia model
     interface Model {
 
-        void performCheckFile(Fragment fragment, String nameFile);
-        void performDownloadFile(Fragment fragment, ArrayList<Organization> actualList, User user) throws InterruptedException, IOException;
-        void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
+        ArrayList<Organization> performCheckFile(String path);
+        void performDownloadFile(String path, User user) throws InterruptedException, IOException;
+        void performUpdateFile(ArrayList<Organization> list, String path) throws JSONException, IOException;
 
     }
 
@@ -42,6 +45,8 @@ public interface HomeContract {
 
         void onSuccessFile(ArrayList<Organization> list);
         void onFailureFile(String message);
+        void onSuccessDownload(ArrayList<Organization> list);
+        void onFailureDownload(String message);
 
     }
 }

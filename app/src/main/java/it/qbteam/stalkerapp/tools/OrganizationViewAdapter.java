@@ -8,12 +8,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
-import it.qbteam.stalkerapp.model.data.Organization;
+
+import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import it.qbteam.stalkerapp.R;
 
 public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationViewAdapter.ViewHolder> {
 
-    private  ArrayList<Organization> listOrganization;
+    private  ArrayList<Organization> organizationList;
     private Context context;
     private OrganizationListener OrganizationListener;
 
@@ -23,8 +25,8 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     }
 
 
-    public OrganizationViewAdapter(ArrayList<Organization> listOrganization, Context context, OrganizationListener OrganizationListener){
-        this.listOrganization=listOrganization;
+    public OrganizationViewAdapter(ArrayList<Organization> organizationList, Context context, OrganizationListener OrganizationListener){
+        this.organizationList = organizationList;
         this.context=context;
         this.OrganizationListener=OrganizationListener;
     }
@@ -43,13 +45,13 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Organization organization= listOrganization.get(position);
-        holder.textNome.setText(organization.getNome());
+        Organization organization = organizationList.get(position);
+        holder.textNome.setText(organization.getName());
     }
 
     @Override
     public int getItemCount() {
-        return listOrganization.size();
+        return organizationList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {

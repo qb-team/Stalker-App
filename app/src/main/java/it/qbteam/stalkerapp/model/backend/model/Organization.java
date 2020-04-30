@@ -22,6 +22,8 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import it.qbteam.stalkerapp.model.data.OrganizationAux;
+
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import javax.validation.constraints.*;
@@ -31,7 +33,7 @@ import javax.validation.Valid;
  * Subject interested in tracking people&#39;s presence inside its own places, in either an anonymous or authenticated way.
  */
 @ApiModel(description = "Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.")
-public class OrganizationTommaso {
+public class Organization implements Comparable<Organization>{
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private Long id;
@@ -83,6 +85,7 @@ public class OrganizationTommaso {
   public static final String SERIALIZED_NAME_TRACKING_AREA = "trackingArea";
   @SerializedName(SERIALIZED_NAME_TRACKING_AREA)
   private String trackingArea;
+
 
   /**
    * How an user who added to its favorites the organization can be tracked inside the organization&#39;s trackingArea and its places.
@@ -136,7 +139,7 @@ public class OrganizationTommaso {
   private TrackingModeEnum trackingMode;
 
 
-  public OrganizationTommaso id(Long id) {
+  public Organization id(Long id) {
     
     this.id = id;
     return this;
@@ -159,8 +162,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso name(String name) {
-    
+  public Organization name(String name) {
     this.name = name;
     return this;
   }
@@ -182,8 +184,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso description(String description) {
-    
+  public Organization description(String description) {
     this.description = description;
     return this;
   }
@@ -205,7 +206,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso image(String image) {
+  public Organization image(String image) {
     
     this.image = image;
     return this;
@@ -228,7 +229,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso street(String street) {
+  public Organization street(String street) {
     
     this.street = street;
     return this;
@@ -251,7 +252,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso number(String number) {
+  public Organization number(String number) {
     
     this.number = number;
     return this;
@@ -274,7 +275,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso postCode(Integer postCode) {
+  public Organization postCode(Integer postCode) {
     
     this.postCode = postCode;
     return this;
@@ -297,7 +298,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso city(String city) {
+  public Organization city(String city) {
     
     this.city = city;
     return this;
@@ -320,7 +321,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso country(String country) {
+  public Organization country(String country) {
     
     this.country = country;
     return this;
@@ -343,7 +344,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso authenticationServerURL(String authenticationServerURL) {
+  public Organization authenticationServerURL(String authenticationServerURL) {
     
     this.authenticationServerURL = authenticationServerURL;
     return this;
@@ -366,7 +367,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso creationDate(OffsetDateTime creationDate) {
+  public Organization creationDate(OffsetDateTime creationDate) {
     
     this.creationDate = creationDate;
     return this;
@@ -390,7 +391,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso lastChangeDate(OffsetDateTime lastChangeDate) {
+  public Organization lastChangeDate(OffsetDateTime lastChangeDate) {
     
     this.lastChangeDate = lastChangeDate;
     return this;
@@ -414,7 +415,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso trackingArea(String trackingArea) {
+  public Organization trackingArea(String trackingArea) {
     
     this.trackingArea = trackingArea;
     return this;
@@ -437,7 +438,7 @@ public class OrganizationTommaso {
   }
 
 
-  public OrganizationTommaso trackingMode(TrackingModeEnum trackingMode) {
+  public Organization trackingMode(TrackingModeEnum trackingMode) {
     
     this.trackingMode = trackingMode;
     return this;
@@ -468,7 +469,8 @@ public class OrganizationTommaso {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrganizationTommaso organization = (OrganizationTommaso) o;
+
+    Organization organization = (Organization) o;
     return Objects.equals(this.id, organization.id) &&
         Objects.equals(this.name, organization.name) &&
         Objects.equals(this.description, organization.description) &&
@@ -488,6 +490,18 @@ public class OrganizationTommaso {
   @Override
   public int hashCode() {
     return Objects.hash(id, name, description, image, street, number, postCode, city, country, authenticationServerURL, creationDate, lastChangeDate, trackingArea, trackingMode);
+  }
+
+  public boolean equals(OrganizationAux o) {
+    if (o instanceof OrganizationAux) {
+      OrganizationAux aux = (OrganizationAux) o;
+      return aux.getNome() == this.name;
+    }
+    return false;
+  }
+  @Override
+  public int compareTo(Organization o) {
+     return name.compareTo(o.getName());
   }
 
 

@@ -12,8 +12,8 @@ import it.qbteam.stalkerapp.R;
 
 //Schermata iniziale per gli utenti non autenticati
 public class AuthenticationFragment extends Fragment {
-    public final static String TAG="Main_Fragment";
 
+    public final static String TAG="Main_Fragment";
     final Fragment loginFragment = new LoginFragment();
     final Fragment signUpFragment = new SignUpFragment();
 
@@ -27,6 +27,7 @@ public class AuthenticationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         MainActivity.fragmentManager.beginTransaction().add(R.id.containerID, loginFragment).hide(loginFragment).commit();
         MainActivity.fragmentManager.beginTransaction().add(R.id.containerID, signUpFragment).hide(signUpFragment).commit();
         View view = inflater.inflate(R.layout.fragment_authentication,container,false);

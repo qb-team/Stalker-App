@@ -2,7 +2,6 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,10 +18,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
-import it.qbteam.stalkerapp.MainActivity;
-import it.qbteam.stalkerapp.model.data.Organization;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
@@ -37,15 +34,17 @@ import java.util.Collections;
 public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
     private MyStalkersListPresenter myStalkersListPresenter;
-    private ArrayList<Organization> OrganizationArrayList;
+    private ArrayList<Organization> organizationList;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
+    private String path;
     private static MyStalkersListFragment instance = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        path= getContext().getFilesDir() + "/Organizzazioni.txt";
         instance=this;
 
     }
@@ -58,8 +57,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         myStalkersListPresenter =new MyStalkersListPresenter(this);
-        OrganizationArrayList=new ArrayList<>();
-        checkFile();
+        organizationList =new ArrayList<>();
+        organizationList=checkFile();
         return view;
     }
 
@@ -67,8 +66,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return instance;
     }
 
-    public void checkFile() {
-        myStalkersListPresenter.checkFile(this, "/Preferiti.txt");
+    public ArrayList<Organization> checkFile() {
+
+       return myStalkersListPresenter.checkFile(path);
     }
 
     //  MyAdapter.OnOrganizzazioneListener DA METTERE ALTRI 2 METODI LDAP E STANDARD COME RISPOSTE
@@ -76,12 +76,13 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void organizationClick(int position) {
 
         Bundle bundle=new Bundle();
-        bundle.putString("nomeOrganizzazione",OrganizationArrayList.get(position).getNome());
-        Fragment aux=OrganizationArrayList.get(position).getFragment();
+        bundle.putString("nomeOrganizzazione", organizationList.get(position).getName());
+        //DA RISOLVERE PER VEDERE CHE FRAGMENT INVOCARE
+       /* Fragment aux= organizationList.get(position).getFragment();
         aux.setArguments(bundle);
         FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, aux).commit();
+        transaction.replace(R.id.HomeFragmentID, aux).commit();*/
 
     }
 
@@ -117,17 +118,17 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     public void removeOrganization(int position) throws IOException, JSONException {
 
-        myStalkersListPresenter.remove(OrganizationArrayList.get(position).getNome(),OrganizationArrayList);
+        myStalkersListPresenter.remove(organizationList.get(position).getName(), organizationList);
 
     }
 
-    public void addOrganization(String nameOrg) throws IOException, JSONException {
+    public void addOrganization(String name) throws IOException, JSONException {
 
-        myStalkersListPresenter.findOrganization(new Organization(nameOrg), OrganizationArrayList);
+        myStalkersListPresenter.findOrganization(name, organizationList);
     }
 
     public void updateFileLocale(ArrayList<Organization> list) throws IOException, JSONException {
-        myStalkersListPresenter.updateFile(list,this,"/Preferiti.txt");
+        myStalkersListPresenter.updateFile(list,path);
     }
 
     @Override
@@ -148,11 +149,11 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         searchView.setOnQueryTextListener(this);
     }
     public void alphabeticalOrder(){
-        Collections.sort(OrganizationArrayList);
+        Collections.sort(organizationList);
         try {
-            adapter=new OrganizationViewAdapter(OrganizationArrayList,this.getContext(),this);
+            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
-            myStalkersListPresenter.updateFile(OrganizationArrayList,this,"/Organizzazioni.txt");
+            myStalkersListPresenter.updateFile(organizationList,"/Preferiti.txt");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -169,10 +170,10 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
         ArrayList<Organization> newList= new ArrayList<>();
-        if(OrganizationArrayList.size()!=0){
-            for(int i=0;i<OrganizationArrayList.size();i++){
-                if(OrganizationArrayList.get(i).getNome().toLowerCase().contains(userInput))
-                    newList.add(OrganizationArrayList.get(i));
+        if(organizationList.size()!=0){
+            for(int i = 0; i< organizationList.size(); i++){
+                if(organizationList.get(i).getName().toLowerCase().contains(userInput))
+                    newList.add(organizationList.get(i));
             }
             adapter=new OrganizationViewAdapter(newList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
@@ -189,8 +190,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     @Override
     public void onSuccessCheckFile(ArrayList<Organization> list) {
-        OrganizationArrayList=list;
-        adapter=new OrganizationViewAdapter(OrganizationArrayList,this.getContext(),this);
+
+        adapter=new OrganizationViewAdapter(list,this.getContext(),this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -205,23 +206,23 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     @Override
-    public void onFailureSearchOrganization(Organization organization) throws IOException, JSONException {
-        myStalkersListPresenter.addOrganization(organization, OrganizationArrayList);
+    public void onFailureSearchOrganization(String name ) throws IOException, JSONException {
+        myStalkersListPresenter.addOrganization(name, organizationList);
     }
 
     @Override
     public void onSuccessAddOrganization(String message) throws IOException, JSONException {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-        adapter=new OrganizationViewAdapter(OrganizationArrayList,this.getContext(),this);
+        adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
         recyclerView.setAdapter(adapter);
-        updateFileLocale(OrganizationArrayList);
+        updateFileLocale(organizationList);
     }
 
     @Override
     public void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException {
         adapter=new OrganizationViewAdapter(list,this.getContext(),this);
         recyclerView.setAdapter(adapter);
-        updateFileLocale(OrganizationArrayList);
+        updateFileLocale(list);
     }
 
 

@@ -2,7 +2,6 @@ package it.qbteam.stalkerapp.ui.view;
 
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView;
@@ -34,8 +32,8 @@ import com.google.firebase.auth.GetTokenResult;
 
 import org.json.JSONException;
 
-import it.qbteam.stalkerapp.MainActivity;
-import it.qbteam.stalkerapp.model.data.Organization;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
@@ -57,6 +55,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private RecyclerView.Adapter adapter;
     private SwipeRefreshLayout refresh;
     private User user;
+    private String path;
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
     Button downloadButton;
@@ -64,7 +63,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-
+        path= getContext().getFilesDir() + "/Organizzazioni.txt";
         if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
             FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -88,6 +87,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         return instance;
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         OrganizationListPresenter=new HomePresenter(this);
-        organizationList=new ArrayList<>();
+        organizationList =new ArrayList<>();
 
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -125,9 +125,13 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             }
         });
 
-
-        checkFile();
-
+        organizationList=checkFile();
+        if(organizationList!=null){
+            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
+        }
+        else
+            Toast.makeText(getActivity(),"Lista ancora vuota!",Toast.LENGTH_SHORT).show();
 
 
         return view;
@@ -135,18 +139,20 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //Avvia lo scaricamento della lista
     public void downloadList() throws InterruptedException, IOException {
-        OrganizationListPresenter.downloadFile(this,organizationList, user);
 
+        OrganizationListPresenter.downloadFile(path, user);
         checkFile();
     }
 
 
-    public void checkFile()  {
-        OrganizationListPresenter.checkFile(this, "/Organizzazioni.txt");
+    public ArrayList<Organization> checkFile()  {
+
+        return  OrganizationListPresenter.checkFile(path);
+
     }
 
      public void onSuccessCheckFile(ArrayList<Organization> list){
-         organizationList=list;
+         organizationList =list;
          adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
          recyclerView.setAdapter(adapter);
      }
@@ -157,17 +163,30 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         downloadButton.setVisibility(View.VISIBLE);
     }
 
+    //Risposta positiva al download della lista delle organizzazioni dal server
+    @Override
+    public void onSuccessDownloadFile(ArrayList<Organization> list) {
+        adapter=new OrganizationViewAdapter(list,this.getContext(),this);
+        recyclerView.setAdapter(adapter);
+    }
+    //Risposta negativa al download della lista delle organizzazioni dal server
+    @Override
+    public void onFailureDownloadFile(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
+
 
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizationClick(int position) {
         Bundle bundle=new Bundle();
-        bundle.putString("nomeOrganizzazione",organizationList.get(position).getNome());
-        Fragment aux=organizationList.get(position).getFragment();
-        aux.setArguments(bundle);
-        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, aux).commit();
+        bundle.putString("nomeOrganizzazione", organizationList.get(position).getName());
+        //DA RISOLVERE!!!!!!!!!!!
+       // Fragment aux= organizationList.get(position).getFragment();
+       // aux.setArguments(bundle);
+       // FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+        //transaction.addToBackStack(null);
+        //transaction.replace(R.id.HomeFragmentID, aux).commit();
         }
 
         @Override
@@ -177,7 +196,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView dialog_nomeOrganizzazione=myDialog.findViewById(R.id.dialog_nomeOrganizzazione);
         TextView dialog_tracciamento=myDialog.findViewById(R.id.dialog_tracciamento);
-        dialog_nomeOrganizzazione.setText(organizationList.get(position).getNome());
+        dialog_nomeOrganizzazione.setText(organizationList.get(position).getName());
         myDialog.show();
         Button moreInfo=myDialog.findViewById(R.id.Button_moreInfo);
         Button aggPref=myDialog.findViewById(R.id.Button_aggiungiPreferiti);
@@ -195,7 +214,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             public void onClick(View v) {
 
                 try {
-                    MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position).getNome());
+                    MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position).getName());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -227,15 +246,13 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     }
 
-
-
-
     public void alphabeticalOrder(){
+
         Collections.sort(organizationList);
         try {
             adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
-            OrganizationListPresenter.updateFile(organizationList,this,"/Organizzazioni.txt");
+            OrganizationListPresenter.updateFile(organizationList,path);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -254,8 +271,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         String userInput= newText.toLowerCase();
         ArrayList<Organization> newList= new ArrayList<>();
         if(organizationList.size()!=0){
-            for(int i=0;i<organizationList.size();i++){
-                if(organizationList.get(i).getNome().toLowerCase().contains(userInput))
+            for(int i = 0; i< organizationList.size(); i++){
+                if(organizationList.get(i).getName().toLowerCase().contains(userInput))
                     newList.add(organizationList.get(i));
             }
             adapter=new OrganizationViewAdapter(newList,this.getContext(),this);

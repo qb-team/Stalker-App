@@ -2,7 +2,7 @@ package it.qbteam.stalkerapp.model.backend.api;
 
 import retrofit2.Call;
 import retrofit2.http.*;
-import it.qbteam.stalkerapp.model.backend.model.OrganizationTommaso;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
 import java.util.List;
 
 public interface OrganizationApi {
@@ -15,7 +15,7 @@ public interface OrganizationApi {
    */
 
   @GET("organization/{organizationId}")
-  Call<OrganizationTommaso> getOrganization(
+  Call<Organization> getOrganization(
     @retrofit2.http.Path("organizationId") Long organizationId
   );
 
@@ -26,6 +26,6 @@ public interface OrganizationApi {
    */
 
   @GET("organization")
-  Call<List<OrganizationTommaso>> getOrganizationList();
+  Call<List<Organization>> getOrganizationList();
 
 }

@@ -4,7 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.*;
 
 import it.qbteam.stalkerapp.model.backend.model.Favorite;
-import it.qbteam.stalkerapp.model.backend.model.OrganizationTommaso;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public interface FavoriteApi {
    * @return Call&lt;List&lt;Organization&gt;&gt;
    */
   @GET("favorite/{userId}")
-  Call<List<OrganizationTommaso>> getFavoriteOrganizationList(
+  Call<List<Organization>> getFavoriteOrganizationList(
     @retrofit2.http.Path("userId") String userId
   );
 

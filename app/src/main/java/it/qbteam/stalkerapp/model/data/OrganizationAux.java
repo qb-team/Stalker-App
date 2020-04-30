@@ -1,18 +1,15 @@
 package it.qbteam.stalkerapp.model.data;
 
-import androidx.fragment.app.Fragment;
-
 import it.qbteam.stalkerapp.ui.view.AbstractOrganizationFragment;
-import it.qbteam.stalkerapp.ui.view.LDAPorganizationFragment;
 import it.qbteam.stalkerapp.ui.view.StandardOrganizationFragment;
 
-public class Organization implements Comparable<Organization>{
+public class OrganizationAux implements Comparable<OrganizationAux>{
 
     private String nome;
     private String typeAccess;
     private AbstractOrganizationFragment fragment;
 
-    public Organization(String nome){
+    public OrganizationAux(String nome){
         this.nome=nome;
         this.typeAccess="LDAP";
         fragment=new StandardOrganizationFragment();
@@ -22,14 +19,14 @@ public class Organization implements Comparable<Organization>{
         return nome;
     }
     public String getType()  { return typeAccess;}
-    public boolean equals(Organization o) {
-        if (o instanceof Organization) {
-            Organization aux = (Organization) o;
+    public boolean equals(OrganizationAux o) {
+        if (o instanceof OrganizationAux) {
+            OrganizationAux aux = (OrganizationAux) o;
             return aux.getNome() == this.nome;
         }
         return false;
     }
-    public int compareTo(Organization o)
+    public int compareTo(OrganizationAux o)
     {
         return nome.compareTo(o.getNome());
     }

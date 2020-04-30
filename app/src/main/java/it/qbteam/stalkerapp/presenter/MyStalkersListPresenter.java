@@ -2,8 +2,11 @@ package it.qbteam.stalkerapp.presenter;
 
 import androidx.fragment.app.Fragment;
 import org.json.JSONException;
+
+import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import it.qbteam.stalkerapp.model.service.Storage;
-import it.qbteam.stalkerapp.model.data.Organization;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -13,16 +16,14 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     private Storage storage;
 
 public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
-
     this.myStalkersView=myStalkersView;
     storage= new Storage(null,this);
-
-
 }
 
+
     @Override
-    public void  checkFile(Fragment fragment, String nameFile) {
-        storage.performCheckFile(fragment, nameFile);
+    public ArrayList<Organization> checkFile( String path) {
+        return storage.performCheckFile(path);
      }
 
     @Override
@@ -31,23 +32,23 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     }
 
     @Override
-    public void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException {
-   storage.performUpdateFile(list,fragment , nameFile);
+    public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
+        storage.performUpdateFile(list,path);
     }
 
     @Override
     public String getOrganizationType(Organization organization) {
-        return organization.getType();
+        return organization.getTrackingMode().toString();
     }
 
     @Override
-    public void findOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException {
-        storage.performFindOrganization(organization, list);
+    public void findOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException {
+        storage.performFindOrganization(name, list);
     }
 
     @Override
-    public void addOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException {
-        storage.performAddOrganization(organization, list);
+    public void addOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException {
+        storage.performAddOrganization(name, list);
     }
 
     @Override
@@ -66,8 +67,8 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     }
 
     @Override
-    public void onFailureSearch(Organization organization) throws IOException, JSONException {
-        myStalkersView.onFailureSearchOrganization(organization);
+    public void onFailureSearch(String name) throws IOException, JSONException {
+        myStalkersView.onFailureSearchOrganization(name);
     }
 
     @Override

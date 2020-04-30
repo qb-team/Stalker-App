@@ -5,7 +5,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import it.qbteam.stalkerapp.model.data.Organization;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
+
 
 
 public interface MyStalkersListContract {
@@ -13,35 +14,36 @@ public interface MyStalkersListContract {
         void onSuccessCheckFile(ArrayList<Organization> list);
         void onFailureCheckFile(String message);
         void onSuccessSearchOrganization(String message);
-        void onFailureSearchOrganization(Organization organization) throws IOException, JSONException;
+        void onFailureSearchOrganization(String name) throws IOException, JSONException;
         void onSuccessAddOrganization(String message) throws IOException, JSONException;
         void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException;
     }
 
     //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
     interface Presenter {
-        void checkFile(Fragment fragment, String nameFile);
+        ArrayList<Organization> checkFile(String path);
         void remove(String name, ArrayList<Organization> list) throws IOException, JSONException;
-        void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException;
+        void updateFile(ArrayList<Organization> list,String path) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
-        void findOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException;
-        void addOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException;
+        void findOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException;
+        void addOrganization(String name , ArrayList<Organization> list) throws IOException, JSONException;
     }
 
     //METODO DEL MODELLO
     interface Model {
-        void performCheckFile(Fragment fragment, String nameFile);
+        ArrayList<Organization> performCheckFile(String path);
         void performRemove(String name, ArrayList<Organization> list) throws IOException, JSONException;
-        void performUpdateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws JSONException, IOException;
-        void performFindOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException;
-        void performAddOrganization(Organization organization, ArrayList<Organization> list) throws IOException, JSONException;
+        void performUpdateFile(ArrayList<Organization> list, String path) throws JSONException, IOException;
+        void performFindOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException;
+        void performAddOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException;
     }
 
     interface MyStalkerListener {
+        //QUESTI DUE METODI FANNO RIFERIMENTO AL METODO PERFORM_CHECK_FILE DA FINIRE
         void onSuccessFile(ArrayList<Organization> list);
         void onFailureFile(String message);
         void onSuccessSearch(String message);
-        void onFailureSearch(Organization organization) throws IOException, JSONException;
+        void onFailureSearch(String name) throws IOException, JSONException;
         void onSuccessAdd(String message) throws IOException, JSONException;
         void onSuccesRemove(ArrayList<Organization> list) throws IOException, JSONException;
 

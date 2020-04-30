@@ -4,9 +4,10 @@ import androidx.fragment.app.Fragment;
 
 import org.json.JSONException;
 
+import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.Storage;
-import it.qbteam.stalkerapp.model.data.Organization;
+import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -21,23 +22,23 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
         storage=new Storage(this,null);
     }
     @Override
-    public void checkFile(Fragment fragment, String nameFile) {
-        storage.performCheckFile(fragment, nameFile);
+    public ArrayList<Organization> checkFile(String path) {
+        return storage.performCheckFile(path);
     }
 
     @Override
-    public void downloadFile( Fragment fragment,  ArrayList<Organization> actualList, User user) throws InterruptedException, IOException {
-        storage.performDownloadFile(fragment,actualList, user);
+    public void downloadFile(String path, User user) throws InterruptedException, IOException {
+        storage.performDownloadFile(path, user);
     }
 
     @Override
-    public void updateFile(ArrayList<Organization> list, Fragment fragment, String nameFile) throws IOException, JSONException {
-        storage.performUpdateFile(list,fragment,nameFile);
+    public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
+        storage.performUpdateFile(list,path);
     }
 
     @Override
     public String getOrganizationType(Organization organization) {
-        return organization.getType();
+        return organization.getTrackingMode().toString();
     }
 
     @Override
@@ -48,6 +49,17 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     @Override
     public void onFailureFile(String message) {
         OrganizationListView.onFailureCheckFile(message);
+    }
+
+    @Override
+    public void onSuccessDownload(ArrayList<Organization> list) {
+        OrganizationListView.onSuccessDownloadFile(list);
+    }
+
+    @Override
+    public void onFailureDownload(String message) {
+        OrganizationListView.onFailureDownloadFile(message);
+
     }
 
 

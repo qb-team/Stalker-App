@@ -17,7 +17,7 @@
             android:textStyle="bold"
             />
         <TextView
-            android:id="@+id/text_view_result"
+            android:id="@+id/descriptionID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
@@ -25,17 +25,20 @@
             android:layout_marginTop="200dp"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:gravity="center_horizontal" />
+            android:gravity="center_horizontal"/>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageID"/>
 
     <TextView
-        android:id="@+id/coordinateID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:layout_marginTop="150dp"
-        />
+            android:id="@+id/coordinateID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginTop="150dp"/>
 
 
 </LinearLayout>

@@ -45,17 +45,20 @@ public class StandardOrganizationFragment extends AbstractOrganizationFragment i
     private LocationListener listener;
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-    TextView titolo;
-    TextView risultati;
-    Button mostra;
+    private TextView title, risultati, descrption ;
+    private Button mostra;
 
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
-        titolo=view.findViewById(R.id.titleID);
+        Bundle bundle=this.getArguments();
+        title=view.findViewById(R.id.titleID);
+        title.setText(bundle.getString("name"));
+        descrption=view.findViewById(R.id.descriptionID);
+        descrption.setText(bundle.getString("description"));
         risultati=view.findViewById(R.id.coordinateID);
-        MostraNome();
+
         checkPermission();
         InserisciCoordinate();
         return view;
@@ -178,13 +181,6 @@ public class StandardOrganizationFragment extends AbstractOrganizationFragment i
             }
             return;
         }}
-
-    public void MostraNome(){
-        Bundle bundle=this.getArguments();
-        if(bundle!=null){
-            titolo.setText(bundle.getString("nomeOrganizzazione"));
-        }
-    }
 
     public static StandardOrganizationFragment getInstance() {
         return instance;

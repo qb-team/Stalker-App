@@ -11,7 +11,10 @@
         android:background="#008577"
         android:gravity="center_horizontal"
         android:orientation="vertical">
-
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageID"/>
         <TextView
             android:id="@+id/dialog_nomeOrganizzazione"
             android:layout_width="wrap_content"

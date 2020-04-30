@@ -73,15 +73,16 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                 JSONArray jsonArray = (JSONArray) jsonObject.get("organisationList");
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObj= jsonArray.getJSONObject(i);
-                    String organizationName= jsonObj.getString("name");
+                    String name= jsonObj.getString("name");
                     String city=jsonObj.getString("city");
+                    String trackingMode=jsonObj.getString("trackingMode");
                     Organization organization=new Organization();
-                    organization.setName(organizationName);
+                    organization.setName(name);
                     organization.setCity(city);
+                    organization.setTrackingMode(Organization.TrackingModeEnum.fromValue(trackingMode));
                     System.out.println("organization:  " + organization);
                     aux.add(organization);
-
-            }
+                }
 
         } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

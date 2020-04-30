@@ -28,7 +28,7 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
  * A simple {@link Fragment} subclass.
  */
 public class LDAPorganizationFragment extends AbstractOrganizationFragment implements OnBackPressListener , View.OnClickListener{
-    private TextView titleTextView,descriptionTextView,positionTextView;
+    private TextView title,description,positionTextView;
     private Button authentication;
     private ImageView mImageView;
     private TextView trackingTextView;
@@ -45,9 +45,11 @@ public class LDAPorganizationFragment extends AbstractOrganizationFragment imple
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ldap_organization, container, false);
-
-        titleTextView=view.findViewById(R.id.titleID);
-        descriptionTextView=view.findViewById(R.id.descriptionID);
+        Bundle bundle=this.getArguments();
+        title=view.findViewById(R.id.titleID);
+        title.setText(bundle.getString("name"));
+        description=view.findViewById(R.id.descriptionID);
+        description.setText(bundle.getString("description"));
         positionTextView=view.findViewById(R.id.positionID);
         authentication=view.findViewById(R.id.LDAPaccessID);
         mImageView=view.findViewById(R.id.imageID);

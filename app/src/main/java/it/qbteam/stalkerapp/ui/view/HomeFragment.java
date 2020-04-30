@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView;
@@ -35,6 +36,7 @@ import org.json.JSONException;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.HomeContract;
@@ -180,13 +182,25 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public void organizationClick(int position) {
         Bundle bundle=new Bundle();
-        bundle.putString("nomeOrganizzazione", organizationList.get(position).getName());
-        //DA RISOLVERE!!!!!!!!!!!
-       // Fragment aux= organizationList.get(position).getFragment();
-       // aux.setArguments(bundle);
-       // FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
-        //transaction.addToBackStack(null);
-        //transaction.replace(R.id.HomeFragmentID, aux).commit();
+        bundle.putString("name", organizationList.get(position).getName());
+        bundle.putString("description", organizationList.get(position).getDescription());
+        bundle.putString("image", organizationList.get(position).getImage());
+
+        if(organizationList.get(position).getTrackingMode().getValue()=="authenticated"){
+            StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
+            stdOrgFragment.setArguments(bundle);
+            FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.HomeFragmentID, stdOrgFragment).commit();
+        }
+        else{
+
+        }
+        MyStalkersListFragment stkOrgFragment= new MyStalkersListFragment();
+        stkOrgFragment.setArguments(bundle);
+        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.HomeFragmentID, stkOrgFragment).commit();
         }
 
         @Override
@@ -195,6 +209,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         myDialog.setContentView(R.layout.dialog_organizzazione);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView dialog_nomeOrganizzazione=myDialog.findViewById(R.id.dialog_nomeOrganizzazione);
+        ImageView image=myDialog.findViewById(R.id.imageID);
+        //image.set(organizationList.get(position).getImage());
         TextView dialog_tracciamento=myDialog.findViewById(R.id.dialog_tracciamento);
         dialog_nomeOrganizzazione.setText(organizationList.get(position).getName());
         myDialog.show();

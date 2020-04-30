@@ -70,18 +70,20 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                     String trackingMode=jsonObj.getString("trackingMode");
                     Long orgId=jsonObj.getLong("id");
                     String creationDate=jsonObj.getString("creationDate");
-                    String serverUrl=jsonObj.getString("authenticationServerURL");
+                    String serverUrl;
                     Organization organization=new Organization();
                     organization.setName(name);
                     organization.setCity(city);
                     organization.setId(orgId);
-
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
                     OffsetDateTime offsetDateTime = OffsetDateTime.parse(creationDate, dateTimeFormatter);
                     organization.setCreationDate(offsetDateTime);
-
-                    organization.setAuthenticationServerURL(serverUrl);
+                    if(trackingMode.equals("authenticated")){
+                        serverUrl=jsonObj.getString("authenticationServerURL");
+                        organization.setAuthenticationServerURL(serverUrl);
+                    }
                     organization.setTrackingMode(Organization.TrackingModeEnum.fromValue(trackingMode));
+
                     System.out.println("organization:  " + organization);
                     aux.add(organization);
                 }
@@ -161,7 +163,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                        o.setName(response.body().get(i).getName());
                        o.setCity(response.body().get(i).getCity());
                        o.setCountry(response.body().get(i).getCountry());
-                       o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
                        o.setCreationDate(response.body().get(i).getCreationDate());
                        o.setDescription(response.body().get(i).getDescription());
                        o.setId(response.body().get(i).getId());
@@ -172,6 +173,8 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                        o.setStreet(response.body().get(i).getStreet());
                        o.setTrackingArea(response.body().get(i).getTrackingArea());
                        o.setTrackingMode(response.body().get(i).getTrackingMode());
+                       if(response.body().get(i).getTrackingMode().getValue()=="authenticated")
+                           o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
                        returnList.add(o);
                     }
 

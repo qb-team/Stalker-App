@@ -84,6 +84,6 @@ public class StalkerLDAP extends AsyncTask<Void,Void,String> implements LDAPorga
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-return"ok";
+        return"ok";
     }
 }

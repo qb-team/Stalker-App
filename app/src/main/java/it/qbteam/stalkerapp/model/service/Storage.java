@@ -14,6 +14,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,9 +68,19 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                     String name= jsonObj.getString("name");
                     String city=jsonObj.getString("city");
                     String trackingMode=jsonObj.getString("trackingMode");
+                    Long orgId=jsonObj.getLong("id");
+                    String creationDate=jsonObj.getString("creationDate");
+                    String serverUrl=jsonObj.getString("authenticationServerURL");
                     Organization organization=new Organization();
                     organization.setName(name);
                     organization.setCity(city);
+                    organization.setId(orgId);
+
+                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+                    OffsetDateTime offsetDateTime = OffsetDateTime.parse(creationDate, dateTimeFormatter);
+                    organization.setCreationDate(offsetDateTime);
+
+                    organization.setAuthenticationServerURL(serverUrl);
                     organization.setTrackingMode(Organization.TrackingModeEnum.fromValue(trackingMode));
                     System.out.println("organization:  " + organization);
                     aux.add(organization);

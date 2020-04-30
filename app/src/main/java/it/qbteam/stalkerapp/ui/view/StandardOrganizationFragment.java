@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
@@ -99,12 +100,14 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     public boolean onOptionsItemSelected(MenuItem item){
         int id= item.getItemId();
         if(id==R.id.preferitiID){
-            Bundle bundle1=this.getArguments();
+            Bundle bundle=this.getArguments();
 
-            if(bundle1!=null){
+            if(bundle!=null){
 
                 try {
-                   MyStalkersListFragment.getInstance().addOrganization(bundle1.getString("nomeOrganizzazione"));
+                    Organization o=new Organization();
+                    o.setName(bundle.getString("name"));
+                    MyStalkersListFragment.getInstance().addOrganization(o);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

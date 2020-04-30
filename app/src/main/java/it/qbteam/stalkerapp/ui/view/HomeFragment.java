@@ -60,6 +60,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private SwipeRefreshLayout refresh;
     private User user;
     private String path;
+
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
     Button downloadButton;
@@ -67,6 +68,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        instance=this;
         path= getContext().getFilesDir() + "/Organizzazioni.txt";
         if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
             FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -95,7 +97,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        System.out.println("Creazione HomeFragment");
+
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
         downloadButton = view.findViewById(R.id.scaricoID);
         refresh=view.findViewById(R.id.swiperefreshID);
@@ -233,7 +235,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             public void onClick(View v) {
 
                 try {
-                    MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position).getName());
+                    MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position));
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

@@ -51,6 +51,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -270,8 +272,16 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                     break;
 
             case R.id.alphabeticalOrderID:
-                HomeFragment.getInstance().alphabeticalOrder();
-                MyStalkersListFragment.getInstance().alphabeticalOrder();
+
+                    HomeFragment.getInstance().alphabeticalOrder();
+                try {
+                    MyStalkersListFragment.getInstance().alphabeticalOrder();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             case R.id.cambianumero:
                 //mService.setNumero(TrackingDistance.checkDistance(mlocation));
                 System.out.println(mService.getNUMERO());

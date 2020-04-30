@@ -13,7 +13,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     MyStalkersListContract.View myStalkersView;
     private Storage storage;
 
-public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
+    public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView=myStalkersView;
     storage= new Storage(null,this);
 }
@@ -25,14 +25,10 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
      }
 
     @Override
-    public void remove(String name, ArrayList<Organization> list) throws IOException, JSONException {
-        storage.performRemove(name,list);
+    public void remove(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {
+        storage.performRemove(organization, list, path);
     }
 
-    @Override
-    public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
-        storage.performUpdateFile(list,path);
-    }
 
     @Override
     public String getOrganizationType(Organization organization) {
@@ -40,13 +36,14 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     }
 
     @Override
-    public void findOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException {
-        storage.performFindOrganization(name, list);
+    public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
+        storage.saveInLocalFile(list,path);
     }
 
+
     @Override
-    public void addOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException {
-        storage.performAddOrganization(name, list);
+    public void addOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {
+        storage.performAddOrganizationLocal(organization, list,path);
     }
 
     @Override
@@ -59,19 +56,15 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
         myStalkersView.onFailureCheckFile(message);
     }
 
-    @Override
-    public void onSuccessSearch(String message) {
-        myStalkersView.onSuccessSearchOrganization(message);
-    }
-
-    @Override
-    public void onFailureSearch(String name) throws IOException, JSONException {
-        myStalkersView.onFailureSearchOrganization(name);
-    }
 
     @Override
     public void onSuccessAdd(String message) throws IOException, JSONException {
         myStalkersView.onSuccessAddOrganization(message);
+    }
+
+    @Override
+    public void onFailureAdd(String message) {
+        myStalkersView.onFailureAddOrganization(message);
     }
 
     @Override

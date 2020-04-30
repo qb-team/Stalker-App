@@ -35,8 +35,6 @@ public interface HomeContract {
 
         ArrayList<Organization> performCheckFile(String path);
         void performDownloadFile(String path, User user) throws InterruptedException, IOException;
-        void performUpdateFile(ArrayList<Organization> list, String path) throws JSONException, IOException;
-
     }
 
     interface HomeListener {

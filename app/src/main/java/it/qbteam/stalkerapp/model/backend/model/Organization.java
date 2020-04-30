@@ -492,13 +492,14 @@ public class Organization implements Comparable<Organization>{
     return Objects.hash(id, name, description, image, street, number, postCode, city, country, authenticationServerURL, creationDate, lastChangeDate, trackingArea, trackingMode);
   }
 
-  public boolean equals(OrganizationAux o) {
-    if (o instanceof OrganizationAux) {
-      OrganizationAux aux = (OrganizationAux) o;
-      return aux.getNome() == this.name;
+  public boolean equals(Organization o) {
+    if (o instanceof Organization) {
+      Organization aux = (Organization) o;
+      return aux.getName() == this.name;
     }
     return false;
   }
+
   @Override
   public int compareTo(Organization o) {
      return name.compareTo(o.getName());

@@ -8,7 +8,6 @@ import it.qbteam.stalkerapp.presenter.HomeContract;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,74 +87,53 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public void performRemove(String name, ArrayList<Organization>list) throws IOException, JSONException {
-
+    public void performRemove(Organization organization, ArrayList<Organization>list, String path) throws IOException, JSONException {
+        boolean trovato=false;
         for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext(); ) {
             Organization o = iterator.next();
-            if (o.getName().equals(name)) {
+            if (o.getName().equals(organization.getName())) {
                 // Remove the current element from the iterator and the list.
                 iterator.remove();
+                trovato=true;
             }
         }
-           myStalkerListener.onSuccesRemove(list);
-    }
+        if(trovato){
+            myStalkerListener.onSuccesRemove(list);
+            saveInLocalFile(list,path);
 
-    @Override
-    public void performUpdateFile(ArrayList<Organization> list, String path ) throws JSONException, IOException {
-        JSONArray ja;
-        JSONObject jo,mainObj;
-        //CONVERTO LA LISTA DINAMICA IN UN NUOVO ARRAY
-        String[] array = new String[list.size()];
-        for(int i=0; i< array.length;i++)
-            array[i]=list.get(i).getName();
-
-        //COSTRUISCO JSONOBJECT
-        ja=new JSONArray();
-        for(int i=0;i<array.length;i++){
-            jo=new JSONObject();
-            jo.put("nome", array[i]);
-            System.out.println(array[i]);
-            ja.put(jo);
         }
-        mainObj=new JSONObject();
-        mainObj.put("listaOrganizzazioni", ja);
-        String s="";
-        s=mainObj.toString();
-        FileWriter w;
-        w=new FileWriter(path);
-        w.write(s);
-        w.flush();
-        w.close();
 
     }
 
-    @Override
-    public void performFindOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException {
 
+
+    @Override
+    public void performAddOrganizationLocal(Organization organization, ArrayList<Organization> list,String path) throws IOException, JSONException {
         boolean trovato = false;
         for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
             Organization o = iterator.next();
-            if (o.getName().equals(name)) {
+            if (o.getName().equals(organization.getName())) {
                 trovato = true;
             }
         }
-        if(trovato)
-            myStalkerListener.onSuccessSearch("L'organizzazione è già presente nella lista MyStalker");
-        else
-            myStalkerListener.onFailureSearch(name);
+        if(trovato){
+
+            myStalkerListener.onFailureAdd("Questa organizzazione è stata già aggiunta a MyStalkers");
+
+        }
+
+        else {
+
+            list.add(organization);
+            saveInLocalFile(list,path);
+            myStalkerListener.onSuccessAdd("Hai aggiunto l'organizzazione a MyStalkers");
+        }
+
+
     }
 
     @Override
-    public void performAddOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException {
-        Organization o=new Organization();
-        o.setName(name);
-        list.add(o);
-        myStalkerListener.onSuccessAdd("L'organizzazione è stata aggiunta alla lista MyStalker");
-
-    }
-
-    @Override
-    public void performDownloadFile(String path, User user) throws InterruptedException, IOException {
+    public void performDownloadFile(String path, User user)  {
         ArrayList<Organization> returnList=new ArrayList<>();
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
         OrganizationApi service = ac.createService(OrganizationApi.class);
@@ -199,7 +177,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                     e.printStackTrace();
                 }
                 try {
-                    convertToJson(returnList,path);
+                    saveInLocalFile(returnList,path);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
@@ -229,7 +207,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         w.close();
 
     }*/
- private void convertToJson(ArrayList<Organization>list,String path) throws JSONException, IOException {
+ public void saveInLocalFile(ArrayList<Organization>list,String path) throws JSONException, IOException {
 
     JSONArray ja = new JSONArray();
 

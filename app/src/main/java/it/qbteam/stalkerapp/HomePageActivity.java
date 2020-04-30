@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -27,18 +26,12 @@ import android.widget.Toast;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.BuildConfig;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -50,6 +43,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
+
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -67,7 +62,7 @@ import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
-public class HomePageActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, NavigationView.OnNavigationItemSelectedListener {
+public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     // Used in checking for runtime permissions.
@@ -155,20 +150,22 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
 
 
+        initScreen();
 
+        /*  Chiedere se è inutile oppure no
         if (savedInstanceState == null) {
 
             // withholding the previously created fragment from being created again
             // On orientation change, it will prevent fragment recreation
             // its necessary to reserve the fragment stack inside each tab
-            initScreen();
+
 
         } else {
             // restoring the previously created fragment
             // and getting the reference
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
-
+        */
 
         myReceiver = new MyReceiver();
 
@@ -212,9 +209,14 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_tab, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     private void initScreen() {
-        // Creating the ViewPager container fragment once
+        // Creato l'actionTab in alto
         actionTabFragment = new ActionTabFragment();
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -236,11 +238,6 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
             // carousel handled the back pressed task
             // do not call super
         }
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
     }
 
     @Override
@@ -270,8 +267,9 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
                     break;
 
             case R.id.alphabeticalOrderID:
-                HomeFragment.getInstance().alphabeticalOrder();
+                    HomeFragment.getInstance().alphabeticalOrder();
                 MyStalkersListFragment.getInstance().alphabeticalOrder();
+                break;
             case R.id.cambianumero:
                 //mService.setNumero(TrackingDistance.checkDistance(mlocation));
                 System.out.println(mService.getNUMERO());

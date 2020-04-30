@@ -31,7 +31,7 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     @Override
     public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
-        storage.performUpdateFile(list,path);
+        storage.saveInLocalFile(list,path);
     }
 
     @Override

@@ -16,20 +16,12 @@ import com.google.android.material.tabs.TabLayout;
 
 
 public class ActionTabFragment extends Fragment {
-    /**
-     * TabPagerIndicator
-     *
-     * Please refer to ViewPagerIndicator library
-     */
+
     protected TabLayout tabLayout;
-
     protected ViewPager viewPager;
-
     private TabViewPagerAdapter adapter;
 
-
     public ActionTabFragment() {
-
         // Required empty public constructor
     }
 
@@ -49,16 +41,11 @@ public class ActionTabFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         // Note that we are passing childFragmentManager, not FragmentManager
         adapter = new TabViewPagerAdapter(getResources(),getChildFragmentManager());
         //add fragment
-
-
-
         adapter.addFragment(new HomeFragment(),"");
         adapter.addFragment(new MyStalkersListFragment(),"");
-       //adapter.addFragment(new Settings(),"");
 
         viewPager.setAdapter(adapter);
         // The one-stop shop for setting up this TabLayout with a ViewPager.
@@ -76,11 +63,9 @@ public class ActionTabFragment extends Fragment {
      *
      * @return true = if this fragment and/or one of its associates Fragment can handle the backPress
      */
-
     public boolean onBackPressed() {
         // currently visible tab Fragment
         OnBackPressListener currentFragment = (OnBackPressListener) adapter.getItem(viewPager.getCurrentItem());
-
         if (currentFragment != null) {
             // lets see if the currentFragment or any of its childFragment can handle onBackPressed
             return currentFragment.onBackPressed();
@@ -89,5 +74,6 @@ public class ActionTabFragment extends Fragment {
         // this Fragment couldn't handle the onBackPressed call
         return false;
     }
+
 
 }

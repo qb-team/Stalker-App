@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,14 +44,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-        path= getContext().getFilesDir() + "/Organizzazioni.txt";
+        path= getContext().getFilesDir() + "/Preferiti.txt";
         instance=this;
 
     }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        System.out.println("Creazione HomeFragment");
+
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
         recyclerView=view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
@@ -58,6 +59,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         myStalkersListPresenter =new MyStalkersListPresenter(this);
         organizationList =new ArrayList<>();
         organizationList=checkFile();
+
+        if(organizationList!=null){
+            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
+        }
+        else
+            Toast.makeText(getActivity(),"Lista ancora vuota!",Toast.LENGTH_SHORT).show();
+
         return view;
     }
 
@@ -75,13 +84,25 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void organizationClick(int position) {
 
         Bundle bundle=new Bundle();
-        bundle.putString("nomeOrganizzazione", organizationList.get(position).getName());
-        //DA RISOLVERE PER VEDERE CHE FRAGMENT INVOCARE
-       /* Fragment aux= organizationList.get(position).getFragment();
-        aux.setArguments(bundle);
-        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, aux).commit();*/
+        bundle.putString("name", organizationList.get(position).getName());
+        bundle.putString("description", organizationList.get(position).getDescription());
+        bundle.putString("image", organizationList.get(position).getImage());
+
+        if(organizationList.get(position).getTrackingMode().getValue()=="anonymous"){
+            StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
+            stdOrgFragment.setArguments(bundle);
+            FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.HomeFragmentID, stdOrgFragment).commit();
+        }
+        else{
+
+            LDAPorganizationFragment LDAPFragment= new LDAPorganizationFragment();
+            LDAPFragment.setArguments(bundle);
+            FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.HomeFragmentID, LDAPFragment).commit();
+        }
 
     }
 
@@ -117,42 +138,23 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     public void removeOrganization(int position) throws IOException, JSONException {
 
-        myStalkersListPresenter.remove(organizationList.get(position).getName(), organizationList);
+        myStalkersListPresenter.remove(organizationList.get(position), organizationList, path);
 
     }
 
-    public void addOrganization(String name) throws IOException, JSONException {
+    public void addOrganization(Organization organization) throws IOException, JSONException {
 
-        myStalkersListPresenter.findOrganization(name, organizationList);
+        myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
+
     }
 
-    public void updateFileLocale(ArrayList<Organization> list) throws IOException, JSONException {
-        myStalkersListPresenter.updateFile(list,path);
-    }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu){
-
-
-        MenuItem preferiti= menu.findItem(R.id.preferitiID);
-        if (preferiti!=null)
-            menu.findItem(R.id.preferitiID).setVisible(false);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.cerca_organizzazione, menu);
-        MenuItem item= menu.findItem(R.id.cercaID);
-        SearchView searchView= (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(this);
-    }
     public void alphabeticalOrder(){
         Collections.sort(organizationList);
         try {
             adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
-            myStalkersListPresenter.updateFile(organizationList,"/Preferiti.txt");
+            myStalkersListPresenter.updateFile(organizationList,path);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -200,28 +202,22 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     @Override
-    public void onSuccessSearchOrganization(String message) {
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onFailureSearchOrganization(String name ) throws IOException, JSONException {
-        myStalkersListPresenter.addOrganization(name, organizationList);
-    }
-
-    @Override
     public void onSuccessAddOrganization(String message) throws IOException, JSONException {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
         adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
         recyclerView.setAdapter(adapter);
-        updateFileLocale(organizationList);
+
+    }
+
+    @Override
+    public void onFailureAddOrganization(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException {
         adapter=new OrganizationViewAdapter(list,this.getContext(),this);
         recyclerView.setAdapter(adapter);
-        updateFileLocale(list);
     }
 
     @Override

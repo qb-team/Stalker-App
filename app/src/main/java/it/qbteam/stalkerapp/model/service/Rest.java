@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.model.service;
 
+import android.net.wifi.hotspot2.pps.Credential;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +31,29 @@ public class Rest{
         this.myStalkerListener=myStalkerListener;
     }
 
+    public void performRemoveOrganizationRest(Organization organization, User user){
+        Favorite favoriteUpload = new Favorite();
+        favoriteUpload.setUserId(user.getToken());
+        favoriteUpload.setOrganizationId(organization.getId());
+        favoriteUpload.setCreationDate(organization.getCreationDate());
+        favoriteUpload.setOrgAuthServerId(organization.getAuthenticationServerURL());
+
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
+        FavoriteApi service = ac.createService(FavoriteApi.class);
+        Call<Void> favorite = service.removeFavoriteOrganization(favoriteUpload);
+        favorite.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                System.out.println(response.code());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println("ERROREEEEEEEEEEEEEEEEEE2");
+            }
+        });
+    }
+
     public void performAddOrganizationRest(Organization organization, User user) throws IOException, JSONException{
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(user.getToken());
@@ -42,7 +67,7 @@ public class Rest{
         favorite.enqueue(new Callback<Favorite>() {
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
-
+                //myStalkerListener.onSuccessAddRest();
                 System.out.println(response.code());
             }
 

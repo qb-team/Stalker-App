@@ -44,6 +44,11 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
         storage.saveInLocalFile(list,path);
     }
 
+    @Override
+    public void removeRest(Organization organization, User user) {
+        rest.performRemoveOrganizationRest(organization, user);
+    }
+
 
     @Override
     public void addOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {

@@ -25,9 +25,10 @@ public interface MyStalkersListContract {
         ArrayList<Organization> checkFile(String path);
         void remove(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException;
         String getOrganizationType(Organization organization);
-        void findOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException;
-        void addOrganization(String name , ArrayList<Organization> list) throws IOException, JSONException;
+        void addOrganizationLocal(Organization organization , ArrayList<Organization> list, String path) throws IOException, JSONException;
         void addOrganizationRest(Organization organization, User user) throws IOException, JSONException;
+        void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
+        void removeRest(Organization organization, User user);
     }
 
     //METODO DEL MODELLO

@@ -1,15 +1,18 @@
 package it.qbteam.stalkerapp;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -119,7 +122,8 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
         // that since this activity is in the foreground, the service can exit foreground mode.
         bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
-        //requestPermissions();
+
+
 
     }
 
@@ -127,7 +131,7 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-
+        statusCheck();
         fStore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
 
@@ -418,8 +422,37 @@ public class HomePageActivity extends AppCompatActivity implements SharedPrefere
             }
         }
     }
+    public void statusCheck() {//Controllo se il GPS è attivo
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
 
+        }
+    }
+    private void buildAlertMessageNoGps() {//Allert nel caso in cui il GPS non sia attivo
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        switcher.setChecked(true);
+                        if (!checkPermissions()) {
+                            requestPermissions();
+                        } else {
+                            mService.requestLocationUpdates();
+                        }
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
 
 
 

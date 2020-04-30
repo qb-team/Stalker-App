@@ -1,10 +1,8 @@
 package it.qbteam.stalkerapp.presenter;
 
-import androidx.fragment.app.Fragment;
 import org.json.JSONException;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import it.qbteam.stalkerapp.model.service.Storage;
 
 import java.io.IOException;

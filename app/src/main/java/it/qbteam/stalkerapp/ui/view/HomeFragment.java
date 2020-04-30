@@ -1,9 +1,13 @@
 package it.qbteam.stalkerapp.ui.view;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,9 +38,7 @@ import com.google.firebase.auth.GetTokenResult;
 import org.json.JSONException;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.OrganizationAux;
 import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.HomeContract;
@@ -101,7 +103,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         OrganizationListPresenter=new HomePresenter(this);
-        organizationList =new ArrayList<>();
+
 
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -181,12 +183,12 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizationClick(int position) {
-        Bundle bundle=new Bundle();
-        bundle.putString("name", organizationList.get(position).getName());
-        bundle.putString("description", organizationList.get(position).getDescription());
-        bundle.putString("image", organizationList.get(position).getImage());
+            Bundle bundle=new Bundle();
+            bundle.putString("name", organizationList.get(position).getName());
+            bundle.putString("description", organizationList.get(position).getDescription());
+            bundle.putString("image", organizationList.get(position).getImage());
 
-        if(organizationList.get(position).getTrackingMode().getValue()=="authenticated"){
+        if(organizationList.get(position).getTrackingMode().getValue()=="anonymous"){
             StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
             stdOrgFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
@@ -195,13 +197,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         }
         else{
 
+            LDAPorganizationFragment LDAPFragment= new LDAPorganizationFragment();
+            LDAPFragment.setArguments(bundle);
+            FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.HomeFragmentID, LDAPFragment).commit();
         }
-        MyStalkersListFragment stkOrgFragment= new MyStalkersListFragment();
-        stkOrgFragment.setArguments(bundle);
-        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.HomeFragmentID, stkOrgFragment).commit();
-        }
+
+    }
 
         @Override
     public void organizationLongClick(int position) {
@@ -304,3 +307,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         return new BackPressImplementation(this).onBackPressed();
     }
 }
+
+
+

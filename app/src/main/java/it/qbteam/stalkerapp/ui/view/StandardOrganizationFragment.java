@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
@@ -38,18 +39,27 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class StandardOrganizationFragment extends AbstractOrganizationFragment implements OnBackPressListener {
+public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
     private static StandardOrganizationFragment instance = null;
     final ArrayList<LatLng> poligono = new ArrayList<>();
     private LocationManager locationManager;
     private LocationListener listener;
+    public final static String TAG="Home_Fragment";
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
     private TextView title, risultati, descrption ;
     private Button mostra;
 
+
+
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+    }
     @Override
-    public View provideYourFragmentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("Creata organizzazione");
 
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
         Bundle bundle=this.getArguments();
@@ -62,7 +72,11 @@ public class StandardOrganizationFragment extends AbstractOrganizationFragment i
         checkPermission();
         InserisciCoordinate();
         return view;
+
+
+
     }
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu){

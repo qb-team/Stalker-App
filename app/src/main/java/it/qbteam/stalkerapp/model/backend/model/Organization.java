@@ -22,7 +22,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import it.qbteam.stalkerapp.model.data.OrganizationAux;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -461,7 +460,7 @@ public class Organization implements Comparable<Organization>{
   }
 
 
-  @Override
+  /*@Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
@@ -485,7 +484,7 @@ public class Organization implements Comparable<Organization>{
         Objects.equals(this.lastChangeDate, organization.lastChangeDate) &&
         Objects.equals(this.trackingArea, organization.trackingArea) &&
         Objects.equals(this.trackingMode, organization.trackingMode);
-  }
+  }*/
 
   @Override
   public int hashCode() {

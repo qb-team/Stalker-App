@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +29,7 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LDAPorganizationFragment extends AbstractOrganizationFragment implements OnBackPressListener , View.OnClickListener{
+public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener{
     private TextView title,description,positionTextView;
     private Button authentication;
     private ImageView mImageView;
@@ -41,10 +43,15 @@ public class LDAPorganizationFragment extends AbstractOrganizationFragment imple
     public LDAPorganizationFragment() {
         // Required empty public constructor
     }
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
+    }
     @Override
-    public View provideYourFragmentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ldap_organization, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("Creata organizzazione");
+        View view=inflater.inflate(R.layout.fragment_ldap_organization, container, false);
         Bundle bundle=this.getArguments();
         title=view.findViewById(R.id.titleID);
         title.setText(bundle.getString("name"));
@@ -60,7 +67,11 @@ public class LDAPorganizationFragment extends AbstractOrganizationFragment imple
         ldaPorganizationPresenter=new LDAPorganizationPresenter();
         authentication.setOnClickListener(this);
         return view;
+
+
+
     }
+
 
 
     @Override

@@ -248,25 +248,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         });
 
     }
-    @Override
-    public void onPrepareOptionsMenu(Menu menu){
 
-        MenuItem preferiti= menu.findItem(R.id.preferitiID);
-        if (preferiti!=null)
-           menu.findItem(R.id.preferitiID).setVisible(false);
-    }
 
-    //Quando viene invocato?
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.cerca_organizzazione, menu);
-
-        MenuItem item= menu.findItem(R.id.cercaID);
-        SearchView searchView= (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(this);
-
-    }
 
     public void alphabeticalOrder(){
 

@@ -148,24 +148,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu){
-
-
-        MenuItem preferiti= menu.findItem(R.id.preferitiID);
-        if (preferiti!=null)
-            menu.findItem(R.id.preferitiID).setVisible(false);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.cerca_organizzazione, menu);
-        MenuItem item= menu.findItem(R.id.cercaID);
-        SearchView searchView= (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(this);
-    }
-    public void alphabeticalOrder() throws IOException, JSONException {
+    public void alphabeticalOrder(){
         Collections.sort(organizationList);
         try {
             adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);

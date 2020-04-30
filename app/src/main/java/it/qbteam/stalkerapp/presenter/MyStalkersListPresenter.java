@@ -3,6 +3,8 @@ package it.qbteam.stalkerapp.presenter;
 import org.json.JSONException;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.Rest;
 import it.qbteam.stalkerapp.model.service.Storage;
 
 import java.io.IOException;
@@ -12,10 +14,12 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     MyStalkersListContract.View myStalkersView;
     private Storage storage;
+    private Rest rest;
 
 public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView=myStalkersView;
     storage= new Storage(null,this);
+    rest = new Rest(this);
 }
 
 
@@ -50,6 +54,11 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     }
 
     @Override
+    public void addOrganizationRest(Organization organization, User user) throws IOException, JSONException {
+        rest.performAddOrganizationRest(organization, user);
+    }
+
+    @Override
     public void onSuccessFile(ArrayList<Organization> list) {
         myStalkersView.onSuccessCheckFile(list);
     }
@@ -77,6 +86,16 @@ public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     @Override
     public void onSuccesRemove(ArrayList<Organization> list) throws IOException, JSONException {
         myStalkersView.onSuccessRemoveOrganization(list);
+    }
+
+    @Override
+    public void onSuccessAddRest(String message) {
+        myStalkersView.onSuccessAddOrganizationRest(message);
+    }
+
+    @Override
+    public void onFailureAddRest(String message) {
+        myStalkersView.onFailureAddOrganizationRest(message);
     }
 
 

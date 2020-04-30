@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
-
+import it.qbteam.stalkerapp.model.data.User;
 
 
 public interface MyStalkersListContract {
@@ -17,6 +17,8 @@ public interface MyStalkersListContract {
         void onFailureSearchOrganization(String name) throws IOException, JSONException;
         void onSuccessAddOrganization(String message) throws IOException, JSONException;
         void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException;
+        void onSuccessAddOrganizationRest(String message);
+        void onFailureAddOrganizationRest(String message);
     }
 
     //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
@@ -27,6 +29,7 @@ public interface MyStalkersListContract {
         String getOrganizationType(Organization organization);
         void findOrganization(String name, ArrayList<Organization> list) throws IOException, JSONException;
         void addOrganization(String name , ArrayList<Organization> list) throws IOException, JSONException;
+        void addOrganizationRest(Organization organization, User user) throws IOException, JSONException;
     }
 
     //METODO DEL MODELLO
@@ -46,6 +49,8 @@ public interface MyStalkersListContract {
         void onFailureSearch(String name) throws IOException, JSONException;
         void onSuccessAdd(String message) throws IOException, JSONException;
         void onSuccesRemove(ArrayList<Organization> list) throws IOException, JSONException;
+        void onSuccessAddRest(String message);
+        void onFailureAddRest(String message);
 
     }
 }

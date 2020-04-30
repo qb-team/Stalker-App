@@ -47,5 +47,4 @@ public interface FavoriteApi {
   Call<Void> removeFavoriteOrganization(
     @retrofit2.http.Body Favorite favorite
   );
-
 }

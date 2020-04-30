@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
@@ -223,5 +224,18 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         updateFileLocale(list);
     }
 
+    @Override
+    public void onSuccessAddOrganizationRest(String message) {
+
+    }
+
+    @Override
+    public void onFailureAddOrganizationRest(String message) {
+
+    }
+
+    public void addOrganizationRest(Organization organization, User user) throws IOException, JSONException {
+        myStalkersListPresenter.addOrganizationRest(organization, user);
+    }
 
 }

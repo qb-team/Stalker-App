@@ -10,80 +10,51 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import it.qbteam.stalkerapp.presenter.LDAPorganizationContract;
 
-public class StalkerLDAP extends AsyncTask<Void,Void,String> implements LDAPorganizationContract.Model {
-    private LDAPConnection ldapConnection;
-    private BindResult bindResult;
-    private String host;
-    private String bindDN;
-    private String password;
-    private int port;
-    private SearchResultEntry entry;
 
-    public StalkerLDAP(String host, int port, String bindDN, String password) {
+    public class StalkerLDAP implements LDAPorganizationContract.Model {
+        private static final String TAG = "com.vartmp7.stalker.component.StalkerLDAP";
 
-        this.host = host;
-        this.port = port;
-        this.bindDN = bindDN;
-        this.password = password;
+        private LDAPConnection connection;
+        private BindResult result;
 
-    }
-    public String getHost(){
-        return this.host;
-    }
-    public int getPort(){
-        return this.port;
-    }
-    public String getBindDN(){
-        return this.bindDN;
-    }
-    public String getPassword(){
-        return this.password;
-    }
+        private String bindDN;
+        private String bindPassword;
+        private String serverAddress;
+        private int serverPort;
 
-    public void performBind() throws LDAPException, ExecutionException, InterruptedException {
+        private SearchResultEntry entry;
 
-    }
+        public StalkerLDAP(String serverAddress, int port, String binDn, String password) {
+            this.serverAddress = serverAddress;
+            this.serverPort = port;
+            this.bindDN = binDn;
+            this.bindPassword = password;
 
-
-    public void performSearch() throws ExecutionException, InterruptedException {
-        System.out.println("performSearch");
-        FutureTask<SearchResultEntry> searchFutureTask = new FutureTask<>(new Callable<SearchResultEntry>() {
-            @Override
-            public SearchResultEntry call() throws Exception {
-                return ldapConnection.getEntry(bindDN);
-            }
-        });
-        new Thread(searchFutureTask).start();
-        this.entry = searchFutureTask.get();
-        this.ldapConnection.close();
-
-    }
-
-
-    @Override
-    protected String doInBackground(Void... voids) {
-        System.out.println("performBind" + this.host + this.port);
-
-        try {
-            this.ldapConnection = new LDAPConnection(host, port);
-        } catch (LDAPException e) {
-            e.printStackTrace();
         }
-        FutureTask<BindResult> bindFutureTask = new FutureTask<>(new Callable<BindResult>() {
-            @Override
-            public BindResult call() throws Exception {
-                return ldapConnection.bind(bindDN, password);
-            }
-        });
 
-        new Thread(bindFutureTask).start();
-        try {
-            this.bindResult = bindFutureTask.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        @Override
+        public void performBind() throws LDAPException, ExecutionException, InterruptedException {
+            this.connection = new LDAPConnection(serverAddress, serverPort);
+            FutureTask<BindResult> bindFutureTask = new FutureTask<>(new Callable<BindResult>() {
+                @Override
+                public BindResult call() throws Exception {
+                    return connection.bind(bindDN, bindPassword);
+                }
+            });
+            new Thread(bindFutureTask).start();
+            this.result = bindFutureTask.get();
         }
-        return"ok";
+
+        @Override
+        public void performSearch() throws ExecutionException, InterruptedException {
+            FutureTask<SearchResultEntry> searchFutureTask = new FutureTask<>(new Callable<SearchResultEntry>() {
+                @Override
+                public SearchResultEntry call() throws Exception {
+                    return connection.getEntry(bindDN);
+                }
+            });
+            new Thread(searchFutureTask).start();
+            this.entry = searchFutureTask.get();
+            this.connection.close();
+        }
     }
-}

@@ -114,7 +114,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
                 passwordLDAP=myDialog.findViewById(R.id.passwordID);
                 StalkerLDAP stalkerLDAP=new StalkerLDAP("ldap:\\/\\/ldap.forumsys.com",8080,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
                 try {
-                    stalkerLDAP.execute();
+                    stalkerLDAP.performBind();
                     stalkerLDAP.performSearch();
 
                     //ldaPorganizationPresenter.setLDAP("ldap.forumsys.com",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
@@ -126,6 +126,8 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
                     Toast.makeText(getActivity(), R.string.ldap_login_failed_check_credentials, Toast.LENGTH_SHORT).show();
                 } catch (InterruptedException e) {
                     Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                } catch (LDAPException e) {
+                    e.printStackTrace();
                 }
                 authentication.setVisibility(View.INVISIBLE);
                 anonimousSwitch.setVisibility(View.VISIBLE);

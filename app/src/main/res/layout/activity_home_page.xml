@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/lightGrayColor"
     tools:openDrawer="start"
     tools:context="it.qbteam.stalkerapp.HomePageActivity">
    <LinearLayout
@@ -24,6 +25,7 @@
            android:id="@+id/nav_host_fragmentID"
            android:layout_width="match_parent"
            android:layout_height="match_parent"
+           android:background="@color/lightGrayColor"
            />
    </LinearLayout>
 

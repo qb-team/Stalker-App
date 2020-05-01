@@ -63,25 +63,22 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
     Button downloadButton;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
         instance=this;
         path= getContext().getFilesDir() + "/Organizzazioni.txt";
-
-
-
     }
+
     public static HomeFragment getInstance() {
         return instance;
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
         downloadButton = view.findViewById(R.id.scaricoID);
         refresh=view.findViewById(R.id.swiperefreshID);
@@ -89,7 +86,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         OrganizationListPresenter=new HomePresenter(this);
-
 
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -133,15 +129,15 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //PROVA A LEGGERE LA LISTA DELLE ORGANIZZAZIONI DA FILE INTERNO E NEL CASO LA TORNA E STAMPA A SCHERMO
     public void checkFile()  {
-
+        System.out.println("CheckFile effettuato");
         organizationList=OrganizationListPresenter.checkFile(path);
         if(organizationList!=null){
         adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
         recyclerView.setAdapter(adapter);
         }
         else Toast.makeText(getActivity(),"Devi ancora scaricare la lista",Toast.LENGTH_SHORT).show();
-
     }
+
     //Risposta positiva al download della lista delle organizzazioni dal server
     @Override
     public void onSuccessDownloadFile(String message) {
@@ -151,6 +147,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public void onFailureDownloadFile(String message) {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+        downloadButton.setVisibility(View.VISIBLE);
     }
 
 
@@ -172,7 +169,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             transaction.replace(R.id.HomeFragmentID, stdOrgFragment).commit();
         }
         else{
-
             LDAPorganizationFragment LDAPFragment= new LDAPorganizationFragment();
             LDAPFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();

@@ -77,7 +77,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_lista_preferiti, container, false);
         recyclerView=view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -118,7 +118,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             stdOrgFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
-            transaction.replace(R.id.HomeFragmentID, stdOrgFragment).commit();
+            transaction.replace(R.id.ListaPreferitiID, stdOrgFragment).commit();
         }
         else{
 
@@ -126,7 +126,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             LDAPFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
-            transaction.replace(R.id.HomeFragmentID, LDAPFragment).commit();
+            transaction.replace(R.id.ListaPreferitiID, LDAPFragment).commit();
         }
 
     }

@@ -225,7 +225,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 .commit();
     }
 
-
     @Override
     public void onBackPressed() {
 

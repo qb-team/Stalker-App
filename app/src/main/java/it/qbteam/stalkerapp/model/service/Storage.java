@@ -144,7 +144,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
             @Override
             public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
 
-                String inline="";
 
                 for(int i=0;i<response.body().size();i++){
                        Organization o =new Organization();

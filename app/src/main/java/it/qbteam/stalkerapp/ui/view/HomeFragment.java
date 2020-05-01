@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.json.JSONException;
 
@@ -128,7 +129,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //PROVA A LEGGERE LA LISTA DELLE ORGANIZZAZIONI DA FILE INTERNO E NEL CASO LA TORNA E STAMPA A SCHERMO
     public void checkFile()  {
-        System.out.println("CheckFile effettuato");
         organizationList=OrganizationListPresenter.checkFile(path);
         if(organizationList!=null){
             adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
@@ -210,7 +210,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView dialog_nomeOrganizzazione=myDialog.findViewById(R.id.dialog_nomeOrganizzazione);
         ImageView image=myDialog.findViewById(R.id.imageID);
-        //image.set(organizationList.get(position).getImage());
+        UrlImageViewHelper.setUrlDrawable(image,organizationList.get(position).getImage()) ;
+
         TextView dialog_tracciamento=myDialog.findViewById(R.id.dialog_tracciamento);
         dialog_nomeOrganizzazione.setText(organizationList.get(position).getName());
         myDialog.show();

@@ -40,6 +40,7 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.PolyUtil;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.json.JSONException;
 
@@ -48,6 +49,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
@@ -83,20 +85,10 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         System.out.println(bundle.getString("image"));
         risultati=view.findViewById(R.id.coordinateID);
         image=view.findViewById(R.id.imageID);
-        FileWriter w;
-        try {
-            w = new FileWriter(getContext().getFilesDir() + "/image.txt");
-            System.out.println(bundle.getString("image"));
-            w.write(bundle.getString("image"));
-            w.flush();
-            w.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        UrlImageViewHelper.setUrlDrawable(image, bundle.getString("image"));
 
-        Bitmap bitmap = BitmapFactory.decodeFile(new File((getContext().getFilesDir() + "/image.txt")).getPath());
-        image.setImageBitmap(bitmap);
+
         return view;
 
     }

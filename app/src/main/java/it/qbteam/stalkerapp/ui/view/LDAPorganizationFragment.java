@@ -20,12 +20,16 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.unboundid.ldap.sdk.LDAPException;
 import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.service.StalkerLDAP;
@@ -84,7 +88,10 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         ldaPorganizationPresenter=new LDAPorganizationPresenter();
         authentication.setOnClickListener(this);
 
-        FileWriter w;
+        UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
+
+
+        /*FileWriter w;
         try {
             w = new FileWriter(getContext().getFilesDir() + "/image.txt");
             System.out.println(bundle.getString("image"));
@@ -97,7 +104,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         }
 
         Bitmap bitmap = BitmapFactory.decodeFile(new File((getContext().getFilesDir() + "/image.txt")).getPath());
-        mImageView.setImageBitmap(bitmap);
+        mImageView.setImageBitmap(bitmap);*/
         return view;
 
 
@@ -135,7 +142,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             public void onClick(View v) {
                 userNameLDAP=myDialog.findViewById(R.id.userNameID);
                 passwordLDAP=myDialog.findViewById(R.id.passwordID);
-                StalkerLDAP stalkerLDAP=new StalkerLDAP("2.234.128.81",8080,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
+                StalkerLDAP stalkerLDAP=new StalkerLDAP("ldap:\\/\\/ldap.forumsys.com",8080,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
                 try {
                     stalkerLDAP.execute();
                     stalkerLDAP.performSearch();

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +76,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_lista_preferiti, container, false);
+        View view = inflater.inflate(R.layout.fragment_mystalker_list, container, false);
         recyclerView=view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -94,6 +93,17 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
         return view;
     }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.favoriteID).setVisible(false);
+        MenuItem item= menu.findItem(R.id.searchID);
+        item.setVisible(true);
+        SearchView searchView= (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onPrepareOptionsMenu(menu);
+    }
+
 
     public static MyStalkersListFragment getInstance() {
         return instance;

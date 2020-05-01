@@ -112,16 +112,13 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             public void onClick(View v) {
                 userNameLDAP=myDialog.findViewById(R.id.userNameID);
                 passwordLDAP=myDialog.findViewById(R.id.passwordID);
-                StalkerLDAP stalkerLDAP=new StalkerLDAP("ldap:\\/\\/ldap.forumsys.com",8080,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
+                StalkerLDAP stalkerLDAP=new StalkerLDAP("2.234.128.81",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
                 try {
+                    
                     stalkerLDAP.performBind();
                     stalkerLDAP.performSearch();
+                    System.out.println(stalkerLDAP.getResult());
 
-                    //ldaPorganizationPresenter.setLDAP("ldap.forumsys.com",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
-                    //System.out.println(ldaPorganizationPresenter.getLDAP().getHost()+ldaPorganizationPresenter.getLDAP().getPort()+ldaPorganizationPresenter.getLDAP().getBindDN()+ldaPorganizationPresenter.getLDAP().getPassword());
-
-                    //ldaPorganizationPresenter.bind();
-                    //ldaPorganizationPresenter.search();
                 } catch (ExecutionException e) {
                     Toast.makeText(getActivity(), R.string.ldap_login_failed_check_credentials, Toast.LENGTH_SHORT).show();
                 } catch (InterruptedException e) {

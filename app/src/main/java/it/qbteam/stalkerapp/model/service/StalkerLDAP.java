@@ -57,4 +57,7 @@ import it.qbteam.stalkerapp.presenter.LDAPorganizationContract;
             this.entry = searchFutureTask.get();
             this.connection.close();
         }
+        public BindResult getResult(){
+            return (BindResult) this.result;
+        }
     }

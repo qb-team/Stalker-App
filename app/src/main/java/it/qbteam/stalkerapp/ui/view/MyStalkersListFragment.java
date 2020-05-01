@@ -95,6 +95,17 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return view;
     }
 
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.favoriteID).setVisible(false);
+        MenuItem item= menu.findItem(R.id.searchID);
+        item.setVisible(true);
+        SearchView searchView= (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+
     public static MyStalkersListFragment getInstance() {
         return instance;
     }

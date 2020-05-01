@@ -127,6 +127,19 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         return view;
     }
 
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.favoriteID).setVisible(false);
+        MenuItem item= menu.findItem(R.id.searchID);
+        item.setVisible(true);
+        SearchView searchView= (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+
+
     //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
     public void downloadList() {
         OrganizationListPresenter.downloadFile(path, user);

@@ -74,15 +74,18 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
         Bundle bundle=this.getArguments();
+
         title=view.findViewById(R.id.titleID);
-        title.setText(bundle.getString("name"));
+        image=view.findViewById(R.id.imageID);
         description=view.findViewById(R.id.descriptionID);
+        risultati=view.findViewById(R.id.coordinateID);
+
+        title.setText(bundle.getString("name"));
+        UrlImageViewHelper.setUrlDrawable(image, bundle.getString("image"));
         description.setText(bundle.getString("description"));
+
         System.out.println(bundle.getString("description"));
         System.out.println(bundle.getString("image"));
-        risultati=view.findViewById(R.id.coordinateID);
-        image=view.findViewById(R.id.imageID);
-        UrlImageViewHelper.setUrlDrawable(image, bundle.getString("image"));
 
         return view;
 

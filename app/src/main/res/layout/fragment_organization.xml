@@ -20,21 +20,22 @@
         android:textSize="28sp"
         android:textStyle="bold" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageID"
+        android:layout_gravity="center"
+        android:src="@drawable/image"/>
+
         <TextView
             android:id="@+id/descriptionID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textColor="@color/blackColor"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="40dp"
             android:textSize="18sp"
             android:gravity="center_horizontal"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageID"
-            android:src="@drawable/image"/>
 
     <TextView
             android:id="@+id/coordinateID"

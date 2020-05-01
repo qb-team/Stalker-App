@@ -28,7 +28,6 @@ public interface HomeContract {
 
     //interfaccia model
     interface Model {
-
         ArrayList<Organization> performCheckFile(String path);
         void performDownloadFile(String path, User user) throws InterruptedException, IOException;
     }

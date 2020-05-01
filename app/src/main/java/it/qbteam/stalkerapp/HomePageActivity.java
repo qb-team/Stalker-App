@@ -136,9 +136,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         // that since this activity is in the foreground, the service can exit foreground mode.
         bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
-
-
-
     }
 
     public static HomePageActivity getInstance() {
@@ -173,7 +170,16 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
 
-        initScreen();
+        if (savedInstanceState == null) {
+            // withholding the previously created fragment from being created again
+            // On orientation change, it will prevent fragment recreation
+            // its necessary to reserve the fragment stack inside each tab
+            initScreen();
+        } else {
+            // restoring the previously created fragment
+            // and getting the reference
+            actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
+        }
 
         myReceiver = new MyReceiver();
 
@@ -268,7 +274,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         mService.requestLocationUpdates();
                     }
                 }
-
                     else{
                     mService.removeLocationUpdates();
                 }
@@ -460,8 +465,5 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         final AlertDialog alert = builder.create();
         alert.show();
     }
-
-
-
 
 }

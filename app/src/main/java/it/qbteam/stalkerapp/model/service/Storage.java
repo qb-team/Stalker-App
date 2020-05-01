@@ -34,9 +34,9 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
          this.homeListener=homeListener;
          this.myStalkerListener=myStalkerListener;
     }
+
     @Override
     public ArrayList<Organization> performCheckFile(String path) {
-
         //CONTROLLO ESISTENZA DEL FILE
         ArrayList<Organization> aux = new ArrayList<>();
         File organizationFile = new File(path);
@@ -125,19 +125,13 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
             }
         }
         if(trovato){
-
             myStalkerListener.onFailureAdd("Questa organizzazione è stata già aggiunta a MyStalkers");
-
         }
-
         else {
-
             list.add(organization);
             saveInLocalFile(list,path);
             myStalkerListener.onSuccessAdd("Hai aggiunto l'organizzazione a MyStalkers");
         }
-
-
     }
 
     @Override
@@ -187,24 +181,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                  homeListener.onFailureDownload("Errore durante lo scaricamento della lista");
             }});
     }
-   /* private void convertToJson(ArrayList<Organization> returnList,String path) throws IOException {
-        String jsonString="";
-        for(int i=0;i<returnList.size();i++){
-        Organization o = new Organization();
-        o=returnList.get(i);
-        ObjectMapper mapper = new ObjectMapper();
-        //Converting the Object to JSONString
-        jsonString += mapper.writeValueAsString(o);
-        System.out.println("CIAOOOO"+jsonString);
-        }
-        FileWriter w;
-        w = new FileWriter(path);
-        w.write(jsonString);
-        System.out.println(jsonString);
-        w.flush();
-        w.close();
 
-    }*/
  public void saveInLocalFile(ArrayList<Organization>list,String path) throws JSONException, IOException {
 
     JSONArray ja = new JSONArray();
@@ -238,9 +215,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
          w.close();
 
 
-}
-
-
-
+    }
 
 }

@@ -164,8 +164,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     public void removeOrganization(int position) throws IOException, JSONException {
 
-        myStalkersListPresenter.remove(organizationList.get(position), organizationList, path);
         myStalkersListPresenter.removeRest(organizationList.get(position), user);
+        myStalkersListPresenter.remove(organizationList.get(position), organizationList, path);
+
 
     }
 

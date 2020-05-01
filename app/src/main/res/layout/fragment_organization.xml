@@ -24,13 +24,13 @@
             android:textColor="@color/blackColor"
             android:layout_marginTop="200dp"
             android:textSize="28sp"
-            android:textStyle="bold"
             android:gravity="center_horizontal"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageID"/>
+            android:id="@+id/imageID"
+            android:src="@drawable/image"/>
 
     <TextView
             android:id="@+id/coordinateID"

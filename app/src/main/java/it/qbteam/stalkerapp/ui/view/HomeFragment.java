@@ -110,70 +110,44 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                try {
-                    downloadList();
-                    refresh.setRefreshing(false);
-                } catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
-                }
+                downloadList();
+                refresh.setRefreshing(false);
             }
         });
 
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    downloadList();
-                    downloadButton.setVisibility(View.INVISIBLE);
-                } catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
-                }
+                downloadList();
+                downloadButton.setVisibility(View.INVISIBLE);
             }
         });
 
-        organizationList=checkFile();
-        if(organizationList!=null){
-            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-            recyclerView.setAdapter(adapter);
-        }
-        else
-            Toast.makeText(getActivity(),"Lista ancora vuota!",Toast.LENGTH_SHORT).show();
-
-
+        checkFile();
         return view;
     }
 
-    //Avvia lo scaricamento della lista
-    public void downloadList() throws InterruptedException, IOException {
-
+    //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
+    public void downloadList() {
         OrganizationListPresenter.downloadFile(path, user);
         checkFile();
     }
 
+    //PROVA A LEGGERE LA LISTA DELLE ORGANIZZAZIONI DA FILE INTERNO E NEL CASO LA TORNA E STAMPA A SCHERMO
+    public void checkFile()  {
 
-    public ArrayList<Organization> checkFile()  {
-
-        return  OrganizationListPresenter.checkFile(path);
+        organizationList=OrganizationListPresenter.checkFile(path);
+        if(organizationList!=null){
+        adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+        recyclerView.setAdapter(adapter);
+        }
+        else Toast.makeText(getActivity(),"Devi ancora scaricare la lista",Toast.LENGTH_SHORT).show();
 
     }
-
-     public void onSuccessCheckFile(ArrayList<Organization> list){
-         organizationList =list;
-         adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-         recyclerView.setAdapter(adapter);
-     }
-
-    @Override
-    public void onFailureCheckFile(String message) {
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-        downloadButton.setVisibility(View.VISIBLE);
-    }
-
     //Risposta positiva al download della lista delle organizzazioni dal server
     @Override
-    public void onSuccessDownloadFile(ArrayList<Organization> list) {
-        adapter=new OrganizationViewAdapter(list,this.getContext(),this);
-        recyclerView.setAdapter(adapter);
+    public void onSuccessDownloadFile(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
     //Risposta negativa al download della lista delle organizzazioni dal server
     @Override
@@ -188,7 +162,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             Bundle bundle=new Bundle();
             bundle.putString("name", organizationList.get(position).getName());
             bundle.putString("description", organizationList.get(position).getDescription());
+            System.out.println("DESCRIPTION"+organizationList.get(position).getDescription());
             bundle.putString("image", organizationList.get(position).getImage());
+        System.out.println("IMAGE:"+organizationList.get(position).getImage());
 
         if(organizationList.get(position).getTrackingMode().getValue()=="anonymous"){
             StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();

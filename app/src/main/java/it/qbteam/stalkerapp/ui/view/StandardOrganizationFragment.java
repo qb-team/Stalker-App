@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +43,10 @@ import com.google.maps.android.PolyUtil;
 
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -49,7 +58,8 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     public final static String TAG="Home_Fragment";
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-    private TextView title, risultati, descrption ;
+    private TextView title, risultati, description ;
+    private ImageView image;
     private Button mostra;
 
 
@@ -67,13 +77,27 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         Bundle bundle=this.getArguments();
         title=view.findViewById(R.id.titleID);
         title.setText(bundle.getString("name"));
-        descrption=view.findViewById(R.id.descriptionID);
-        descrption.setText(bundle.getString("description"));
+        description=view.findViewById(R.id.descriptionID);
+        description.setText(bundle.getString("description"));
+        System.out.println(bundle.getString("description"));
+        System.out.println(bundle.getString("image"));
         risultati=view.findViewById(R.id.coordinateID);
+        image=view.findViewById(R.id.imageID);
+        FileWriter w;
+        try {
+            w = new FileWriter(getContext().getFilesDir() + "/image.txt");
+            System.out.println(bundle.getString("image"));
+            w.write(bundle.getString("image"));
+            w.flush();
+            w.close();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeFile(new File((getContext().getFilesDir() + "/image.txt")).getPath());
+        image.setImageBitmap(bitmap);
         return view;
-
-
 
     }
 

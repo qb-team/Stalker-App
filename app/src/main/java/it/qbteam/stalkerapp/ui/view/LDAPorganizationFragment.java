@@ -1,6 +1,8 @@
 package it.qbteam.stalkerapp.ui.view;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -20,6 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.unboundid.ldap.sdk.LDAPException;
 import org.json.JSONException;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import it.qbteam.stalkerapp.R;
@@ -78,6 +83,21 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         trackingTextView.setVisibility(View.INVISIBLE);
         ldaPorganizationPresenter=new LDAPorganizationPresenter();
         authentication.setOnClickListener(this);
+
+        FileWriter w;
+        try {
+            w = new FileWriter(getContext().getFilesDir() + "/image.txt");
+            System.out.println(bundle.getString("image"));
+            w.write(bundle.getString("image"));
+            w.flush();
+            w.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeFile(new File((getContext().getFilesDir() + "/image.txt")).getPath());
+        mImageView.setImageBitmap(bitmap);
         return view;
 
 

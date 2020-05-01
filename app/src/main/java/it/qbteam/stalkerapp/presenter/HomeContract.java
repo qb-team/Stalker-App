@@ -13,9 +13,8 @@ public interface HomeContract {
     //interfaccia view
     interface View {
 
-        void onSuccessCheckFile(ArrayList<Organization> list);
-        void onFailureCheckFile(String message);
-        void onSuccessDownloadFile(ArrayList<Organization> list);
+
+        void onSuccessDownloadFile(String message);
         void onFailureDownloadFile(String message);
 
     }
@@ -39,9 +38,8 @@ public interface HomeContract {
 
     interface HomeListener {
 
-        void onSuccessFile(ArrayList<Organization> list);
-        void onFailureFile(String message);
-        void onSuccessDownload(ArrayList<Organization> list);
+
+        void onSuccessDownload(String message);
         void onFailureDownload(String message);
 
     }

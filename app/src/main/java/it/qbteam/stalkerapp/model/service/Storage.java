@@ -65,34 +65,36 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                 JSONArray jsonArray = (JSONArray) jsonObject.get("organisationList");
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObj= jsonArray.getJSONObject(i);
+
                     String name= jsonObj.getString("name");
+                    String description=jsonObj.getString("description");
+                    String image=jsonObj.getString("image");
                     String city=jsonObj.getString("city");
                     String trackingMode=jsonObj.getString("trackingMode");
                     Long orgId=jsonObj.getLong("id");
                     String creationDate=jsonObj.getString("creationDate");
                     String serverUrl;
+
                     Organization organization=new Organization();
                     organization.setName(name);
+                    organization.setImage(image);
+                    organization.setDescription(description);
                     organization.setCity(city);
                     organization.setId(orgId);
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
                     OffsetDateTime offsetDateTime = OffsetDateTime.parse(creationDate, dateTimeFormatter);
                     organization.setCreationDate(offsetDateTime);
+
                     if(trackingMode.equals("authenticated")){
                         serverUrl=jsonObj.getString("authenticationServerURL");
                         organization.setAuthenticationServerURL(serverUrl);
                     }
                     organization.setTrackingMode(Organization.TrackingModeEnum.fromValue(trackingMode));
-
                     System.out.println("organization:  " + organization);
                     aux.add(organization);
                 }
 
-        } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+        } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
 
@@ -178,25 +180,14 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                        returnList.add(o);
                     }
 
-                FileWriter w;
-
                 try {
-
-                        w = new FileWriter(path);
-                        w.write(inline);
-                        System.out.println(inline);
-                        w.flush();
-                        w.close();
-
+                    saveInLocalFile(returnList,path);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try {
-                    saveInLocalFile(returnList,path);
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-                homeListener.onSuccessDownload(returnList);
+                homeListener.onSuccessDownload("Lista scaricata con successo");
             }
 
             @Override

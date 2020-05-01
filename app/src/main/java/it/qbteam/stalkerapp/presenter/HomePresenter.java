@@ -25,7 +25,7 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     }
 
     @Override
-    public void downloadFile(String path, User user) throws InterruptedException, IOException {
+    public void downloadFile(String path, User user)  {
         storage.performDownloadFile(path, user);
     }
 
@@ -39,19 +39,10 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
         return organization.getTrackingMode().toString();
     }
 
-    @Override
-    public void onSuccessFile(ArrayList<Organization> list) {
-        OrganizationListView.onSuccessCheckFile(list);
-    }
 
     @Override
-    public void onFailureFile(String message) {
-        OrganizationListView.onFailureCheckFile(message);
-    }
-
-    @Override
-    public void onSuccessDownload(ArrayList<Organization> list) {
-        OrganizationListView.onSuccessDownloadFile(list);
+    public void onSuccessDownload(String message) {
+        OrganizationListView.onSuccessDownloadFile(message);
     }
 
     @Override

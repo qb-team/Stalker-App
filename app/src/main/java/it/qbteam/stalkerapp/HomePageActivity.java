@@ -26,10 +26,13 @@ import android.widget.Toast;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.BuildConfig;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -67,7 +70,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static final String TAG = MainActivity.class.getSimpleName();
     // Used in checking for runtime permissions.
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
+    private static HomePageActivity instance = null;
     // The BroadcastReceiver used to listen from broadcasts from the service.
     private MyReceiver myReceiver;  // Receiver personalizzato
 
@@ -86,6 +89,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
     private static String userEmail;
+    private User user;
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -109,9 +113,24 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         super.onStart();
         active= true;
 
-        /*if (fAuth.getCurrentUser() == null ) {
-            goToMainActivity();
-        }*/
+        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
+            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            mUser.getIdToken(true)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+
+                                user=new User(task.getResult().getToken());
+
+                                // Send token to your backend via HTTPS
+                                // ...
+                            } else {
+                                // Handle error -> task.getException();
+                            }
+                        }
+                    });
+        }
 
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
@@ -122,11 +141,16 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     }
 
+    public static HomePageActivity getInstance() {
+        return instance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         statusCheck();
+        instance=this;
         fStore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
 
@@ -149,23 +173,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
 
-
         initScreen();
-
-        /*  Chiedere se è inutile oppure no
-        if (savedInstanceState == null) {
-
-            // withholding the previously created fragment from being created again
-            // On orientation change, it will prevent fragment recreation
-            // its necessary to reserve the fragment stack inside each tab
-
-
-        } else {
-            // restoring the previously created fragment
-            // and getting the reference
-            actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
-        }
-        */
 
         myReceiver = new MyReceiver();
 
@@ -206,9 +214,11 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             }
         });
 
-
     }
 
+    public  User getUser(){
+        return user;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_tab, menu);

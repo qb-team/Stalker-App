@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
@@ -45,7 +46,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView.Adapter adapter;
     private String path;
     private static MyStalkersListFragment instance = null;
-    private  User user;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,23 +55,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         path= getContext().getFilesDir() + "/Preferiti.txt";
         instance=this;
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
-            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-            mUser.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-                                user = new User(task.getResult().getToken());
-                                System.out.println("ECCO IL TOKEN:  " + user.getToken());
-                                // Send token to your backend via HTTPS
-                                // ...
-                            } else {
-                                // Handle error -> task.getException();
-                            }
-                        }
-                    });
-        }
 
     }
     @Nullable
@@ -173,7 +157,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     public void removeOrganization(int position) throws IOException, JSONException {
 
-        myStalkersListPresenter.removeRest(organizationList.get(position), user);
+        myStalkersListPresenter.removeRest(organizationList.get(position), HomePageActivity.getInstance().getUser());
         myStalkersListPresenter.remove(organizationList.get(position), organizationList, path);
 
     }

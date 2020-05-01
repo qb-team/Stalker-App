@@ -37,6 +37,7 @@ import com.google.firebase.auth.GetTokenResult;
 
 import org.json.JSONException;
 
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
@@ -58,9 +59,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private static HomeFragment instance = null;
     private RecyclerView.Adapter adapter;
     private SwipeRefreshLayout refresh;
-    private User user;
     private String path;
-
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
     Button downloadButton;
@@ -70,23 +69,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         super.onCreate(savedInstanceState);
         instance=this;
         path= getContext().getFilesDir() + "/Organizzazioni.txt";
-        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
-            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-            mUser.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-                                user = new User(task.getResult().getToken());
-                                System.out.println("ECCO IL TOKEN:  " + user.getToken());
-                                // Send token to your backend via HTTPS
-                                // ...
-                            } else {
-                                // Handle error -> task.getException();
-                            }
-                        }
-                    });
-        }
+
 
     }
     public static HomeFragment getInstance() {
@@ -142,7 +126,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
     public void downloadList() {
-        OrganizationListPresenter.downloadFile(path, user);
+
+        OrganizationListPresenter.downloadFile(path, HomePageActivity.getInstance().getUser());
         checkFile();
     }
 
@@ -225,7 +210,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
                 try {
                     MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position));
-                    MyStalkersListFragment.getInstance().addOrganizationRest(organizationList.get(position), user);
+                    MyStalkersListFragment.getInstance().addOrganizationRest(organizationList.get(position), HomePageActivity.getInstance().getUser());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

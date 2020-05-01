@@ -25,14 +25,20 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.unboundid.ldap.sdk.LDAPException;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.StalkerLDAP;
+import it.qbteam.stalkerapp.presenter.LDAPorganizationContract;
 import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
-public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener{
+public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener, LDAPorganizationContract.View {
     private TextView title,description,positionTextView;
     private Button authentication;
     private ImageView mImageView;
@@ -75,7 +81,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         anonimousSwitch.setVisibility(View.INVISIBLE);
         trackingTextView=view.findViewById(R.id.trackingTextID);
         trackingTextView.setVisibility(View.INVISIBLE);
-        ldaPorganizationPresenter=new LDAPorganizationPresenter();
+        ldaPorganizationPresenter=new LDAPorganizationPresenter(this);
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
 
@@ -113,12 +119,12 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             public void onClick(View v) {
                 userNameLDAP=myDialog.findViewById(R.id.userNameID);
                 passwordLDAP=myDialog.findViewById(R.id.passwordID);
-                StalkerLDAP stalkerLDAP=new StalkerLDAP("2.234.128.81",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
+                ldaPorganizationPresenter.setLDAP("2.234.128.81",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
+
                 try {
-                    
-                    stalkerLDAP.performBind();
-                    stalkerLDAP.performSearch();
-                    System.out.println(stalkerLDAP.getResult());
+
+                    ldaPorganizationPresenter.bind();
+                    ldaPorganizationPresenter.search();
 
                 } catch (ExecutionException e) {
                     Toast.makeText(getActivity(), R.string.ldap_login_failed_check_credentials, Toast.LENGTH_SHORT).show();
@@ -127,14 +133,42 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
                 } catch (LDAPException e) {
                     e.printStackTrace();
                 }
-                authentication.setVisibility(View.INVISIBLE);
-                anonimousSwitch.setVisibility(View.VISIBLE);
-                anonimousSwitch.setChecked(true);
-                trackingTextView.setVisibility(View.VISIBLE);
+                /* System.out.println(ldaPorganizationPresenter.getLDAP().isLogged());
+                System.out.println(ldaPorganizationPresenter.getLDAP().getUid());
+                System.out.println(ldaPorganizationPresenter.getLDAP().getUidNumber());*/
                 myDialog.dismiss();
             }
         });
     }
 
 
+    @Override
+    public void onSuccessLdap(String message) {
+        anonimousSwitch.setVisibility(View.VISIBLE);
+        anonimousSwitch.setChecked(false);
+        authentication.setVisibility(View.INVISIBLE);
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+        try {
+            Organization o=new Organization();
+
+            o.setName(title.getText().toString());
+            MyStalkersListFragment.getInstance().addOrganization(o);
+
+            MyStalkersListFragment.getInstance().addOrganizationRest(o, HomePageActivity.getInstance().getUser());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onFailureLdap(String message) {
+        authentication.setVisibility(View.VISIBLE);
+        authentication.setVisibility(View.INVISIBLE);
+        anonimousSwitch.setChecked(false);
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+
+    }
 }

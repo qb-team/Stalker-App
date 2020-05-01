@@ -4,13 +4,17 @@ import com.unboundid.ldap.sdk.LDAPException;
 import java.util.concurrent.ExecutionException;
 import it.qbteam.stalkerapp.model.service.StalkerLDAP;
 
-public class LDAPorganizationPresenter implements LDAPorganizationContract.Presenter {
-   private StalkerLDAP stalkerLDAP;
+public class LDAPorganizationPresenter implements LDAPorganizationContract.Presenter, LDAPorganizationContract.LDAPlistener{
 
+    private StalkerLDAP stalkerLDAP;
+   private LDAPorganizationContract.View ldapView;
+
+   public LDAPorganizationPresenter(LDAPorganizationContract.View ldapView){
+       this.ldapView=ldapView;
+   }
     @Override
     public void bind() throws InterruptedException, LDAPException, ExecutionException {
-
-             stalkerLDAP.performBind();
+        stalkerLDAP.performBind();
     }
 
     @Override
@@ -20,11 +24,21 @@ public class LDAPorganizationPresenter implements LDAPorganizationContract.Prese
 
     @Override
     public StalkerLDAP getLDAP() {
-        return this.stalkerLDAP;
+        return stalkerLDAP.getInstance();
     }
 
     @Override
     public void setLDAP(String host, int port, String bindDN, String password) {
-        this.stalkerLDAP=new StalkerLDAP(host,  port, bindDN, password);
+        this.stalkerLDAP=new StalkerLDAP(host,  port, bindDN, password,this);
+    }
+
+    @Override
+    public void onSuccess(String message) {
+        ldapView.onSuccessLdap(message);
+    }
+
+    @Override
+    public void onFailure(String message) {
+        ldapView.onFailureLdap(message);
     }
 }

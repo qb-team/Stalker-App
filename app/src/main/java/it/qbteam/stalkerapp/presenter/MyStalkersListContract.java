@@ -10,6 +10,7 @@ import it.qbteam.stalkerapp.model.data.User;
 
 
 public interface MyStalkersListContract {
+
     interface View {
         void onSuccessCheckFile(ArrayList<Organization> list);
         void onFailureCheckFile(String message);

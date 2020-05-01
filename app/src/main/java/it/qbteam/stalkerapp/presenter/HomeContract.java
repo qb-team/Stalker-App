@@ -13,7 +13,6 @@ public interface HomeContract {
     //interfaccia view
     interface View {
 
-
         void onSuccessDownloadFile(String message);
         void onFailureDownloadFile(String message);
 

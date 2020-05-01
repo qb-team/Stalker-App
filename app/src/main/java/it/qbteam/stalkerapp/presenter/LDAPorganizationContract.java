@@ -7,27 +7,30 @@ import it.qbteam.stalkerapp.model.service.StalkerLDAP;
 public interface LDAPorganizationContract {
     interface View {
 
-        void onLoadListFailure(String message);
-
+        void onSuccessLdap(String message);
+        void onFailureLdap(String message);
     }
 
     //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
     interface Presenter {
-        public void setLDAP(String host, int port, String bindDN, String password);
-        public void bind() throws InterruptedException, LDAPException, ExecutionException;
-        public void search() throws ExecutionException, InterruptedException;
-        StalkerLDAP getLDAP();
+         void setLDAP(String host, int port, String bindDN, String password);
+         void bind() throws InterruptedException, LDAPException, ExecutionException;
+         void search() throws ExecutionException, InterruptedException;
+         StalkerLDAP getLDAP();
+
     }
 
     //METODO DEL MODELLO
     interface Model {
-        public void performBind() throws LDAPException, ExecutionException, InterruptedException;
-        public void performSearch() throws ExecutionException, InterruptedException;
+         void performBind() throws LDAPException, ExecutionException, InterruptedException;
+         void performSearch() throws ExecutionException, InterruptedException;
 
     }
 
-    interface OrganizationListListener {
+    interface LDAPlistener {
 
+        void onSuccess(String message);
         void onFailure(String message);
+
     }
 }

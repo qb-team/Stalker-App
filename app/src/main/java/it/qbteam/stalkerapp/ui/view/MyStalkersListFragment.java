@@ -77,7 +77,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
         recyclerView=view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);

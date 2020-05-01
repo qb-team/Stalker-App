@@ -25,11 +25,6 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.unboundid.ldap.sdk.LDAPException;
 import org.json.JSONException;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.service.StalkerLDAP;
@@ -37,9 +32,6 @@ import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener{
     private TextView title,description,positionTextView;
     private Button authentication;
@@ -70,8 +62,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        System.out.println("Creata organizzazione");
         View view=inflater.inflate(R.layout.fragment_ldap_organization, container, false);
         Bundle bundle=this.getArguments();
         title=view.findViewById(R.id.titleID);
@@ -87,31 +77,11 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         trackingTextView.setVisibility(View.INVISIBLE);
         ldaPorganizationPresenter=new LDAPorganizationPresenter();
         authentication.setOnClickListener(this);
-
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
 
-
-        /*FileWriter w;
-        try {
-            w = new FileWriter(getContext().getFilesDir() + "/image.txt");
-            System.out.println(bundle.getString("image"));
-            w.write(bundle.getString("image"));
-            w.flush();
-            w.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Bitmap bitmap = BitmapFactory.decodeFile(new File((getContext().getFilesDir() + "/image.txt")).getPath());
-        mImageView.setImageBitmap(bitmap);*/
         return view;
 
-
-
     }
-
-
 
     @Override
     public boolean onBackPressed() {

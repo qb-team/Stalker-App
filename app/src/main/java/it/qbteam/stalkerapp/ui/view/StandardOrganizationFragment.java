@@ -59,7 +59,6 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     private LocationListener listener;
     public final static String TAG="Home_Fragment";
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
     private TextView title, risultati, description ;
     private ImageView image;
     private Button mostra;
@@ -73,8 +72,6 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("Creata organizzazione");
-
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
         Bundle bundle=this.getArguments();
         title=view.findViewById(R.id.titleID);
@@ -85,9 +82,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         System.out.println(bundle.getString("image"));
         risultati=view.findViewById(R.id.coordinateID);
         image=view.findViewById(R.id.imageID);
-
         UrlImageViewHelper.setUrlDrawable(image, bundle.getString("image"));
-
 
         return view;
 

@@ -41,20 +41,13 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         ArrayList<Organization> aux = new ArrayList<>();
         File organizationFile = new File(path);
         if(organizationFile.length()==0 || !organizationFile.exists()) {
+            if(homeListener!=null)
+                 homeListener.onFailureCheck("La lista è ancora vuota, scaricala!");
 
         }
-            //DA CAPIRE COME CHIAMARE QUELLO GIUSTO TRA HOME_FRAGMENT E MY_STALKER_FRAGMENT
-            /*if(nameFile=="/Organizzazioni.txt")
-                homeListener.onFailureFile("Local file empty");
-            else{
-                myStalkerListener.onFailureFile("Local file empty");
-            }
 
-            return;
-        }*/
         else {
             try {
-
                 FileInputStream fin = new FileInputStream(organizationFile);
                 byte[] buffer = new byte[(int) organizationFile.length()];
                 new DataInputStream(fin).readFully(buffer);
@@ -97,7 +90,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
-
         }
         return aux;
     }

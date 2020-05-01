@@ -61,11 +61,6 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void onSuccessFile(ArrayList<Organization> list) {
-        myStalkersView.onSuccessCheckFile(list);
-    }
-
-    @Override
     public void onFailureFile(String message) {
         myStalkersView.onFailureCheckFile(message);
     }

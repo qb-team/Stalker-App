@@ -63,20 +63,18 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
     Button downloadButton;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
         instance=this;
         path= getContext().getFilesDir() + "/Organizzazioni.txt";
-
-
-
     }
+
     public static HomeFragment getInstance() {
         return instance;
     }
-
 
     @Nullable
     @Override
@@ -108,6 +106,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         });
 
         checkFile();
+
         return view;
     }
 
@@ -126,9 +125,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
     public void downloadList() {
-
         OrganizationListPresenter.downloadFile(path, HomePageActivity.getInstance().getUser());
-        checkFile();
     }
 
     //PROVA A LEGGERE LA LISTA DELLE ORGANIZZAZIONI DA FILE INTERNO E NEL CASO LA TORNA E STAMPA A SCHERMO
@@ -136,21 +133,46 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
         organizationList=OrganizationListPresenter.checkFile(path);
         if(organizationList!=null){
-        adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-        recyclerView.setAdapter(adapter);
+            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
         }
-        else Toast.makeText(getActivity(),"Devi ancora scaricare la lista",Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getActivity(),"Devi ancora scaricare la lista",Toast.LENGTH_SHORT).show();
 
     }
     //Risposta positiva al download della lista delle organizzazioni dal server
     @Override
     public void onSuccessDownloadFile(String message) {
+        checkFile();
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
+
     //Risposta negativa al download della lista delle organizzazioni dal server
     @Override
     public void onFailureDownloadFile(String message) {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFailureCheckFile(String message) {
+        AlertDialog download = new AlertDialog.Builder(getContext())
+                .setTitle("Scarica lista delle organizzazioni")
+                .setMessage("La tua lista delle organizzazioni è ancora vuota, vuoi scaricarla?")
+                .setPositiveButton("Scarica", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        downloadList();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .create();
+        download.show();
     }
 
 

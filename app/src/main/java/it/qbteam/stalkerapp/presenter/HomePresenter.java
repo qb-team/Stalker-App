@@ -51,5 +51,8 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     }
 
-
+    @Override
+    public void onFailureCheck(String message) {
+        OrganizationListView.onFailureCheckFile(message);
+    }
 }

@@ -41,7 +41,6 @@ public interface MyStalkersListContract {
 
     interface MyStalkerListener {
         //QUESTI DUE METODI FANNO RIFERIMENTO AL METODO PERFORM_CHECK_FILE DA FINIRE
-        void onSuccessFile(ArrayList<Organization> list);
         void onFailureFile(String message);
 
         void onSuccessAdd(String message) throws IOException, JSONException;

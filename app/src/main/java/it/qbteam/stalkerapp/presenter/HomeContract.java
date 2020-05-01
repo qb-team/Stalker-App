@@ -12,15 +12,13 @@ public interface HomeContract {
 
     //interfaccia view
     interface View {
-
         void onSuccessDownloadFile(String message);
         void onFailureDownloadFile(String message);
-
+        void onFailureCheckFile(String message);
     }
 
     //interfaccia presenter
     interface Presenter {
-
         ArrayList<Organization> checkFile(String path);
         void downloadFile(String path, User user) throws InterruptedException, IOException;
         void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
@@ -36,10 +34,8 @@ public interface HomeContract {
     }
 
     interface HomeListener {
-
-
         void onSuccessDownload(String message);
         void onFailureDownload(String message);
-
+        void onFailureCheck(String message);
     }
 }

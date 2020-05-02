@@ -26,7 +26,8 @@ import it.qbteam.stalkerapp.R;
 
 public class Utils {
 
-    static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_location_updates";
+
+    public static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_location_updates";
 
     /**
      * Returns true if requesting location updates, otherwise returns false.

@@ -9,12 +9,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -65,14 +67,13 @@ import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
-public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
+public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener  {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     // Used in checking for runtime permissions.
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static HomePageActivity instance = null;
     // The BroadcastReceiver used to listen from broadcasts from the service.
-    private MyReceiver myReceiver;  // Receiver personalizzato
 
     // A reference to the service used to get location updates.
     private TrackingStalker mService = null;  // Classe che contiene tutti i metodi Google
@@ -168,7 +169,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
-        switcher.setChecked(false);
         if (savedInstanceState == null) {
             // withholding the previously created fragment from being created again
             // On orientation change, it will prevent fragment recreation
@@ -180,17 +180,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
 
-        myReceiver = new MyReceiver();
-
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
             if (!checkPermissions()) {
                 requestPermissions();
-
             }
         }
-        else
-            switcher.setChecked(false);
 
 
 
@@ -199,6 +194,9 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         TextView emailTextView=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
         emailTextView.setText(userEmail);
 
+        // Restore the state of the buttons when the activity (re)launches.
+        setSwitchState(Utils.requestingLocationUpdates(this));
+
 
         switcher.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +204,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 if(switcher.isChecked()){
                     if (!checkPermissions()) {
                         requestPermissions();
-                        switcher.setChecked(false);
                     } else {
                         mService.requestLocationUpdates();
                     }
@@ -216,6 +213,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 }
             }
         });
+
 
     }
 
@@ -240,12 +238,10 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     @Override
     public void onBackPressed() {
-
         if (!actionTabFragment.onBackPressed()) {
             // container Fragment or its associates couldn't handle the back pressed task
             // delegating the task to super class
             super.onBackPressed();
-
         } else {
             // carousel handled the back pressed task
             // do not call super
@@ -261,22 +257,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
-                // Dopo togliere
-            case R.id.nav_switchID:
-                switcher.setChecked(!switcher.isChecked());
-                if(switcher.isChecked()){
-                    if (!checkPermissions()) {
-                        requestPermissions();
-                    } else {
-                        mService.requestLocationUpdates();
-                    }
-                }
-                    else{
-                    mService.removeLocationUpdates();
-                }
-
-                    break;
-
             case R.id.alphabeticalOrderID:
                     HomeFragment.getInstance().alphabeticalOrder();
                 MyStalkersListFragment.getInstance().alphabeticalOrder();
@@ -319,7 +299,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         @Override
                         public void onClick(View view) {
                             // Request permission
-                            switcher.setChecked(false);
                             ActivityCompat.requestPermissions(HomePageActivity.this,
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                     REQUEST_PERMISSIONS_REQUEST_CODE);
@@ -352,10 +331,10 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                switcher.setChecked(true);
                 mService.requestLocationUpdates();
             } else {
                 // Permission denied.
+                setSwitchState(false);
                 Snackbar.make(
                         findViewById(R.id.drawer_layoutID),
                         R.string.permission_denied_explanation,
@@ -383,69 +362,41 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
-                new IntentFilter(TrackingStalker.ACTION_BROADCAST));
     }
 
     @Override
     protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
         super.onPause();
     }
 
     @Override
     protected void onStop() {
         if (mBound) {
-            // Unbind from the service. This signals to the service that this activity is no longer
-            // in the foreground, and the service can respond by promoting itself to a foreground
-            // service.
             unbindService(mServiceConnection);
             mBound = false;
         }
+
+
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
 
         super.onStop();
     }
     ///////////// FINE INDAGARE //////////////////////
 
-    /**
-     * Gestisce la notifica a schermo
-     * Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION); --> Si prende la location
-     * Toast.makeText(MainActivity.this, Utils.getLocationText(location),Toast.LENGTH_SHORT).show(); --> La stampa a schermo
-     * Receiver for broadcasts sent by {@link TrackingStalker}.
-     */
-    private class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Location location = intent.getParcelableExtra(TrackingStalker.EXTRA_LOCATION);
-            // Per stampare a schermo coordinate Lang e Lot
-//            if (location != null) {
-//                Toast.makeText(MainActivity.this, Utils.getLocationText(location),
-//                        Toast.LENGTH_SHORT).show();
-//            }
-            // Ti dice se sei dentro un organizzazione oppure no
-            if (location != null ){
-                mlocation=location;
-                Toast.makeText(HomePageActivity.this, Utils.isInside(location),Toast.LENGTH_LONG).show();
 
-//                mService.switchPriority(Utils.checkDistance(location));
-            }
-        }
-    }
     public void statusCheck() {//Controllo se il GPS è attivo
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
-
         }
     }
+
     private void buildAlertMessageNoGps() {//Allert nel caso in cui il GPS non sia attivo
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        switcher.setChecked(true);
                         if (!checkPermissions()) {
                             requestPermissions();
                         } else {
@@ -461,6 +412,24 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        // Update the buttons state depending on whether location updates are being requested.
+        if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
+            setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
+                    false));
+        }
+    }
+
+    private void setSwitchState(boolean requestingLocationUpdates) {
+        if (requestingLocationUpdates) {
+            switcher.setChecked(true);
+        } else {
+            switcher.setChecked(false);
+        }
     }
 
 }

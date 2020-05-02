@@ -41,9 +41,15 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.android.PolyUtil;
+
+import java.util.ArrayList;
+
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.Utils;
@@ -430,14 +436,57 @@ public class TrackingStalker extends Service {
         System.out.println("L'intervallo veloce è questo:  " + mLocationRequest.getFastestInterval());
         mLocation = location;
 
-        // Notify anyone listening for broadcasts about the new location.
-        Intent intent = new Intent(ACTION_BROADCAST);
-        intent.putExtra(EXTRA_LOCATION, location);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+        if (location!=null){
+            handleLocation(location);
+        }
 
         // Aggiornamento notifiche quando funziona in background
         if (serviceIsRunningInForeground(this)) {
             mNotificationManager.notify(NOTIFICATION_ID, getNotification());
+        }
+    }
+
+    private void handleLocation(Location location){
+        if (isInside(location)){
+            //logica dentro location
+        }
+        else{
+            int i= TrackingDistance.checkDistance(location);
+            switchPriority(i);
+            // Aggiornamento locationrequest
+        }
+    }
+
+    public boolean isInside(Location location) {
+        //Polygon Torre; --> come si usa Polygon?
+        final ArrayList<LatLng> polygon = new ArrayList<>();
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        polygon.add(new LatLng(45.4139244815,11.8809040336));
+        polygon.add(new LatLng(45.4137732038,11.8812763624));
+        polygon.add(new LatLng(45.4134925404,11.8810503718));
+        polygon.add(new LatLng(45.4136378199,11.8806753327));
+
+        for (LatLng point : polygon) {
+            builder.include(point);
+        }
+        System.out.println("creo builder:  " + builder);
+
+        LatLng test = new LatLng(location.getLatitude(), location.getLongitude());
+        String isInsideString;
+
+        boolean isInsideBoundary = builder.build().contains(test); // true se il test point è all'interno del confine
+        boolean isInsideBoolean = PolyUtil.containsLocation(test, polygon, true); // false se il punto è all'esterno del polygon
+
+        if (isInsideBoundary && isInsideBoolean == true )
+        {
+            isInsideString = "sei dentro";
+            return true;
+
+        }
+        else {
+            isInsideString = "sei fuori";
+            return false;
         }
     }
 

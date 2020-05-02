@@ -33,6 +33,8 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -48,11 +50,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.android.PolyUtil;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.service.Rest;
+import it.qbteam.stalkerapp.model.tracking.trackingArea.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
+import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
 /**
  * A bound and started service that is promoted to a foreground service when location updates have
@@ -73,7 +81,7 @@ public class TrackingStalker extends Service {
     private static final String PACKAGE_NAME ="it.qbteam.stalkerapp.model.Tracking.TrackingStalker";
     public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-
+    private String organizzazione;
     private static final String TAG = TrackingStalker.class.getSimpleName();
 
     /**
@@ -144,8 +152,12 @@ public class TrackingStalker extends Service {
      * The current location.
      */
     private Location mLocation;
+    private int position;
+    private ArrayList<Organization> organization;
+    private ArrayList<LatLngOrganization> latLngOrganizations;
+    public TrackingStalker() throws JSONException {
 
-    public TrackingStalker() {
+
     }
 
     @Override
@@ -159,7 +171,11 @@ public class TrackingStalker extends Service {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                onNewLocation(locationResult.getLastLocation());
+                try {
+                    onNewLocation(locationResult.getLastLocation());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -429,8 +445,9 @@ public class TrackingStalker extends Service {
      * Log.i(TAG, "New location: " + location); --> Stampa nel run
      * mLocation = location; --> crea l'oggetto di tipo "Location" mLocation
      * */
-    private void onNewLocation(Location location) {
-        Log.i(TAG, "New location: " + location);
+    private void onNewLocation(Location location) throws JSONException {
+
+
 
         System.out.println("L'intervallo è questo:  " + mLocationRequest.getInterval());
         System.out.println("L'intervallo veloce è questo:  " + mLocationRequest.getFastestInterval());
@@ -446,48 +463,51 @@ public class TrackingStalker extends Service {
         }
     }
 
-    private void handleLocation(Location location){
+    private void handleLocation(Location location) throws JSONException {
         if (isInside(location)){
-            //logica dentro location
+            Toast.makeText(HomePageActivity.getInstance(),organizzazione,Toast.LENGTH_SHORT).show();
+            Rest.performMovement(organization.get(position),HomePageActivity.getInstance().getUser());
         }
         else{
+
             int i= TrackingDistance.checkDistance(location);
             switchPriority(i);
             // Aggiornamento locationrequest
         }
     }
 
-    public boolean isInside(Location location) {
+    public boolean isInside(Location location) throws JSONException {
         //Polygon Torre; --> come si usa Polygon?
-        final ArrayList<LatLng> polygon = new ArrayList<>();
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        this.organization= MyStalkersListFragment.getInstance().getMyStalkerList();
+        latLngOrganizations=new ArrayList<>();
+        for(int i=0;i<organization.size();i++){
 
-        polygon.add(new LatLng(45.4139244815,11.8809040336));
-        polygon.add(new LatLng(45.4137732038,11.8812763624));
-        polygon.add(new LatLng(45.4134925404,11.8810503718));
-        polygon.add(new LatLng(45.4136378199,11.8806753327));
-
-        for (LatLng point : polygon) {
-            builder.include(point);
+            latLngOrganizations.get(i).setLatLng(organization.get(i));
+            latLngOrganizations.get(i).setBuilder(latLngOrganizations.get(i).getLatLng());
+            latLngOrganizations.get(i).setName(organization.get(i));
+            latLngOrganizations.get(i).setTrackingMode(organization.get(i));
+            latLngOrganizations.get(i).setOrganizationID(organization.get(i));
         }
-        System.out.println("creo builder:  " + builder);
 
-        LatLng test = new LatLng(location.getLatitude(), location.getLongitude());
-        String isInsideString;
+        boolean inside=false;
 
-        boolean isInsideBoundary = builder.build().contains(test); // true se il test point è all'interno del confine
-        boolean isInsideBoolean = PolyUtil.containsLocation(test, polygon, true); // false se il punto è all'esterno del polygon
+        LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        for(int i=0;i<latLngOrganizations.size();i++) {
 
-        if (isInsideBoundary && isInsideBoolean == true )
+            boolean isInsideBoundary = latLngOrganizations.get(i).getBuilder().build().contains(actualPosition); // true se il test point è all'interno del confine
+            boolean isInsideBoolean = PolyUtil.containsLocation(actualPosition, latLngOrganizations.get(i).getLatLng(), true); // false se il punto è all'esterno del polygon
+
+            if (isInsideBoundary && isInsideBoolean == true )
         {
-            isInsideString = "sei dentro";
-            return true;
+            position=i;
+            inside= true;
+            organizzazione ="Sei dentro a "+latLngOrganizations.get(i).getName();
 
         }
-        else {
-            isInsideString = "sei fuori";
-            return false;
-        }
+
+
+    }
+        return inside;
     }
 
 

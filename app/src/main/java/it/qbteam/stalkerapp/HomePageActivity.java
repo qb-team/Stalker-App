@@ -116,12 +116,13 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
             FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
             mUser.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
                             if (task.isSuccessful()) {
 
-                                user=new User(task.getResult().getToken());
+                                user=new User(task.getResult().getToken(),mUser.getUid());
 
                                 // Send token to your backend via HTTPS
                                 // ...

@@ -206,7 +206,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return new BackPressImplementation(this).onBackPressed();
     }
 
-
+    public ArrayList <Organization> getMyStalkerList(){
+        return myStalkersListPresenter.checkFile(path);
+    }
     @Override
     public void onSuccessCheckFile(ArrayList<Organization> list) {
         adapter=new OrganizationViewAdapter(list,this.getContext(),this);

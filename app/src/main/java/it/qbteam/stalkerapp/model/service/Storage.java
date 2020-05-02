@@ -65,13 +65,14 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                     Long orgId=jsonObj.getLong("id");
                     String creationDate=jsonObj.getString("creationDate");
                     String serverUrl;
-
+                    String trackingArea=jsonObj.getString("trackingArea");
                     Organization organization=new Organization();
                     organization.setName(name);
                     organization.setImage(image);
                     organization.setDescription(description);
                     organization.setCity(city);
                     organization.setId(orgId);
+                    organization.setTrackingArea(trackingArea);
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
                     OffsetDateTime offsetDateTime = OffsetDateTime.parse(creationDate, dateTimeFormatter);
                     organization.setCreationDate(offsetDateTime);

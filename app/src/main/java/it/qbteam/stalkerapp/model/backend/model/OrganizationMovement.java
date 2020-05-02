@@ -39,7 +39,7 @@ public class OrganizationMovement {
 
   public static final String SERIALIZED_NAME_MOVEMENT_TYPE = "movementType";
   @SerializedName(SERIALIZED_NAME_MOVEMENT_TYPE)
-  private Integer movementType;
+  private Integer movementType; //1:ingresso -1:uscita
 
   public static final String SERIALIZED_NAME_ORGANIZATION_ID = "organizationId";
   @SerializedName(SERIALIZED_NAME_ORGANIZATION_ID)

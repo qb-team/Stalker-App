@@ -168,7 +168,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
-
+        switcher.setChecked(false);
         if (savedInstanceState == null) {
             // withholding the previously created fragment from being created again
             // On orientation change, it will prevent fragment recreation
@@ -188,8 +188,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 requestPermissions();
 
             }
-            else
-                switcher.setChecked(true);
         }
         else
             switcher.setChecked(false);

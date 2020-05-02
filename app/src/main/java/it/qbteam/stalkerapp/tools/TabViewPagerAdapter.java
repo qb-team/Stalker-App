@@ -69,13 +69,4 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
     }*/
 
 
-    /**
-     * Get the Fragment by position
-     *
-     * @param position tab position of the fragment
-     * @return
-     */
-   /* public Fragment getRegisteredFragment(int position) {
-        return registeredFragments.get(position);
-    }*/
 }

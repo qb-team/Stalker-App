@@ -156,14 +156,12 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
 
     public void removeOrganization(int position) throws IOException, JSONException {
-
         myStalkersListPresenter.removeRest(organizationList.get(position), HomePageActivity.getInstance().getUser());
         myStalkersListPresenter.remove(organizationList.get(position), organizationList, path);
 
     }
 
     public void addOrganization(Organization organization) throws IOException, JSONException {
-
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
 
     }
@@ -211,7 +209,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     @Override
     public void onSuccessCheckFile(ArrayList<Organization> list) {
-
         adapter=new OrganizationViewAdapter(list,this.getContext(),this);
         recyclerView.setAdapter(adapter);
     }

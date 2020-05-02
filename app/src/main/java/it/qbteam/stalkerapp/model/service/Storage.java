@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -54,7 +53,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                 fin.close();
                 String s = new String(buffer, "UTF-8");
                 JSONObject jsonObject = new JSONObject(s);
-                System.out.println("jsonObject:  " + jsonObject);
                 JSONArray jsonArray = (JSONArray) jsonObject.get("organisationList");
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObj= jsonArray.getJSONObject(i);

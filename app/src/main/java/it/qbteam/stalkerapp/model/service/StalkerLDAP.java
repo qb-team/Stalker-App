@@ -49,7 +49,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Model {
             });
             new Thread(bindFutureTask).start();
             this.result = bindFutureTask.get();
-              System.out.println("CREDENZIALI:"+result.getServerSASLCredentials()+"   "+ "RESULT"+result.toString());
+
 
 
         }

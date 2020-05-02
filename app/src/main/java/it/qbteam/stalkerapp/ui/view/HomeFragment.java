@@ -1,17 +1,13 @@
 package it.qbteam.stalkerapp.ui.view;
 
-
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,26 +23,16 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-
 import org.json.JSONException;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.HomeContract;
 import it.qbteam.stalkerapp.presenter.HomePresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,7 +94,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         return view;
     }
 
-
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.favoriteID).setVisible(false);
@@ -119,8 +103,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         searchView.setOnQueryTextListener(this);
         super.onPrepareOptionsMenu(menu);
     }
-
-
 
     //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
     public void downloadList() {
@@ -175,7 +157,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         download.show();
     }
 
-
     //  MyAdapter.OnOrganizzazioneListener
     @Override
     public void organizationClick(int position) {
@@ -184,7 +165,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             bundle.putString("description", organizationList.get(position).getDescription());
             System.out.println("DESCRIPTION"+organizationList.get(position).getDescription());
             bundle.putString("image", organizationList.get(position).getImage());
-        System.out.println("IMAGE:"+organizationList.get(position).getImage());
 
         if(organizationList.get(position).getTrackingMode().getValue()=="anonymous"){
             StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
@@ -211,7 +191,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         TextView dialog_nomeOrganizzazione=myDialog.findViewById(R.id.dialog_nomeOrganizzazione);
         ImageView image=myDialog.findViewById(R.id.imageID);
         UrlImageViewHelper.setUrlDrawable(image,organizationList.get(position).getImage()) ;
-
         TextView dialog_tracciamento=myDialog.findViewById(R.id.dialog_tracciamento);
         dialog_nomeOrganizzazione.setText(organizationList.get(position).getName());
         myDialog.show();
@@ -221,7 +200,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
             @Override
             public void onClick(View v) {
-
                 organizationClick(position);
                 myDialog.dismiss();
             }
@@ -229,7 +207,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         aggPref.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
                     MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position));
                     MyStalkersListFragment.getInstance().addOrganizationRest(organizationList.get(position), HomePageActivity.getInstance().getUser());
@@ -248,7 +225,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
 
     public void alphabeticalOrder(){
-
         Collections.sort(organizationList);
         try {
             adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);

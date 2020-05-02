@@ -105,7 +105,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         Button annull= myDialog.findViewById(R.id.annulID);
         Button access= myDialog.findViewById(R.id.accessID);
         myDialog.show();
-
         annull.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -133,9 +132,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
                 } catch (LDAPException e) {
                     e.printStackTrace();
                 }
-                /* System.out.println(ldaPorganizationPresenter.getLDAP().isLogged());
-                System.out.println(ldaPorganizationPresenter.getLDAP().getUid());
-                System.out.println(ldaPorganizationPresenter.getLDAP().getUidNumber());*/
                 myDialog.dismiss();
             }
         });
@@ -150,7 +146,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
         try {
             Organization o=new Organization();
-
             o.setName(title.getText().toString());
             MyStalkersListFragment.getInstance().addOrganization(o);
 

@@ -30,13 +30,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 //Parte visiva (View) di SignUp
 public class SignUpFragment extends Fragment implements View.OnClickListener, SignUpContract.View, OnBackPressListener {
+
     public final static String TAG="Registrati_Fragment";
-
-
     EditText emailEditText, passwordEditText, confPasswordEditText;
     Button signUpButton;
     Button termsofUseButton;
-
     private SignUpPresenter signUpPresenter;
     ProgressDialog progressDialog;
     CheckBox termsofUseCheckBox;
@@ -115,7 +113,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     @Override
     public void onSignUpSuccess(FirebaseUser firebaseUser) {
         progressDialog.dismiss();
-
         Toast.makeText(getActivity(), "Registrazione effettuato con successo" , Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), HomePageActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

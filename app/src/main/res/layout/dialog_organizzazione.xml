@@ -60,14 +60,5 @@
             android:text="Aggiungi a MyStalkers"
             android:textAlignment="textStart" />
     </LinearLayout>
-
-    <!--- <ImageView
-         android:layout_width="150dp"
-         android:layout_height="150dp"
-         android:id="@+id/dialog_immage"
-         android:src="@drawable/torre_archimede"
-         android:layout_centerHorizontal="true"
-         android:layout_alignParentTop="true"/> -->
-
-
+    
 </RelativeLayout>

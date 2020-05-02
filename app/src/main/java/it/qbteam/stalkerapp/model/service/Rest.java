@@ -36,7 +36,7 @@ public class Rest{
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("ERROREEEEEEEEEEEEEEEEEE");
+                System.out.println("Errore durante la rimozione dell'organizzazione");
             }
         });
     }
@@ -47,7 +47,6 @@ public class Rest{
         favoriteUpload.setUserId(user.getToken());
         favoriteUpload.setOrganizationId(organization.getId());
         favoriteUpload.setCreationDate(organization.getCreationDate());
-
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
         FavoriteApi service = ac.createService(FavoriteApi.class);
         Call<Favorite> favorite = service.addFavoriteOrganization(favoriteUpload);
@@ -59,7 +58,7 @@ public class Rest{
             }
             @Override
             public void onFailure(Call<Favorite> call, Throwable t) {
-                System.out.println("ERROREEEEEEEEEEEEEEEEEE");
+                System.out.println("Errore durante l'aggiunta dell'organizzazione");
             }
         });
     }

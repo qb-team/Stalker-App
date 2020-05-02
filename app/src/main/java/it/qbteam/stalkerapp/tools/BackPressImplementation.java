@@ -4,7 +4,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 public class BackPressImplementation implements OnBackPressListener {
+
     private Fragment parentFragment;
+
     public BackPressImplementation(Fragment parentFragment) {
         this.parentFragment = parentFragment;
     }

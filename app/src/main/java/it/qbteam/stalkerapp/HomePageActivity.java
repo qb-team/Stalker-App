@@ -45,8 +45,20 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.navigation.ui.AppBarConfiguration;
 
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.tracking.TrackingDistance;
+import it.qbteam.stalkerapp.presenter.HomeContract;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
@@ -72,11 +84,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private Location mlocation;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
+    private FirebaseUser firebaseUser;
+    private  AppBarConfiguration mAppBarConfiguration;
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
     private static String userEmail;
     private User user;
-
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -106,10 +119,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
                             if (task.isSuccessful()) {
+
                                 user=new User(task.getResult().getToken());
+
                                 // Send token to your backend via HTTPS
-                            }
-                            else {
+                                // ...
+                            } else {
                                 // Handle error -> task.getException();
                             }
                         }
@@ -138,8 +153,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         if(fAuth.getCurrentUser()!=null){
             userEmail=fAuth.getCurrentUser().getEmail();
         }
-        else
-            goToMainActivity();
+        else goToMainActivity();
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
@@ -149,7 +163,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         actionBarDrawerToggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_viewID);
         navigationView.setNavigationItemSelectedListener( this);
-
         //setting switch button in drawer menu
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
@@ -167,18 +180,21 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
 
-        myReceiver = new MyReceiver();//Inizializzazione classe annidata che gestisce le notifiche di tracciamento
+        myReceiver = new MyReceiver();
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
             if (!checkPermissions()) {
                 requestPermissions();
+
             }
             else
                 switcher.setChecked(true);
         }
         else
             switcher.setChecked(false);
+
+
 
          //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);
@@ -226,6 +242,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     @Override
     public void onBackPressed() {
+
         if (!actionTabFragment.onBackPressed()) {
             // container Fragment or its associates couldn't handle the back pressed task
             // delegating the task to super class
@@ -246,25 +263,26 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
-
+                // Dopo togliere
             case R.id.nav_switchID:
                 switcher.setChecked(!switcher.isChecked());
                 if(switcher.isChecked()){
                     if (!checkPermissions()) {
                         requestPermissions();
-                    }
-                    else
+                    } else {
                         mService.requestLocationUpdates();
+                    }
                 }
-                else
+                    else{
                     mService.removeLocationUpdates();
-                break;
+                }
+
+                    break;
 
             case R.id.alphabeticalOrderID:
-                HomeFragment.getInstance().alphabeticalOrder();
+                    HomeFragment.getInstance().alphabeticalOrder();
                 MyStalkersListFragment.getInstance().alphabeticalOrder();
                 break;
-
             case R.id.cambianumero:
                 //mService.setNumero(TrackingDistance.checkDistance(mlocation));
                 System.out.println(mService.getNUMERO());
@@ -309,8 +327,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                                     REQUEST_PERMISSIONS_REQUEST_CODE);
                         }
                     }).show();
-        }
-        else {
+        } else {
             Log.i(TAG, "Requesting permission");
             // Request permission. It's possible this can be auto answered if device policy
             // sets the permission in a given state or the user denied the permission
@@ -339,8 +356,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 // Permission was granted.
                 switcher.setChecked(true);
                 mService.requestLocationUpdates();
-            }
-            else {
+            } else {
                 // Permission denied.
                 Snackbar.make(
                         findViewById(R.id.drawer_layoutID),
@@ -365,6 +381,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
+    ///////////// INDAGARE //////////////////////
     @Override
     protected void onResume() {
         super.onResume();
@@ -387,8 +404,10 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             unbindService(mServiceConnection);
             mBound = false;
         }
+
         super.onStop();
     }
+    ///////////// FINE INDAGARE //////////////////////
 
     /**
      * Gestisce la notifica a schermo
@@ -409,18 +428,20 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             if (location != null ){
                 mlocation=location;
                 Toast.makeText(HomePageActivity.this, Utils.isInside(location),Toast.LENGTH_LONG).show();
-//               mService.switchPriority(Utils.checkDistance(location));
+
+//                mService.switchPriority(Utils.checkDistance(location));
             }
         }
     }
     public void statusCheck() {//Controllo se il GPS è attivo
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
-    }
 
-    private void buildAlertMessageNoGps() {//Alert nel caso in cui il GPS non sia attivo
+        }
+    }
+    private void buildAlertMessageNoGps() {//Allert nel caso in cui il GPS non sia attivo
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
                 .setCancelable(false)
@@ -443,4 +464,5 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
 }

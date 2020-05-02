@@ -14,20 +14,19 @@
 package it.qbteam.stalkerapp.model.backend.model;
 
 import java.util.Objects;
-
 import com.google.gson.annotations.SerializedName;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.time.OffsetDateTime;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
+
 
 /**
  * Link between the user and the organization: only the organization which users set to be their favorite can track their movements.
  */
 @ApiModel(description = "Link between the user and the organization: only the organization which users set to be their favorite can track their movements.")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
 public class Favorite {
   public static final String SERIALIZED_NAME_USER_ID = "userId";
   @SerializedName(SERIALIZED_NAME_USER_ID)
@@ -47,17 +46,17 @@ public class Favorite {
 
 
   public Favorite userId(String userId) {
-    
+
     this.userId = userId;
     return this;
   }
 
-   /**
+  /**
    * Authentication service&#39;s user unique identifier.
    * @return userId
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "Authentication service's user unique identifier.")
+  @Size(max=256)  @ApiModelProperty(required = true, value = "Authentication service's user unique identifier.")
 
   public String getUserId() {
     return userId;
@@ -70,17 +69,18 @@ public class Favorite {
 
 
   public Favorite organizationId(Long organizationId) {
-    
+
     this.organizationId = organizationId;
     return this;
   }
 
-   /**
+  /**
    * Unique identifier of the organization the user sets as favorite.
+   * minimum: 1
    * @return organizationId
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "Unique identifier of the organization the user sets as favorite.")
+  @Min(1L)  @ApiModelProperty(required = true, value = "Unique identifier of the organization the user sets as favorite.")
 
   public Long getOrganizationId() {
     return organizationId;
@@ -93,17 +93,17 @@ public class Favorite {
 
 
   public Favorite orgAuthServerId(String orgAuthServerId) {
-    
+
     this.orgAuthServerId = orgAuthServerId;
     return this;
   }
 
-   /**
+  /**
    * User unique identifier from the authentication server of the organization.
    * @return orgAuthServerId
-  **/
+   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
+  @Size(max=256)  @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
 
   public String getOrgAuthServerId() {
     return orgAuthServerId;
@@ -116,15 +116,15 @@ public class Favorite {
 
 
   public Favorite creationDate(OffsetDateTime creationDate) {
-    
+
     this.creationDate = creationDate;
     return this;
   }
 
-   /**
+  /**
    * When the favorite was added by the user.
    * @return creationDate
-  **/
+   **/
   @NotNull
   @Valid
   @ApiModelProperty(required = true, value = "When the favorite was added by the user.")
@@ -149,9 +149,9 @@ public class Favorite {
     }
     Favorite favorite = (Favorite) o;
     return Objects.equals(this.userId, favorite.userId) &&
-        Objects.equals(this.organizationId, favorite.organizationId) &&
-        Objects.equals(this.orgAuthServerId, favorite.orgAuthServerId) &&
-        Objects.equals(this.creationDate, favorite.creationDate);
+            Objects.equals(this.organizationId, favorite.organizationId) &&
+            Objects.equals(this.orgAuthServerId, favorite.orgAuthServerId) &&
+            Objects.equals(this.creationDate, favorite.creationDate);
   }
 
   @Override

@@ -10,23 +10,19 @@
  * Do not edit the class manually.
  */
 
-
 package it.qbteam.stalkerapp.model.backend.model;
 
 import java.util.Objects;
-
 import com.google.gson.annotations.SerializedName;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import javax.validation.constraints.*;
-
 
 /**
  * Area of an organization subjected to tracking.
  */
 @ApiModel(description = "Area of an organization subjected to tracking.")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
 public class Place {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
@@ -46,17 +42,18 @@ public class Place {
 
 
   public Place id(Long id) {
-    
+
     this.id = id;
     return this;
   }
 
-   /**
+  /**
    * Unique identifier for a place of an organization.
+   * minimum: 1
    * @return id
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "Unique identifier for a place of an organization.")
+  @Min(1L)  @ApiModelProperty(required = true, value = "Unique identifier for a place of an organization.")
 
   public Long getId() {
     return id;
@@ -69,17 +66,17 @@ public class Place {
 
 
   public Place name(String name) {
-    
+
     this.name = name;
     return this;
   }
 
-   /**
+  /**
    * Name describing the place. If not set by user it gets automatically filled.
    * @return name
-  **/
+   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "Name describing the place. If not set by user it gets automatically filled.")
+  @Size(max=128)  @ApiModelProperty(value = "Name describing the place. If not set by user it gets automatically filled.")
 
   public String getName() {
     return name;
@@ -92,17 +89,18 @@ public class Place {
 
 
   public Place organizationId(Long organizationId) {
-    
+
     this.organizationId = organizationId;
     return this;
   }
 
-   /**
+  /**
    * Unique identifier of the organization the place is part of.
+   * minimum: 1
    * @return organizationId
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "Unique identifier of the organization the place is part of.")
+  @Min(1L)  @ApiModelProperty(required = true, value = "Unique identifier of the organization the place is part of.")
 
   public Long getOrganizationId() {
     return organizationId;
@@ -115,15 +113,15 @@ public class Place {
 
 
   public Place trackingArea(String trackingArea) {
-    
+
     this.trackingArea = trackingArea;
     return this;
   }
 
-   /**
+  /**
    * Area subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.
    * @return trackingArea
-  **/
+   **/
   @NotNull
   @ApiModelProperty(required = true, value = "Area subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.")
 
@@ -147,9 +145,9 @@ public class Place {
     }
     Place place = (Place) o;
     return Objects.equals(this.id, place.id) &&
-        Objects.equals(this.name, place.name) &&
-        Objects.equals(this.organizationId, place.organizationId) &&
-        Objects.equals(this.trackingArea, place.trackingArea);
+            Objects.equals(this.name, place.name) &&
+            Objects.equals(this.organizationId, place.organizationId) &&
+            Objects.equals(this.trackingArea, place.trackingArea);
   }
 
   @Override
@@ -182,4 +180,3 @@ public class Place {
   }
 
 }
-

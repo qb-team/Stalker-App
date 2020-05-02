@@ -14,7 +14,6 @@
 package it.qbteam.stalkerapp.model.backend.model;
 
 import java.util.Objects;
-
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -22,7 +21,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import javax.validation.constraints.*;
@@ -32,7 +30,8 @@ import javax.validation.Valid;
  * Subject interested in tracking people&#39;s presence inside its own places, in either an anonymous or authenticated way.
  */
 @ApiModel(description = "Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.")
-public class Organization implements Comparable<Organization>{
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
+public class Organization implements Comparable<Organization> {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private Long id;
@@ -86,13 +85,18 @@ public class Organization implements Comparable<Organization>{
   private String trackingArea;
 
 
+  @Override
+  public int compareTo(Organization o) {
+    return name.compareTo(o.getName());
+  }
+
   /**
    * How an user who added to its favorites the organization can be tracked inside the organization&#39;s trackingArea and its places.
    */
   @JsonAdapter(TrackingModeEnum.Adapter.class)
   public enum TrackingModeEnum {
     AUTHENTICATED("authenticated"),
-    
+
     ANONYMOUS("anonymous");
 
     private String value;
@@ -139,17 +143,18 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization id(Long id) {
-    
+
     this.id = id;
     return this;
   }
 
-   /**
+  /**
    * Unique identifier for an organization.
+   * minimum: 1
    * @return id
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "Unique identifier for an organization.")
+  @Min(1L)  @ApiModelProperty(required = true, value = "Unique identifier for an organization.")
 
   public Long getId() {
     return id;
@@ -162,16 +167,17 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization name(String name) {
+
     this.name = name;
     return this;
   }
 
-   /**
+  /**
    * Name of the organization.
    * @return name
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "Name of the organization.")
+  @Size(max=128)  @ApiModelProperty(required = true, value = "Name of the organization.")
 
   public String getName() {
     return name;
@@ -184,16 +190,17 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization description(String description) {
+
     this.description = description;
     return this;
   }
 
-   /**
+  /**
    * Small description of what the organization does.
    * @return description
-  **/
+   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "Small description of what the organization does.")
+  @Size(max=512)  @ApiModelProperty(value = "Small description of what the organization does.")
 
   public String getDescription() {
     return description;
@@ -206,17 +213,17 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization image(String image) {
-    
+
     this.image = image;
     return this;
   }
 
-   /**
+  /**
    * Image/logo for the organization which gets shown on the application.
    * @return image
-  **/
+   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "Image/logo for the organization which gets shown on the application.")
+  @Size(max=300)  @ApiModelProperty(value = "Image/logo for the organization which gets shown on the application.")
 
   public String getImage() {
     return image;
@@ -229,17 +236,17 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization street(String street) {
-    
+
     this.street = street;
     return this;
   }
 
-   /**
+  /**
    * The street where the organization is located.
    * @return street
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "The street where the organization is located.")
+  @Size(max=256)  @ApiModelProperty(required = true, value = "The street where the organization is located.")
 
   public String getStreet() {
     return street;
@@ -252,17 +259,17 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization number(String number) {
-    
+
     this.number = number;
     return this;
   }
 
-   /**
+  /**
    * The number in the street where the organization is located.
    * @return number
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "The number in the street where the organization is located.")
+  @Size(max=10)  @ApiModelProperty(required = true, value = "The number in the street where the organization is located.")
 
   public String getNumber() {
     return number;
@@ -275,17 +282,19 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization postCode(Integer postCode) {
-    
+
     this.postCode = postCode;
     return this;
   }
 
-   /**
+  /**
    * The postcode where the organization is located.
+   * minimum: 0
+   * maximum: 99999
    * @return postCode
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "The postcode where the organization is located.")
+  @Min(0) @Max(99999)  @ApiModelProperty(required = true, value = "The postcode where the organization is located.")
 
   public Integer getPostCode() {
     return postCode;
@@ -298,17 +307,17 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization city(String city) {
-    
+
     this.city = city;
     return this;
   }
 
-   /**
+  /**
    * The city where the organization is located.
    * @return city
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "The city where the organization is located.")
+  @Size(max=100)  @ApiModelProperty(required = true, value = "The city where the organization is located.")
 
   public String getCity() {
     return city;
@@ -321,17 +330,17 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization country(String country) {
-    
+
     this.country = country;
     return this;
   }
 
-   /**
+  /**
    * The country where the organization is located.
    * @return country
-  **/
+   **/
   @NotNull
-  @ApiModelProperty(required = true, value = "The country where the organization is located.")
+  @Size(max=100)  @ApiModelProperty(required = true, value = "The country where the organization is located.")
 
   public String getCountry() {
     return country;
@@ -344,17 +353,17 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization authenticationServerURL(String authenticationServerURL) {
-    
+
     this.authenticationServerURL = authenticationServerURL;
     return this;
   }
 
-   /**
+  /**
    * URL or IP address of the authentication server of the organization. If it&#39;s required a specific port or protocol it must be specified. Needed only if trackingMethod is set to authenticated.
    * @return authenticationServerURL
-  **/
+   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "URL or IP address of the authentication server of the organization. If it's required a specific port or protocol it must be specified. Needed only if trackingMethod is set to authenticated.")
+  @Size(max=2048)  @ApiModelProperty(value = "URL or IP address of the authentication server of the organization. If it's required a specific port or protocol it must be specified. Needed only if trackingMethod is set to authenticated.")
 
   public String getAuthenticationServerURL() {
     return authenticationServerURL;
@@ -367,15 +376,15 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization creationDate(OffsetDateTime creationDate) {
-    
+
     this.creationDate = creationDate;
     return this;
   }
 
-   /**
+  /**
    * When the organization was added to the system.
    * @return creationDate
-  **/
+   **/
   @NotNull
   @Valid
   @ApiModelProperty(required = true, value = "When the organization was added to the system.")
@@ -391,15 +400,15 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization lastChangeDate(OffsetDateTime lastChangeDate) {
-    
+
     this.lastChangeDate = lastChangeDate;
     return this;
   }
 
-   /**
+  /**
    * When the organization parameters were last changed.
    * @return lastChangeDate
-  **/
+   **/
   @NotNull
   @Valid
   @ApiModelProperty(required = true, value = "When the organization parameters were last changed.")
@@ -415,15 +424,15 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization trackingArea(String trackingArea) {
-    
+
     this.trackingArea = trackingArea;
     return this;
   }
 
-   /**
+  /**
    * Area subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.
    * @return trackingArea
-  **/
+   **/
   @NotNull
   @ApiModelProperty(required = true, value = "Area subjected to movement tracking of people. It is a collection of (longitude, latitude) pairs consisting in a polygon. The string is expressed in JSON format.")
 
@@ -438,15 +447,15 @@ public class Organization implements Comparable<Organization>{
 
 
   public Organization trackingMode(TrackingModeEnum trackingMode) {
-    
+
     this.trackingMode = trackingMode;
     return this;
   }
 
-   /**
+  /**
    * How an user who added to its favorites the organization can be tracked inside the organization&#39;s trackingArea and its places.
    * @return trackingMode
-  **/
+   **/
   @NotNull
   @ApiModelProperty(required = true, value = "How an user who added to its favorites the organization can be tracked inside the organization's trackingArea and its places.")
 
@@ -460,7 +469,7 @@ public class Organization implements Comparable<Organization>{
   }
 
 
-  /*@Override
+  @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
@@ -468,40 +477,26 @@ public class Organization implements Comparable<Organization>{
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-
     Organization organization = (Organization) o;
     return Objects.equals(this.id, organization.id) &&
-        Objects.equals(this.name, organization.name) &&
-        Objects.equals(this.description, organization.description) &&
-        Objects.equals(this.image, organization.image) &&
-        Objects.equals(this.street, organization.street) &&
-        Objects.equals(this.number, organization.number) &&
-        Objects.equals(this.postCode, organization.postCode) &&
-        Objects.equals(this.city, organization.city) &&
-        Objects.equals(this.country, organization.country) &&
-        Objects.equals(this.authenticationServerURL, organization.authenticationServerURL) &&
-        Objects.equals(this.creationDate, organization.creationDate) &&
-        Objects.equals(this.lastChangeDate, organization.lastChangeDate) &&
-        Objects.equals(this.trackingArea, organization.trackingArea) &&
-        Objects.equals(this.trackingMode, organization.trackingMode);
-  }*/
+            Objects.equals(this.name, organization.name) &&
+            Objects.equals(this.description, organization.description) &&
+            Objects.equals(this.image, organization.image) &&
+            Objects.equals(this.street, organization.street) &&
+            Objects.equals(this.number, organization.number) &&
+            Objects.equals(this.postCode, organization.postCode) &&
+            Objects.equals(this.city, organization.city) &&
+            Objects.equals(this.country, organization.country) &&
+            Objects.equals(this.authenticationServerURL, organization.authenticationServerURL) &&
+            Objects.equals(this.creationDate, organization.creationDate) &&
+            Objects.equals(this.lastChangeDate, organization.lastChangeDate) &&
+            Objects.equals(this.trackingArea, organization.trackingArea) &&
+            Objects.equals(this.trackingMode, organization.trackingMode);
+  }
 
   @Override
   public int hashCode() {
     return Objects.hash(id, name, description, image, street, number, postCode, city, country, authenticationServerURL, creationDate, lastChangeDate, trackingArea, trackingMode);
-  }
-
-  public boolean equals(Organization o) {
-    if (o instanceof Organization) {
-      Organization aux = (Organization) o;
-      return aux.getName() == this.name;
-    }
-    return false;
-  }
-
-  @Override
-  public int compareTo(Organization o) {
-     return name.compareTo(o.getName());
   }
 
 
@@ -539,4 +534,3 @@ public class Organization implements Comparable<Organization>{
   }
 
 }
-

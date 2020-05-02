@@ -226,6 +226,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     public void alphabeticalOrder(){
         Collections.sort(organizationList);
+        //Collections.so
         try {
             adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
             recyclerView.setAdapter(adapter);

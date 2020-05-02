@@ -4,6 +4,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.android.SphericalUtil;
 
@@ -101,6 +102,23 @@ public class TrackingDistance {
                 start.longitude + (u * (end.longitude - start.longitude)));
 
 
+    }
+
+    ArrayList<LatLng> polygon = new ArrayList<>();
+    LatLngBounds.Builder areaBuilder = new LatLngBounds.Builder();
+
+    public LatLngBounds.Builder buildPolygonArea(ArrayList<LatLng> sides){
+
+        for(int i=0; i<sides.size(); i++){
+            polygon.add(sides.get(i));
+        }
+
+        //costruttore area organizzazione
+        for (LatLng point : polygon) {
+            areaBuilder.include(point);
+        }
+
+        return areaBuilder;
     }
 
 

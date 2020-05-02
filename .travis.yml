@@ -11,28 +11,6 @@ android:
     - add-on
     - extra
   licenses:
-<<<<<<< HEAD
-    - "android-sdk-preview-license-52d11cd2"
-    - "android-sdk-license-28.+"
-    - "google-gdk-license-28.+"
-    - "android-sdk-license-29.+"
-    - "google-gdk-license-29.+"
-#before_script:
-#  - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
-#  - emulator -avd test -no-audio -no-window &
-#  - android-wait-for-emulator
-#  - adb shell input keyevent 82 &
-before_install:
-  - chmod +x gradlew
-  - touch $HOME/.android/repositories.cfg
-  - yes | sdkmanager "platforms;android-28"
-  - yes | sdkmanager "build-tools;28.0.3"
-script:
-  - sudo ./gradlew test --stacktrace
-
-after_success:
-  - ./gradlew check jacocoTestReport coveralls
-=======
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-28.+'
     - 'google-gdk-license-28.+'
@@ -53,26 +31,18 @@ script:
 
 after_success:
   - ./gradlew check jacocoTestReport coveralls    
->>>>>>> a70b4db34fe583e1662f7732a5f66a5f331497bf
 
 after_failure:
   - ./gradlew clean check --debug
 
 install: sudo ./gradlew assembleDebug --stacktrace
 
-<<<<<<< HEAD
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-  # Emulator Management: Create, Start and Wait
-=======
 
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
   # Emulator Management: Create, Start and Wait	
->>>>>>> a70b4db34fe583e1662f7732a5f66a5f331497bf
 
 cache:
   directories:
@@ -80,19 +50,11 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 #before_deploy:
-<<<<<<< HEAD
-# Set up git user name and tag this commit
-#     - git config --local user.name "WenXiaowei"
-#     - git config --local user.email "Xiaowei.wen1997@gmail.com"
-#     - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-#    - git tag $TRAVIS_TAG
-=======
       # Set up git user name and tag this commit
  #     - git config --local user.name "WenXiaowei"
  #     - git config --local user.email "Xiaowei.wen1997@gmail.com"
  #     - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
   #    - git tag $TRAVIS_TAG
->>>>>>> a70b4db34fe583e1662f7732a5f66a5f331497bf
 #deploy:
 #      provider: releases
 #      api_key: "ACCESS_TOKEN"

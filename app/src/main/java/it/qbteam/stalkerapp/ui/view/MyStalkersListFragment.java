@@ -95,14 +95,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         myStalkersListPresenter =new MyStalkersListPresenter(this);
         organizationList =new ArrayList<>();
-        organizationList=checkFile();
 
-        if(organizationList!=null){
-            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-            recyclerView.setAdapter(adapter);
-        }
-        else
-            Toast.makeText(getActivity(),"Lista ancora vuota!",Toast.LENGTH_SHORT).show();
 
         return view;
     }
@@ -287,6 +280,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     @Override
     public void onResume() {
         super.onResume();
+        //organizationList=checkFile();
+
+        if(organizationList!=null){
+            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
+        }
+        else
+            Toast.makeText(getActivity(),"Lista ancora vuota!",Toast.LENGTH_SHORT).show();
     }
 
     @Override

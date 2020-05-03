@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             public void onRefresh() {
                 downloadList();
                 refresh.setRefreshing(false);
+               // MyStalkersListFragment.getInstance().checkFile();
             }
         });
 

@@ -63,6 +63,7 @@ import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.tracking.TrackingDistance;
 import it.qbteam.stalkerapp.presenter.HomeContract;
+import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;

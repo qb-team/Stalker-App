@@ -59,7 +59,7 @@ public class Rest {
             @Override
             public void onResponse(Call<List<Organization>> call, Response<List<Organization>> response) {
                 response.body();
-                System.out.println(response.body());
+                System.out.println("STAMPA DELLA RESPONSE  "+response.body());
             }
 
             @Override

@@ -71,21 +71,21 @@ public class Rest {
     }
 
 
-    public static void performMovement(Organization organization, User user) {
+    public static void performMovement(String name , String authServerID,OffsetDateTime timeStamp,long orgID, User user) {
         final String[] exitToken = new String[1];
         OrganizationMovement movementUpload= new OrganizationMovement();
         movementUpload.setMovementType(1);
         OffsetDateTime dateTime= OffsetDateTime.now();
         movementUpload.setTimestamp(dateTime);
-        movementUpload.setOrganizationId(organization.getId());
-        movementUpload.setOrgAuthServerId(organization.getAuthenticationServerURL());
+        movementUpload.setOrganizationId(orgID);
+        movementUpload.setOrgAuthServerId(authServerID);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
         MovementApi service = ac.createService(MovementApi.class);
         Call<OrganizationMovement> movement= service.trackMovementInOrganization(movementUpload);
         movement.enqueue(new Callback<OrganizationMovement>() {
                 @Override
                 public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
-                    exitToken[0] =(response.body().getExitToken());
+
                     System.out.println(response.body().getExitToken());
                 }
 

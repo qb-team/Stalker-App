@@ -149,7 +149,7 @@ public class TrackingStalker extends Service {
      */
     private Location mLocation;
     private int position;
-    private ArrayList<Organization> organization;
+    private ArrayList<Organization> organizationList;
     private ArrayList<LatLngOrganization> latLngOrganizations;
 
     public TrackingStalker() throws JSONException {
@@ -457,9 +457,11 @@ public class TrackingStalker extends Service {
     }
 
     private void handleLocation(Location location) throws JSONException {
-        if (isInside(location)==false) {
-            Toast.makeText(HomePageActivity.getInstance(), organizzazione, Toast.LENGTH_SHORT).show();
-            Rest.performMovement(organization.get(position), HomePageActivity.getInstance().getUser());
+        if (isInside(location)==true) {
+
+            Toast.makeText(MyStalkersListFragment.getInstance().getContext(), organizzazione, Toast.LENGTH_SHORT).show();
+
+
         } else {
 
             int i = TrackingDistance.checkDistance(location);
@@ -470,24 +472,26 @@ public class TrackingStalker extends Service {
     public boolean isInside(Location location) throws JSONException {
 
         boolean found = false;
-        organization = new ArrayList<>();
-        organization.addAll(MyStalkersListFragment.getInstance().getMyStalkerList());
+        organizationList = new ArrayList<>();
+        organizationList.addAll(MyStalkersListFragment.getInstance().getMyStalkerList());
+        if(organizationList!=null){
         latLngOrganizations = new ArrayList<>();
         LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
         final LatLngBounds.Builder builder=new LatLngBounds.Builder();
 
-        for (int i = 0; i < organization.size(); i++) {
+        for (int i = 0; i < organizationList.size(); i++) {
             LatLngOrganization aux = new LatLngOrganization();
-            aux.setLatLng(organization.get(i));
-            aux.setName(organization.get(i));
-            aux.setTrackingMode(organization.get(i));
-            aux.setOrganizationID(organization.get(i));
+            aux.setLatLng(organizationList.get(i));
+            aux.setName(organizationList.get(i));
+            aux.setTrackingMode(organizationList.get(i));
+            aux.setOrganizationID(organizationList.get(i));
+            aux.setOrgAuthServerid(organizationList.get(i));
+            aux.setTimeStamp(organizationList.get(i));
             latLngOrganizations.add(aux);
         }
 
 
-        for(int i=0;i<latLngOrganizations.size()||found;i++) {
-
+        for(int i=0;i<latLngOrganizations.size();i++) {
             for (LatLng point : latLngOrganizations.get(i).getLatLng()) {
                 builder.include(point);
             }
@@ -495,14 +499,15 @@ public class TrackingStalker extends Service {
             boolean isInsideBoundary = builder.build().contains(actualPosition);
             boolean isInside = PolyUtil.containsLocation(actualPosition, latLngOrganizations.get(i).getLatLng(), true);
             if (isInsideBoundary==true && isInside==true){
-                System.out.println("SONO DENTROO");
+                organizzazione="sei dentro a"+latLngOrganizations.get(i).getName();
+                Rest.performMovement(latLngOrganizations.get(i).getName(),latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getTimeStamp(),latLngOrganizations.get(i).getOrgID(), HomePageActivity.getInstance().getUser());
                 found= true;
             }
 
-            else organizzazione="Sei dentro a";
+
 
         }
-
+        }
 
         return found;
 

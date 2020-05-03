@@ -1,8 +1,15 @@
 package it.qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,18 +34,21 @@ import com.google.firebase.auth.GetTokenResult;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 import it.qbteam.stalkerapp.presenter.MyStalkersListPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
+import it.qbteam.stalkerapp.tools.Utils;
+
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
+public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MyStalkersListPresenter myStalkersListPresenter;
     private ArrayList<Organization> organizationList;
@@ -46,7 +56,26 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView.Adapter adapter;
     private String path;
     private static MyStalkersListFragment instance = null;
+    // A reference to the service used to get location updates.
+    private TrackingStalker mService = null;  // Classe che contiene tutti i metodi Google
 
+    // Tracks the bound state of the service.
+    private boolean mBound = false;
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            TrackingStalker.LocalBinder binder = (TrackingStalker.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +83,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         super.onCreate(savedInstanceState);
         path= getContext().getFilesDir() + "/Preferiti.txt";
         instance=this;
-
+        getContext().bindService(new Intent(getContext(), TrackingStalker.class), mServiceConnection,
+                Context.BIND_AUTO_CREATE);
 
     }
     @Nullable
@@ -254,5 +284,42 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void addOrganizationRest(Organization organization, User user) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationRest(organization, user);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        if (mBound) {
+            getContext().unbindService(mServiceConnection);
+            mBound = false;
+        }
+
+
+        PreferenceManager.getDefaultSharedPreferences(getContext()).unregisterOnSharedPreferenceChangeListener(this);
+
+        super.onStop();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        // Update the buttons state depending on whether location updates are being requested.
+        if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
+            HomePageActivity.getInstance().setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
+                    false));
+        }
+    }
+
+    public void startTracking(){
+        mService.requestLocationUpdates();
+    }
+    public void stopTracking(){
+        mService.removeLocationUpdates();
+    }
 }

@@ -69,7 +69,7 @@ import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
-public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener  {
+public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener  {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     // Used in checking for runtime permissions.
@@ -77,11 +77,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static HomePageActivity instance = null;
     // The BroadcastReceiver used to listen from broadcasts from the service.
 
-    // A reference to the service used to get location updates.
-    private TrackingStalker mService = null;  // Classe che contiene tutti i metodi Google
 
-    // Tracks the bound state of the service.
-    private boolean mBound = false;
     static boolean active=false;
     private SwitchCompat switcher;
     private Location mlocation;
@@ -95,22 +91,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private User user;
     private ArrayList<Organization> myStalkerList;
     // Monitors the state of the connection to the service.
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            TrackingStalker.LocalBinder binder = (TrackingStalker.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-            mBound = false;
-        }
-    };
-
 
     @Override
     protected void onStart() {
@@ -138,8 +118,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
-        bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
-                Context.BIND_AUTO_CREATE);
+
     }
 
     public static HomePageActivity getInstance() {
@@ -209,11 +188,13 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     if (!checkPermissions()) {
                         requestPermissions();
                     } else {
-                        mService.requestLocationUpdates();
+                        //mService.requestLocationUpdates();
+                        MyStalkersListFragment.getInstance().startTracking();
                     }
                 }
                 else{
-                    mService.removeLocationUpdates();
+                    //mService.removeLocationUpdates();
+                    MyStalkersListFragment.getInstance().stopTracking();
                 }
             }
         });
@@ -267,7 +248,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 break;
             case R.id.cambianumero:
                 //mService.setNumero(TrackingDistance.checkDistance(mlocation));
-                System.out.println(mService.getNUMERO());
+                //System.out.println(mService.getNUMERO());
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -335,7 +316,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                mService.requestLocationUpdates();
+                MyStalkersListFragment.getInstance().startTracking();
             } else {
                 // Permission denied.
                 setSwitchState(false);
@@ -363,28 +344,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     }
 
     ///////////// INDAGARE //////////////////////
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        if (mBound) {
-            unbindService(mServiceConnection);
-            mBound = false;
-        }
-
-
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
-
-        super.onStop();
-    }
     ///////////// FINE INDAGARE //////////////////////
 
 
@@ -404,7 +364,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         if (!checkPermissions()) {
                             requestPermissions();
                         } else {
-                            mService.requestLocationUpdates();
+                            MyStalkersListFragment.getInstance().startTracking();
                         }
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
@@ -419,16 +379,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     }
 
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        // Update the buttons state depending on whether location updates are being requested.
-        if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
-            setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
-                    false));
-        }
-    }
 
-    private void setSwitchState(boolean requestingLocationUpdates) {
+    public void setSwitchState(boolean requestingLocationUpdates) {
         if (requestingLocationUpdates) {
             switcher.setChecked(true);
         } else {

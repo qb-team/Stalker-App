@@ -46,14 +46,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.android.PolyUtil;
-
 import org.json.JSONException;
-
 import java.util.ArrayList;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
@@ -78,7 +74,7 @@ import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
  */
 public class TrackingStalker extends Service {
 
-    private static final String PACKAGE_NAME ="it.qbteam.stalkerapp.model.Tracking.TrackingStalker";
+    private static final String PACKAGE_NAME = "it.qbteam.stalkerapp.model.Tracking.TrackingStalker";
     public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
     private String organizzazione;
@@ -155,6 +151,7 @@ public class TrackingStalker extends Service {
     private int position;
     private ArrayList<Organization> organization;
     private ArrayList<LatLngOrganization> latLngOrganizations;
+
     public TrackingStalker() throws JSONException {
 
 
@@ -208,9 +205,8 @@ public class TrackingStalker extends Service {
      * int 	PRIORITY_HIGH_ACCURACY 	Used with setPriority(int) to request the most accurate locations available.
      * int 	PRIORITY_LOW_POWER 	Used with setPriority(int) to request "city" level accuracy.
      * int 	PRIORITY_NO_POWER 	Used with setPriority(int) to request the best accuracy possible with zero additional power consumption.
-     *
+     * <p>
      * setSmallestDisplacement(float smallestDisplacementMeters) --> Set the minimum displacement between location updates in meters
-     *
      */
     private void createLocationRequest() {
         System.out.println("creato locationrequest");
@@ -221,7 +217,7 @@ public class TrackingStalker extends Service {
 //        mLocationRequest.setSmallestDisplacement(2);
     }
 
-    public void setNumero(int i){
+    public void setNumero(int i) {
         removeLocationUpdates();
         switchPriority(i);
         requestLocationUpdates();
@@ -235,7 +231,7 @@ public class TrackingStalker extends Service {
      */
     public void switchPriority(int i) {
         System.out.println("Switch priority avvenuto");
-        switch (i){
+        switch (i) {
             case 0:
                 mLocationRequest = new LocationRequest();
                 System.out.println("Massima accuretazza");
@@ -264,18 +260,16 @@ public class TrackingStalker extends Service {
     }
 
 
-
-
-    public int getNUMERO(){
+    public int getNUMERO() {
         return NUMERO;
     }
 
 
-
-    /** Creazione FusedLocation
+    /**
+     * Creazione FusedLocation
      * https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient
      * getlastlocation() --> Ritorna l'ultima posizione     *
-     * */
+     */
     private void getLastLocation() {
         try {
             mFusedLocationClient.getLastLocation()
@@ -344,7 +338,9 @@ public class TrackingStalker extends Service {
     }
 
 
-    /** Non so bene come viene gestito --> Forse non serve nella nostra app */
+    /**
+     * Non so bene come viene gestito --> Forse non serve nella nostra app
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -394,9 +390,6 @@ public class TrackingStalker extends Service {
     }
 
 
-
-
-
     /**
      * La notifica a schermo viene gestita qui
      * Returns the {@link NotificationCompat} used as part of the foreground service.
@@ -422,7 +415,7 @@ public class TrackingStalker extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .addAction(R.drawable.ic_launch, "Apri l' app",
                         activityPendingIntent)
-                .addAction(R.drawable.ic_cancel,"Interrompi tracciamento",
+                .addAction(R.drawable.ic_cancel, "Interrompi tracciamento",
                         servicePendingIntent)
                 .setContentText(text) // Stampa a schermo IN BACKGROUND
                 .setContentTitle(Utils.getLocationTitle(this))
@@ -441,19 +434,19 @@ public class TrackingStalker extends Service {
     }
 
 
-    /** Gestione posizione
+    /**
+     * Gestione posizione
      * Log.i(TAG, "New location: " + location); --> Stampa nel run
      * mLocation = location; --> crea l'oggetto di tipo "Location" mLocation
-     * */
+     */
     private void onNewLocation(Location location) throws JSONException {
-
 
 
         System.out.println("L'intervallo è questo:  " + mLocationRequest.getInterval());
         System.out.println("L'intervallo veloce è questo:  " + mLocationRequest.getFastestInterval());
         mLocation = location;
 
-        if (location!=null){
+        if (location != null) {
             handleLocation(location);
         }
 
@@ -464,51 +457,58 @@ public class TrackingStalker extends Service {
     }
 
     private void handleLocation(Location location) throws JSONException {
-        if (isInside(location)){
-            Toast.makeText(HomePageActivity.getInstance(),organizzazione,Toast.LENGTH_SHORT).show();
-            Rest.performMovement(organization.get(position),HomePageActivity.getInstance().getUser());
-        }
-        else{
+        if (isInside(location)==false) {
+            Toast.makeText(HomePageActivity.getInstance(), organizzazione, Toast.LENGTH_SHORT).show();
+            Rest.performMovement(organization.get(position), HomePageActivity.getInstance().getUser());
+        } else {
 
-            int i= TrackingDistance.checkDistance(location);
+            int i = TrackingDistance.checkDistance(location);
             switchPriority(i);
-            // Aggiornamento locationrequest
         }
     }
 
     public boolean isInside(Location location) throws JSONException {
-        //Polygon Torre; --> come si usa Polygon?
-        this.organization= MyStalkersListFragment.getInstance().getMyStalkerList();
-        latLngOrganizations=new ArrayList<>();
-        for(int i=0;i<organization.size();i++){
 
-            latLngOrganizations.get(i).setLatLng(organization.get(i));
-            latLngOrganizations.get(i).setBuilder(latLngOrganizations.get(i).getLatLng());
-            latLngOrganizations.get(i).setName(organization.get(i));
-            latLngOrganizations.get(i).setTrackingMode(organization.get(i));
-            latLngOrganizations.get(i).setOrganizationID(organization.get(i));
-        }
-
-        boolean inside=false;
-
+        boolean found = false;
+        organization = new ArrayList<>();
+        organization.addAll(MyStalkersListFragment.getInstance().getMyStalkerList());
+        latLngOrganizations = new ArrayList<>();
         LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
-        for(int i=0;i<latLngOrganizations.size();i++) {
+        final LatLngBounds.Builder builder=new LatLngBounds.Builder();
 
-            boolean isInsideBoundary = latLngOrganizations.get(i).getBuilder().build().contains(actualPosition); // true se il test point è all'interno del confine
-            boolean isInsideBoolean = PolyUtil.containsLocation(actualPosition, latLngOrganizations.get(i).getLatLng(), true); // false se il punto è all'esterno del polygon
+        for (int i = 0; i < organization.size(); i++) {
+            LatLngOrganization aux = new LatLngOrganization();
+            aux.setLatLng(organization.get(i));
+            aux.setName(organization.get(i));
+            aux.setTrackingMode(organization.get(i));
+            aux.setOrganizationID(organization.get(i));
+            latLngOrganizations.add(aux);
+        }
 
-            if (isInsideBoundary && isInsideBoolean == true )
-        {
-            position=i;
-            inside= true;
-            organizzazione ="Sei dentro a "+latLngOrganizations.get(i).getName();
+
+        for(int i=0;i<latLngOrganizations.size()||found;i++) {
+
+            for (LatLng point : latLngOrganizations.get(i).getLatLng()) {
+                builder.include(point);
+            }
+
+            boolean isInsideBoundary = builder.build().contains(actualPosition);
+            boolean isInside = PolyUtil.containsLocation(actualPosition, latLngOrganizations.get(i).getLatLng(), true);
+            if (isInsideBoundary==true && isInside==true){
+                System.out.println("SONO DENTROO");
+                found= true;
+            }
+
+            else organizzazione="Sei dentro a";
 
         }
 
 
-    }
-        return inside;
-    }
+        return found;
+
+        }
+
+
 
 
 

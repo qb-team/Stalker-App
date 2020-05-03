@@ -16,34 +16,31 @@ public class LatLngOrganization {
 
     private String name;
     private ArrayList<LatLng> polygon;
-    private LatLngBounds.Builder builder;
     private String trackingMode;
     private long organizationID;
 
     public void setLatLng(Organization organization) throws JSONException {
-        String inline="";
 
-        final ArrayList<LatLng> polygon = new ArrayList<>();
+        String inline=organization.getTrackingArea();
+        System.out.println("INLINE  "+inline);
+        polygon = new ArrayList<>();
         JSONObject jsonObject = new JSONObject(inline);
         JSONArray jsonArray = (JSONArray) jsonObject.get("Organizzazioni");
         for(int i=0;i<jsonArray.length();i++) {
             JSONObject jsonObj = jsonArray.getJSONObject(i);
             double latitude = jsonObj.getDouble("lat");
             double longitude = jsonObj.getDouble("long");
-            this.polygon.add(new LatLng(latitude, longitude));
+            polygon.add(new LatLng(latitude, longitude));
         }
 
 
-    }
-    public void setBuilder(ArrayList<LatLng> polygon){
-        for (LatLng point : polygon) {
-            this.builder.include(point);
-        }
+      System.out.println("ARRAY LATLNG"+ polygon);
     }
 
     public void setName(Organization organization){
-        this.name=organization.getName();
+        name=organization.getName();
     }
+
     public void setTrackingMode(Organization organization){
         this.trackingMode=organization.getTrackingMode().toString();
 
@@ -54,12 +51,13 @@ public class LatLngOrganization {
     public ArrayList<LatLng> getLatLng(){
         return this.polygon;
     }
-    public LatLngBounds.Builder getBuilder(){
-        return this.builder;
-    }
+
+
+
     public String  getName(){
         return this.name;
     }
+
     public String getTrackingMode(){
         return this.trackingMode;
     }

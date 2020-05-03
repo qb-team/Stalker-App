@@ -56,8 +56,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import it.qbteam.stalkerapp.model.backend.ApiClient;
+import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.tracking.TrackingDistance;
 import it.qbteam.stalkerapp.presenter.HomeContract;
@@ -91,6 +93,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private DrawerLayout drawer;
     private static String userEmail;
     private User user;
+    private ArrayList<Organization> myStalkerList;
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -230,12 +233,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private void initScreen() {
         // Creato l'actionTab in alto
         actionTabFragment = new ActionTabFragment();
-
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragmentID, actionTabFragment)
                 .commit();
     }
+
 
     @Override
     public void onBackPressed() {

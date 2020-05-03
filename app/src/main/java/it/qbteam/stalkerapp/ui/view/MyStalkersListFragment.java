@@ -207,7 +207,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     public ArrayList <Organization> getMyStalkerList(){
+        System.out.println("STALKER LIST  "+ myStalkersListPresenter.checkFile(path));
         return myStalkersListPresenter.checkFile(path);
+
     }
     @Override
     public void onSuccessCheckFile(ArrayList<Organization> list) {

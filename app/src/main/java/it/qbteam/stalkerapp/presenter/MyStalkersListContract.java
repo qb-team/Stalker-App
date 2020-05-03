@@ -30,6 +30,7 @@ public interface MyStalkersListContract {
         void addOrganizationRest(Organization organization, User user) throws IOException, JSONException;
         void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
         void removeRest(Organization organization, User user);
+        ArrayList<Organization> loadList(User user);
     }
 
     //METODO DEL MODELLO

@@ -49,6 +49,11 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
         rest.performRemoveOrganizationRest(organization, user);
     }
 
+    @Override
+    public ArrayList<Organization> loadList(User user) {
+      return rest.performLoadList(user);
+    }
+
 
     @Override
     public void addOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {

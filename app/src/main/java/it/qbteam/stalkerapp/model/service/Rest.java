@@ -2,7 +2,10 @@ package it.qbteam.stalkerapp.model.service;
 
 import org.json.JSONException;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
@@ -30,7 +33,6 @@ public class Rest {
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(user.getUid());
         favoriteUpload.setOrganizationId(organization.getId());
-
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
         FavoriteApi service = ac.createService(FavoriteApi.class);
         Call<Void> favorite = service.removeFavoriteOrganization(favoriteUpload);
@@ -46,7 +48,28 @@ public class Rest {
             }
         });
     }
+    public ArrayList<Organization> performLoadList(User user){
+        ArrayList<Organization> aux=new ArrayList<>();
+        Favorite favoriteDownload= new Favorite();
+        favoriteDownload.setUserId(user.getUid());
+        ApiClient ac =new ApiClient("bearerAuth").setBearerToken(user.getToken());
+        FavoriteApi service = ac.createService(FavoriteApi.class);
+        Call<List<Organization>> favorite= service.getFavoriteOrganizationList(favoriteDownload.getUserId());
+        favorite.enqueue(new Callback<List<Organization>>() {
+            @Override
+            public void onResponse(Call<List<Organization>> call, Response<List<Organization>> response) {
+                response.body();
+                System.out.println(response.body());
+            }
 
+            @Override
+            public void onFailure(Call<List<Organization>> call, Throwable t) {
+                System.out.println("ERROREE");
+            }
+        });
+
+return aux;
+    }
     public void performAddOrganizationRest(Organization organization, User user) throws IOException, JSONException {
 
         Favorite favoriteUpload = new Favorite();

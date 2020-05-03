@@ -58,7 +58,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private static MyStalkersListFragment instance = null;
     // A reference to the service used to get location updates.
     private TrackingStalker mService = null;  // Classe che contiene tutti i metodi Google
-
     // Tracks the bound state of the service.
     private boolean mBound = false;
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -125,7 +124,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     public ArrayList<Organization> checkFile() {
 
-       return myStalkersListPresenter.checkFile(path);
+       //return myStalkersListPresenter.checkFile(path);
+        return myStalkersListPresenter.loadList(HomePageActivity.getInstance().getUser());
     }
 
     //  MyAdapter.OnOrganizzazioneListener DA METTERE ALTRI 2 METODI LDAP E STANDARD COME RISPOSTE

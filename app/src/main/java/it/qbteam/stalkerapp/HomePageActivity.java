@@ -212,10 +212,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             case R.id.alphabeticalOrderID:
                     HomeFragment.getInstance().alphabeticalOrder();
                 break;
-            case R.id.cambianumero:
-                //mService.setNumero(TrackingDistance.checkDistance(mlocation));
-                //System.out.println(mService.getNUMERO());
-                break;
+
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

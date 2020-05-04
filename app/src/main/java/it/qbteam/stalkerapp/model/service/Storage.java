@@ -81,7 +81,8 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                         serverUrl=jsonObj.getString("authenticationServerURL");
                         organization.setAuthenticationServerURL(serverUrl);
                     }
-                    organization.setTrackingMode(Organization.TrackingModeEnum.fromValue(trackingMode));
+
+                    organization.setTrackingMode(Organization.TrackingModeEnum.valueOf(trackingMode));
                     System.out.println("organization:  " + organization);
                     aux.add(organization);
                 }
@@ -205,7 +206,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         jo.put("creationDate", list.get(i).getCreationDate());
         jo.put("lastChangeDate", list.get(i).getLastChangeDate());
         jo.put("trackingArea", list.get(i).getTrackingArea());
-        jo.put("trackingMode", list.get(i).getTrackingMode().toString());
+        jo.put("trackingMode", list.get(i).getTrackingMode().getValue());
         ja.put(jo);
     }
     JSONObject mainObj = new JSONObject();

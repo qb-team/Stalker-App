@@ -122,6 +122,9 @@ public class Organization implements Comparable<Organization> {
       }
       throw new IllegalArgumentException("Unexpected value '" + value + "'");
     }
+    public void setTrackingMode(String tracking){
+      this.value=tracking;
+    }
 
     public static class Adapter extends TypeAdapter<TrackingModeEnum> {
       @Override

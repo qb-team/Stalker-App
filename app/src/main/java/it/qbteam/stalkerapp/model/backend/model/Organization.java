@@ -95,9 +95,9 @@ public class Organization implements Comparable<Organization> {
    */
   @JsonAdapter(TrackingModeEnum.Adapter.class)
   public enum TrackingModeEnum {
-    AUTHENTICATED("authenticated"),
+    authenticated("authenticated"),
 
-    ANONYMOUS("anonymous");
+    anonymous("anonymous");
 
     private String value;
 

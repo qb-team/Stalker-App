@@ -171,15 +171,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             bundle.putString("description", organizationList.get(position).getDescription());
             System.out.println("DESCRIPTION"+organizationList.get(position).getDescription());
             bundle.putString("image", organizationList.get(position).getImage());
-
-        if(organizationList.get(position).getTrackingMode().getValue()=="anonymous"){
+        if(organizationList.get(position).getTrackingMode().toString()=="anonymous"){
             StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
             stdOrgFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.HomeFragmentID, stdOrgFragment).commit();
         }
-        else{
+        else {
             LDAPorganizationFragment LDAPFragment= new LDAPorganizationFragment();
             LDAPFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();

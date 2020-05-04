@@ -85,6 +85,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         getContext().bindService(new Intent(getContext(), TrackingStalker.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
 
+
     }
     @Nullable
     @Override
@@ -97,8 +98,19 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         organizationList =new ArrayList<>();
 
 
+
+
         return view;
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        System.out.println("ciao:  " + mService);
+
+    }
+
+
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
@@ -230,8 +242,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     public ArrayList <Organization> getMyStalkerList(){
-        System.out.println("STALKER LIST  "+ myStalkersListPresenter.checkFile(path));
-        return myStalkersListPresenter.checkFile(path);
+        return organizationList;
 
     }
     @Override
@@ -318,9 +329,21 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     public void startTracking(){
+        createListOrganization();
+        System.out.println("lala:  " + mService);
         mService.requestLocationUpdates();
     }
+
     public void stopTracking(){
         mService.removeLocationUpdates();
     }
+
+    private void createListOrganization(){
+        try {
+            mService.createOrganizationArrayList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

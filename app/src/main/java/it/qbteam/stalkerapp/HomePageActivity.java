@@ -189,7 +189,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     if (!checkPermissions()) {
                         requestPermissions();
                     } else {
-                        //mService.requestLocationUpdates();
+                        //.requestLocationUpdates();
                         MyStalkersListFragment.getInstance().startTracking();
                     }
                 }
@@ -343,11 +343,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             }
         }
     }
-
-    ///////////// INDAGARE //////////////////////
-
-    ///////////// FINE INDAGARE //////////////////////
-
 
     public void statusCheck() {//Controllo se il GPS è attivo
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

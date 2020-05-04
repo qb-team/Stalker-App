@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +48,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -56,9 +58,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView.Adapter adapter;
     private String path;
     private static MyStalkersListFragment instance = null;
-    // A reference to the service used to get location updates.
-    private TrackingStalker mService = null;  // Classe che contiene tutti i metodi Google
-    // Tracks the bound state of the service.
+    private TrackingStalker mService = null;
     private boolean mBound = false;
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -81,11 +81,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
         path= getContext().getFilesDir() + "/Preferiti.txt";
+
         instance=this;
+
         getContext().bindService(new Intent(getContext(), TrackingStalker.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
 
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -94,8 +97,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         myStalkersListPresenter =new MyStalkersListPresenter(this);
-        organizationList =new ArrayList<>();
+        organizationList=new ArrayList<>();
 
+        loadMyStalkerList(ActionTabFragment.getInstance().getUserToken(),ActionTabFragment.getInstance().getUID());
 
         return view;
     }
@@ -115,10 +119,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return instance;
     }
 
-    public ArrayList<Organization> checkFile() {
+    public void loadMyStalkerList(String UID, String userToken) {
 
-       //return myStalkersListPresenter.checkFile(path);
-        return myStalkersListPresenter.loadList(HomePageActivity.getInstance().getUser());
+        myStalkersListPresenter.loadList(UID,userToken);
     }
 
     //  MyAdapter.OnOrganizzazioneListener DA METTERE ALTRI 2 METODI LDAP E STANDARD COME RISPOSTE
@@ -179,7 +182,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
 
     public void removeOrganization(int position) throws IOException, JSONException {
-        myStalkersListPresenter.removeRest(organizationList.get(position), HomePageActivity.getInstance().getUser());
+        myStalkersListPresenter.removeRest(organizationList.get(position),ActionTabFragment.getInstance().getUserToken(),ActionTabFragment.getInstance().getUID());
         myStalkersListPresenter.remove(organizationList.get(position), organizationList, path);
 
     }
@@ -274,8 +277,19 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     }
 
-    public void addOrganizationRest(Organization organization, User user) throws IOException, JSONException {
-        myStalkersListPresenter.addOrganizationRest(organization, user);
+    @Override
+    public void onSuccessLoadFile(List<Organization> list) {
+        if(list!=null){
+            ArrayList<Organization> aux= new ArrayList<>(list);
+            adapter=new OrganizationViewAdapter(aux,this.getContext(),this);
+            recyclerView.setAdapter(adapter);
+        }
+        else
+            Toast.makeText(getContext(),"Lista MyStalker ancora vuota",Toast.LENGTH_SHORT).show();
+    }
+
+    public void addOrganizationRest(Organization organization, String UID, String userToken) throws IOException, JSONException {
+        myStalkersListPresenter.addOrganizationRest(organization, UID,userToken);
     }
     @Override
     public void onResume() {

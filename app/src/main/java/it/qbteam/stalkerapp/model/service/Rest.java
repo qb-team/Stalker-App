@@ -28,12 +28,12 @@ public class Rest {
         this.myStalkerListener = myStalkerListener;
     }
 
-    public void performRemoveOrganizationRest(Organization organization, User user) {
+    public void performRemoveOrganizationRest(Organization organization, String UID, String userToken) {
 
         Favorite favoriteUpload = new Favorite();
-        favoriteUpload.setUserId(user.getUid());
+        favoriteUpload.setUserId(UID);
         favoriteUpload.setOrganizationId(organization.getId());
-        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         FavoriteApi service = ac.createService(FavoriteApi.class);
         Call<Void> favorite = service.removeFavoriteOrganization(favoriteUpload);
         favorite.enqueue(new Callback<Void>() {
@@ -48,35 +48,35 @@ public class Rest {
             }
         });
     }
-    public ArrayList<Organization> performLoadList(User user){
-        ArrayList<Organization> aux=new ArrayList<>();
+    public void performLoadList(String UID, String userToken){
+
         Favorite favoriteDownload= new Favorite();
-        favoriteDownload.setUserId(user.getUid());
-        ApiClient ac =new ApiClient("bearerAuth").setBearerToken(user.getToken());
+        favoriteDownload.setUserId(UID);
+        ApiClient ac =new ApiClient("bearerAuth").setBearerToken(userToken);
         FavoriteApi service = ac.createService(FavoriteApi.class);
         Call<List<Organization>> favorite= service.getFavoriteOrganizationList(favoriteDownload.getUserId());
         favorite.enqueue(new Callback<List<Organization>>() {
             @Override
             public void onResponse(Call<List<Organization>> call, Response<List<Organization>> response) {
-                response.body();
-                System.out.println("STAMPA DELLA RESPONSE  "+response.body());
+
+                myStalkerListener.onSuccessLoad(response.body());
+             System.out.println("RISPOSTA LOAD: "+response.body());
             }
 
             @Override
             public void onFailure(Call<List<Organization>> call, Throwable t) {
-                System.out.println("ERROREE");
+                System.out.println("ERRORE LOAD");
             }
         });
 
-return aux;
     }
-    public void performAddOrganizationRest(Organization organization, User user) throws IOException, JSONException {
+    public void performAddOrganizationRest(Organization organization, String UID, String userToken) throws IOException, JSONException {
 
         Favorite favoriteUpload = new Favorite();
-        favoriteUpload.setUserId(user.getUid());
+        favoriteUpload.setUserId(UID);
         favoriteUpload.setOrganizationId(organization.getId());
         favoriteUpload.setCreationDate(organization.getCreationDate());
-        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         FavoriteApi service = ac.createService(FavoriteApi.class);
         Call<Favorite> favorite = service.addFavoriteOrganization(favoriteUpload);
         favorite.enqueue(new Callback<Favorite>() {
@@ -110,6 +110,7 @@ return aux;
                 public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
                     System.out.println(response.body().getExitToken());
+                    System.out.println("INVIATO AL SERVER ENTRATA IN UNA ORGANIZZAZIONE");
                 }
 
                 @Override

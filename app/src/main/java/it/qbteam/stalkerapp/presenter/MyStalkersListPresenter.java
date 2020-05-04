@@ -9,6 +9,7 @@ import it.qbteam.stalkerapp.model.service.Storage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyStalkersListPresenter implements MyStalkersListContract.Presenter, MyStalkersListContract.MyStalkerListener{
 
@@ -45,13 +46,13 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void removeRest(Organization organization, User user) {
-        rest.performRemoveOrganizationRest(organization, user);
+    public void removeRest(Organization organization, String UID, String userToken) {
+        rest.performRemoveOrganizationRest(organization, UID,userToken);
     }
 
     @Override
-    public ArrayList<Organization> loadList(User user) {
-      return rest.performLoadList(user);
+    public void loadList(String UID, String userToken) {
+        rest.performLoadList(UID, userToken);
     }
 
 
@@ -61,8 +62,8 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void addOrganizationRest(Organization organization, User user) throws IOException, JSONException {
-        rest.performAddOrganizationRest(organization, user);
+    public void addOrganizationRest(Organization organization,String UID, String userToken) throws IOException, JSONException {
+        rest.performAddOrganizationRest(organization,UID,userToken);
     }
 
     @Override
@@ -87,14 +88,11 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void onSuccessAddRest(String message) {
-        myStalkersView.onSuccessAddOrganizationRest(message);
+    public void onSuccessLoad(List<Organization> list) {
+        myStalkersView.onSuccessLoadFile(list);
     }
 
-    @Override
-    public void onFailureAddRest(String message) {
-        myStalkersView.onFailureAddOrganizationRest(message);
-    }
+
 
 
 }

@@ -2,28 +2,20 @@ package it.qbteam.stalkerapp;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -46,31 +38,18 @@ import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.ui.AppBarConfiguration;
 
-import org.json.JSONException;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.tracking.TrackingDistance;
-import it.qbteam.stalkerapp.presenter.HomeContract;
-import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import it.qbteam.stalkerapp.tools.Utils;
-import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
-public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener  {
+public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     // Used in checking for runtime permissions.
@@ -92,36 +71,11 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private User user;
     private ArrayList<Organization> myStalkerList;
     // Monitors the state of the connection to the service.
-
     @Override
     protected void onStart() {
         super.onStart();
-        active= true;
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
-            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-            mUser.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-
-                                user=new User(task.getResult().getToken(),mUser.getUid());
-
-                                // Send token to your backend via HTTPS
-                                // ...
-                            } else {
-                                // Handle error -> task.getException();
-                            }
-                        }
-                    });
-        }
-
-        // Bind to the service. If the service is in foreground mode, this signals to the service
-        // that since this activity is in the foreground, the service can exit foreground mode.
 
     }
-
     public static HomePageActivity getInstance() {
         return instance;
     }
@@ -133,12 +87,19 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         statusCheck();
         instance=this;
         fStore = FirebaseFirestore.getInstance();
-        fAuth = FirebaseAuth.getInstance();
+        fAuth= FirebaseAuth.getInstance();
 
-        if(fAuth.getCurrentUser()!=null){
+
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+
             userEmail=fAuth.getCurrentUser().getEmail();
+
+
         }
         else goToMainActivity();
+
+
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
@@ -153,16 +114,33 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
-        if (savedInstanceState == null) {
-            // withholding the previously created fragment from being created again
-            // On orientation change, it will prevent fragment recreation
-            // its necessary to reserve the fragment stack inside each tab
-            initScreen();
-        } else {
-            // restoring the previously created fragment
-            // and getting the reference
-            actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
+            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            mUser.getIdToken(true)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+
+                                user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                System.out.println("TOKEN CREATO:"+task.getResult().getToken()+"UID CREATO:"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                if (savedInstanceState == null) {
+                                    // withholding the previously created fragment from being created again
+                                    // On orientation change, it will prevent fragment recreation
+                                    // its necessary to reserve the fragment stack inside each tab
+                                    initScreen();
+                                } else {
+                                    // restoring the previously created fragment
+                                    // and getting the reference
+                                    actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
+                                }
+                            } else {
+                                // Handle error -> task.getException();
+                            }
+                        }
+                    });
         }
+
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
@@ -215,7 +193,11 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private void initScreen() {
         // Creato l'actionTab in alto
         actionTabFragment = new ActionTabFragment();
-        final FragmentManager fragmentManager = getSupportFragmentManager();
+        Bundle bundle=new Bundle();
+        bundle.putString("userToken", user.getToken());
+        bundle.putString("userID",user.getUid());
+        actionTabFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragmentID, actionTabFragment)
                 .commit();
@@ -344,9 +326,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
-    ///////////// INDAGARE //////////////////////
-
-    ///////////// FINE INDAGARE //////////////////////
 
 
     public void statusCheck() {//Controllo se il GPS è attivo
@@ -388,5 +367,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             switcher.setChecked(false);
         }
     }
+
 
 }

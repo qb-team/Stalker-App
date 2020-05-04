@@ -2,6 +2,7 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -9,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import it.qbteam.stalkerapp.HomePageActivity;
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.TabViewPagerAdapter;
@@ -20,18 +23,32 @@ public class ActionTabFragment extends Fragment {
     protected TabLayout tabLayout;
     protected ViewPager viewPager;
     private TabViewPagerAdapter adapter;
+    private String UID;
+    private  String userToken;
+    private static ActionTabFragment instance = null;
 
     public ActionTabFragment() {
         // Required empty public constructor
     }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+        instance=this;
 
+    }
+    public static ActionTabFragment getInstance() {
+        return instance;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_action_tab, container, false);
-
+        Bundle bundle=this.getArguments();
+        System.out.println("SEtto user in ActionTab");
+        UID=bundle.getString("UserID");
+        userToken=bundle.getString("userToken");
         tabLayout = (TabLayout) view.findViewById(R.id.tabID);
         viewPager = (ViewPager) view.findViewById(R.id.viewpagerID);
         //setHasOptionsMenu(true);
@@ -56,6 +73,7 @@ public class ActionTabFragment extends Fragment {
 
         // Fixed tabs display all tabs concurrently
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+
     }
 
     /**
@@ -75,5 +93,14 @@ public class ActionTabFragment extends Fragment {
         return false;
     }
 
+    public TabViewPagerAdapter getTabViewPagerAdapter(){
+        return this.adapter;
+    }
+    public String getUID(){
+        return this.UID;
+    }
 
+    public String getUserToken(){
+        return this.userToken;
+    }
 }

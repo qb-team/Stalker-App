@@ -1,7 +1,9 @@
 package it.qbteam.stalkerapp.ui.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -27,6 +29,7 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import org.json.JSONException;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.HomeContract;
@@ -38,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class HomeFragment extends Fragment implements HomeContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
-
     private HomePresenter OrganizationListPresenter;
     private ArrayList<Organization> organizationList;
     private RecyclerView recyclerView;
@@ -48,12 +50,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private String path;
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
+    Activity activity;
     Button downloadButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        System.out.println("User HomeFragment");
         instance=this;
         path= getContext().getFilesDir() + "/Organizzazioni.txt";
     }
@@ -78,7 +82,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             public void onRefresh() {
                 downloadList();
                 refresh.setRefreshing(false);
-               // MyStalkersListFragment.getInstance().checkFile();
+
             }
         });
 
@@ -125,6 +129,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //Risposta positiva al download della lista delle organizzazioni dal server
     @Override
     public void onSuccessDownloadFile(String message) {
+
         checkFile();
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
@@ -133,7 +138,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public void onFailureDownloadFile(String message) {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-        downloadButton.setVisibility(View.VISIBLE);
+        //downloadButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -186,6 +191,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
         @Override
     public void organizationLongClick(int position) {
+
         myDialog=new Dialog(getContext());
         myDialog.setContentView(R.layout.dialog_organizzazione);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -210,7 +216,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             public void onClick(View v) {
                 try {
                     MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position));
-                    MyStalkersListFragment.getInstance().addOrganizationRest(organizationList.get(position), HomePageActivity.getInstance().getUser());
+                    MyStalkersListFragment.getInstance().addOrganizationRest(organizationList.get(position), ActionTabFragment.getInstance().getUID(),ActionTabFragment.getInstance().getUserToken());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

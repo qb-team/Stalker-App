@@ -1,6 +1,7 @@
 package it.qbteam.stalkerapp.ui.view;
 
 import android.app.Dialog;
+import android.drm.DrmStore;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -47,6 +48,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     private EditText userNameLDAP, passwordLDAP;
     private LDAPorganizationPresenter ldaPorganizationPresenter;
     Dialog myDialog;
+    private User user;
 
 
     public LDAPorganizationFragment() {
@@ -55,6 +57,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
 
     }
 
@@ -148,8 +151,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             Organization o=new Organization();
             o.setName(title.getText().toString());
             MyStalkersListFragment.getInstance().addOrganization(o);
-
-            MyStalkersListFragment.getInstance().addOrganizationRest(o, HomePageActivity.getInstance().getUser());
+            MyStalkersListFragment.getInstance().addOrganizationRest(o,ActionTabFragment.getInstance().getUID(),ActionTabFragment.getInstance().getUserToken());
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {

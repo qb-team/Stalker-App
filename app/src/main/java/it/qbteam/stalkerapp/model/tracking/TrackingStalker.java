@@ -34,7 +34,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -53,6 +52,7 @@ import java.util.ArrayList;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.Rest;
 import it.qbteam.stalkerapp.model.tracking.trackingArea.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
@@ -148,7 +148,6 @@ public class TrackingStalker extends Service {
      * The current location.
      */
     private Location mLocation;
-    private int position;
     private ArrayList<Organization> organizationList;
     private ArrayList<LatLngOrganization> latLngOrganizations;
 
@@ -159,6 +158,7 @@ public class TrackingStalker extends Service {
 
     @Override
     public void onCreate() {
+        System.out.println("User Tracking");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);  // Instanzazione FusedLocationProviderClient
 
         /** Creazione del CallBack
@@ -503,8 +503,6 @@ public class TrackingStalker extends Service {
                 Rest.performMovement(latLngOrganizations.get(i).getName(),latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getTimeStamp(),latLngOrganizations.get(i).getOrgID(), HomePageActivity.getInstance().getUser());
                 found= true;
             }
-
-
 
         }
         }

@@ -11,17 +11,21 @@ import com.google.firebase.auth.GetTokenResult;
 public class User {
     String token;
     String uid;
-    public User(String token,String uid) {
+    public User(String token, String uid) {
         this.token=token;
         this.uid=uid;
+    }
+
+    public String getUid(){
+        return this.uid;
     }
     public String getToken(){
         return this.token;
     }
 
-    public String getUid(){
-    return this.uid;
-    }
+
+
+
 }
 
 

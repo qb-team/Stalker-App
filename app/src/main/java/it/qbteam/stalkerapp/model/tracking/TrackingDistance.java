@@ -11,38 +11,43 @@ import com.google.maps.android.SphericalUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.qbteam.stalkerapp.model.tracking.trackingArea.LatLngOrganization;
+
 public class TrackingDistance {
 
-    public static int checkDistance(Location location){
+    public static int checkDistance(Location location, ArrayList<LatLngOrganization> latLngOrganizations){
 
-        int i=0;
-
-        final ArrayList<LatLng> poligono = new ArrayList<>();
-
-        poligono.add(new LatLng(45.4139244815,11.8809040336));
-        poligono.add(new LatLng(45.4137732038,11.8812763624));
-        poligono.add(new LatLng(45.4134925404,11.8810503718));
-        poligono.add(new LatLng(45.4136378199,11.8806753327));
-
+        int prioritySet=0;
+        LatLng nearestPoint=null;
+        double distance = 0;
         LatLng test = new LatLng(location.getLatitude(), location.getLongitude());
 
-        LatLng nearestPoint = findNearestPoint(test, poligono);
-        double distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
+        for(int i=0;i<latLngOrganizations.size();i++) {
+            final ArrayList<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
+            if (distance==0){
+                nearestPoint = findNearestPoint(test, poligono);
+                distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
+            }
+            if (distance>SphericalUtil.computeDistanceBetween(test, nearestPoint)){
+                nearestPoint = findNearestPoint(test, poligono);
+                distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
+            }
+        }
 
         Log.e("NEAREST POINT: ", "" + nearestPoint); // lat/lng: (3.0,2.0)
         Log.e("DISTANCE: ", "" + SphericalUtil.computeDistanceBetween(test, nearestPoint)); // 222085.35856591124
 
         if (distance<=150){
-            i = 0;
+            prioritySet = 0;
         }
         else if (distance<=500){
-            i = 1;
+            prioritySet = 1;
         }
         else if (distance>500){
-            i = 2;
+            prioritySet = 2;
         }
 
-        return i;
+        return prioritySet;
     }
 
     private static LatLng findNearestPoint(LatLng test, List<LatLng> target) {

@@ -171,6 +171,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             bundle.putString("description", organizationList.get(position).getDescription());
             System.out.println("DESCRIPTION"+organizationList.get(position).getDescription());
             bundle.putString("image", organizationList.get(position).getImage());
+            Organization o = organizationList.get(position);
+            System.out.println("ecco l'o " + o);
         if(organizationList.get(position).getTrackingMode().toString()=="anonymous"){
             StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
             stdOrgFragment.setArguments(bundle);

@@ -467,8 +467,13 @@ public class Organization implements Comparable<Organization> {
   }
 
 
-  public void setTrackingMode(TrackingModeEnum trackingMode) {
-    this.trackingMode = trackingMode;
+  public void setTrackingMode(String trackingMode) {
+    if (trackingMode.equals(TrackingModeEnum.anonymous.value)){
+      this.trackingMode = TrackingModeEnum.anonymous;
+    } else if (trackingMode.equals(TrackingModeEnum.authenticated.value)){
+      this.trackingMode = TrackingModeEnum.authenticated;
+    }
+
   }
 
 

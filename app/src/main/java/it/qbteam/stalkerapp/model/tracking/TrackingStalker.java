@@ -79,6 +79,8 @@ public class TrackingStalker extends Service {
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
     private static final String TAG = TrackingStalker.class.getSimpleName();
     private LatLngOrganization insideOrganization;
+    private boolean insideOrganizationBoolean = false;
+    private boolean insidePlaceBoolean = false;
 
     /**
      * Switch per aggiornare il Locationrequest
@@ -207,23 +209,7 @@ public class TrackingStalker extends Service {
      * int 	PRIORITY_NO_POWER 	Used with setPriority(int) to request the best accuracy possible with zero additional power consumption.
      * <p>
      * setSmallestDisplacement(float smallestDisplacementMeters) --> Set the minimum displacement between location updates in meters
-     */
-    private void createLocationRequest() {
-        System.out.println("creato locationrequest");
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        mLocationRequest.setSmallestDisplacement(2);
-    }
-
-    public void setNumero(int i) {
-        removeLocationUpdates();
-        switchPriority(i);
-        requestLocationUpdates();
-    }
-
-    /**
+     *
      * Switch per aggiornare il Locationrequest
      * 0 -> Massima accuretazza
      * 1 -> Acurattezza bilanciata
@@ -257,11 +243,6 @@ public class TrackingStalker extends Service {
         }
 
 
-    }
-
-
-    public int getNUMERO() {
-        return NUMERO;
     }
 
 
@@ -466,7 +447,19 @@ public class TrackingStalker extends Service {
         mLocation = location;
 
         if (location != null) {
-            handleLocation(location);
+            if (!insideOrganizationBoolean && !insidePlaceBoolean){
+                handleOrganizations(location);
+            }
+
+            if (insideOrganizationBoolean && !insidePlaceBoolean){
+                handlePlaces(location);
+                isInsideActualOrganization(location);
+            }
+
+            if (insideOrganizationBoolean && insidePlaceBoolean){
+                handleInsidePlace(location);
+            }
+
         }
 
         // Aggiornamento notifiche quando funziona in background
@@ -475,16 +468,64 @@ public class TrackingStalker extends Service {
         }
     }
 
-    private void handleLocation(Location location) throws JSONException {
-        if (isInside(location)) {
+    private void handleOrganizations(Location location) {
+        // Guarda se siamo dentro o no a un organizzazione, in caso DOVREBBE switchare la priorità
+        // In caso positivo insideOrganizationBoolean diventa true
+        if (isInsideOrganizations(location)) {
             Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei dentro a " + insideOrganization.getName() , Toast.LENGTH_SHORT).show();
+            insideOrganizationBoolean=true;
+            // INVIA RICHIESTA AL SERVER per dire che SIAMO ENTRATI
         } else {
             int i = TrackingDistance.checkDistance(location, latLngOrganizations);
             switchPriority(i);
         }
     }
 
-    public boolean isInside(Location location) {
+    private void handlePlaces(Location location) {
+        // Guarda se siamo dentro o no a un LUOGO
+        // In caso positivo insidePlaceBoolean diventa true
+        if (isInsidePlace(location)){
+            /** NOTIFICO IL SERVER CHE SIAMO ENTRATI IN UN LUOGO DELL'ORGANIZZAZIONE */
+            insidePlaceBoolean=true;
+        }
+    }
+
+    private void handleInsidePlace(Location location) {
+        /*
+        CONTROLLO SE È USCITO (Si potrebbe usare lo stesso metodo isInsideActualOrganization) {
+             NOTIFICO IL SERVER CHE SIAMO USCITI DAL LUOGO DELL'ORGANIZZAZIONE
+        }
+        */
+        /*
+        CONTROLLO SE È COMUNQUE DENTRO UN LUOGO MA UNO DIVERSO{
+            NOTIFICO IL SERVER CHE SIAMO USCITI DAL LUOGO DELL'ORGANIZZAZIONE E SIAMO ENTRATI IN UN ALTRO
+        }
+         */
+    }
+
+
+    private boolean isInsidePlace(Location location) {
+//        ArrayList<> luoghiorganizzazione = new ArrayList()<> ; // --> Creazione arraylist di luoghi all'interno dell'organizzazione
+        // Costruzione Builder
+        return false;
+    }
+
+    private void isInsideActualOrganization(Location location) {
+        LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        final LatLngBounds.Builder builder=new LatLngBounds.Builder();
+        for (LatLng point : insideOrganization.getLatLng()) {
+            builder.include(point);
+        }
+        boolean isInsideBoundary = builder.build().contains(actualPosition);
+        boolean isInside = PolyUtil.containsLocation(actualPosition, insideOrganization.getLatLng(), true);
+        if (!isInsideBoundary || !isInside) {
+            /** NOTIFICO IL SERVER CHE SIAMO USCITI DALL'ORGANIZZAZIONE */
+            insideOrganizationBoolean = false;
+        }
+    }
+
+
+    public boolean isInsideOrganizations(Location location) {
         boolean found = false;
         if(organizationList!=null){
         LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
@@ -506,6 +547,8 @@ public class TrackingStalker extends Service {
         }
         return found;
     }
+
+
 
 
 

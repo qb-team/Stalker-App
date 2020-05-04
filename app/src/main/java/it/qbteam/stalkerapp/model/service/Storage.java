@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.model.service;
 
+import com.google.gson.Gson;
+
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
@@ -54,8 +56,10 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                 String s = new String(buffer, "UTF-8");
                 JSONObject jsonObject = new JSONObject(s);
                 JSONArray jsonArray = (JSONArray) jsonObject.get("organisationList");
+
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObj= jsonArray.getJSONObject(i);
+
 
                     String name= jsonObj.getString("name");
                     String description=jsonObj.getString("description");
@@ -73,6 +77,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                     organization.setCity(city);
                     organization.setId(orgId);
                     organization.setTrackingArea(trackingArea);
+                    organization.setTrackingMode(trackingMode);
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
                     OffsetDateTime offsetDateTime = OffsetDateTime.parse(creationDate, dateTimeFormatter);
                     organization.setCreationDate(offsetDateTime);
@@ -81,7 +86,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                         serverUrl=jsonObj.getString("authenticationServerURL");
                         organization.setAuthenticationServerURL(serverUrl);
                     }
-                    organization.setTrackingMode(organization.getTrackingMode());
                     System.out.println("organization:  " + organization);
                     aux.add(organization);
                 }
@@ -165,7 +169,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                        o.setPostCode(response.body().get(i).getPostCode());
                        o.setStreet(response.body().get(i).getStreet());
                        o.setTrackingArea(response.body().get(i).getTrackingArea());
-                       o.setTrackingMode(response.body().get(i).getTrackingMode());
+                       o.setTrackingMode(response.body().get(i).getTrackingMode().toString());
                        if(response.body().get(i).getTrackingMode().getValue()=="authenticated")
                            o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
                        returnList.add(o);

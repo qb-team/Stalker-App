@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -56,8 +57,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static HomePageActivity instance = null;
     // The BroadcastReceiver used to listen from broadcasts from the service.
-
-
     static boolean active=false;
     private SwitchCompat switcher;
     private Location mlocation;
@@ -84,22 +83,31 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
+            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+            mUser.getIdToken(true)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+                                user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                System.out.println("TOKEN CREATO:"+task.getResult().getToken()+"UID CREATO:"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            } else {
+                                // Handle error -> task.getException();
+                            }
+                        }
+                    });
+        }
         statusCheck();
         instance=this;
         fStore = FirebaseFirestore.getInstance();
         fAuth= FirebaseAuth.getInstance();
 
-
-
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
 
             userEmail=fAuth.getCurrentUser().getEmail();
 
-
         }
         else goToMainActivity();
-
-
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
@@ -114,32 +122,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
-        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
-            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-            mUser.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-
-                                user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                System.out.println("TOKEN CREATO:"+task.getResult().getToken()+"UID CREATO:"+FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                if (savedInstanceState == null) {
-                                    // withholding the previously created fragment from being created again
-                                    // On orientation change, it will prevent fragment recreation
-                                    // its necessary to reserve the fragment stack inside each tab
-                                    initScreen();
-                                } else {
-                                    // restoring the previously created fragment
-                                    // and getting the reference
-                                    actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
-                                }
-                            } else {
-                                // Handle error -> task.getException();
-                            }
-                        }
-                    });
-        }
 
 
         // Check that the user hasn't revoked permissions by going to Settings.
@@ -149,9 +131,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             }
         }
 
-
-
-         //setting user email in drawer menu
+        //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);
         TextView emailTextView=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
         emailTextView.setText(userEmail);
@@ -166,10 +146,9 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 if(switcher.isChecked()){
                     if (!checkPermissions()) {
                         requestPermissions();
-                    } else {
+                    } else
                         //.requestLocationUpdates();
                         MyStalkersListFragment.getInstance().startTracking();
-                    }
                 }
                 else{
                     //mService.removeLocationUpdates();
@@ -178,12 +157,21 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             }
         });
 
+       if (savedInstanceState == null) {
+            // withholding the previously created fragment from being created again
+            // On orientation change, it will prevent fragment recreation
+            // its necessary to reserve the fragment stack inside each tab
+            initScreen();
+        } else {
+            // restoring the previously created fragment
+            // and getting the reference
+            actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
+        }
 
     }
 
-    public  User getUser(){
-        return user;
-    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_tab, menu);
@@ -193,10 +181,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private void initScreen() {
         // Creato l'actionTab in alto
         actionTabFragment = new ActionTabFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("userToken", user.getToken());
-        bundle.putString("userID",user.getUid());
-        actionTabFragment.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragmentID, actionTabFragment)
@@ -227,7 +211,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 break;
             case R.id.alphabeticalOrderID:
                     HomeFragment.getInstance().alphabeticalOrder();
-                MyStalkersListFragment.getInstance().alphabeticalOrder();
                 break;
             case R.id.cambianumero:
                 //mService.setNumero(TrackingDistance.checkDistance(mlocation));
@@ -366,5 +349,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
+
+    public  String getUID(){
+        return user.getUid();
+    }
+    public  String getuserToken(){
+        return user.getToken();
+    }
 
 }

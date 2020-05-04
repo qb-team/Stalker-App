@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
     public void downloadList() {
-        OrganizationListPresenter.downloadFile(path, HomePageActivity.getInstance().getUser());
+        OrganizationListPresenter.downloadFile(path, HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
     }
 
     //PROVA A LEGGERE LA LISTA DELLE ORGANIZZAZIONI DA FILE INTERNO E NEL CASO LA TORNA E STAMPA A SCHERMO
@@ -215,8 +215,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             @Override
             public void onClick(View v) {
                 try {
+                    //Aggiungo organizzazione in locale
                     MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position));
-                    MyStalkersListFragment.getInstance().addOrganizationRest(organizationList.get(position), ActionTabFragment.getInstance().getUID(),ActionTabFragment.getInstance().getUserToken());
+                    //Aggiungo organizzazione su server
+                    MyStalkersListFragment.getInstance().addOrganizationRest(organizationList.get(position),HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

@@ -25,18 +25,13 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     }
 
     @Override
-    public void downloadFile(String path, User user)  {
-        storage.performDownloadFile(path, user);
+    public void downloadFile(String path, String UID, String userToken)  {
+        storage.performDownloadFile(path, UID,userToken);
     }
 
     @Override
     public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
         storage.saveInLocalFile(list,path);
-    }
-
-    @Override
-    public String getOrganizationType(Organization organization) {
-        return organization.getTrackingMode().toString();
     }
 
 

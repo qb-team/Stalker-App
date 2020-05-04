@@ -433,20 +433,19 @@ public class TrackingStalker extends Service {
         return builder.build();
     }
 
-    public void createOrganizationArrayList() throws JSONException {
-        organizationList = new ArrayList<>();
-        organizationList.addAll(MyStalkersListFragment.getInstance().getMyStalkerList());
-        if(organizationList!=null) {
+    public void createOrganizationArrayList(ArrayList<Organization>list) throws JSONException {
+
+        if(list!=null) {
             latLngOrganizations = new ArrayList<>();
 
-            for (int i = 0; i < organizationList.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 LatLngOrganization aux = new LatLngOrganization();
-                aux.setLatLng(organizationList.get(i));
-                aux.setName(organizationList.get(i));
-                aux.setTrackingMode(organizationList.get(i));
-                aux.setOrganizationID(organizationList.get(i));
-                aux.setOrgAuthServerid(organizationList.get(i));
-                aux.setTimeStamp(organizationList.get(i));
+                aux.setLatLng(list.get(i));
+                aux.setName(list.get(i));
+                aux.setTrackingMode(list.get(i));
+                aux.setOrganizationID(list.get(i));
+                aux.setOrgAuthServerid(list.get(i));
+                aux.setTimeStamp(list.get(i));
                 latLngOrganizations.add(aux);
             }
 
@@ -499,7 +498,7 @@ public class TrackingStalker extends Service {
             boolean isInside = PolyUtil.containsLocation(actualPosition, latLngOrganizations.get(i).getLatLng(), true);
             if (isInsideBoundary && isInside){
                 insideOrganization = latLngOrganizations.get(i);
-                Rest.performMovement(latLngOrganizations.get(i).getName(),latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getTimeStamp(),latLngOrganizations.get(i).getOrgID(), HomePageActivity.getInstance().getUser());
+                Rest.performMovement(latLngOrganizations.get(i).getName(),latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getTimeStamp(),latLngOrganizations.get(i).getOrgID(), HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
                 found= true;
             }
 

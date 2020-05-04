@@ -34,8 +34,8 @@ public class TrackingDistance {
             }
         }
 
-        Log.e("NEAREST POINT: ", "" + nearestPoint); // lat/lng: (3.0,2.0)
-        Log.e("DISTANCE: ", "" + SphericalUtil.computeDistanceBetween(test, nearestPoint)); // 222085.35856591124
+        //Log.e("NEAREST POINT: ", "" + nearestPoint); // lat/lng: (3.0,2.0)
+       // Log.e("DISTANCE: ", "" + SphericalUtil.computeDistanceBetween(test, nearestPoint)); // 222085.35856591124
 
         if (distance<=150){
             prioritySet = 0;

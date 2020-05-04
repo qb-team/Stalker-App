@@ -25,20 +25,10 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
 
     @Override
-    public ArrayList<Organization> checkFile( String path) {
-        return storage.performCheckFile(path);
-     }
-
-    @Override
     public void remove(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {
         storage.performRemove(organization, list, path);
     }
 
-
-    @Override
-    public String getOrganizationType(Organization organization) {
-        return organization.getTrackingMode().toString();
-    }
 
     @Override
     public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
@@ -46,7 +36,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void removeRest(Organization organization, String UID, String userToken) {
+    public void removeOrganizationRest(Organization organization, String UID, String userToken) {
         rest.performRemoveOrganizationRest(organization, UID,userToken);
     }
 
@@ -62,14 +52,11 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void addOrganizationRest(Organization organization,String UID, String userToken) throws IOException, JSONException {
+    public void addOrganizationRest(Organization organization,String UID, String userToken) {
         rest.performAddOrganizationRest(organization,UID,userToken);
     }
 
-    @Override
-    public void onFailureFile(String message) {
-        myStalkersView.onFailureCheckFile(message);
-    }
+
 
 
     @Override
@@ -88,7 +75,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void onSuccessLoad(List<Organization> list) {
+    public void onSuccessLoad(List<Organization> list) throws IOException, JSONException {
         myStalkersView.onSuccessLoadFile(list);
     }
 

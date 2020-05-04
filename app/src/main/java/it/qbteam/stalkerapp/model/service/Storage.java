@@ -117,6 +117,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     @Override
     public void performAddOrganizationLocal(Organization organization, ArrayList<Organization> list,String path) throws IOException, JSONException {
         boolean trovato = false;
+        if(list!=null){
         for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
             Organization o = iterator.next();
             if (o.getName().equals(organization.getName())) {
@@ -124,9 +125,15 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
             }
         }
         if(trovato){
-            myStalkerListener.onFailureAdd("Questa organizzazione è stata già aggiunta a MyStalkers");
+            myStalkerListener.onFailureAdd("Organizzazione già presente in MyStalkers");
         }
         else {
+            list.add(organization);
+            saveInLocalFile(list,path);
+            myStalkerListener.onSuccessAdd("Hai aggiunto l'organizzazione a MyStalkers");
+        }}
+        else{
+            list=new ArrayList<>();
             list.add(organization);
             saveInLocalFile(list,path);
             myStalkerListener.onSuccessAdd("Hai aggiunto l'organizzazione a MyStalkers");
@@ -134,9 +141,9 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public void performDownloadFile(String path, User user)  {
+    public void performDownloadFile(String path, String UID, String userToken)  {
         ArrayList<Organization> returnList=new ArrayList<>();
-        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(user.getToken());
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         OrganizationApi service = ac.createService(OrganizationApi.class);
         Call<List<Organization>> orgList = service.getOrganizationList();
         orgList.enqueue(new Callback<List<Organization>>() {

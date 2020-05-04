@@ -20,16 +20,15 @@ public interface HomeContract {
     //interfaccia presenter
     interface Presenter {
         ArrayList<Organization> checkFile(String path);
-        void downloadFile(String path, User user) throws InterruptedException, IOException;
+        void downloadFile(String path, String UID, String userToken) throws InterruptedException, IOException;
         void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
-        String getOrganizationType(Organization organization);
 
     }
 
     //interfaccia model
     interface Model {
         ArrayList<Organization> performCheckFile(String path);
-        void performDownloadFile(String path, User user) throws InterruptedException, IOException;
+        void performDownloadFile(String path, String UID,String userToken) throws InterruptedException, IOException;
     }
 
     interface HomeListener {

@@ -2,6 +2,7 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -15,7 +16,13 @@ import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.TabViewPagerAdapter;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
 
 public class ActionTabFragment extends Fragment {
@@ -23,8 +30,7 @@ public class ActionTabFragment extends Fragment {
     protected TabLayout tabLayout;
     protected ViewPager viewPager;
     private TabViewPagerAdapter adapter;
-    private String UID;
-    private  String userToken;
+    private  User user;
     private static ActionTabFragment instance = null;
 
     public ActionTabFragment() {
@@ -32,8 +38,9 @@ public class ActionTabFragment extends Fragment {
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+
         instance=this;
 
     }
@@ -45,10 +52,7 @@ public class ActionTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_action_tab, container, false);
-        Bundle bundle=this.getArguments();
-        System.out.println("SEtto user in ActionTab");
-        UID=bundle.getString("UserID");
-        userToken=bundle.getString("userToken");
+
         tabLayout = (TabLayout) view.findViewById(R.id.tabID);
         viewPager = (ViewPager) view.findViewById(R.id.viewpagerID);
         //setHasOptionsMenu(true);
@@ -93,14 +97,6 @@ public class ActionTabFragment extends Fragment {
         return false;
     }
 
-    public TabViewPagerAdapter getTabViewPagerAdapter(){
-        return this.adapter;
-    }
-    public String getUID(){
-        return this.UID;
-    }
 
-    public String getUserToken(){
-        return this.userToken;
-    }
+
 }

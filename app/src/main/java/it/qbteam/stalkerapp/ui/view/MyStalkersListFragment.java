@@ -59,6 +59,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private String path;
     private static MyStalkersListFragment instance = null;
     private TrackingStalker mService = null;
+    private User user;
     private boolean mBound = false;
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -78,10 +79,24 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        organizationList=new ArrayList<>();
         path= getContext().getFilesDir() + "/Preferiti.txt";
+        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
+            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+            mUser.getIdToken(true)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
 
+                            user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            System.out.println("TOKEN CREATO:"+task.getResult().getToken()+"UID CREATO:"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            loadMyStalkerList(user.getUid(),user.getToken());
+                        } else {
+                            // Handle error -> task.getException();
+                        }
+                    });
+        }
         instance=this;
 
         getContext().bindService(new Intent(getContext(), TrackingStalker.class), mServiceConnection,
@@ -98,22 +113,10 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         myStalkersListPresenter =new MyStalkersListPresenter(this);
-        organizationList=new ArrayList<>();
-
-        loadMyStalkerList(ActionTabFragment.getInstance().getUserToken(),ActionTabFragment.getInstance().getUID());
-
 
 
         return view;
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        System.out.println("ciao:  " + mService);
-
-    }
-
 
 
     @Override
@@ -194,7 +197,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
 
     public void removeOrganization(int position) throws IOException, JSONException {
-        myStalkersListPresenter.removeRest(organizationList.get(position),ActionTabFragment.getInstance().getUserToken(),ActionTabFragment.getInstance().getUID());
+        myStalkersListPresenter.removeOrganizationRest(organizationList.get(position),user.getUid(),user.getToken());
         myStalkersListPresenter.remove(organizationList.get(position), organizationList, path);
 
     }
@@ -202,20 +205,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void addOrganization(Organization organization) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
 
-    }
-
-
-    public void alphabeticalOrder(){
-        Collections.sort(organizationList);
-        try {
-            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-            recyclerView.setAdapter(adapter);
-            myStalkersListPresenter.updateFile(organizationList,path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -244,75 +233,49 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return new BackPressImplementation(this).onBackPressed();
     }
 
-    public ArrayList <Organization> getMyStalkerList(){
-        return organizationList;
 
-    }
+    //Organizzazione aggiunta correttamente ai preferiti
     @Override
-    public void onSuccessCheckFile(ArrayList<Organization> list) {
-        adapter=new OrganizationViewAdapter(list,this.getContext(),this);
-        recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onFailureCheckFile(String message) {
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onSuccessAddOrganization(String message) throws IOException, JSONException {
+    public void onSuccessAddOrganization(String message)  {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
         adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
         recyclerView.setAdapter(adapter);
 
+
     }
 
+    //Organizzazione già presente nei preferiti
     @Override
     public void onFailureAddOrganization(String message) {
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
 
+    //Organizzazione rimossa con successo
     @Override
-    public void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException {
+    public void onSuccessRemoveOrganization(ArrayList<Organization> list)  {
         adapter=new OrganizationViewAdapter(list,this.getContext(),this);
         recyclerView.setAdapter(adapter);
     }
 
+
+    //Lista organizzazioni preferiti caricate da server con successo
     @Override
-    public void onSuccessAddOrganizationRest(String message) {
-
-    }
-
-    @Override
-    public void onFailureAddOrganizationRest(String message) {
-
-    }
-
-    @Override
-    public void onSuccessLoadFile(List<Organization> list) {
+    public void onSuccessLoadFile(List<Organization> list) throws IOException, JSONException {
         if(list!=null){
             ArrayList<Organization> aux= new ArrayList<>(list);
             adapter=new OrganizationViewAdapter(aux,this.getContext(),this);
             recyclerView.setAdapter(adapter);
+            myStalkersListPresenter.updateFile(aux,path);
+            organizationList=aux;
+
         }
         else
             Toast.makeText(getContext(),"Lista MyStalker ancora vuota",Toast.LENGTH_SHORT).show();
     }
 
-    public void addOrganizationRest(Organization organization, String UID, String userToken) throws IOException, JSONException {
+    //Organizzazione aggiunta sul server
+    public void addOrganizationRest(Organization organization, String UID, String userToken)  {
         myStalkersListPresenter.addOrganizationRest(organization, UID,userToken);
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        //organizationList=checkFile();
-
-        if(organizationList!=null){
-            adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-            recyclerView.setAdapter(adapter);
-        }
-        else
-            Toast.makeText(getActivity(),"Lista ancora vuota!",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -327,7 +290,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             mBound = false;
         }
 
-
         PreferenceManager.getDefaultSharedPreferences(getContext()).unregisterOnSharedPreferenceChangeListener(this);
 
         super.onStop();
@@ -341,20 +303,20 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                     false));
         }
     }
-
+    //Metodo che fa iniziare il tracciamento sulle organizzaioni presenti dei preferiti
     public void startTracking(){
         createListOrganization();
         System.out.println("lala:  " + mService);
         mService.requestLocationUpdates();
     }
-
+    //Metodo che fa fermare il tracciamneto sulle organizzazioni presenti nei preferiti
     public void stopTracking(){
         mService.removeLocationUpdates();
     }
 
     private void createListOrganization(){
         try {
-            mService.createOrganizationArrayList();
+            mService.createOrganizationArrayList(organizationList);
         } catch (JSONException e) {
             e.printStackTrace();
         }

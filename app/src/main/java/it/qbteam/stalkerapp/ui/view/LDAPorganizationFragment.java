@@ -151,7 +151,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             Organization o=new Organization();
             o.setName(title.getText().toString());
             MyStalkersListFragment.getInstance().addOrganization(o);
-            MyStalkersListFragment.getInstance().addOrganizationRest(o,ActionTabFragment.getInstance().getUID(),ActionTabFragment.getInstance().getUserToken());
+            MyStalkersListFragment.getInstance().addOrganizationRest(o,HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {

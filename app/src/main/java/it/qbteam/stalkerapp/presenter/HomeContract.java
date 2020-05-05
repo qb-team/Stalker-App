@@ -20,7 +20,7 @@ public interface HomeContract {
     //interfaccia presenter
     interface Presenter {
         ArrayList<Organization> checkLocalFile(String path);
-        void downloadHomeListRest(String path, String UID, String userToken) throws InterruptedException, IOException;
+        void downloadHomeListRest(String path, String userToken) throws InterruptedException, IOException;
         void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
 
     }

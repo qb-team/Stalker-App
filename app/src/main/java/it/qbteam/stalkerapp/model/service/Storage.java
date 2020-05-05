@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.backend.model.OrganizationMovement;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.presenter.HomeContract;
 import org.json.JSONArray;
@@ -17,6 +18,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import javax.validation.constraints.NotNull;
 import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 import retrofit2.Call;
@@ -43,8 +48,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
     @Override
     public ArrayList<Organization> performCheckFileLocal(String path) {
-        //CONTROLLO ESISTENZA DEL FILE
-        System.out.println("Path "+path);
+
         ArrayList<Organization> aux = new ArrayList<>();
         File organizationFile = new File(path);
         if(organizationFile.length()==0 || !organizationFile.exists()) {
@@ -147,7 +151,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     public void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
 
     JSONArray ja = new JSONArray();
-    System.out.println("PATH"+ path);
 
     for(int i=0;i<list.size();i++) {
         JSONObject jo = new JSONObject();
@@ -166,6 +169,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         jo.put("trackingMode", list.get(i).getTrackingMode());
         ja.put(jo);
     }
+
     JSONObject mainObj = new JSONObject();
     mainObj.put("organisationList", ja);
 
@@ -177,23 +181,77 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
             w.close();
     }
 
-    public static void saveExitToken(Long orgID, String exitToken) throws IOException {
+    /*public static void saveExitTokenLocal(Long orgID, String exitToken) throws IOException {
 
         HashMap<Long,String> map= new HashMap<>();
         map.put(orgID,exitToken);
-        FileOutputStream fos=new FileOutputStream(new File("data/user/0/it.qbteam.stalkerapp/files/ExitToken.txt"));
-        ObjectOutputStream objectOutputStream=new ObjectOutputStream(fos);
-        objectOutputStream.writeObject(map);
+        //Scrivo su file.txt
+        File toWrite= new File("data/user/0/it.qbteam.stalkerapp/files/ExitToken.txt");
+        FileOutputStream fos=new FileOutputStream(toWrite);
+        ObjectOutputStream oos=new ObjectOutputStream(fos);
+        oos.writeObject(map);
+        oos.flush();
+        oos.close();
         fos.close();
-
-        File organizationFile = new File("data/user/0/it.qbteam.stalkerapp/files/ExitToken.txt");
-        FileInputStream fin = new FileInputStream(organizationFile);
-        byte[] buffer = new byte[(int) organizationFile.length()];
-        new DataInputStream(fin).readFully(buffer);
-        fin.close();
-        String s = new String(buffer, "UTF-8");
-        System.out.println(s);
 
     }
 
+    public static String readExitTokenLocal(String path) throws IOException, ClassNotFoundException {
+
+        File toRead=new File(path);
+        FileInputStream fis=new FileInputStream(toRead);
+        ObjectInputStream ois=new ObjectInputStream(fis);
+        HashMap<Long,String> mapInFile=(HashMap<Long,String>)ois.readObject();
+        ois.close();
+        fis.close();
+        Long key=null;
+        String value = null;
+        for(Map.Entry<Long,String> m :mapInFile.entrySet()){
+            key=m.getKey();
+            value=m.getValue();
+            System.out.println(m.getKey()+" : "+m.getValue());
+        }
+        return value;
+    }*/
+
+    public static void serializeMovementInLocal(OrganizationMovement organizationMovement) throws IOException {
+
+        //Saving of OrganizationMovement in a file
+        File toWrite = new File("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
+        FileOutputStream fos=new FileOutputStream(toWrite);
+        ObjectOutputStream oos=new ObjectOutputStream(fos);
+
+        // Method for serialization of OrganizationMovement
+        oos.writeObject(organizationMovement);
+        oos.flush();
+        oos.close();
+        fos.close();
+
+    }
+    public static OrganizationMovement deserializeMovementInLocal() throws IOException, ClassNotFoundException {
+
+        OrganizationMovement organizationMovement= new OrganizationMovement();
+        // Reading the OrganizationMovement from a file
+        FileInputStream fis= new FileInputStream("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        // Method for deserialization of object
+        organizationMovement = (OrganizationMovement)ois.readObject();
+        ois.close();
+        fis.close();
+        return organizationMovement;
+
+    }
+
+    public static void deleteMovement() throws IOException {
+        OrganizationMovement organizationMovement=null;
+        // Reading the OrganizationMovement from a file
+        File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
+        FileOutputStream fos=new FileOutputStream(toDelete);
+        ObjectOutputStream oos=new ObjectOutputStream(fos);
+        //sovvrascivo con OrganizationMovement null==delete
+        oos.writeObject(organizationMovement);
+        oos.flush();
+        oos.close();
+        fos.close();
+    }
 }

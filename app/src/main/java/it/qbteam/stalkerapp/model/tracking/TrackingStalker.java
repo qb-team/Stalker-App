@@ -48,11 +48,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.android.PolyUtil;
 import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.service.REST;
+import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.tracking.trackingArea.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
@@ -80,6 +83,7 @@ public class TrackingStalker extends Service {
     private LatLngOrganization insideOrganization;
     private boolean insideOrganizationBoolean = false;
     private boolean insidePlaceBoolean = false;
+    private ArrayList<Organization> inOrganization;
 
     /**
      * Switch per aggiornare il Locationrequest
@@ -157,6 +161,7 @@ public class TrackingStalker extends Service {
     @Override
     public void onCreate() {
         System.out.println("User Tracking");
+        inOrganization=new ArrayList<>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);  // Instanzazione FusedLocationProviderClient
 
         /** Creazione del CallBack
@@ -168,7 +173,7 @@ public class TrackingStalker extends Service {
                 super.onLocationResult(locationResult);
                 try {
                     onNewLocation(locationResult.getLastLocation());
-                } catch (JSONException e) {
+                } catch (JSONException | IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -217,10 +222,12 @@ public class TrackingStalker extends Service {
             case 0:
                 mLocationRequest = new LocationRequest();
                 System.out.println("Massima accuretazza");
-                mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-                mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+                // mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+                // mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+                mLocationRequest.setInterval(15000);
+                mLocationRequest.setFastestInterval(15000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//              mLocationRequest.setSmallestDisplacement(2);
+                // mLocationRequest.setSmallestDisplacement(2);
                 break;
             case 1:
                 mLocationRequest = new LocationRequest();
@@ -232,13 +239,11 @@ public class TrackingStalker extends Service {
             case 2:
                 mLocationRequest = new LocationRequest();
                 System.out.println("Bassa accuratezza");
-                mLocationRequest.setInterval(30000);
+                mLocationRequest.setInterval(15000);
                 mLocationRequest.setFastestInterval(15000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
                 break;
         }
-
-
     }
 
     /**
@@ -348,7 +353,6 @@ public class TrackingStalker extends Service {
     @Override
     public boolean onUnbind(Intent intent) {     // Serve per i servizi Foreground --> In particolare fa partire l'applicazione in background
         Log.i(TAG, "Last client unbound from service");
-
         // Called when the last client (MainActivity in case of this sample) unbinds from this
         // service. If this method is called due to a configuration change in MainActivity, we
         // do nothing. Otherwise, we make this service a foreground service.
@@ -373,7 +377,6 @@ public class TrackingStalker extends Service {
 
         // Creazione del testo da stampare a schermo IN BACKGROUND
         CharSequence text = Utils.getLocationText(mLocation);
-
 
         // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
         intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
@@ -408,7 +411,6 @@ public class TrackingStalker extends Service {
     }
 
     public boolean checkUpdateList(ArrayList<Organization>list) throws JSONException {
-         System.out.println("FACCIO CHECK LISTA MYSTALKER");
         if(list!=null) {
             latLngOrganizations = new ArrayList<>();
 
@@ -421,7 +423,6 @@ public class TrackingStalker extends Service {
                 aux.setOrgAuthServerid(list.get(i));
                 aux.setTimeStamp(list.get(i));
                 latLngOrganizations.add(aux);
-                System.out.println("size latlng"+latLngOrganizations.size());
             }
             return true;
         }
@@ -434,14 +435,13 @@ public class TrackingStalker extends Service {
      * mLocation = location; --> crea l'oggetto di tipo "Location" mLocation
      */
 
-    private void onNewLocation(Location location) throws JSONException {
+    private void onNewLocation(Location location) throws JSONException, IOException, ClassNotFoundException {
 
         System.out.println("L'intervallo è questo:  " + mLocationRequest.getInterval());
         System.out.println("L'intervallo veloce è questo:  " + mLocationRequest.getFastestInterval());
         mLocation = location;
         //Faccio il check se la lista myStalker è cambiata
         if (location != null && checkUpdateList(MyStalkersListFragment.getInstance().checkForUpdate())) {
-
             handleOrganizations(location);
         }
 
@@ -462,64 +462,18 @@ public class TrackingStalker extends Service {
         }
     }
 
-    private void handleOrganizations(Location location) {
+    private void handleOrganizations(Location location) throws IOException, ClassNotFoundException {
 
-        if (isInsideOrganizations(location)) {
-            Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei dentro a " + insideOrganization.getName() , Toast.LENGTH_SHORT).show();
-            insideOrganizationBoolean=true;
-            // INVIA RICHIESTA AL SERVER per dire che SIAMO ENTRATI
-        } else {
+         isInsideOrganizations(location);
+           //VEDRO' CHE METTERCI DENTRO PER ORA NON MI SERVE;
+       /* else {
             int i = TrackingDistance.checkDistance(location, latLngOrganizations);
             switchPriority(i);
-        }
+        }*/
     }
 
-    private void handlePlaces(Location location) {
-        // Guarda se siamo dentro o no a un LUOGO
-        // In caso positivo insidePlaceBoolean diventa true
-        if (isInsidePlace(location)){
-            /** NOTIFICO IL SERVER CHE SIAMO ENTRATI IN UN LUOGO DELL'ORGANIZZAZIONE */
-            insidePlaceBoolean=true;
-        }
-    }
+    public void isInsideOrganizations(Location location) throws IOException, ClassNotFoundException {
 
-    private void handleInsidePlace(Location location) {
-        /*
-        CONTROLLO SE È USCITO (Si potrebbe usare lo stesso metodo isInsideActualOrganization) {
-             NOTIFICO IL SERVER CHE SIAMO USCITI DAL LUOGO DELL'ORGANIZZAZIONE
-        }
-        */
-        /*
-        CONTROLLO SE È COMUNQUE DENTRO UN LUOGO MA UNO DIVERSO{
-            NOTIFICO IL SERVER CHE SIAMO USCITI DAL LUOGO DELL'ORGANIZZAZIONE E SIAMO ENTRATI IN UN ALTRO
-        }
-         */
-    }
-
-
-    private boolean isInsidePlace(Location location) {
-//        ArrayList<> luoghiorganizzazione = new ArrayList()<> ; // --> Creazione arraylist di luoghi all'interno dell'organizzazione
-        // Costruzione Builder
-        return false;
-    }
-
-    private void isInsideActualOrganization(Location location) {
-
-        LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
-        final LatLngBounds.Builder builder=new LatLngBounds.Builder();
-        for (LatLng point : insideOrganization.getLatLng()) {
-            builder.include(point);
-        }
-        boolean isInsideBoundary = builder.build().contains(actualPosition);
-        boolean isInside = PolyUtil.containsLocation(actualPosition, insideOrganization.getLatLng(), true);
-        if (!isInsideBoundary || !isInside) {
-            /** NOTIFICO IL SERVER CHE SIAMO USCITI DALL'ORGANIZZAZIONE */
-            insideOrganizationBoolean = false;
-        }
-    }
-
-    public boolean isInsideOrganizations(Location location) {
-        boolean found = false;
         if(latLngOrganizations!=null){
         LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
         final LatLngBounds.Builder builder=new LatLngBounds.Builder();
@@ -532,18 +486,26 @@ public class TrackingStalker extends Service {
             boolean isInsideBoundary = builder.build().contains(actualPosition);
             boolean isInside = PolyUtil.containsLocation(actualPosition, latLngOrganizations.get(i).getLatLng(), true);
             if (isInsideBoundary && isInside){
+                if(Storage.deserializeMovementInLocal()==null){
                 insideOrganization = latLngOrganizations.get(i);
-                REST.performMovementREST(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken());
-                found= true;
-                System.out.println("SONO DENTRO A QUESTA ORGANIZZAZIONE"+latLngOrganizations.get(i).getName());
-            }
-            else System.out.println("SONO FUORI DA QUESTA ORGANIZZAZIONE"+latLngOrganizations.get(i).getName());
-        }
-        }
-        return found;
-    }
+                REST.performMovementREST(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),1,null);
+                Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei dentro a" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
 
-    /**
+                }
+            }
+            else{
+                if(Storage.deserializeMovementInLocal()!=null){
+                REST.performMovementREST(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
+                Storage.deleteMovement();
+                Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei uscito da" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+        }
+        }
+    }
+   /**
      * Class used for the client Binder.  Since this service runs in the same process as its
      * clients, we don't need to deal with IPC.
      */
@@ -574,3 +536,47 @@ public class TrackingStalker extends Service {
         return false;
     }
 }
+
+  /*  private void handlePlaces(Location location) {
+        // Guarda se siamo dentro o no a un LUOGO
+        // In caso positivo insidePlaceBoolean diventa true
+        if (isInsidePlace(location)){
+             NOTIFICO IL SERVER CHE SIAMO ENTRATI IN UN LUOGO DELL'ORGANIZZAZIONE
+            insidePlaceBoolean=true;
+        }
+    }
+
+    private void handleInsidePlace(Location location) {
+
+        CONTROLLO SE È USCITO (Si potrebbe usare lo stesso metodo isInsideActualOrganization) {
+             NOTIFICO IL SERVER CHE SIAMO USCITI DAL LUOGO DELL'ORGANIZZAZIONE
+        }
+
+        CONTROLLO SE È COMUNQUE DENTRO UN LUOGO MA UNO DIVERSO{
+            NOTIFICO IL SERVER CHE SIAMO USCITI DAL LUOGO DELL'ORGANIZZAZIONE E SIAMO ENTRATI IN UN ALTRO
+        }
+
+    }
+
+
+    private boolean isInsidePlace(Location location) {
+//        ArrayList<> luoghiorganizzazione = new ArrayList()<> ; // --> Creazione arraylist di luoghi all'interno dell'organizzazione
+        // Costruzione Builder
+        return false;
+    }
+
+    private void isInsideActualOrganization(Location location) {
+
+        LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        final LatLngBounds.Builder builder=new LatLngBounds.Builder();
+        for (LatLng point : insideOrganization.getLatLng()) {
+            builder.include(point);
+        }
+        boolean isInsideBoundary = builder.build().contains(actualPosition);
+        boolean isInside = PolyUtil.containsLocation(actualPosition, insideOrganization.getLatLng(), true);
+        if (!isInsideBoundary || !isInside) {
+             NOTIFICO IL SERVER CHE SIAMO USCITI DALL'ORGANIZZAZIONE
+            insideOrganizationBoolean = false;
+        }
+    }
+*/

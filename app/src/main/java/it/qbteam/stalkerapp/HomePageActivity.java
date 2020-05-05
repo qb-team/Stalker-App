@@ -41,6 +41,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
@@ -148,7 +149,15 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         requestPermissions();
                     } else
                         //.requestLocationUpdates();
-                        MyStalkersListFragment.getInstance().startTracking();
+                    {
+                        try {
+                            MyStalkersListFragment.getInstance().startTracking();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 else{
                     //mService.removeLocationUpdates();
@@ -279,7 +288,13 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                MyStalkersListFragment.getInstance().startTracking();
+                try {
+                    MyStalkersListFragment.getInstance().startTracking();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             } else {
                 // Permission denied.
                 setSwitchState(false);
@@ -322,7 +337,11 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         if (!checkPermissions()) {
                             requestPermissions();
                         } else {
-                            MyStalkersListFragment.getInstance().startTracking();
+                            try {
+                                MyStalkersListFragment.getInstance().startTracking();
+                            } catch (IOException | ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
                         }
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }

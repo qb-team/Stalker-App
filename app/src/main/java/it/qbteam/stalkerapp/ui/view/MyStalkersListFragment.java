@@ -35,6 +35,7 @@ import com.google.firebase.auth.GetTokenResult;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
@@ -301,8 +302,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //Metodo che fa iniziare il tracciamento sulle organizzaioni presenti dei preferiti
-    public void startTracking() {
+    public void startTracking() throws IOException, ClassNotFoundException {
         //createListOrganization();
+        Storage.deleteMovement();
         mService.requestLocationUpdates();
     }
 

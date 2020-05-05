@@ -135,13 +135,12 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
     //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
     public void downloadList() {
-        OrganizationListPresenter.downloadHomeListRest(path, HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
+        OrganizationListPresenter.downloadHomeListRest(path,HomePageActivity.getInstance().getuserToken());
     }
 
     //Risposta positiva al download della lista delle organizzazioni dal server
     @Override
     public void onSuccessDownloadList(String message) {
-
         checkFile();
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }

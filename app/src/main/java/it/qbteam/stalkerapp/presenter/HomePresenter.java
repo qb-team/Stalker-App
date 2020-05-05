@@ -31,8 +31,8 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     }
 
     @Override
-    public void downloadHomeListRest(String path, String UID, String userToken)  {
-        rest.performDownloadFileREST(path, UID,userToken);
+    public void downloadHomeListRest(String path, String userToken)  {
+        rest.performDownloadFileREST(path,userToken);
     }
 
     @Override

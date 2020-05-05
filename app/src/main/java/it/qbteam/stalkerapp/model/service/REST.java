@@ -98,7 +98,7 @@ public class REST {
         favorite.enqueue(new Callback<Favorite>() {
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
-
+                System.out.println(response.code());
             }
 
             @Override
@@ -109,26 +109,35 @@ public class REST {
 
     }
 
-    public static void performMovementREST(String authServerID,long orgID,String userToken) {
+    public static void performMovementREST(String authServerID,long orgID,String userToken,int type,String exitToken) {
 
         OrganizationMovement movementUpload= new OrganizationMovement();
-        movementUpload.setMovementType(1);
+        movementUpload.setMovementType(type);
         OffsetDateTime dateTime= OffsetDateTime.now();
-        System.out.println("Data organizzazione"+dateTime);
         movementUpload.setTimestamp(dateTime);
         movementUpload.setOrganizationId(orgID);
         if(authServerID!=null)
         movementUpload.setOrgAuthServerId(authServerID);
+        if(type==-1)
+            movementUpload.setExitToken(exitToken);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         MovementApi service = ac.createService(MovementApi.class);
         Call<OrganizationMovement> movement= service.trackMovementInOrganization(movementUpload);
         movement.enqueue(new Callback<OrganizationMovement>() {
                 @Override
                 public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
-                    System.out.println(response.body().getExitToken());
-                    System.out.println("INVIATO AL SERVER ENTRATA IN UNA ORGANIZZAZIONE");
+
                     try {
-                        Storage.saveExitToken(orgID,response.body().getExitToken());
+                        if(type==1){
+
+                            movementUpload.setExitToken(response.body().getExitToken());
+                            //Serializzo oggetto movement con il suo exit token
+                              Storage.serializeMovementInLocal(movementUpload);
+
+
+                        }
+
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -136,14 +145,12 @@ public class REST {
 
                 @Override
                 public void onFailure(Call<OrganizationMovement> call, Throwable t) {
-                    System.out.println(t.getMessage());
-                        System.out.println("FALLITO IL TRACCIAMENTO");
                 }
         });
 
     }
 
-    public void performDownloadFileREST(String path, String UID, String userToken)  {
+    public void performDownloadFileREST(String path, String userToken)  {
 
         ArrayList<Organization> returnList=new ArrayList<>();
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);

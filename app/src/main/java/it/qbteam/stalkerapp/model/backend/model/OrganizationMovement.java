@@ -26,7 +26,7 @@ import javax.validation.Valid;
  */
 @ApiModel(description = "Movement in an organization.")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
-public class OrganizationMovement {
+public class OrganizationMovement implements java.io.Serializable {
   public static final String SERIALIZED_NAME_EXIT_TOKEN = "exitToken";
   @SerializedName(SERIALIZED_NAME_EXIT_TOKEN)
   private String exitToken;

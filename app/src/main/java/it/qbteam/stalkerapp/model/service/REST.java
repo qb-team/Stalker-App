@@ -24,17 +24,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Rest {
+public class REST {
 
     MyStalkersListContract.MyStalkerListener myStalkerListener;
     HomeContract.HomeListener homeListener;
 
-    public Rest(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
+    public REST(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
         this.myStalkerListener = myStalkerListener;
         this.homeListener=homeListener;
     }
 
-    public void performRemoveOrganizationRest(Organization organization, String UID, String userToken) {
+    public void performRemoveOrganizationREST(Organization organization, String UID, String userToken) {
 
                     Favorite favoriteUpload = new Favorite();
                     favoriteUpload.setUserId(UID);
@@ -58,7 +58,7 @@ public class Rest {
 
     }
 
-    public void performLoadList(String UID, String userToken) {
+    public void performLoadListREST(String UID, String userToken) {
 
                 Favorite favoriteDownload = new Favorite();
                 favoriteDownload.setUserId(UID);
@@ -87,7 +87,7 @@ public class Rest {
 
 
 
-    public void performAddOrganizationRest(Organization organization, String UID, String userToken) {
+    public void performAddOrganizationREST(Organization organization, String UID, String userToken) {
 
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(UID);
@@ -102,7 +102,6 @@ public class Rest {
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
 
-                System.out.println(response.code());
             }
 
             @Override
@@ -114,13 +113,15 @@ public class Rest {
     }
 
 
-    public static void performMovement(String name , String authServerID,OffsetDateTime timeStamp,long orgID, String UID,String userToken) {
-        final String[] exitToken = new String[1];
+    public static void performMovementREST(String authServerID,long orgID,String userToken) {
+
         OrganizationMovement movementUpload= new OrganizationMovement();
         movementUpload.setMovementType(1);
         OffsetDateTime dateTime= OffsetDateTime.now();
+        System.out.println("Data organizzazione"+dateTime);
         movementUpload.setTimestamp(dateTime);
         movementUpload.setOrganizationId(orgID);
+        if(authServerID!=null)
         movementUpload.setOrgAuthServerId(authServerID);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         MovementApi service = ac.createService(MovementApi.class);
@@ -128,20 +129,20 @@ public class Rest {
         movement.enqueue(new Callback<OrganizationMovement>() {
                 @Override
                 public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
-
                     System.out.println(response.body().getExitToken());
                     System.out.println("INVIATO AL SERVER ENTRATA IN UNA ORGANIZZAZIONE");
                 }
 
                 @Override
                 public void onFailure(Call<OrganizationMovement> call, Throwable t) {
-
+                    System.out.println(t.getMessage());
+                        System.out.println("FALLITO IL TRACCIAMENTO");
                 }
         });
 
     }
 
-    public void performDownloadFile(String path, String UID, String userToken)  {
+    public void performDownloadFileREST(String path, String UID, String userToken)  {
         ArrayList<Organization> returnList=new ArrayList<>();
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         OrganizationApi service = ac.createService(OrganizationApi.class);
@@ -172,7 +173,8 @@ public class Rest {
                 }
 
                 try {
-                    Storage.saveInLocalFile(returnList,path);
+                    Storage save=new Storage(null,null);
+                    save.performUpdateFile(returnList,path);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

@@ -50,14 +50,12 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private String path;
     public final static String TAG="Home_Fragment";
     Dialog myDialog;
-    Activity activity;
     Button downloadButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-        System.out.println("User HomeFragment");
         instance=this;
         path= getContext().getFilesDir() + "/Organizzazioni.txt";
     }
@@ -99,24 +97,12 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         return view;
     }
 
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.favoriteID).setVisible(false);
-        MenuItem item= menu.findItem(R.id.searchID);
-        item.setVisible(true);
-        SearchView searchView= (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(this);
-        super.onPrepareOptionsMenu(menu);
-    }
 
-    //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
-    public void downloadList() {
-        OrganizationListPresenter.downloadFile(path, HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
-    }
+
 
     //PROVA A LEGGERE LA LISTA DELLE ORGANIZZAZIONI DA FILE INTERNO E NEL CASO LA TORNA E STAMPA A SCHERMO
     public void checkFile()  {
-        organizationList=OrganizationListPresenter.checkFile(path);
+        organizationList=OrganizationListPresenter.checkLocalFile(path);
         if(organizationList!=null){
             adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
@@ -124,21 +110,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         else
             Toast.makeText(getActivity(),"Devi ancora scaricare la lista",Toast.LENGTH_SHORT).show();
 
-    }
-
-    //Risposta positiva al download della lista delle organizzazioni dal server
-    @Override
-    public void onSuccessDownloadFile(String message) {
-
-        checkFile();
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-    }
-
-    //Risposta negativa al download della lista delle organizzazioni dal server
-    @Override
-    public void onFailureDownloadFile(String message) {
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-        //downloadButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -162,12 +133,29 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 .create();
         download.show();
     }
+    //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
+    public void downloadList() {
+        OrganizationListPresenter.downloadHomeListRest(path, HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
+    }
 
-    //  MyAdapter.OnOrganizzazioneListener
+    //Risposta positiva al download della lista delle organizzazioni dal server
+    @Override
+    public void onSuccessDownloadList(String message) {
+
+        checkFile();
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
+
+    //Risposta negativa al download della lista delle organizzazioni dal server
+    @Override
+    public void onFailureDownloadList(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+        //downloadButton.setVisibility(View.VISIBLE);
+    }
+//Click listener
     @Override
     public void organizationClick(int position) {
             Bundle bundle=new Bundle();
-            Organization o = organizationList.get(position);
             bundle.putString("name", organizationList.get(position).getName());
             bundle.putString("description", organizationList.get(position).getDescription());
             bundle.putLong("orgID",organizationList.get(position).getId());
@@ -192,7 +180,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     }
 
-        @Override
+    @Override
     public void organizationLongClick(int position) {
 
         myDialog=new Dialog(getContext());
@@ -206,6 +194,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         myDialog.show();
         Button moreInfo=myDialog.findViewById(R.id.Button_moreInfo);
         Button aggPref=myDialog.findViewById(R.id.Button_aggiungiPreferiti);
+            if(organizationList.get(position).getTrackingMode().toString()!="anonymous") {
+                aggPref.setVisibility(View.INVISIBLE);
+            }
         moreInfo.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -218,10 +209,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             @Override
             public void onClick(View v) {
                 try {
-                    //Aggiungo organizzazione in locale
+                    //Aggiungo organizzazione in locale e sul server
                     MyStalkersListFragment.getInstance().addOrganization(organizationList.get(position));
-                    //Aggiungo organizzazione su server
-                    MyStalkersListFragment.getInstance().addOrganizationRest(organizationList.get(position),HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -233,9 +223,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         });
 
     }
-
-
-
+    //End click listener
     public void alphabeticalOrder(){
         Collections.sort(organizationList);
         //Collections.so
@@ -248,6 +236,16 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.favoriteID).setVisible(false);
+        MenuItem item= menu.findItem(R.id.searchID);
+        item.setVisible(true);
+        SearchView searchView= (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onPrepareOptionsMenu(menu);
     }
     // SearchView.OnQueryTextListener
     @Override
@@ -277,6 +275,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();
     }
+
 }
 
 

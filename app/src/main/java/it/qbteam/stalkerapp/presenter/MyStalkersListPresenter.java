@@ -3,8 +3,7 @@ package it.qbteam.stalkerapp.presenter;
 import org.json.JSONException;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.service.Rest;
+import it.qbteam.stalkerapp.model.service.REST;
 import it.qbteam.stalkerapp.model.service.Storage;
 
 import java.io.IOException;
@@ -15,36 +14,24 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     MyStalkersListContract.View myStalkersView;
     private Storage storage;
-    private Rest rest;
+    private REST rest;
 
     public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView=myStalkersView;
     storage= new Storage(null,this);
-    rest = new Rest(this, null);
+    rest = new REST(this, null);
 }
 
 
     @Override
-    public void remove(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {
-        storage.performRemove(organization, list, path);
-    }
-
-
-    @Override
     public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
-        storage.saveInLocalFile(list,path);
+        storage.performUpdateFile(list,path);
     }
 
     @Override
-    public void removeOrganizationRest(Organization organization, String UID, String userToken) {
-        rest.performRemoveOrganizationRest(organization, UID,userToken);
+    public ArrayList<Organization> checkLocalFile(String path) {
+        return storage.performCheckFileLocal(path);
     }
-
-    @Override
-    public void loadList(String UID, String userToken) {
-        rest.performLoadList(UID, userToken);
-    }
-
 
     @Override
     public void addOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {
@@ -52,16 +39,13 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void addOrganizationRest(Organization organization,String UID, String userToken) {
-        rest.performAddOrganizationRest(organization,UID,userToken);
+    public void addOrganizationREST(Organization organization,String UID, String userToken) {
+        rest.performAddOrganizationREST(organization,UID,userToken);
     }
 
-
-
-
     @Override
-    public void onSuccessAdd(String message) throws IOException, JSONException {
-        myStalkersView.onSuccessAddOrganization(message);
+    public void onSuccessAdd(ArrayList<Organization>list,String message) throws IOException, JSONException {
+        myStalkersView.onSuccessAddOrganization(list,message);
     }
 
     @Override
@@ -70,16 +54,28 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
+    public void removeOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {
+        storage.performRemoveLocal(organization, list, path);
+    }
+
+    @Override
+    public void removeOrganizationREST(Organization organization, String UID, String userToken) {
+        rest.performRemoveOrganizationREST(organization, UID,userToken);
+    }
+
+    @Override
     public void onSuccesRemove(ArrayList<Organization> list) throws IOException, JSONException {
         myStalkersView.onSuccessRemoveOrganization(list);
     }
 
     @Override
-    public void onSuccessLoad(List<Organization> list) throws IOException, JSONException {
-        myStalkersView.onSuccessLoadFile(list);
+    public void downloadListREST(String UID, String userToken) {
+        rest.performLoadListREST(UID, userToken);
     }
 
-
-
+    @Override
+    public void onSuccessLoad(List<Organization> list) throws IOException, JSONException {
+        myStalkersView.onSuccessLoadMyStalkerList(list);
+    }
 
 }

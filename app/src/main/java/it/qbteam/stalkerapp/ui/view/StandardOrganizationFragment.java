@@ -82,9 +82,6 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         UrlImageViewHelper.setUrlDrawable(image, bundle.getString("image"));
         description.setText(bundle.getString("description"));
 
-        System.out.println(bundle.getString("description"));
-        System.out.println(bundle.getString("image"));
-
         return view;
 
     }

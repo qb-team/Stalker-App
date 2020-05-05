@@ -92,7 +92,6 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
     //Se il login non ha avuto esito positivo l'utente viene notificato
     @Override
     public void onLoginFailure(FirebaseException e) {
-        System.out.println("Non funziona niente");
         mProgressDialog.dismiss();
         if (e instanceof FirebaseAuthInvalidCredentialsException) {
             Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();

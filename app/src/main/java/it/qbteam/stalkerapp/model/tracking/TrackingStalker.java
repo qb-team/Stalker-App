@@ -36,7 +36,7 @@ import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -52,8 +52,7 @@ import java.util.ArrayList;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.service.Rest;
+import it.qbteam.stalkerapp.model.service.REST;
 import it.qbteam.stalkerapp.model.tracking.trackingArea.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
@@ -150,10 +149,9 @@ public class TrackingStalker extends Service {
      * The current location.
      */
     private Location mLocation;
-    private ArrayList<Organization> organizationList;
     private ArrayList<LatLngOrganization> latLngOrganizations;
 
-    public TrackingStalker() throws JSONException {
+    public TrackingStalker()  {
 
 
     }
@@ -414,8 +412,8 @@ public class TrackingStalker extends Service {
         return builder.build();
     }
 
-    public void createOrganizationArrayList(ArrayList<Organization>list) throws JSONException {
-
+    public boolean checkUpdateList(ArrayList<Organization>list) throws JSONException {
+         System.out.println("FACCIO CHECK LISTA MYSTALKER");
         if(list!=null) {
             latLngOrganizations = new ArrayList<>();
 
@@ -428,11 +426,12 @@ public class TrackingStalker extends Service {
                 aux.setOrgAuthServerid(list.get(i));
                 aux.setTimeStamp(list.get(i));
                 latLngOrganizations.add(aux);
+                System.out.println("size latlng"+latLngOrganizations.size());
             }
-
+            return true;
         }
+        else return false;
     }
-
 
     /**
      * Gestione posizione
@@ -446,12 +445,15 @@ public class TrackingStalker extends Service {
         System.out.println("L'intervallo veloce è questo:  " + mLocationRequest.getFastestInterval());
         mLocation = location;
 
-        if (location != null) {
-            if (!insideOrganizationBoolean && !insidePlaceBoolean){
-                handleOrganizations(location);
-            }
+        if (location != null && checkUpdateList(MyStalkersListFragment.getInstance().checkForUpdate())) {
+            //Faccio il check se la lista myStalker è cambiata
+           ;
 
-            if (insideOrganizationBoolean && !insidePlaceBoolean){
+            handleOrganizations(location);
+        }
+        else System.out.println("TRACCIAMENTO IN ATTESA DI ORGANIZZAZIONI");
+
+           /* if (insideOrganizationBoolean && !insidePlaceBoolean){
                 handlePlaces(location);
                 isInsideActualOrganization(location);
             }
@@ -460,17 +462,15 @@ public class TrackingStalker extends Service {
                 handleInsidePlace(location);
             }
 
-        }
-
-        // Aggiornamento notifiche quando funziona in background
+        }*/
+           // Aggiornamento notifiche quando funziona in background
         if (serviceIsRunningInForeground(this)) {
             mNotificationManager.notify(NOTIFICATION_ID, getNotification());
         }
     }
 
     private void handleOrganizations(Location location) {
-        // Guarda se siamo dentro o no a un organizzazione, in caso DOVREBBE switchare la priorità
-        // In caso positivo insideOrganizationBoolean diventa true
+
         if (isInsideOrganizations(location)) {
             Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei dentro a " + insideOrganization.getName() , Toast.LENGTH_SHORT).show();
             insideOrganizationBoolean=true;
@@ -511,6 +511,7 @@ public class TrackingStalker extends Service {
     }
 
     private void isInsideActualOrganization(Location location) {
+
         LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
         final LatLngBounds.Builder builder=new LatLngBounds.Builder();
         for (LatLng point : insideOrganization.getLatLng()) {
@@ -527,10 +528,11 @@ public class TrackingStalker extends Service {
 
     public boolean isInsideOrganizations(Location location) {
         boolean found = false;
-        if(organizationList!=null){
+        if(latLngOrganizations!=null){
         LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
         final LatLngBounds.Builder builder=new LatLngBounds.Builder();
-        for(int i=0;i<latLngOrganizations.size();i++) {
+        for(int i = 0; i<latLngOrganizations.size(); i++) {
+            //Mi costruisco il poligono relativo a latLngOrganizations.get(i)==una organizzazione alla volta
             for (LatLng point : latLngOrganizations.get(i).getLatLng()) {
                 builder.include(point);
             }
@@ -539,10 +541,11 @@ public class TrackingStalker extends Service {
             boolean isInside = PolyUtil.containsLocation(actualPosition, latLngOrganizations.get(i).getLatLng(), true);
             if (isInsideBoundary && isInside){
                 insideOrganization = latLngOrganizations.get(i);
-                Rest.performMovement(latLngOrganizations.get(i).getName(),latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getTimeStamp(),latLngOrganizations.get(i).getOrgID(), HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
+                REST.performMovementREST(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken());
                 found= true;
+                System.out.println("SONO DENTRO A QUESTA ORGANIZZAZIONE"+latLngOrganizations.get(i).getName());
             }
-
+            else System.out.println("SONO FUORI DA QUESTA ORGANIZZAZIONE"+latLngOrganizations.get(i).getName());
         }
         }
         return found;

@@ -81,23 +81,23 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        organizationList=new ArrayList<>();
-        path= getContext().getFilesDir() + "/Preferiti.txt";
-        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
+        organizationList = new ArrayList<>();
+        path = getContext().getFilesDir() + "/Preferiti.txt";
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
             mUser.getIdToken(true)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
 
-                            user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            System.out.println("TOKEN CREATO:"+task.getResult().getToken()+"UID CREATO:"+FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            loadMyStalkerList(user.getUid(),user.getToken());
+                            user = new User(task.getResult().getToken(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            System.out.println("TOKEN CREATO:" + task.getResult().getToken() + "UID CREATO:" + FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            loadMyStalkerList(user.getUid(), user.getToken());
                         } else {
                             // Handle error -> task.getException();
                         }
                     });
         }
-        instance=this;
+        instance = this;
 
         getContext().bindService(new Intent(getContext(), TrackingStalker.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
@@ -109,24 +109,13 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mystalker_list, container, false);
-        recyclerView=view.findViewById(R.id.recyclerViewID);
+        recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        myStalkersListPresenter =new MyStalkersListPresenter(this);
+        myStalkersListPresenter = new MyStalkersListPresenter(this);
 
 
         return view;
-    }
-
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.favoriteID).setVisible(false);
-        MenuItem item= menu.findItem(R.id.searchID);
-        item.setVisible(true);
-        SearchView searchView= (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(this);
-        super.onPrepareOptionsMenu(menu);
     }
 
 
@@ -134,32 +123,29 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return instance;
     }
 
-    public void loadMyStalkerList(String UID, String userToken) {
-
-        myStalkersListPresenter.loadList(UID,userToken);
-    }
-
-    //  MyAdapter.OnOrganizzazioneListener DA METTERE ALTRI 2 METODI LDAP E STANDARD COME RISPOSTE
+    //Click listener
     @Override
     public void organizationClick(int position) {
 
-        Bundle bundle=new Bundle();
+        Bundle bundle = new Bundle();
         bundle.putString("name", organizationList.get(position).getName());
         bundle.putString("description", organizationList.get(position).getDescription());
+        bundle.putLong("orgID", organizationList.get(position).getId());
         bundle.putString("image", organizationList.get(position).getImage());
+        bundle.putString("serverURL", organizationList.get(position).getAuthenticationServerURL());
+        bundle.putString("creationDate", organizationList.get(position).getCreationDate().toString());
 
-        if(organizationList.get(position).getTrackingMode().getValue()=="anonymous"){
-            StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
+        if (organizationList.get(position).getTrackingMode().getValue() == "anonymous") {
+            StandardOrganizationFragment stdOrgFragment = new StandardOrganizationFragment();
             stdOrgFragment.setArguments(bundle);
-            FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.ListaPreferitiID, stdOrgFragment).commit();
-        }
-        else{
+        } else {
 
-            LDAPorganizationFragment LDAPFragment= new LDAPorganizationFragment();
+            LDAPorganizationFragment LDAPFragment = new LDAPorganizationFragment();
             LDAPFragment.setArguments(bundle);
-            FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.ListaPreferitiID, LDAPFragment).commit();
         }
@@ -195,18 +181,17 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         myQuittingDialogBox.show();
     }
 
-
-    public void removeOrganization(int position) throws IOException, JSONException {
-        myStalkersListPresenter.removeOrganizationRest(organizationList.get(position),user.getUid(),user.getToken());
-        myStalkersListPresenter.remove(organizationList.get(position), organizationList, path);
-
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.favoriteID).setVisible(false);
+        MenuItem item = menu.findItem(R.id.searchID);
+        item.setVisible(true);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onPrepareOptionsMenu(menu);
     }
 
-    public void addOrganization(Organization organization) throws IOException, JSONException {
-        myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
-
-    }
-
+    //End click listener
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -214,69 +199,80 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        String userInput= newText.toLowerCase();
-        ArrayList<Organization> newList= new ArrayList<>();
-        if(organizationList.size()!=0){
-            for(int i = 0; i< organizationList.size(); i++){
-                if(organizationList.get(i).getName().toLowerCase().contains(userInput))
+        String userInput = newText.toLowerCase();
+        ArrayList<Organization> newList = new ArrayList<>();
+        if (organizationList.size() != 0) {
+            for (int i = 0; i < organizationList.size(); i++) {
+                if (organizationList.get(i).getName().toLowerCase().contains(userInput))
                     newList.add(organizationList.get(i));
             }
-            adapter=new OrganizationViewAdapter(newList,this.getContext(),this);
+            adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
             recyclerView.setAdapter(adapter);
 
         }
         return false;
     }
 
-    @Override
-    public boolean onBackPressed() {
-        return new BackPressImplementation(this).onBackPressed();
-    }
 
+    public void addOrganization(Organization organization) throws IOException, JSONException {
+        myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
+        myStalkersListPresenter.addOrganizationREST(organization, user.getUid(), user.getToken());
+    }
 
     //Organizzazione aggiunta correttamente ai preferiti
     @Override
-    public void onSuccessAddOrganization(String message)  {
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-        adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+    public void onSuccessAddOrganization(ArrayList<Organization> list, String message) throws IOException, JSONException {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
-
-
+        myStalkersListPresenter.updateFile(list, path);
     }
 
     //Organizzazione già presente nei preferiti
     @Override
     public void onFailureAddOrganization(String message) {
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void removeOrganization(int position) throws IOException, JSONException {
+        myStalkersListPresenter.removeOrganizationREST(organizationList.get(position), user.getUid(), user.getToken());
+        myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
+
     }
 
     //Organizzazione rimossa con successo
     @Override
-    public void onSuccessRemoveOrganization(ArrayList<Organization> list)  {
-        adapter=new OrganizationViewAdapter(list,this.getContext(),this);
+    public void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException {
+        adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
+        myStalkersListPresenter.updateFile(list, path);
     }
 
+    public void loadMyStalkerList(String UID, String userToken) {
 
+        myStalkersListPresenter.downloadListREST(UID, userToken);
+    }
+    //Viene usato dal StalkerTracker per verificare se la lista è aggiornata oppure no
+     public ArrayList<Organization> checkForUpdate(){
+        return myStalkersListPresenter.checkLocalFile(path);
+     }
     //Lista organizzazioni preferiti caricate da server con successo
+
     @Override
-    public void onSuccessLoadFile(List<Organization> list) throws IOException, JSONException {
-        if(list!=null){
-            ArrayList<Organization> aux= new ArrayList<>(list);
-            adapter=new OrganizationViewAdapter(aux,this.getContext(),this);
+    public void onSuccessLoadMyStalkerList(List<Organization> list) throws IOException, JSONException {
+        if (list != null) {
+            //Converto la list in ArrayList
+            ArrayList<Organization> aux = new ArrayList<>(list);
+            //Assegno la lista appena scaricata dal server
+            organizationList.addAll(aux);
+            adapter = new OrganizationViewAdapter(organizationList, this.getContext(), this);
             recyclerView.setAdapter(adapter);
-            myStalkersListPresenter.updateFile(aux,path);
-            organizationList=aux;
+            myStalkersListPresenter.updateFile(organizationList, path);
 
-        }
-        else
-            Toast.makeText(getContext(),"Lista MyStalker ancora vuota",Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(getContext(), "Lista MyStalker ancora vuota", Toast.LENGTH_SHORT).show();
     }
 
-    //Organizzazione aggiunta sul server
-    public void addOrganizationRest(Organization organization, String UID, String userToken)  {
-        myStalkersListPresenter.addOrganizationRest(organization, UID,userToken);
-    }
 
     @Override
     public void onPause() {
@@ -303,23 +299,30 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                     false));
         }
     }
+
     //Metodo che fa iniziare il tracciamento sulle organizzaioni presenti dei preferiti
-    public void startTracking(){
-        createListOrganization();
-        System.out.println("lala:  " + mService);
+    public void startTracking() {
+        //createListOrganization();
         mService.requestLocationUpdates();
     }
-    //Metodo che fa fermare il tracciamneto sulle organizzazioni presenti nei preferiti
-    public void stopTracking(){
-        mService.removeLocationUpdates();
-    }
 
-    private void createListOrganization(){
+   /* private void createListOrganization() {
         try {
-            mService.createOrganizationArrayList(organizationList);
+            mService.createOrganizationArrayList(myStalkersListPresenter.checkLocalFile(path));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }*/
+
+
+    //Metodo che fa fermare il tracciamneto sulle organizzazioni presenti nei preferiti
+    public void stopTracking() {
+        mService.removeLocationUpdates();
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return new BackPressImplementation(this).onBackPressed();
     }
 
 }

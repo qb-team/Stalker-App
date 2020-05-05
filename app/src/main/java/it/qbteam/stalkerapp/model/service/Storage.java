@@ -37,7 +37,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public ArrayList<Organization> performCheckFile(String path) {
+    public ArrayList<Organization> performCheckFileLocal(String path) {
         //CONTROLLO ESISTENZA DEL FILE
         ArrayList<Organization> aux = new ArrayList<>();
         File organizationFile = new File(path);
@@ -84,7 +84,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
                         serverUrl=jsonObj.getString("authenticationServerURL");
                         organization.setAuthenticationServerURL(serverUrl);
                     }
-                    System.out.println("organization:  " + organization);
+
                     aux.add(organization);
                 }
 
@@ -96,7 +96,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
     }
 
     @Override
-    public void performRemove(Organization organization, ArrayList<Organization>list, String path) throws IOException, JSONException {
+    public void performRemoveLocal(Organization organization, ArrayList<Organization>list, String path) throws IOException, JSONException {
         boolean trovato=false;
         for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext(); ) {
             Organization o = iterator.next();
@@ -108,7 +108,7 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         }
         if(trovato){
             myStalkerListener.onSuccesRemove(list);
-            saveInLocalFile(list,path);
+            performUpdateFile(list,path);
 
         }
 
@@ -131,19 +131,19 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         }
         else {
             list.add(organization);
-            saveInLocalFile(list,path);
-            myStalkerListener.onSuccessAdd("Hai aggiunto l'organizzazione a MyStalkers");
+            performUpdateFile(list,path);
+            myStalkerListener.onSuccessAdd(list,"Hai aggiunto l'organizzazione a MyStalkers");
         }}
         else{
             list=new ArrayList<>();
             list.add(organization);
-            saveInLocalFile(list,path);
-            myStalkerListener.onSuccessAdd("Hai aggiunto l'organizzazione a MyStalkers");
+            performUpdateFile(list,path);
+            myStalkerListener.onSuccessAdd(list,"Hai aggiunto l'organizzazione a MyStalkers");
         }
     }
 
 
- public static void saveInLocalFile(ArrayList<Organization> list, String path) throws JSONException, IOException {
+    public void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
 
     JSONArray ja = new JSONArray();
 
@@ -171,7 +171,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
             FileWriter w;
             w = new FileWriter(path);
             w.write(inline);
-         System.out.println(inline);
          w.flush();
          w.close();
 

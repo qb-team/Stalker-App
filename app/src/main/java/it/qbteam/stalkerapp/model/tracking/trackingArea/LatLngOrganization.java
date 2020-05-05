@@ -25,7 +25,6 @@ public class LatLngOrganization {
     public void setLatLng(Organization organization) throws JSONException {
 
         String inline=organization.getTrackingArea();
-        System.out.println("INLINE  "+inline);
         polygon = new ArrayList<>();
         JSONObject jsonObject = new JSONObject(inline);
         JSONArray jsonArray = (JSONArray) jsonObject.get("Organizzazioni");
@@ -36,8 +35,6 @@ public class LatLngOrganization {
             polygon.add(new LatLng(latitude, longitude));
         }
 
-
-      System.out.println("ARRAY LATLNG"+ polygon);
     }
 
     public void setName(Organization organization){
@@ -46,11 +43,12 @@ public class LatLngOrganization {
 
     public void setTrackingMode(Organization organization){
         this.trackingMode=organization.getTrackingMode().toString();
-
     }
+
     public void setOrganizationID(Organization organization){
         this.organizationID=organization.getId();
     }
+
     public ArrayList<LatLng> getLatLng(){
         return this.polygon;
     }
@@ -58,9 +56,11 @@ public class LatLngOrganization {
     public void setOrgAuthServerid(Organization organization){
         this.orgAuthServerID=organization.getAuthenticationServerURL();
     }
+
     public void setTimeStamp(Organization organization){
         this.timeStamp=organization.getCreationDate();
     }
+    
     public OffsetDateTime getTimeStamp(){ return timeStamp; }
 
     public String getOrgAuthServerID(){return orgAuthServerID;}
@@ -68,7 +68,9 @@ public class LatLngOrganization {
     public String  getName(){
         return this.name;
     }
+
     public long getOrgID(){return this.organizationID;}
+
     public String getTrackingMode(){
         return this.trackingMode;
     }

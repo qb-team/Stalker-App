@@ -3,8 +3,7 @@ package it.qbteam.stalkerapp.presenter;
 import org.json.JSONException;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.service.Rest;
+import it.qbteam.stalkerapp.model.service.REST;
 import it.qbteam.stalkerapp.model.service.Storage;
 
 import java.io.IOException;
@@ -14,38 +13,36 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     private HomeContract.View OrganizationListView;
     private Storage storage;
-    private Rest rest;
+    private REST rest;
 
     public HomePresenter(HomeContract.View OrganizationListView){
         this.OrganizationListView=OrganizationListView;
-
         storage=new Storage(this,null);
-        rest=new Rest(null, this);
+        rest=new REST(null, this);
     }
     @Override
-    public ArrayList<Organization> checkFile(String path) {
-        return storage.performCheckFile(path);
-    }
-
-    @Override
-    public void downloadFile(String path, String UID, String userToken)  {
-        rest.performDownloadFile(path, UID,userToken);
+    public ArrayList<Organization> checkLocalFile(String path) {
+        return storage.performCheckFileLocal(path);
     }
 
     @Override
     public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
-        storage.saveInLocalFile(list,path);
+        storage.performUpdateFile(list,path);
     }
 
+    @Override
+    public void downloadHomeListRest(String path, String UID, String userToken)  {
+        rest.performDownloadFileREST(path, UID,userToken);
+    }
 
     @Override
     public void onSuccessDownload(String message) {
-        OrganizationListView.onSuccessDownloadFile(message);
+        OrganizationListView.onSuccessDownloadList(message);
     }
 
     @Override
     public void onFailureDownload(String message) {
-        OrganizationListView.onFailureDownloadFile(message);
+        OrganizationListView.onFailureDownloadList(message);
     }
 
     @Override

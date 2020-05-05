@@ -53,7 +53,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     private EditText userNameLDAP, passwordLDAP;
     private LDAPorganizationPresenter ldaPorganizationPresenter;
     Dialog myDialog;
-    private User user;
 
 
     public LDAPorganizationFragment() {
@@ -163,7 +162,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             o.setAuthenticationServerURL(serverURL);
             o.setCreationDate(creationDate);
             MyStalkersListFragment.getInstance().addOrganization(o);
-            MyStalkersListFragment.getInstance().addOrganizationRest(o,HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {

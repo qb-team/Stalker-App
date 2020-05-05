@@ -12,23 +12,23 @@ public interface HomeContract {
 
     //interfaccia view
     interface View {
-        void onSuccessDownloadFile(String message);
-        void onFailureDownloadFile(String message);
+        void onSuccessDownloadList(String message);
+        void onFailureDownloadList(String message);
         void onFailureCheckFile(String message);
     }
 
     //interfaccia presenter
     interface Presenter {
-        ArrayList<Organization> checkFile(String path);
-        void downloadFile(String path, String UID, String userToken) throws InterruptedException, IOException;
+        ArrayList<Organization> checkLocalFile(String path);
+        void downloadHomeListRest(String path, String UID, String userToken) throws InterruptedException, IOException;
         void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
 
     }
 
     //interfaccia model
     interface Model {
-        ArrayList<Organization> performCheckFile(String path);
-       // void performDownloadFile(String path, String UID,String userToken) throws InterruptedException, IOException;
+        ArrayList<Organization> performCheckFileLocal(String path);
+        void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
     }
 
     interface HomeListener {

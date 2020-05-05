@@ -7,14 +7,18 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
 import it.qbteam.stalkerapp.model.backend.api.MovementApi;
+import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
 import it.qbteam.stalkerapp.model.backend.model.Favorite;
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.backend.model.OrganizationMovement;
 import it.qbteam.stalkerapp.model.backend.model.PlaceMovement;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.presenter.HomeContract;
 import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,16 +27,15 @@ import retrofit2.Response;
 public class Rest {
 
     MyStalkersListContract.MyStalkerListener myStalkerListener;
+    HomeContract.HomeListener homeListener;
 
-    public Rest(MyStalkersListContract.MyStalkerListener myStalkerListener) {
+    public Rest(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
         this.myStalkerListener = myStalkerListener;
+        this.homeListener=homeListener;
     }
 
     public void performRemoveOrganizationRest(Organization organization, String UID, String userToken) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+
                     Favorite favoriteUpload = new Favorite();
                     favoriteUpload.setUserId(UID);
                     favoriteUpload.setCreationDate(organization.getCreationDate());
@@ -52,14 +55,11 @@ public class Rest {
                         System.out.println("Errore durante la rimozione dell'organizzazione");
                 }
             });
-        }}.start();
+
     }
 
     public void performLoadList(String UID, String userToken) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+
                 Favorite favoriteDownload = new Favorite();
                 favoriteDownload.setUserId(UID);
                 ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
@@ -84,14 +84,11 @@ public class Rest {
                     }
                 });
             }
-        }.start();
-    }
+
+
 
     public void performAddOrganizationRest(Organization organization, String UID, String userToken) {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(UID);
         favoriteUpload.setOrganizationId(organization.getId());
@@ -99,6 +96,7 @@ public class Rest {
         favoriteUpload.setOrgAuthServerId(organization.getAuthenticationServerURL());
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         FavoriteApi service = ac.createService(FavoriteApi.class);
+
         Call<Favorite> favorite = service.addFavoriteOrganization(favoriteUpload);
         favorite.enqueue(new Callback<Favorite>() {
             @Override
@@ -112,7 +110,7 @@ public class Rest {
                 System.out.println("Errore durante l'aggiunta dell'organizzazione");
             }
         });
-    }}.start();
+
     }
 
 
@@ -141,6 +139,52 @@ public class Rest {
                 }
         });
 
-
     }
+
+    public void performDownloadFile(String path, String UID, String userToken)  {
+        ArrayList<Organization> returnList=new ArrayList<>();
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
+        OrganizationApi service = ac.createService(OrganizationApi.class);
+        Call<List<Organization>> orgList = service.getOrganizationList();
+        orgList.enqueue(new Callback<List<Organization>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
+
+
+                for(int i=0;i<response.body().size();i++){
+                    Organization o =new Organization();
+                    o.setName(response.body().get(i).getName());
+                    o.setCity(response.body().get(i).getCity());
+                    o.setCountry(response.body().get(i).getCountry());
+                    o.setCreationDate(response.body().get(i).getCreationDate());
+                    o.setDescription(response.body().get(i).getDescription());
+                    o.setId(response.body().get(i).getId());
+                    o.setImage(response.body().get(i).getImage());
+                    o.setLastChangeDate(response.body().get(i).getLastChangeDate());
+                    o.setNumber(response.body().get(i).getNumber());
+                    o.setPostCode(response.body().get(i).getPostCode());
+                    o.setStreet(response.body().get(i).getStreet());
+                    o.setTrackingArea(response.body().get(i).getTrackingArea());
+                    o.setTrackingMode(response.body().get(i).getTrackingMode().toString());
+                    if(response.body().get(i).getTrackingMode().getValue()=="authenticated")
+                        o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
+                    returnList.add(o);
+                }
+
+                try {
+                    Storage.saveInLocalFile(returnList,path);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                homeListener.onSuccessDownload("Lista scaricata con successo");
+            }
+
+            @Override
+            public void onFailure(Call<List<Organization>> call, Throwable t) {
+                homeListener.onFailureDownload("Errore durante lo scaricamento della lista");
+            }});
+    }
+
 }

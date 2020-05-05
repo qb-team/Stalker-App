@@ -28,7 +28,7 @@ public interface HomeContract {
     //interfaccia model
     interface Model {
         ArrayList<Organization> performCheckFile(String path);
-        void performDownloadFile(String path, String UID,String userToken) throws InterruptedException, IOException;
+       // void performDownloadFile(String path, String UID,String userToken) throws InterruptedException, IOException;
     }
 
     interface HomeListener {

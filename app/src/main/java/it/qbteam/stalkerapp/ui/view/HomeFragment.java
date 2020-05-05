@@ -167,12 +167,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public void organizationClick(int position) {
             Bundle bundle=new Bundle();
+            Organization o = organizationList.get(position);
             bundle.putString("name", organizationList.get(position).getName());
             bundle.putString("description", organizationList.get(position).getDescription());
-            System.out.println("DESCRIPTION"+organizationList.get(position).getDescription());
+            bundle.putLong("orgID",organizationList.get(position).getId());
             bundle.putString("image", organizationList.get(position).getImage());
-            Organization o = organizationList.get(position);
-            System.out.println("ecco l'o " + o);
+            bundle.putString("serverURL", organizationList.get(position).getAuthenticationServerURL());
+            bundle.putString("creationDate",organizationList.get(position).getCreationDate().toString());
+
         if(organizationList.get(position).getTrackingMode().toString()=="anonymous"){
             StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
             stdOrgFragment.setArguments(bundle);

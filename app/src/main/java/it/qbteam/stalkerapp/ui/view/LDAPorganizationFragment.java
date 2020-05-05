@@ -27,6 +27,8 @@ import com.unboundid.ldap.sdk.LDAPException;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 
 import it.qbteam.stalkerapp.HomePageActivity;
@@ -45,6 +47,9 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     private ImageView mImageView;
     private TextView trackingTextView;
     private Switch anonimousSwitch;
+    private Long orgID;
+    private OffsetDateTime creationDate;
+    private String serverURL;
     private EditText userNameLDAP, passwordLDAP;
     private LDAPorganizationPresenter ldaPorganizationPresenter;
     Dialog myDialog;
@@ -80,6 +85,10 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         positionTextView=view.findViewById(R.id.positionID);
         authentication=view.findViewById(R.id.LDAPaccessID);
         mImageView=view.findViewById(R.id.imageID);
+        orgID=bundle.getLong("orgID");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        creationDate = OffsetDateTime.parse(bundle.getString("creationDate"), dateTimeFormatter);
+        serverURL=bundle.getString("serverURL");
         anonimousSwitch=view.findViewById(R.id.switchAnonimousID);
         anonimousSwitch.setVisibility(View.INVISIBLE);
         trackingTextView=view.findViewById(R.id.trackingTextID);
@@ -150,6 +159,9 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         try {
             Organization o=new Organization();
             o.setName(title.getText().toString());
+            o.setId(orgID);
+            o.setAuthenticationServerURL(serverURL);
+            o.setCreationDate(creationDate);
             MyStalkersListFragment.getInstance().addOrganization(o);
             MyStalkersListFragment.getInstance().addOrganizationRest(o,HomePageActivity.getInstance().getUID(),HomePageActivity.getInstance().getuserToken());
         } catch (JSONException e) {

@@ -4,6 +4,7 @@ import org.json.JSONException;
 
 import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.Rest;
 import it.qbteam.stalkerapp.model.service.Storage;
 
 import java.io.IOException;
@@ -13,11 +14,13 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     private HomeContract.View OrganizationListView;
     private Storage storage;
+    private Rest rest;
 
     public HomePresenter(HomeContract.View OrganizationListView){
         this.OrganizationListView=OrganizationListView;
 
         storage=new Storage(this,null);
+        rest=new Rest(null, this);
     }
     @Override
     public ArrayList<Organization> checkFile(String path) {
@@ -26,7 +29,7 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     @Override
     public void downloadFile(String path, String UID, String userToken)  {
-        storage.performDownloadFile(path, UID,userToken);
+        rest.performDownloadFile(path, UID,userToken);
     }
 
     @Override

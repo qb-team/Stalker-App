@@ -59,8 +59,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
                 for(int i=0;i<jsonArray.length();i++){
                     JSONObject jsonObj= jsonArray.getJSONObject(i);
-
-
                     String name= jsonObj.getString("name");
                     String description=jsonObj.getString("description");
                     String image=jsonObj.getString("image");
@@ -144,54 +142,8 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         }
     }
 
-    @Override
-    public void performDownloadFile(String path, String UID, String userToken)  {
-        ArrayList<Organization> returnList=new ArrayList<>();
-        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
-        OrganizationApi service = ac.createService(OrganizationApi.class);
-        Call<List<Organization>> orgList = service.getOrganizationList();
-        orgList.enqueue(new Callback<List<Organization>>() {
-            @Override
-            public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
 
-
-                for(int i=0;i<response.body().size();i++){
-                       Organization o =new Organization();
-                       o.setName(response.body().get(i).getName());
-                       o.setCity(response.body().get(i).getCity());
-                       o.setCountry(response.body().get(i).getCountry());
-                       o.setCreationDate(response.body().get(i).getCreationDate());
-                       o.setDescription(response.body().get(i).getDescription());
-                       o.setId(response.body().get(i).getId());
-                       o.setImage(response.body().get(i).getImage());
-                       o.setLastChangeDate(response.body().get(i).getLastChangeDate());
-                       o.setNumber(response.body().get(i).getNumber());
-                       o.setPostCode(response.body().get(i).getPostCode());
-                       o.setStreet(response.body().get(i).getStreet());
-                       o.setTrackingArea(response.body().get(i).getTrackingArea());
-                       o.setTrackingMode(response.body().get(i).getTrackingMode().toString());
-                       if(response.body().get(i).getTrackingMode().getValue()=="authenticated")
-                           o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
-                       returnList.add(o);
-                    }
-
-                try {
-                    saveInLocalFile(returnList,path);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                homeListener.onSuccessDownload("Lista scaricata con successo");
-            }
-
-            @Override
-            public void onFailure(Call<List<Organization>> call, Throwable t) {
-                 homeListener.onFailureDownload("Errore durante lo scaricamento della lista");
-            }});
-    }
-
- public void saveInLocalFile(ArrayList<Organization>list,String path) throws JSONException, IOException {
+ public static void saveInLocalFile(ArrayList<Organization> list, String path) throws JSONException, IOException {
 
     JSONArray ja = new JSONArray();
 
@@ -210,7 +162,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         jo.put("lastChangeDate", list.get(i).getLastChangeDate());
         jo.put("trackingArea", list.get(i).getTrackingArea());
         jo.put("trackingMode", list.get(i).getTrackingMode());
-        System.out.println("CIAOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" +list.get(i).getTrackingMode());
         ja.put(jo);
     }
     JSONObject mainObj = new JSONObject();

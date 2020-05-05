@@ -83,9 +83,7 @@ public class REST {
                         System.out.println("ERRORE LOAD");
                     }
                 });
-            }
-
-
+    }
 
     public void performAddOrganizationREST(Organization organization, String UID, String userToken) {
 
@@ -96,7 +94,6 @@ public class REST {
         favoriteUpload.setOrgAuthServerId(organization.getAuthenticationServerURL());
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         FavoriteApi service = ac.createService(FavoriteApi.class);
-
         Call<Favorite> favorite = service.addFavoriteOrganization(favoriteUpload);
         favorite.enqueue(new Callback<Favorite>() {
             @Override
@@ -111,7 +108,6 @@ public class REST {
         });
 
     }
-
 
     public static void performMovementREST(String authServerID,long orgID,String userToken) {
 
@@ -131,6 +127,11 @@ public class REST {
                 public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
                     System.out.println(response.body().getExitToken());
                     System.out.println("INVIATO AL SERVER ENTRATA IN UNA ORGANIZZAZIONE");
+                    try {
+                        Storage.saveExitToken(orgID,response.body().getExitToken());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -143,6 +144,7 @@ public class REST {
     }
 
     public void performDownloadFileREST(String path, String UID, String userToken)  {
+
         ArrayList<Organization> returnList=new ArrayList<>();
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         OrganizationApi service = ac.createService(OrganizationApi.class);
@@ -150,7 +152,6 @@ public class REST {
         orgList.enqueue(new Callback<List<Organization>>() {
             @Override
             public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
-
 
                 for(int i=0;i<response.body().size();i++){
                     Organization o =new Organization();

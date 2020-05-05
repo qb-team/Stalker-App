@@ -152,8 +152,6 @@ public class TrackingStalker extends Service {
     private ArrayList<LatLngOrganization> latLngOrganizations;
 
     public TrackingStalker()  {
-
-
     }
 
     @Override
@@ -222,7 +220,7 @@ public class TrackingStalker extends Service {
                 mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
                 mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//                mLocationRequest.setSmallestDisplacement(2);
+//              mLocationRequest.setSmallestDisplacement(2);
                 break;
             case 1:
                 mLocationRequest = new LocationRequest();
@@ -242,7 +240,6 @@ public class TrackingStalker extends Service {
 
 
     }
-
 
     /**
      * Creazione FusedLocation
@@ -308,6 +305,7 @@ public class TrackingStalker extends Service {
                 false);
 
         // We got here because the user decided to remove location updates from the notification.
+
         if (startedFromNotification) {
             removeLocationUpdates();
             stopSelf();
@@ -315,7 +313,6 @@ public class TrackingStalker extends Service {
         // Tells the system to not try to recreate the service after it has been killed.
         return START_NOT_STICKY;
     }
-
 
     /**
      * Non so bene come viene gestito --> Forse non serve nella nostra app
@@ -367,8 +364,6 @@ public class TrackingStalker extends Service {
     public void onDestroy() {
         mServiceHandler.removeCallbacksAndMessages(null);
     }
-
-
     /**
      * La notifica a schermo viene gestita qui
      * Returns the {@link NotificationCompat} used as part of the foreground service.
@@ -438,20 +433,17 @@ public class TrackingStalker extends Service {
      * Log.i(TAG, "New location: " + location); --> Stampa nel run
      * mLocation = location; --> crea l'oggetto di tipo "Location" mLocation
      */
-    private void onNewLocation(Location location) throws JSONException {
 
+    private void onNewLocation(Location location) throws JSONException {
 
         System.out.println("L'intervallo è questo:  " + mLocationRequest.getInterval());
         System.out.println("L'intervallo veloce è questo:  " + mLocationRequest.getFastestInterval());
         mLocation = location;
-
+        //Faccio il check se la lista myStalker è cambiata
         if (location != null && checkUpdateList(MyStalkersListFragment.getInstance().checkForUpdate())) {
-            //Faccio il check se la lista myStalker è cambiata
-           ;
 
             handleOrganizations(location);
         }
-        else System.out.println("TRACCIAMENTO IN ATTESA DI ORGANIZZAZIONI");
 
            /* if (insideOrganizationBoolean && !insidePlaceBoolean){
                 handlePlaces(location);
@@ -464,6 +456,7 @@ public class TrackingStalker extends Service {
 
         }*/
            // Aggiornamento notifiche quando funziona in background
+
         if (serviceIsRunningInForeground(this)) {
             mNotificationManager.notify(NOTIFICATION_ID, getNotification());
         }
@@ -525,7 +518,6 @@ public class TrackingStalker extends Service {
         }
     }
 
-
     public boolean isInsideOrganizations(Location location) {
         boolean found = false;
         if(latLngOrganizations!=null){
@@ -550,13 +542,6 @@ public class TrackingStalker extends Service {
         }
         return found;
     }
-
-
-
-
-
-
-
 
     /**
      * Class used for the client Binder.  Since this service runs in the same process as its

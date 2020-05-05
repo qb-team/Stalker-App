@@ -13,11 +13,15 @@ import org.json.JSONObject;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -36,17 +40,17 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
          this.myStalkerListener=myStalkerListener;
     }
 
+
     @Override
     public ArrayList<Organization> performCheckFileLocal(String path) {
         //CONTROLLO ESISTENZA DEL FILE
+        System.out.println("Path "+path);
         ArrayList<Organization> aux = new ArrayList<>();
         File organizationFile = new File(path);
         if(organizationFile.length()==0 || !organizationFile.exists()) {
             if(homeListener!=null)
                  homeListener.onFailureCheck("La lista è ancora vuota, scaricala!");
-
         }
-
         else {
             try {
                 FileInputStream fin = new FileInputStream(organizationFile);
@@ -114,8 +118,6 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
 
     }
 
-
-
     @Override
     public void performAddOrganizationLocal(Organization organization, ArrayList<Organization> list,String path) throws IOException, JSONException {
         boolean trovato = false;
@@ -142,10 +144,10 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
         }
     }
 
-
     public void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
 
     JSONArray ja = new JSONArray();
+    System.out.println("PATH"+ path);
 
     for(int i=0;i<list.size();i++) {
         JSONObject jo = new JSONObject();
@@ -171,9 +173,26 @@ public class Storage implements HomeContract.Model, MyStalkersListContract.Model
             FileWriter w;
             w = new FileWriter(path);
             w.write(inline);
-         w.flush();
-         w.close();
+            w.flush();
+            w.close();
+    }
 
+    public static void saveExitToken(Long orgID, String exitToken) throws IOException {
+
+        HashMap<Long,String> map= new HashMap<>();
+        map.put(orgID,exitToken);
+        FileOutputStream fos=new FileOutputStream(new File("data/user/0/it.qbteam.stalkerapp/files/ExitToken.txt"));
+        ObjectOutputStream objectOutputStream=new ObjectOutputStream(fos);
+        objectOutputStream.writeObject(map);
+        fos.close();
+
+        File organizationFile = new File("data/user/0/it.qbteam.stalkerapp/files/ExitToken.txt");
+        FileInputStream fin = new FileInputStream(organizationFile);
+        byte[] buffer = new byte[(int) organizationFile.length()];
+        new DataInputStream(fin).readFully(buffer);
+        fin.close();
+        String s = new String(buffer, "UTF-8");
+        System.out.println(s);
 
     }
 

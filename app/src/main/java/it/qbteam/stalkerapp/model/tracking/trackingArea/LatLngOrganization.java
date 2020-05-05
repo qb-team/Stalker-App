@@ -60,7 +60,7 @@ public class LatLngOrganization {
     public void setTimeStamp(Organization organization){
         this.timeStamp=organization.getCreationDate();
     }
-    
+
     public OffsetDateTime getTimeStamp(){ return timeStamp; }
 
     public String getOrgAuthServerID(){return orgAuthServerID;}

@@ -1,16 +1,13 @@
-package it.qbteam.stalkerapp.model.tracking.trackingArea;
+package it.qbteam.stalkerapp.model.data;
 
 import com.google.android.gms.maps.model.LatLng;
-
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
-import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 
 public class LatLngOrganization {
 

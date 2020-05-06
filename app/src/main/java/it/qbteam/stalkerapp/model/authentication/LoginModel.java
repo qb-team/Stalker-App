@@ -1,8 +1,8 @@
-package it.qbteam.stalkerapp.model;
+package it.qbteam.stalkerapp.model.authentication;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import it.qbteam.stalkerapp.presenter.LoginContract;
+import it.qbteam.stalkerapp.contract.LoginContract;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;

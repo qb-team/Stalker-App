@@ -14,12 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.presenter.LoginContract;
+import it.qbteam.stalkerapp.contract.LoginContract;
 import it.qbteam.stalkerapp.presenter.LoginPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;

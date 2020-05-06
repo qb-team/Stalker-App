@@ -2,16 +2,14 @@ package it.qbteam.stalkerapp.model.tracking;
 
 import android.location.Location;
 import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.android.SphericalUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import it.qbteam.stalkerapp.model.tracking.trackingArea.LatLngOrganization;
+import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 
 public class TrackingDistance {
 

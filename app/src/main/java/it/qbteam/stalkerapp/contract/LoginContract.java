@@ -1,4 +1,4 @@
-package it.qbteam.stalkerapp.presenter;
+package it.qbteam.stalkerapp.contract;
 
 import androidx.fragment.app.Fragment;
 import com.google.firebase.FirebaseException;

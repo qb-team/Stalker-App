@@ -5,11 +5,8 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import it.qbteam.stalkerapp.ui.view.AuthenticationFragment;
-import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 
 //Activity principale che ti porta nella seconda activity (HomePage) se si è autenticati, altrimenti ti indirizza al MainFragment
 public class MainActivity extends AppCompatActivity {

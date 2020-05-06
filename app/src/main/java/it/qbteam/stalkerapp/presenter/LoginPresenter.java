@@ -1,7 +1,9 @@
 package it.qbteam.stalkerapp.presenter;
 
 import androidx.fragment.app.Fragment;
-import it.qbteam.stalkerapp.model.LoginModel;
+
+import it.qbteam.stalkerapp.contract.LoginContract;
+import it.qbteam.stalkerapp.model.authentication.LoginModel;
 import com.google.firebase.FirebaseException;
 
 //Presenter di Login

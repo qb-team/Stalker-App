@@ -2,10 +2,10 @@ package it.qbteam.stalkerapp.presenter;
 
 import org.json.JSONException;
 
-import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
+import it.qbteam.stalkerapp.contract.MyStalkersListContract;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.service.REST;
 import it.qbteam.stalkerapp.model.service.Storage;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,10 @@
-package it.qbteam.stalkerapp.presenter;
+package it.qbteam.stalkerapp.contract;
 
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
-
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 
 public interface MyStalkersListContract {
 

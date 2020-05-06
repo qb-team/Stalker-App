@@ -1,29 +1,16 @@
 package it.qbteam.stalkerapp.ui.view;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.TabViewPagerAdapter;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-
 
 public class ActionTabFragment extends Fragment {
 

@@ -11,7 +11,7 @@
  */
 
 
-package it.qbteam.stalkerapp.model.backend.modelBackend;
+package it.qbteam.stalkerapp.model.backend.dataBackend;
 
 
 import java.util.Objects;

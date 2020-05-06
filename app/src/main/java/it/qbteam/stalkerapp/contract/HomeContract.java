@@ -1,9 +1,7 @@
-package it.qbteam.stalkerapp.presenter;
+package it.qbteam.stalkerapp.contract;
 
 import org.json.JSONException;
-
-import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
-
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import java.io.IOException;
 import java.util.ArrayList;
 

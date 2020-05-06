@@ -36,7 +36,6 @@ import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -48,15 +47,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.android.PolyUtil;
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
-import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.service.REST;
 import it.qbteam.stalkerapp.model.service.Storage;
-import it.qbteam.stalkerapp.model.tracking.trackingArea.LatLngOrganization;
+import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 

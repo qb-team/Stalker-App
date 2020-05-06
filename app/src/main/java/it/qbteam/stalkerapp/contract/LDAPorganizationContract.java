@@ -1,4 +1,4 @@
-package it.qbteam.stalkerapp.presenter;
+package it.qbteam.stalkerapp.contract;
 
 import com.unboundid.ldap.sdk.LDAPException;
 import java.util.concurrent.ExecutionException;

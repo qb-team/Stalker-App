@@ -4,8 +4,8 @@ package it.qbteam.stalkerapp.model.backend.api;
 import retrofit2.Call;
 import retrofit2.http.*;
 
-import it.qbteam.stalkerapp.model.backend.modelBackend.OrganizationMovement;
-import it.qbteam.stalkerapp.model.backend.modelBackend.PlaceMovement;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
+import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
 
 public interface MovementApi {
   /**

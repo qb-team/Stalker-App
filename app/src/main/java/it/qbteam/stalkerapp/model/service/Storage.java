@@ -1,8 +1,8 @@
 package it.qbteam.stalkerapp.model.service;
 
-import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
-import it.qbteam.stalkerapp.model.backend.modelBackend.OrganizationMovement;
-import it.qbteam.stalkerapp.presenter.HomeContract;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
+import it.qbteam.stalkerapp.contract.HomeContract;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
+import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 
 public class Storage implements HomeContract.Model, MyStalkersListContract.Model {
 

@@ -1,5 +1,4 @@
 package it.qbteam.stalkerapp.model.service;
-import android.os.AsyncTask;
 
 import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.LDAPConnection;
@@ -8,9 +7,7 @@ import com.unboundid.ldap.sdk.SearchResultEntry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
-import it.qbteam.stalkerapp.presenter.LDAPorganizationContract;
-import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
-
+import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
 
 public class StalkerLDAP implements LDAPorganizationContract.Model {
 

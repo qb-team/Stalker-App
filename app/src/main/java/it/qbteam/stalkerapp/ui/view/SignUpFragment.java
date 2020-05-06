@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.presenter.SignUpContract;
+import it.qbteam.stalkerapp.contract.SignUpContract;
 import it.qbteam.stalkerapp.presenter.SignUpPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;

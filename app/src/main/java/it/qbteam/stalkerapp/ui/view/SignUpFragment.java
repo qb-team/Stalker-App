@@ -57,6 +57,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         termsofUseButton.setOnClickListener(this);
         return view;
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -72,7 +73,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     //Controlla le credenziali inserite dall'utente nella vista della registrazione
     private void checkSignUpDetails() {
         if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())&&calculate(passwordEditText.getText().toString())){
-            controllSignUp(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            checkSignUp(emailEditText.getText().toString(), passwordEditText.getText().toString());
         }else{
             if(!calculate(passwordEditText.getText().toString()))
                 Toast.makeText(getContext(), "Inserire una password che comprenda: una lettera maiuscola e minuscola,un numero, un carattere speciale e una lunghezza minima di 6 caratteri", Toast.LENGTH_LONG).show();
@@ -85,7 +86,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     }
 
     //Controllo se l'utente ha spuntato il checkbox delle condizioni d'uso e avvia il metodo "signUp" nel Presenter
-    private void controllSignUp(String email, String password) {
+    private void checkSignUp(String email, String password) {
         if(termsofUseCheckBox.isChecked()) {
             progressDialog.show();
             signUpPresenter.signUp(this, email, password);

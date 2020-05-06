@@ -62,7 +62,7 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
     //Controlla le credenziali inserite dall'utente nella vista del Login
     private void checkLoginDetails() {
         if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())){
-            initLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            checkLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
         }else{
             if(TextUtils.isEmpty(emailEditText.getText().toString())){
                 emailEditText.setError("Inserisci una email valida");
@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
     }
 
     //Avvia il metodo del Login nel Presenter
-    private void initLogin(String email, String password) {
+    private void checkLogin(String email, String password) {
         mProgressDialog.show();
         loginPresenter.login(this, email, password);
     }

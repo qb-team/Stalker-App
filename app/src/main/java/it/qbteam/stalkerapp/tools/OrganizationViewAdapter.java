@@ -15,7 +15,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
     private  ArrayList<Organization> organizationList;
     private Context context;
-    private OrganizationListener OrganizationListener;
+    private OrganizationListener organizationListener;
 
     public interface OrganizationListener{
         void organizationClick(int position);
@@ -23,10 +23,10 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     }
 
 
-    public OrganizationViewAdapter(ArrayList<Organization> organizationList, Context context, OrganizationListener OrganizationListener){
+    public OrganizationViewAdapter(ArrayList<Organization> organizationList, Context context, OrganizationListener organizationListener){
         this.organizationList = organizationList;
         this.context=context;
-        this.OrganizationListener=OrganizationListener;
+        this.organizationListener=organizationListener;
     }
 
 
@@ -37,7 +37,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
                 .inflate(R.layout.organization_row,parent,false);
 
 
-        return new ViewHolder(v,OrganizationListener);
+        return new ViewHolder(v,organizationListener);
     }
 
     @Override
@@ -56,11 +56,11 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
         public TextView textNome;
 
-        OrganizationListener OrganizationListener;
+        OrganizationListener organizationListenerViewHolder;
 
-        public ViewHolder(@NonNull View itemView, OrganizationListener OrganizationListener) {
+        public ViewHolder(@NonNull View itemView, OrganizationListener organizationListenerViewHolder) {
             super(itemView);
-            this.OrganizationListener=OrganizationListener;
+            this.organizationListenerViewHolder=organizationListenerViewHolder;
             textNome = itemView.findViewById(R.id.textView2);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -68,12 +68,12 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
         @Override
         public void onClick(View v) {
-            OrganizationListener.organizationClick(getAdapterPosition());
+            organizationListenerViewHolder.organizationClick(getAdapterPosition());
         }
 
         @Override
         public boolean onLongClick(View v) {
-            OrganizationListener.organizationLongClick(getAdapterPosition());
+            organizationListenerViewHolder.organizationLongClick(getAdapterPosition());
             return true;
         }
     }

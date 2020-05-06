@@ -9,8 +9,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
 public class User {
-    String token;
-    String uid;
+    private String token;
+    private String uid;
     public User(String token, String uid) {
         this.token=token;
         this.uid=uid;

@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.validation.constraints.NotNull;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
@@ -46,12 +44,12 @@ public class REST {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                          System.out.println(response.code());
-                    }
 
-                             @Override
-                            public void onFailure(Call<Void> call, Throwable t) {
+                    }
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
                         System.out.println("Errore durante la rimozione dell'organizzazione");
-                }
+                    }
             });
 
     }

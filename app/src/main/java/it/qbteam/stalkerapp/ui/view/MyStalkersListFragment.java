@@ -28,7 +28,6 @@ import com.google.firebase.auth.FirebaseUser;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.service.REST;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
@@ -154,7 +153,18 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         try {
-                            removeOrganization(position);
+                            if (Storage.deserializeMovementInLocal()!=null&&organizationList.get(position).getId().equals(Storage.deserializeMovementInLocal().getOrganizationId())){
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setTitle("Condizioni di eliminazione organizzazione")
+                                        .setMessage("Attualmente sei tracciato in questa organizzazione, prima di eliminarla devi uscire dall'organizzazione")
+                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                            }
+                                        });
+                                builder.show();
+                            }
+                              else removeOrganization(position);
                         } catch (IOException | JSONException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -223,13 +233,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onFailureAddOrganization(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
-    //da migliorare, perchè se elimino una organizzazione mentro sono dentro e il gps mi sta tracciando, non mi dice che sono uscito
+    //da migliorare, perchè se elimino una organizzazione mentro sono dentro e il gps mi sta tracciando, non mi dice che sono uscito perche token sono diversi
     public void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
-        if (organizationList.get(position).getId().equals(Storage.deserializeMovementInLocal().getOrganizationId())) {
-            System.out.println("sono dentro all'if e cerco di eliminare ");
-            REST.performMovementREST(organizationList.get(position).getAuthenticationServerURL(),organizationList.get(position).getId(), user.getToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
-            Storage.deleteMovement();
-        }
+
         myStalkersListPresenter.removeOrganizationREST(organizationList.get(position), user.getUid(), user.getToken());
         myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
 
@@ -297,6 +303,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Metodo che fa iniziare il tracciamento sulle organizzaioni presenti dei preferiti
     public void startTracking() throws IOException {
+
         Storage.deleteMovement();
         mService.requestLocationUpdates();
     }
@@ -305,6 +312,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //Metodo che fa fermare il tracciamneto sulle organizzazioni presenti nei preferiti
     public void stopTracking() {
         mService.removeLocationUpdates();
+
     }
 
     @Override

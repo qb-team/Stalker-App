@@ -494,7 +494,6 @@ public class TrackingStalker extends Service {
 
                     if(Storage.deserializeMovementInLocal()==null){
 
-                        System.out.println("deserializzazione==null");
                         insideOrganization = latLngOrganizations.get(i);
                         REST.performMovementREST(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),1,null);
                         Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei dentro a" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
@@ -507,7 +506,6 @@ public class TrackingStalker extends Service {
 
                     if(Storage.deserializeMovementInLocal()!=null&&latLngOrganizations.get(i).getOrgID()==Storage.deserializeMovementInLocal().getOrganizationId()){
 
-                        System.out.println("deleteMovement deserializzazione!=null");
                         REST.performMovementREST(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
                         Storage.deleteMovement();
                         Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei uscito da" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();

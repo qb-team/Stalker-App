@@ -18,19 +18,19 @@ public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract
         mSignUpInteractor = new SignUpModel(this);
     }
 
-    //Metodo invocato dalla View per passare le credenziali al Model per registrare un nuovo utente
+    //Metodo invocato dalla View per passare le credenziali al Interactor per registrare un nuovo utente
     @Override
     public void signUp(Fragment fragment, String email, String password) {
         mSignUpInteractor.performFirebaseRegistration(fragment,email,password);
     }
 
-    //Metodo invocato nel Model tramite il Contract e chiama il metodo onRegistrationSuccess nella View
+    //Metodo invocato nel Interactor tramite il Contract e chiama il metodo onRegistrationSuccess nella View
     @Override
     public void onSuccess(FirebaseUser firebaseUser) {
         mSignUpView.onSignUpSuccess(firebaseUser);
     }
 
-    //Metodo invocato nel Model tramite il Contract e chiama il metodo onRegistrationFailure nella View
+    //Metodo invocato nel Interactor tramite il Contract e chiama il metodo onRegistrationFailure nella View
     @Override
     public void onFailure(FirebaseException e) {
         mSignUpView.onSignUpFailure(e);

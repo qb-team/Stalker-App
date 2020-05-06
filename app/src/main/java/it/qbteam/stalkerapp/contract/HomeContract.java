@@ -23,7 +23,7 @@ public interface HomeContract {
     }
 
     //interfaccia model
-    interface Model {
+    interface Interactor {
         ArrayList<Organization> performCheckFileLocal(String path);
         void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
     }

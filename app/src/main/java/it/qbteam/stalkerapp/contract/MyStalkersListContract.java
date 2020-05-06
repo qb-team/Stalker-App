@@ -17,7 +17,7 @@ public interface MyStalkersListContract {
 
     }
 
-    //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
+    //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Interactor DEL MODELLO
     interface Presenter {
         void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
         ArrayList<Organization> checkLocalFile(String path);
@@ -29,7 +29,7 @@ public interface MyStalkersListContract {
     }
 
     //METODO DEL MODELLO
-    interface Model {
+    interface Interactor {
         void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
         void performRemoveLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException, ClassNotFoundException;
         void performAddOrganizationLocal(Organization organization, ArrayList<Organization> list,String path) throws IOException, JSONException;

@@ -10,7 +10,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 //Modello di Registrati
-public class SignUpModel implements SignUpContract.Model {
+public class SignUpModel implements SignUpContract.Interactor {
     //private static final String TAG = UtenteRegistrazione.class.getSimpleName();
     private SignUpContract.onRegistrationListener mOnRegistrationListener;//
 

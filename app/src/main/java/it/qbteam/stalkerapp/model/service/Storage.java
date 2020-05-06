@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 
-public class Storage implements HomeContract.Model, MyStalkersListContract.Model {
+public class Storage implements HomeContract.Interactor, MyStalkersListContract.Interactor {
 
     HomeContract.HomeListener homeListener;
     MyStalkersListContract.MyStalkerListener myStalkerListener;

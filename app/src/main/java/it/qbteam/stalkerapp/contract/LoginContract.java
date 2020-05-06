@@ -15,12 +15,12 @@ public interface LoginContract {
     interface Presenter{
         void login(Fragment fragment, String email, String password);
     }
-    //Interfaccia del Model
-    interface Model{
+    //Interfaccia del Interactor
+    interface Interactor{
         void performFirebaseLogin(Fragment fragment, String email, String password);
     }
 
-    //Interfaccia che fa comunicare il Model con il Presenter
+    //Interfaccia che fa comunicare il Interactor con il Presenter
     interface onLoginListener{
         void onSuccess(String message);
         void onFailure(FirebaseException e);

@@ -10,7 +10,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 //Modello di Login
-public class LoginModel implements LoginContract.Model {
+public class LoginModel implements LoginContract.Interactor {
 
     private LoginContract.onLoginListener mOnLoginListener;
 

@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
 
-public class StalkerLDAP implements LDAPorganizationContract.Model {
+public class StalkerLDAP implements LDAPorganizationContract.Interactor {
 
         private LDAPorganizationContract.LDAPlistener ldaPlistener;
         private static final String TAG = "StalkerLDAP";

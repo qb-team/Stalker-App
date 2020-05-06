@@ -11,7 +11,7 @@ public interface LDAPorganizationContract {
         void onFailureLdap(String message);
     }
 
-    //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Model DEL MODELLO
+    //METODO DEL PRESENTER CHE VA A CHIAMARE IL METODO DELL' Interactor DEL MODELLO
     interface Presenter {
          void setLDAP(String host, int port, String bindDN, String password);
          void bind() throws InterruptedException, LDAPException, ExecutionException;
@@ -21,7 +21,7 @@ public interface LDAPorganizationContract {
     }
 
     //METODO DEL MODELLO
-    interface Model {
+    interface Interactor {
          void performBind() throws LDAPException, ExecutionException, InterruptedException;
          void performSearch() throws ExecutionException, InterruptedException;
 

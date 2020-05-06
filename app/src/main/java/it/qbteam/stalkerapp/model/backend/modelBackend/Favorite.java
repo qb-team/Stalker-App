@@ -11,7 +11,7 @@
  */
 
 
-package it.qbteam.stalkerapp.model.backend.model;
+package it.qbteam.stalkerapp.model.backend.modelBackend;
 
 import java.util.Objects;
 import com.google.gson.annotations.SerializedName;

@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,23 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-
 import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.REST;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
@@ -44,14 +38,13 @@ import it.qbteam.stalkerapp.presenter.MyStalkersListPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import it.qbteam.stalkerapp.tools.Utils;
-
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener, SharedPreferences.OnSharedPreferenceChangeListener {
+
 
     private MyStalkersListPresenter myStalkersListPresenter;
     private ArrayList<Organization> organizationList;
@@ -114,8 +107,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         myStalkersListPresenter = new MyStalkersListPresenter(this);
-
-
         return view;
     }
 
@@ -164,9 +155,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
                         try {
                             removeOrganization(position);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
+                        } catch (IOException | JSONException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
 
@@ -234,8 +223,13 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onFailureAddOrganization(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
-
-    public void removeOrganization(int position) throws IOException, JSONException {
+    //da migliorare, perchè se elimino una organizzazione mentro sono dentro e il gps mi sta tracciando, non mi dice che sono uscito
+    public void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
+        if (organizationList.get(position).getId().equals(Storage.deserializeMovementInLocal().getOrganizationId())) {
+            System.out.println("sono dentro all'if e cerco di eliminare ");
+            REST.performMovementREST(organizationList.get(position).getAuthenticationServerURL(),organizationList.get(position).getId(), user.getToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
+            Storage.deleteMovement();
+        }
         myStalkersListPresenter.removeOrganizationREST(organizationList.get(position), user.getUid(), user.getToken());
         myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
 
@@ -302,19 +296,10 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //Metodo che fa iniziare il tracciamento sulle organizzaioni presenti dei preferiti
-    public void startTracking() throws IOException, ClassNotFoundException {
-        //createListOrganization();
+    public void startTracking() throws IOException {
         Storage.deleteMovement();
         mService.requestLocationUpdates();
     }
-
-   /* private void createListOrganization() {
-        try {
-            mService.createOrganizationArrayList(myStalkersListPresenter.checkLocalFile(path));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }*/
 
 
     //Metodo che fa fermare il tracciamneto sulle organizzazioni presenti nei preferiti

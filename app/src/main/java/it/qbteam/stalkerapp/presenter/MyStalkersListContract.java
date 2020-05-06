@@ -1,13 +1,11 @@
 package it.qbteam.stalkerapp.presenter;
 
-import androidx.fragment.app.Fragment;
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
 
 
 public interface MyStalkersListContract {
@@ -28,14 +26,14 @@ public interface MyStalkersListContract {
         void addOrganizationLocal(Organization organization , ArrayList<Organization> list, String path) throws IOException, JSONException;
         void addOrganizationREST(Organization organization, String UID, String userToken) throws IOException, JSONException;
         void removeOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException;
-        void removeOrganizationREST(Organization organization,String UID, String userToken);
+        void removeOrganizationREST(Organization organization,String UID, String userToken) throws IOException, ClassNotFoundException;
         void downloadListREST(String UID, String userToken);
     }
 
     //METODO DEL MODELLO
     interface Model {
         void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
-        void performRemoveLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException;
+        void performRemoveLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException, ClassNotFoundException;
         void performAddOrganizationLocal(Organization organization, ArrayList<Organization> list,String path) throws IOException, JSONException;
     }
 

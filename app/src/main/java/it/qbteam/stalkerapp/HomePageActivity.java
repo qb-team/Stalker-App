@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -39,12 +37,9 @@ import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.ui.AppBarConfiguration;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import it.qbteam.stalkerapp.model.backend.model.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
@@ -54,28 +49,20 @@ import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    // Used in checking for runtime permissions.
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static HomePageActivity instance = null;
-    // The BroadcastReceiver used to listen from broadcasts from the service.
-    static boolean active=false;
     private SwitchCompat switcher;
-    private Location mlocation;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
-    private FirebaseUser firebaseUser;
-    private  AppBarConfiguration mAppBarConfiguration;
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
     private static String userEmail;
     private User user;
-    private ArrayList<Organization> myStalkerList;
-    // Monitors the state of the connection to the service.
     @Override
     protected void onStart() {
         super.onStart();
-
     }
+
     public static HomePageActivity getInstance() {
         return instance;
     }
@@ -147,21 +134,18 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 if(switcher.isChecked()){
                     if (!checkPermissions()) {
                         requestPermissions();
-                    } else
-                        //.requestLocationUpdates();
-                    {
+                    }
+                    else {
                         try {
                             MyStalkersListFragment.getInstance().startTracking();
                         } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
                     }
                 }
                 else{
-                    //mService.removeLocationUpdates();
                     MyStalkersListFragment.getInstance().stopTracking();
+
                 }
             }
         });
@@ -292,8 +276,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     MyStalkersListFragment.getInstance().startTracking();
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+
                 }
             } else {
                 // Permission denied.
@@ -339,7 +322,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         } else {
                             try {
                                 MyStalkersListFragment.getInstance().startTracking();
-                            } catch (IOException | ClassNotFoundException e) {
+                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -365,10 +348,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
-
-    public  String getUID(){
-        return user.getUid();
-    }
     public  String getuserToken(){
         return user.getToken();
     }

@@ -1,9 +1,7 @@
 package it.qbteam.stalkerapp.ui.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,8 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import org.json.JSONException;
 import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.presenter.HomeContract;
@@ -151,9 +148,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
         //downloadButton.setVisibility(View.VISIBLE);
     }
-//Click listener
+    //Click listener
     @Override
     public void organizationClick(int position) {
+
             Bundle bundle=new Bundle();
             bundle.putString("name", organizationList.get(position).getName());
             bundle.putString("description", organizationList.get(position).getDescription());

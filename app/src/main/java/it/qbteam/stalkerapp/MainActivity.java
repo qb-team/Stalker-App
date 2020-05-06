@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {// Inizializzazione dei comandi supportati da Firebase
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         fragmentManager=getSupportFragmentManager();

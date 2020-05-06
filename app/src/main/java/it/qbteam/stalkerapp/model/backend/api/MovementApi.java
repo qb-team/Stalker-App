@@ -1,13 +1,11 @@
 package it.qbteam.stalkerapp.model.backend.api;
 
-import it.qbteam.stalkerapp.model.backend.CollectionFormats.*;
-
 
 import retrofit2.Call;
 import retrofit2.http.*;
 
-import it.qbteam.stalkerapp.model.backend.model.OrganizationMovement;
-import it.qbteam.stalkerapp.model.backend.model.PlaceMovement;
+import it.qbteam.stalkerapp.model.backend.modelBackend.OrganizationMovement;
+import it.qbteam.stalkerapp.model.backend.modelBackend.PlaceMovement;
 
 public interface MovementApi {
   /**

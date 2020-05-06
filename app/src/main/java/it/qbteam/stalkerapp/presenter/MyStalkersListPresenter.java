@@ -2,7 +2,7 @@ package it.qbteam.stalkerapp.presenter;
 
 import org.json.JSONException;
 
-import it.qbteam.stalkerapp.model.backend.model.Organization;
+import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
 import it.qbteam.stalkerapp.model.service.REST;
 import it.qbteam.stalkerapp.model.service.Storage;
 
@@ -59,7 +59,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     }
 
     @Override
-    public void removeOrganizationREST(Organization organization, String UID, String userToken) {
+    public void removeOrganizationREST(Organization organization, String UID, String userToken) throws IOException, ClassNotFoundException {
         rest.performRemoveOrganizationREST(organization, UID,userToken);
     }
 

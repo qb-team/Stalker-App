@@ -17,10 +17,10 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
      * Create pager adapter
 
      * @param resources
-     * @param fragmentManagerm
+     * @param fragmentManager
      */
-    public TabViewPagerAdapter(final Resources resources, FragmentManager fragmentManagerm) {
-        super(fragmentManagerm);
+    public TabViewPagerAdapter(final Resources resources, FragmentManager fragmentManager) {
+        super(fragmentManager);
         this.resources = resources;
     }
 

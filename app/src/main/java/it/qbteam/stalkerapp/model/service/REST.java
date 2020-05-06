@@ -2,22 +2,20 @@ package it.qbteam.stalkerapp.model.service;
 
 import org.json.JSONException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
 import it.qbteam.stalkerapp.model.backend.api.MovementApi;
 import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
-import it.qbteam.stalkerapp.model.backend.model.Favorite;
-import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.backend.model.OrganizationMovement;
-import it.qbteam.stalkerapp.model.backend.model.PlaceMovement;
-import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.backend.modelBackend.Favorite;
+import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.modelBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.presenter.HomeContract;
 import it.qbteam.stalkerapp.presenter.MyStalkersListContract;
 import retrofit2.Call;
@@ -48,7 +46,7 @@ public class REST {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                          System.out.println(response.code());
-                            }
+                    }
 
                              @Override
                             public void onFailure(Call<Void> call, Throwable t) {

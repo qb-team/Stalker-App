@@ -13,16 +13,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.presenter.SignUpContract;
 import it.qbteam.stalkerapp.presenter.SignUpPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;

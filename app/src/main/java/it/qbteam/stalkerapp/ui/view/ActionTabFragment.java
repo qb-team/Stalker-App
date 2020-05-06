@@ -30,7 +30,6 @@ public class ActionTabFragment extends Fragment {
     protected TabLayout tabLayout;
     protected ViewPager viewPager;
     private TabViewPagerAdapter adapter;
-    private  User user;
     private static ActionTabFragment instance = null;
 
     public ActionTabFragment() {

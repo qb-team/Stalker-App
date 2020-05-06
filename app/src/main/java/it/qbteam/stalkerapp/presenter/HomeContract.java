@@ -2,8 +2,7 @@ package it.qbteam.stalkerapp.presenter;
 
 import org.json.JSONException;
 
-import it.qbteam.stalkerapp.model.backend.model.Organization;
-import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.backend.modelBackend.Organization;
 
 import java.io.IOException;
 import java.util.ArrayList;

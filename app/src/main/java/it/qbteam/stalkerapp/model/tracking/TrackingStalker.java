@@ -220,10 +220,8 @@ public class TrackingStalker extends Service {
             case 0:
                 mLocationRequest = new LocationRequest();
                 System.out.println("Massima accuretazza");
-                // mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-                // mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-                mLocationRequest.setInterval(10000);
-                mLocationRequest.setFastestInterval(10000);
+                mLocationRequest.setInterval(5000);
+                mLocationRequest.setFastestInterval(2500);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                 // mLocationRequest.setSmallestDisplacement(2);
                 break;

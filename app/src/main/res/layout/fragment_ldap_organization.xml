@@ -64,6 +64,7 @@
                 android:gravity="center_horizontal"
                 android:text="Sei dentro"
                 android:textAlignment="center"
+                android:visibility="invisible"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 

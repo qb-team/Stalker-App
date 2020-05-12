@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.tools.TabViewPagerAdapter;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
@@ -46,13 +47,14 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static HomePageActivity instance = null;
+    private static User user;
     private SwitchCompat switcher;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
     private static String userEmail;
-    private User user;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -198,9 +200,9 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 startActivity(intent);
                 break;
             case R.id.alphabeticalOrderID:
-                    HomeFragment.getInstance().alphabeticalOrder();
+                HomeFragment mHomeFragment = new HomeFragment();
+                mHomeFragment.alphabeticalOrder();
                 break;
-
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -212,10 +214,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         startActivity(intent);
     }
 
-    /** ACCETTAZIONE PERMESSI */
-    /**
-     * Returns the current state of the permissions needed.
-     */
+
     private boolean checkPermissions() {
         return  PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -343,7 +342,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
-    public  String getuserToken(){
+    public static String getuserToken(){
         return user.getToken();
     }
 

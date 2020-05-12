@@ -17,38 +17,34 @@ public class ActionTabFragment extends Fragment {
     protected TabLayout tabLayout;
     protected ViewPager viewPager;
     private TabViewPagerAdapter adapter;
-    private static ActionTabFragment instance = null;
 
     public ActionTabFragment() {
-        // Required empty public constructor
+        // Required empty public constructor.
     }
+
+    //Creation of the fragment as a component.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        instance=this;
-
     }
-    public static ActionTabFragment getInstance() {
-        return instance;
-    }
+
+    //Creation of the graphic part displayed by the user.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_action_tab, container, false);
-
         tabLayout = (TabLayout) view.findViewById(R.id.tabID);
         viewPager = (ViewPager) view.findViewById(R.id.viewpagerID);
-        //setHasOptionsMenu(true);
         return view;
     }
 
+    //Indicates that the creation of the activity has been completed.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Note that we are passing childFragmentManager, not FragmentManager
+        // Note that we are passing childFragmentManager, not FragmentManager.
         adapter = new TabViewPagerAdapter(getResources(),getChildFragmentManager());
         //add fragment
         adapter.addFragment(new HomeFragment(),"");
@@ -63,14 +59,9 @@ public class ActionTabFragment extends Fragment {
 
         // Fixed tabs display all tabs concurrently
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
-
     }
 
-    /**
-     * Retrieve the currently visible Tab Fragment and propagate the onBackPressed callback
-     *
-     * @return true = if this fragment and/or one of its associates Fragment can handle the backPress
-     */
+    //Management of the back button.
     public boolean onBackPressed() {
         // currently visible tab Fragment
         OnBackPressListener currentFragment = (OnBackPressListener) adapter.getItem(viewPager.getCurrentItem());
@@ -82,7 +73,4 @@ public class ActionTabFragment extends Fragment {
         // this Fragment couldn't handle the onBackPressed call
         return false;
     }
-
-
-
 }

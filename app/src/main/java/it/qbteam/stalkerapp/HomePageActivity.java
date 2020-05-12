@@ -36,7 +36,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.tools.TabViewPagerAdapter;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
@@ -345,7 +344,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     }
 
     //Returns user's token.
-    public String getUserToken(){
+    public static String getUserToken(){
         return user.getToken();
     }
 

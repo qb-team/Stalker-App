@@ -82,7 +82,6 @@ public class TrackingStalker extends Service {
     private boolean insideOrganizationBoolean = false;
     private boolean insidePlaceBoolean = false;
     private ArrayList<Organization> inOrganization;
-    private HomePageActivity homePageActivity;
     /**
      * Switch per aggiornare il Locationrequest
      * 0 -> Massima accuretazza
@@ -160,7 +159,6 @@ public class TrackingStalker extends Service {
     public void onCreate() {
         System.out.println("User Tracking");
         inOrganization=new ArrayList<>();
-        homePageActivity= new HomePageActivity();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);  // Instanzazione FusedLocationProviderClient
 
         /** Creazione del CallBack
@@ -494,7 +492,7 @@ public class TrackingStalker extends Service {
 
                        // isInsidePlace();
                         insideOrganization = latLngOrganizations.get(i);
-                        Server.performMovementServer(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),homePageActivity.getUserToken(),1,null);
+                        Server.performMovementServer(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getUserToken(),1,null);
                         Toast.makeText(getApplicationContext(), "Sei dentro a" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
 
                     }
@@ -505,7 +503,7 @@ public class TrackingStalker extends Service {
 
                     if(Storage.deserializeMovementInLocal()!=null&&latLngOrganizations.get(i).getOrgID()==Storage.deserializeMovementInLocal().getOrganizationId()){
 
-                        Server.performMovementServer(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),homePageActivity.getUserToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
+                        Server.performMovementServer(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getUserToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
                         Storage.deleteMovement();
                         Toast.makeText(getApplicationContext(), "Sei uscito da" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
 

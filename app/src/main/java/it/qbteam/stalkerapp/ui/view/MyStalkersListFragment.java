@@ -297,7 +297,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 
         if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
-            HomePageActivity.getInstance().setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
+            HomePageActivity homePageActivity= new HomePageActivity();
+            homePageActivity.setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
                     false));
         }
 

@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
     //SCARICA LA LISTA DAL SERVER E LA SALVA IN FILE LOCALE
     public void downloadList() {
-        OrganizationListPresenter.downloadHomeListRest(path,HomePageActivity.getInstance().getuserToken());
+        OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getInstance().getuserToken());
     }
 
     //Risposta positiva al download della lista delle organizzazioni dal server
@@ -244,6 +244,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         searchView.setOnQueryTextListener(this);
         super.onPrepareOptionsMenu(menu);
     }
+
     // SearchView.OnQueryTextListener
     @Override
     public boolean onQueryTextSubmit(String query) {

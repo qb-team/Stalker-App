@@ -84,7 +84,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             user = new User(task.getResult().getToken(), FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            System.out.println("TOKEN CREATO:" + task.getResult().getToken() + "UID CREATO:" + FirebaseAuth.getInstance().getCurrentUser().getUid());
                             loadMyStalkerList(user.getUid(), user.getToken());
                         } else {
                             // Handle error -> task.getException();
@@ -207,7 +206,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //Add the organization received as input to both the FileSystem and the Server.
     public void addOrganization(Organization organization) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
-        myStalkersListPresenter.addOrganizationREST(organization, user.getUid(), user.getToken());
+        myStalkersListPresenter.addOrganizationServer(organization, user.getUid(), user.getToken());
     }
 
     //Notifies the user of the success of the organization's add operation.
@@ -227,7 +226,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Removes an organization from both the FileSystem and the Server.
     public void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
-        myStalkersListPresenter.removeOrganizationREST(organizationList.get(position), user.getUid(), user.getToken());
+        myStalkersListPresenter.removeOrganizationServer(organizationList.get(position), user.getUid(), user.getToken());
         myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
     }
 
@@ -241,7 +240,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Downloads from the Server the list of organizations previously added by the user.
     public void loadMyStalkerList(String UID, String userToken) {
-        myStalkersListPresenter.downloadListREST(UID, userToken);
+        myStalkersListPresenter.downloadListServer(UID, userToken);
     }
 
     //Keeps track of any changes made by the user of his list of organizations in the `MyStalkerListFragment` view.

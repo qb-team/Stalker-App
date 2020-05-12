@@ -11,28 +11,25 @@ import com.google.firebase.auth.FirebaseAuth;
 
 //Modello di Registrati
 public class SignUpModel implements SignUpContract.Interactor {
-    //private static final String TAG = UtenteRegistrazione.class.getSimpleName();
+
     private SignUpContract.onRegistrationListener mOnRegistrationListener;//
 
-    //Costruttore
+    //SignUpModel costructor.
     public SignUpModel(SignUpContract.onRegistrationListener onRegistrationListener){
         this.mOnRegistrationListener = onRegistrationListener;
     }
 
-    //Metodo (di Firebase) che permette di effettuare la registrazione sul server Firebase
+    //Firebase's method that allows the user sign up to Stalker application(in Firebase server).
     @Override
     public void performFirebaseRegistration(Fragment fragment, String email, String password) {
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            .addOnCompleteListener(task -> {
                 if(!task.isSuccessful()){
                     mOnRegistrationListener.onFailure((FirebaseException) task.getException());
                 }else{
                     mOnRegistrationListener.onSuccess(task.getResult().getUser());
                 }
-            }
-        });
+            });
     }
 }

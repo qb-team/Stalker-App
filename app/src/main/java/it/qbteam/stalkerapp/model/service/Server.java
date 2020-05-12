@@ -19,17 +19,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class REST {
+public class Server {
 
     MyStalkersListContract.MyStalkerListener myStalkerListener;
     HomeContract.HomeListener homeListener;
 
-    public REST(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
+    public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
         this.myStalkerListener = myStalkerListener;
-        this.homeListener=homeListener;
+        this.homeListener = homeListener;
     }
 
-    public void performRemoveOrganizationREST(Organization organization, String UID, String userToken) {
+    //Removes the organization from the user's favorite organization list.
+    public void performRemoveOrganizationServer(Organization organization, String UID, String userToken) {
 
                     Favorite favoriteUpload = new Favorite();
                     favoriteUpload.setUserId(UID);
@@ -53,7 +54,8 @@ public class REST {
 
     }
 
-    public void performLoadListREST(String UID, String userToken) {
+    //Gets the list of favorite organizations of a user.
+    public void performLoadListServer(String UID, String userToken) {
 
                 Favorite favoriteDownload = new Favorite();
                 favoriteDownload.setUserId(UID);
@@ -72,7 +74,6 @@ public class REST {
                         }
                         System.out.println("RISPOSTA LOAD: " + response.code());
                     }
-
                     @Override
                     public void onFailure(Call<List<Organization>> call, Throwable t) {
                         System.out.println("ERRORE LOAD");
@@ -80,7 +81,8 @@ public class REST {
                 });
     }
 
-    public void performAddOrganizationREST(Organization organization, String UID, String userToken) {
+    //Adds a new organization to the user's favorite organization list.
+    public void performAddOrganizationServer(Organization organization, String UID, String userToken) {
 
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(UID);
@@ -95,7 +97,6 @@ public class REST {
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
                 System.out.println(response.code());
             }
-
             @Override
             public void onFailure(Call<Favorite> call, Throwable t) {
                 System.out.println("Errore durante l'aggiunta dell'organizzazione");
@@ -104,34 +105,30 @@ public class REST {
 
     }
 
-    public static void performMovementREST(String authServerID,long orgID,String userToken,int type,String exitToken) {
+    //Tracks the user movement inside the trackingArea of an organization.
+    public static void performMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken) {
 
-        OrganizationMovement movementUpload= new OrganizationMovement();
+        OrganizationMovement movementUpload = new OrganizationMovement();
         movementUpload.setMovementType(type);
         OffsetDateTime dateTime= OffsetDateTime.now();
         movementUpload.setTimestamp(dateTime);
         movementUpload.setOrganizationId(orgID);
-        if(authServerID!=null)
-        movementUpload.setOrgAuthServerId(authServerID);
-        if(type==-1)
+        if(authServerID != null)
+            movementUpload.setOrgAuthServerId(authServerID);
+        if(type == -1)
             movementUpload.setExitToken(exitToken);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         MovementApi service = ac.createService(MovementApi.class);
-        Call<OrganizationMovement> movement= service.trackMovementInOrganization(movementUpload);
+        Call<OrganizationMovement> movement = service.trackMovementInOrganization(movementUpload);
         movement.enqueue(new Callback<OrganizationMovement>() {
                 @Override
                 public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
                     try {
                         if(type==1){
-
                             movementUpload.setExitToken(response.body().getExitToken());
-                            //Serializzo oggetto movement con il suo exit token
-                              Storage.serializeMovementInLocal(movementUpload);
-
-
+                            Storage.serializeMovementInLocal(movementUpload);
                         }
-
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -145,9 +142,10 @@ public class REST {
 
     }
 
-    public void performDownloadFileREST(String path, String userToken)  {
+    //Returns the list of all organizations.
+    public void performDownloadFileServer(String path, String userToken)  {
 
-        ArrayList<Organization> returnList=new ArrayList<>();
+        ArrayList<Organization> returnList = new ArrayList<>();
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         OrganizationApi service = ac.createService(OrganizationApi.class);
         Call<List<Organization>> orgList = service.getOrganizationList();
@@ -155,7 +153,7 @@ public class REST {
             @Override
             public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
 
-                for(int i=0;i<response.body().size();i++){
+                for(int i=0; i<response.body().size(); i++){
                     Organization o =new Organization();
                     o.setName(response.body().get(i).getName());
                     o.setCity(response.body().get(i).getCity());
@@ -176,7 +174,7 @@ public class REST {
                 }
 
                 try {
-                    Storage save=new Storage(null,null);
+                    Storage save = new Storage(null,null);
                     save.performUpdateFile(returnList,path);
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -52,7 +52,7 @@ import java.util.ArrayList;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
-import it.qbteam.stalkerapp.model.service.REST;
+import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
@@ -491,7 +491,7 @@ public class TrackingStalker extends Service {
                     if(Storage.deserializeMovementInLocal()==null){
 
                         insideOrganization = latLngOrganizations.get(i);
-                        REST.performMovementREST(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),1,null);
+                        Server.performMovementServer(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),1,null);
                         Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei dentro a" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
 
                     }
@@ -502,7 +502,7 @@ public class TrackingStalker extends Service {
 
                     if(Storage.deserializeMovementInLocal()!=null&&latLngOrganizations.get(i).getOrgID()==Storage.deserializeMovementInLocal().getOrganizationId()){
 
-                        REST.performMovementREST(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
+                        Server.performMovementServer(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
                         Storage.deleteMovement();
                         Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei uscito da" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
 
@@ -567,7 +567,7 @@ public class TrackingStalker extends Service {
 
 
     private boolean isInsidePlace(Location location) {
-//        ArrayList<> luoghiorganizzazione = new ArrayList()<> ; // --> Creazione arraylist di luoghi all'interno dell'organizzazione
+    // ArrayList<> luoghiorganizzazione = new ArrayList()<> ; // --> Creazione arraylist di luoghi all'interno dell'organizzazione
         // Costruzione Builder
         return false;
     }

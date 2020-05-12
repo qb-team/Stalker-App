@@ -14,27 +14,24 @@ public class LoginModel implements LoginContract.Interactor {
 
     private LoginContract.onLoginListener mOnLoginListener;
 
-    //Costruttore
+    //LoginModel costructor.
     public LoginModel(LoginContract.onLoginListener onLoginListener){
         this.mOnLoginListener=onLoginListener;
     }
 
-    //Metodo (di Firebase) che permette di effettuare il login sul server Firebase
+    //Firebase's method that allows the user login to Stalker application(in Firebase server).
     @Override
     public void performFirebaseLogin(Fragment activity, String email, String password) {
         FirebaseAuth.getInstance()
             .signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
 
-                            mOnLoginListener.onSuccess(task.getResult().toString());
+                        mOnLoginListener.onSuccess(task.getResult().toString());
 
-                        }
-                        else {
-                            mOnLoginListener.onFailure((FirebaseException) task.getException());
-                        }
+                    }
+                    else {
+                        mOnLoginListener.onFailure((FirebaseException) task.getException());
                     }
                 });
     }

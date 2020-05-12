@@ -20,21 +20,20 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
         private String serverAddress;
         private int serverPort;
         private SearchResultEntry entry;
-        private static StalkerLDAP instance = null;
 
         public StalkerLDAP(String serverAddress, int port, String binDn, String password,LDAPorganizationContract.LDAPlistener ldaPlistener) {
             this.serverAddress = serverAddress;
             this.serverPort = port;
             this.bindDN = binDn;
             this.bindPassword = password;
-            this.ldaPlistener=ldaPlistener;
-            this.instance=this;
+            this.ldaPlistener = ldaPlistener;
+
 
         }
-        public static StalkerLDAP getInstance() {
-        return instance;
-    }
 
+        //Uses to authenticate clients to the directory server,
+        //to establish an authorization identity that will be used for subsequent operations processed on that connection,
+        //and to specify the LDAP protocol version that the client will use.
         @Override
         public void performBind() throws LDAPException, ExecutionException, InterruptedException {
             this.connection = new LDAPConnection(serverAddress, serverPort);
@@ -51,6 +50,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
 
         }
 
+        //Uses to retrieve partial or complete copies of entries matching a given set of criteria.
         @Override
         public void performSearch() throws ExecutionException, InterruptedException {
             FutureTask<SearchResultEntry> searchFutureTask = new FutureTask<>(new Callable<SearchResultEntry>() {
@@ -70,19 +70,4 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
         }
 
 
-        public String getUid() {
-            return entry.getAttributeValue("uid");
-
-        }
-        public String getUidNumber() {
-            return entry.getAttributeValue("uidNumber");
-        }
-
-        public SearchResultEntry getSearchResultEntry(){
-            return entry;
-        }
-
-        public BindResult getResult(){
-            return (BindResult) this.result;
-        }
     }

@@ -27,18 +27,18 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     MyStalkersListContract.MyStalkerListener myStalkerListener;
 
     public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener){
-         this.homeListener=homeListener;
-         this.myStalkerListener=myStalkerListener;
+         this.homeListener = homeListener;
+         this.myStalkerListener = myStalkerListener;
     }
 
-
+    //Checks if the list of organizations already exists in local file.
     @Override
     public ArrayList<Organization> performCheckFileLocal(String path) {
 
         ArrayList<Organization> aux = new ArrayList<>();
         File organizationFile = new File(path);
         if(organizationFile.length()==0 || !organizationFile.exists()) {
-            if(homeListener!=null)
+            if(homeListener != null)
                  homeListener.onFailureCheck("La lista è ancora vuota, scaricala!");
         }
         else {
@@ -51,7 +51,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                 JSONObject jsonObject = new JSONObject(s);
                 JSONArray jsonArray = (JSONArray) jsonObject.get("organisationList");
 
-                for(int i=0;i<jsonArray.length();i++){
+                for(int i=0; i<jsonArray.length(); i++){
                     JSONObject jsonObj= jsonArray.getJSONObject(i);
                     String name= jsonObj.getString("name");
                     String description=jsonObj.getString("description");
@@ -82,17 +82,19 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                     aux.add(organization);
                 }
 
-        } catch (JSONException | IOException e) {
+            }
+            catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
         }
         return aux;
     }
 
+    //Removes an organization from the local file and update the local file.
     @Override
     public void performRemoveLocal(Organization organization, ArrayList<Organization>list, String path) throws IOException, JSONException {
-        boolean trovato=false;
-        for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext(); ) {
+        boolean trovato = false;
+        for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
             Organization o = iterator.next();
             if (o.getName().equals(organization.getName())) {
                 iterator.remove();
@@ -107,32 +109,39 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     }
 
+    //Adds an organization to the list of organizations and update the local file.
     @Override
     public void performAddOrganizationLocal(Organization organization, ArrayList<Organization> list,String path) throws IOException, JSONException {
         boolean trovato = false;
-        if(list!=null){
-        for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
-            Organization o = iterator.next();
-            if (o.getName().equals(organization.getName())) {
-                trovato = true;
+        if(list != null){
+            for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
+                    Organization o = iterator.next();
+
+                    if (o.getName().equals(organization.getName())) {
+                        trovato = true;
+                    }
+            }
+
+            if(trovato){
+                myStalkerListener.onFailureAdd("Organizzazione già presente in MyStalkers");
+            }
+
+            else {
+                list.add(organization);
+                performUpdateFile(list,path);
+                myStalkerListener.onSuccessAdd(list,"Hai aggiunto l'organizzazione a MyStalkers");
             }
         }
-        if(trovato){
-            myStalkerListener.onFailureAdd("Organizzazione già presente in MyStalkers");
-        }
-        else {
-            list.add(organization);
-            performUpdateFile(list,path);
-            myStalkerListener.onSuccessAdd(list,"Hai aggiunto l'organizzazione a MyStalkers");
-        }}
+
         else{
-            list=new ArrayList<>();
+            list = new ArrayList<>();
             list.add(organization);
             performUpdateFile(list,path);
             myStalkerListener.onSuccessAdd(list,"Hai aggiunto l'organizzazione a MyStalkers");
         }
     }
 
+    //Updates the list of organizations in the local file.
     public void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
 
     JSONArray ja = new JSONArray();
@@ -166,14 +175,13 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             w.close();
     }
 
-
+    //Serializes the object OrganizationMovement in a local file.
     public static void serializeMovementInLocal(OrganizationMovement organizationMovement) throws IOException {
 
         //Saving of OrganizationMovement in a file
         File toWrite = new File("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
         FileOutputStream fos=new FileOutputStream(toWrite);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
-
         // Method for serialization of OrganizationMovement
         oos.writeObject(organizationMovement);
         oos.flush();
@@ -181,6 +189,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fos.close();
 
     }
+    //Deserializes the object OrganizationMovement from a local file.
     public static OrganizationMovement deserializeMovementInLocal() throws IOException, ClassNotFoundException {
 
         OrganizationMovement organizationMovement= new OrganizationMovement();
@@ -195,6 +204,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     }
 
+    //Deletes the current object OrganizationMovement serialized in a local file.
     public static void deleteMovement() throws IOException {
 
         OrganizationMovement organizationMovement=null;
@@ -202,7 +212,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
         FileOutputStream fos=new FileOutputStream(toDelete);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
-        //sovvrascivo con OrganizationMovement null==delete
+        //write the object OrganizationMovement null==delete
         oos.writeObject(organizationMovement);
         oos.flush();
         oos.close();

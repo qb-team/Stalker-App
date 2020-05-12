@@ -83,7 +83,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                         if (task.isSuccessful()) {
 
                             user = new User(task.getResult().getToken(), FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            System.out.println("TOKEN CREATO:" + task.getResult().getToken() + "UID CREATO:" + FirebaseAuth.getInstance().getCurrentUser().getUid());
                             loadMyStalkerList(user.getUid(), user.getToken());
                         } else {
                             // Handle error -> task.getException();
@@ -216,7 +215,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     public void addOrganization(Organization organization) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
-        myStalkersListPresenter.addOrganizationREST(organization, user.getUid(), user.getToken());
+        myStalkersListPresenter.addOrganizationServer(organization, user.getUid(), user.getToken());
     }
 
     //Organizzazione aggiunta correttamente ai preferiti
@@ -236,7 +235,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //da migliorare, perchè se elimino una organizzazione mentro sono dentro e il gps mi sta tracciando, non mi dice che sono uscito perche token sono diversi
     public void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
 
-        myStalkersListPresenter.removeOrganizationREST(organizationList.get(position), user.getUid(), user.getToken());
+        myStalkersListPresenter.removeOrganizationServer(organizationList.get(position), user.getUid(), user.getToken());
         myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
 
     }
@@ -251,7 +250,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     public void loadMyStalkerList(String UID, String userToken) {
 
-        myStalkersListPresenter.downloadListREST(UID, userToken);
+        myStalkersListPresenter.downloadListServer(UID, userToken);
     }
     //Viene usato dal StalkerTracker per verificare se la lista è aggiornata oppure no
      public ArrayList<Organization> checkForUpdate(){

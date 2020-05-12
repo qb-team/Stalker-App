@@ -32,6 +32,7 @@ import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
 public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener, LDAPorganizationContract.View {
+
     private TextView title,description,positionTextView;
     private Button authentication;
     private ImageView mImageView;
@@ -41,131 +42,131 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     private OffsetDateTime creationDate;
     private String serverURL;
     private EditText userNameLDAP, passwordLDAP;
-    private LDAPorganizationPresenter ldaPorganizationPresenter;
+    private LDAPorganizationPresenter ldapOrganizationPresenter;
     Dialog myDialog;
 
 
     public LDAPorganizationFragment() {
-        // Required empty public constructor
+        // Required empty public constructor.
     }
+
+    //Creation of the fragment as a component.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-
     }
 
+    //Set invisible menu item.
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.searchID).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 
-
-
+    //Creation of the graphic part displayed by the user.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_ldap_organization, container, false);
-        Bundle bundle=this.getArguments();
-        title=view.findViewById(R.id.titleID);
+        View view = inflater.inflate(R.layout.fragment_ldap_organization, container, false);
+        Bundle bundle = this.getArguments();
+        title = view.findViewById(R.id.titleID);
         title.setText(bundle.getString("name"));
-        description=view.findViewById(R.id.descriptionID);
+        description = view.findViewById(R.id.descriptionID);
         description.setText(bundle.getString("description"));
-        positionTextView=view.findViewById(R.id.positionID);
-        authentication=view.findViewById(R.id.LDAPaccessID);
-        mImageView=view.findViewById(R.id.imageID);
-        orgID=bundle.getLong("orgID");
+        positionTextView = view.findViewById(R.id.positionID);
+        authentication = view.findViewById(R.id.LDAPaccessID);
+        mImageView = view.findViewById(R.id.imageID);
+        orgID = bundle.getLong("orgID");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         creationDate = OffsetDateTime.parse(bundle.getString("creationDate"), dateTimeFormatter);
-        serverURL=bundle.getString("serverURL");
-        anonimousSwitch=view.findViewById(R.id.switchAnonimousID);
+        serverURL = bundle.getString("serverURL");
+        anonimousSwitch = view.findViewById(R.id.switchAnonimousID);
         anonimousSwitch.setVisibility(View.INVISIBLE);
-        trackingTextView=view.findViewById(R.id.trackingTextID);
+        trackingTextView = view.findViewById(R.id.trackingTextID);
         trackingTextView.setVisibility(View.INVISIBLE);
-        ldaPorganizationPresenter=new LDAPorganizationPresenter(this);
+        ldapOrganizationPresenter = new LDAPorganizationPresenter(this);
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
 
         return view;
-
     }
 
-
+    //Management of the back button.
     @Override
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();
     }
 
+    //Authentication Button in the LDAP Organization.
     @Override
     public void onClick(View v) {
-        myDialog=new Dialog(getContext());
+        myDialog = new Dialog(getContext());
         myDialog.setContentView(R.layout.dialog_ldap_access);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        EditText userName= myDialog.findViewById(R.id.userNameID);
-        EditText password= myDialog.findViewById(R.id.passwordID);
-        Button annull= myDialog.findViewById(R.id.annulID);
+        EditText userName = myDialog.findViewById(R.id.userNameID);
+        EditText password = myDialog.findViewById(R.id.passwordID);
+        Button annul= myDialog.findViewById(R.id.annulID);
         Button access= myDialog.findViewById(R.id.accessID);
         myDialog.show();
-        annull.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+        //That is the annul button of the pop-up.
+        annul.setOnClickListener(v12 -> myDialog.dismiss());
 
-                myDialog.dismiss();
+        //That is the access button of the pop-up.
+        access.setOnClickListener(v1 -> {
+            userNameLDAP = myDialog.findViewById(R.id.userNameID);
+            passwordLDAP = myDialog.findViewById(R.id.passwordID);
+
+            //Try to connect of the LDAP server and it sends the credentials to the model (to the presenter).
+            ldapOrganizationPresenter.setLDAP("2.234.128.81",389, userNameLDAP.getText().toString(), passwordLDAP.getText().toString());
+            try {
+                ldapOrganizationPresenter.bind();
+                ldapOrganizationPresenter.search();
             }
-        });
-        access.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userNameLDAP=myDialog.findViewById(R.id.userNameID);
-                passwordLDAP=myDialog.findViewById(R.id.passwordID);
-                ldaPorganizationPresenter.setLDAP("2.234.128.81",389,userNameLDAP.getText().toString(),passwordLDAP.getText().toString());
-
-                try {
-
-                    ldaPorganizationPresenter.bind();
-                    ldaPorganizationPresenter.search();
-
-                } catch (ExecutionException e) {
-                    Toast.makeText(getActivity(), R.string.ldap_login_failed_check_credentials, Toast.LENGTH_SHORT).show();
-                } catch (InterruptedException e) {
-                    Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-                } catch (LDAPException e) {
-                    e.printStackTrace();
-                }
-                myDialog.dismiss();
+            catch(ExecutionException e) {
+                Toast.makeText(getActivity(), R.string.ldap_login_failed_check_credentials, Toast.LENGTH_SHORT).show();
             }
+            catch(InterruptedException e) {
+                Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+            catch(LDAPException e) {
+                e.printStackTrace();
+            }
+            myDialog.dismiss();
         });
     }
 
-
+    //Success of LDAP authentication
     @Override
     public void onSuccessLdap(String message) {
         anonimousSwitch.setVisibility(View.VISIBLE);
         anonimousSwitch.setChecked(false);
         authentication.setVisibility(View.INVISIBLE);
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+
+        //Try to add of the organization on MyStalkersList
         try {
-            Organization o=new Organization();
+            Organization o = new Organization();
             o.setName(title.getText().toString());
             o.setId(orgID);
             o.setAuthenticationServerURL(serverURL);
             o.setCreationDate(creationDate);
-            MyStalkersListFragment.getInstance().addOrganization(o);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            MyStalkersListFragment mMyStalkersListFragment = new MyStalkersListFragment();
+            mMyStalkersListFragment.addOrganization(o);
+        }
+        catch (JSONException e) {
             e.printStackTrace();
         }
-
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    //Failure of LDAP authentication
     @Override
     public void onFailureLdap(String message) {
         authentication.setVisibility(View.VISIBLE);
         authentication.setVisibility(View.INVISIBLE);
         anonimousSwitch.setChecked(false);
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-
     }
 }

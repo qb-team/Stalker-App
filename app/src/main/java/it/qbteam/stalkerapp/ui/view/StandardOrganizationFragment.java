@@ -21,16 +21,18 @@ import java.io.IOException;
 
 public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
 
-    private static StandardOrganizationFragment instance = null;
     public final static String TAG="Home_Fragment";
+    private static StandardOrganizationFragment instance = null;
     private TextView title, risultati, description ;
     private ImageView image;
 
+    //Creation of the fragment as a component.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
     }
+
+    //Creation of the graphic part displayed by the user.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
@@ -42,12 +44,10 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         title.setText(bundle.getString("name"));
         UrlImageViewHelper.setUrlDrawable(image, bundle.getString("image"));
         description.setText(bundle.getString("description"));
-
         return view;
-
     }
 
-
+    //Makes the 'add to favorites' option visible to the application's action tab menu and hides the search command.
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.favoriteID).setVisible(true);
@@ -55,9 +55,11 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         super.onPrepareOptionsMenu(menu);
     }
 
+    //Add the organization to the favorites list.
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id= item.getItemId();
+
         if(id==R.id.preferitiID){
             Bundle bundle=this.getArguments();
 
@@ -66,26 +68,23 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
                 try {
                     Organization o=new Organization();
                     o.setName(bundle.getString("name"));
-                    MyStalkersListFragment.getInstance().addOrganization(o);
+                    MyStalkersListFragment myStalkersListFragment = new MyStalkersListFragment();
+                    myStalkersListFragment.addOrganization(o);
 
-                } catch (JSONException e) {
+                }
+                catch (JSONException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
 
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    public static StandardOrganizationFragment getInstance() {
-        return instance;
-    }
-
+    //Manages the back button.
     @Override
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();

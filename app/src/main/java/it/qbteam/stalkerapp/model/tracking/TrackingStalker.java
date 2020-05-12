@@ -419,7 +419,8 @@ public class TrackingStalker extends Service {
 
         //Faccio il check se la lista myStalker è cambiata
         if (location != null) {
-            checkUpdateList(MyStalkersListFragment.getInstance().checkForUpdate());
+            MyStalkersListFragment myStalkersListFragment = new MyStalkersListFragment();
+            checkUpdateList(myStalkersListFragment.checkForUpdate());
             handleOrganizations(location);
         }
 
@@ -492,7 +493,7 @@ public class TrackingStalker extends Service {
 
                         insideOrganization = latLngOrganizations.get(i);
                         Server.performMovementServer(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),1,null);
-                        Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei dentro a" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Sei dentro a" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
 
                     }
                 }
@@ -504,7 +505,7 @@ public class TrackingStalker extends Service {
 
                         Server.performMovementServer(latLngOrganizations.get(i).getOrgAuthServerID(),latLngOrganizations.get(i).getOrgID(),HomePageActivity.getInstance().getuserToken(),-1, Storage.deserializeMovementInLocal().getExitToken());
                         Storage.deleteMovement();
-                        Toast.makeText(MyStalkersListFragment.getInstance().getContext(), "Sei uscito da" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Sei uscito da" +" "+insideOrganization.getName() , Toast.LENGTH_LONG).show();
 
 
                     }

@@ -267,7 +267,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
                 try {
-                    MyStalkersListFragment.getInstance().startTracking();
+                    MyStalkersListFragment.startTracking();
                 } catch (IOException e) {
                     e.printStackTrace();
 
@@ -315,7 +315,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                             requestPermissions();
                         } else {
                             try {
-                                MyStalkersListFragment.getInstance().startTracking();
+                                MyStalkersListFragment.startTracking();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

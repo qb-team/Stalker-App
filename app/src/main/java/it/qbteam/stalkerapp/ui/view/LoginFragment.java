@@ -24,19 +24,19 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
-//Parte visiva (View) di Login
-public class LoginFragment extends Fragment implements LoginContract.View, View.OnClickListener, OnBackPressListener {
+    public class LoginFragment extends Fragment implements LoginContract.View, View.OnClickListener, OnBackPressListener {
     public final static String TAG="Login_Fragment";
     private LoginPresenter loginPresenter;
-    ProgressDialog mProgressDialog;
-    private EditText emailEditText,passwordEditText;
+    ProgressDialog progressDialog;
+    private EditText emailEditText, passwordEditText;
     private Button loginButton;
 
+    //Creation of the fragment as a component.
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    //Costruzione della vista
+    //Creation of the graphic part displayed by the user.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_login,container,false);
@@ -45,65 +45,79 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
         loginButton = view.findViewById(R.id.loginButtonID);
         loginButton.setOnClickListener(this);
         loginPresenter = new LoginPresenter(this);
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage("Aspetta il completamento del login");
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Aspetta il completamento del login");
         return view;
     }
 
+    //When the user click on the "Login" button, this method is invoked and it calls the `checkLoginDetails()` method.
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.loginButtonID:
-                checkLoginDetails();
-                break;
+
+        if(v.getId() == R.id.loginButtonID) {
+            checkLoginDetails();
         }
+
     }
 
-    //Controlla le credenziali inserite dall'utente nella vista del Login
-    private void checkLoginDetails() {
-        if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())){
+    //Check if the user has written their credentials and send them to the `initLogin (email: String, password: String)` method, otherwise it signals the absence of them.
+    void checkLoginDetails() {
+
+        if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())) {
             checkLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
-        }else{
-            if(TextUtils.isEmpty(emailEditText.getText().toString())){
+        }
+
+        else {
+
+            if(TextUtils.isEmpty(emailEditText.getText().toString())) {
                 emailEditText.setError("Inserisci una email valida");
-            }if(TextUtils.isEmpty(passwordEditText.getText().toString())){
+            }
+
+            if(TextUtils.isEmpty(passwordEditText.getText().toString())) {
                 passwordEditText.setError("Inserisci una password valida");
             }
+
         }
     }
 
-    //Avvia il metodo del Login nel Presenter
+    //Start the login method in the presenter.
     private void checkLogin(String email, String password) {
-        mProgressDialog.show();
+        progressDialog.show();
         loginPresenter.login(this, email, password);
     }
 
-    //Se il login ha avuto esito positivo l'utente viene notificato e indirizzato nella schermata di HomePage dedicata agli utenti autenticati
+    //If the login was successful, the user is notified and directed to the HomePage screen dedicated to authenticated users.
     @Override
     public void onLoginSuccess(String message) {
-        mProgressDialog.dismiss();
+        progressDialog.dismiss();
         Toast.makeText(getActivity(), "Login effettuato con successo" , Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), HomePageActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
-    //Se il login non ha avuto esito positivo l'utente viene notificato
+    //If the login wasn't successful, the user is notified.
     @Override
     public void onLoginFailure(FirebaseException e) {
-        mProgressDialog.dismiss();
-        if (e instanceof FirebaseAuthInvalidCredentialsException) {
+        progressDialog.dismiss();
+
+        if(e instanceof FirebaseAuthInvalidCredentialsException) {
             Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();
         }
-        if (e instanceof FirebaseNetworkException){ //Credo che sia quello in caso l'utente esista già --> registrazione
+
+        if(e instanceof FirebaseNetworkException){ //Credo che sia quello in caso l'utente esista già --> registrazione
             Toast.makeText(getActivity(), "Non sei connesso a internet" , Toast.LENGTH_LONG).show();
         }
-        if (e instanceof FirebaseAuthInvalidUserException) {
+
+        if(e instanceof FirebaseAuthInvalidUserException) {
             Toast.makeText(getActivity(), "L'e-mail non esiste" , Toast.LENGTH_LONG).show();
         }
+
     }
 
+    //Manages the back button.
     @Override
     public boolean onBackPressed() {
-        return new BackPressImplementation(this).onBackPressed();    }
+        return new BackPressImplementation(this).onBackPressed();
+    }
 }

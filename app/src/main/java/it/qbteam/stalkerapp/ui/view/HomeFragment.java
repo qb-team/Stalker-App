@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
     public void downloadList() {
-        OrganizationListPresenter.downloadHomeListRest(path, HomePageActivity.getuserToken());
+        OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getInstance().getuserToken());
     }
 
     //It notifies the user of the correct download of the list from the Server.

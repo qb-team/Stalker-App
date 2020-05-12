@@ -134,14 +134,14 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     }
                     else {
                         try {
-                            MyStalkersListFragment.getInstance().startTracking();
+                            MyStalkersListFragment.startTracking();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }
                 else{
-                    MyStalkersListFragment.getInstance().stopTracking();
+                    MyStalkersListFragment.stopTracking();
 
                 }
             }

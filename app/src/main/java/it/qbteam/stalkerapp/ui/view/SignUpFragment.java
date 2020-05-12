@@ -25,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
-//Parte visiva (View) di SignUp
 public class SignUpFragment extends Fragment implements View.OnClickListener, SignUpContract.View, OnBackPressListener {
 
     public final static String TAG="Registrati_Fragment";
@@ -36,11 +35,13 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     ProgressDialog progressDialog;
     CheckBox termsofUseCheckBox;
 
+    //Creation of the fragment as a component.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    //Creation of the graphic part displayed by the user.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_registrati,container,false);
@@ -58,6 +59,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         return view;
     }
 
+    //Wait for a user click on the "Sign Up" button to invoke the `checkSignUpDetails ()` method, or a click on "Read the conditions of use" to invoke the `showTermsofUse ()` method.
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -70,31 +72,39 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         }
     }
 
-    //Controlla le credenziali inserite dall'utente nella vista della registrazione
+    //Check if the user has written their credentials, confirmed the password and accepted the conditions of use, if so, send them to the `checkSignUp (email: String, password: String)` method, otherwise report the user of absence of them.
     private void checkSignUpDetails() {
+
         if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())&&calculate(passwordEditText.getText().toString())){
             checkSignUp(emailEditText.getText().toString(), passwordEditText.getText().toString());
-        }else{
+
+        }
+        else {
+
             if(!calculate(passwordEditText.getText().toString()))
                 Toast.makeText(getContext(), "Inserire una password che comprenda: una lettera maiuscola e minuscola,un numero, un carattere speciale e una lunghezza minima di 6 caratteri", Toast.LENGTH_LONG).show();
-            if(TextUtils.isEmpty(emailEditText.getText().toString())){
+
+            if(TextUtils.isEmpty(emailEditText.getText().toString()))
                 emailEditText.setError("Inserisci una email valida");
-            }if(TextUtils.isEmpty(passwordEditText.getText().toString())){
+
+            if(TextUtils.isEmpty(passwordEditText.getText().toString()))
                 passwordEditText.setError("Inserisci una password valida");
-            }
+
         }
     }
 
-    //Controllo se l'utente ha spuntato il checkbox delle condizioni d'uso e avvia il metodo "signUp" nel Presenter
+    //Invokes the Firebase methods to register the email and the password, in case of success the `onSignUpSuccess (message: String)` method will be invoked while, in case of failure it will be invoked `onSignUpFailure (e: FirebaseException)`.
     private void checkSignUp(String email, String password) {
+
         if(termsofUseCheckBox.isChecked()) {
             progressDialog.show();
             signUpPresenter.signUp(this, email, password);
         }
+
         else Toast.makeText(getContext(), "Per poterti registrare devi accettare le condizioni d'uso", Toast.LENGTH_SHORT).show();
     }
 
-    //Popup che mostra il contenuto testuale delle condizioni d'uso
+    //Opens a pop-up showing the conditions of use that the user will have to accept.
     private void showTermsofUse(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Condizioni d'uso")
@@ -107,7 +117,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         builder.show();
     }
 
-    //Se la registrazione ha avuto esito positivo l'utente viene notificato e indirizzato nella schermata di HomePage dedicata agli utenti autenticati
+    //The registration was successful and the user will be moved to the `HomePageActivity.class` and displays a message indicating that he has successfully authenticated.
     @Override
     public void onSignUpSuccess(FirebaseUser firebaseUser) {
         progressDialog.dismiss();
@@ -117,19 +127,22 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         startActivity(intent);
     }
 
-    //Se la registrazione non ha avuto esito positivo l'utente viene notificato
+    //Registration has failed and the user displays a message indicating the error.
     @Override
     public void onSignUpFailure(FirebaseException e) {
         progressDialog.dismiss();
+
         if (e instanceof FirebaseAuthInvalidCredentialsException) {
             Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();
         }
+
         if (e instanceof FirebaseAuthUserCollisionException){ //Credo che sia quello in caso l'utente esista già --> registrazione
             Toast.makeText(getActivity(), "L'e-mail è già presente nel sistema" , Toast.LENGTH_LONG).show();
         }
+
     }
 
-    //Controllo che la password sia sicura
+    //Calculate the complexity of the password to verify its security.
     public boolean calculate(String password) {
         boolean upper = false;
         boolean lower = false;
@@ -160,10 +173,13 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
 
         if(upper && lower && number && specialChar && password.length()>=6)
             return true;
+
         else
             return false;
+
     }
 
+    //Manages the back button.
     @Override
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();

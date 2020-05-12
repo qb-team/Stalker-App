@@ -10,11 +10,13 @@ import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
 import it.qbteam.stalkerapp.model.backend.api.MovementApi;
 import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
+import it.qbteam.stalkerapp.model.backend.api.PlaceApi;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Favorite;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -104,7 +106,26 @@ public class Server {
         });
 
     }
+    public static void performDownloadPlaceServer(Organization organization, String userToken){
 
+        Place placeDownload = new Place();
+        placeDownload.setOrganizationId(organization.getId());
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
+        PlaceApi service = ac.createService(PlaceApi.class);
+        Call<List<Place>> place = service.getPlaceListOfOrganization(placeDownload.getOrganizationId());
+        place.enqueue(new Callback<List<Place>>() {
+            @Override
+            public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
+                System.out.println(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Place>> call, Throwable t) {
+                System.out.println("ERRORE PLACE");
+            }
+        });
+
+    }
     //Tracks the user movement inside the trackingArea of an organization.
     public static void performMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken) {
 

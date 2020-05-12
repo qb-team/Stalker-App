@@ -34,15 +34,15 @@ public class LatLngOrganization {
     }
 
     public void setName(Organization organization){
-        name=organization.getName();
+        name = organization.getName();
     }
 
     public void setTrackingMode(Organization organization){
-        this.trackingMode=organization.getTrackingMode().toString();
+        this.trackingMode = organization.getTrackingMode().toString();
     }
 
     public void setOrganizationID(Organization organization){
-        this.organizationID=organization.getId();
+        this.organizationID = organization.getId();
     }
 
     public ArrayList<LatLng> getLatLng(){
@@ -50,11 +50,11 @@ public class LatLngOrganization {
     }
 
     public void setOrgAuthServerid(Organization organization){
-        this.orgAuthServerID=organization.getAuthenticationServerURL();
+        this.orgAuthServerID = organization.getAuthenticationServerURL();
     }
 
     public void setTimeStamp(Organization organization){
-        this.timeStamp=organization.getCreationDate();
+        this.timeStamp = organization.getCreationDate();
     }
 
     public OffsetDateTime getTimeStamp(){ return timeStamp; }

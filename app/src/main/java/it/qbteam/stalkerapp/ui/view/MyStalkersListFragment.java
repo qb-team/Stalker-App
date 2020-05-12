@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
@@ -212,10 +213,11 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return false;
     }
 
-
     public void addOrganization(Organization organization) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
         myStalkersListPresenter.addOrganizationServer(organization, user.getUid(), user.getToken());
+        Server.performDownloadPlaceServer(organization,user.getToken());
+
     }
 
     //Organizzazione aggiunta correttamente ai preferiti

@@ -3,9 +3,7 @@ package it.qbteam.stalkerapp.model.backend.api;
 
 import retrofit2.Call;
 import retrofit2.http.*;
-
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
-
 import java.util.List;
 
 public interface PlaceApi {

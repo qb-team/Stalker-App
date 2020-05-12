@@ -11,20 +11,13 @@ public class Utils {
 
     public static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_location_updates";
 
-    /**
-     * Returns true if requesting location updates, otherwise returns false.
-     *
-     * @param context The {@link Context}.
-     */
+    //Returns true if requesting location updates, otherwise returns false.
     public static boolean requestingLocationUpdates(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(KEY_REQUESTING_LOCATION_UPDATES, false);
     }
 
-    /**
-     * Stores the location updates state in SharedPreferences.
-     * @param requestingLocationUpdates The location updates state.
-     */
+    //Stores the location updates state in SharedPreferences.
     public static void setRequestingLocationUpdates(Context context, boolean requestingLocationUpdates) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
@@ -32,16 +25,13 @@ public class Utils {
                 .apply();
     }
 
-    /**
-     * Stampa a schermo la latitudine e la longitudine
-     * Returns the {@code location} object as a human readable string.
-     * @param location  The {@link Location}.
-     */
+    //Returns the object as a human readable string.
     public static String getLocationText(Location location) {
         return location == null ? "Unknown location" :
                 "(" + location.getLatitude() + ", " + location.getLongitude() + ")";
     }
 
+    //Returns the information about the actual location.
     public static String getLocationTitle(Context context) {
         return context.getString(R.string.location_updated,
                 DateFormat.getDateTimeInstance().format(new Date()));

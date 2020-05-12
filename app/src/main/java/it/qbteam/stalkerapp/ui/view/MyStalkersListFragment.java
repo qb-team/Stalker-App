@@ -203,10 +203,15 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         }
         return false;
     }
+
     //Add the organization received as input to both the FileSystem and the Server.
     public void addOrganization(Organization organization) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
         myStalkersListPresenter.addOrganizationServer(organization, user.getUid(), user.getToken());
+
+
+    }
+    public void downloadPlaceServer(Organization organization){
         Server.performDownloadPlaceServer(organization,user.getToken());
 
     }
@@ -299,14 +304,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public static void startTracking() throws IOException {
+    public void startTracking() throws IOException {
         Storage.deleteMovement();
         mService.requestLocationUpdates();
     }
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public static void stopTracking() {
+    public void stopTracking() {
         mService.removeLocationUpdates();
     }
 

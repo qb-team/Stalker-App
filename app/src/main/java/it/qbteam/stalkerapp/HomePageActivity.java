@@ -46,7 +46,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-    private static HomePageActivity instance = null;
     private static User user;
     private SwitchCompat switcher;
     private FirebaseAuth fAuth;
@@ -54,16 +53,16 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
     private static String userEmail;
+    private MyStalkersListFragment myStalkersListFragment;
 
+    //Method that is invoked when the application is opened.
     @Override
     protected void onStart() {
         super.onStart();
     }
 
-    public static HomePageActivity getInstance() {
-        return instance;
-    }
-
+    //Creates Activity and manages the fragments connected to it. In this method there is the user authentication check,
+    // in case the user is no longer logged in the goToMainActivity () method is invoked.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +82,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     });
         }
         statusCheck();
-        instance=this;
         fStore = FirebaseFirestore.getInstance();
         fAuth= FirebaseAuth.getInstance();
 
@@ -134,14 +132,14 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     }
                     else {
                         try {
-                            MyStalkersListFragment.startTracking();
+                            myStalkersListFragment.startTracking();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }
                 else{
-                    MyStalkersListFragment.stopTracking();
+                    myStalkersListFragment.stopTracking();
 
                 }
             }
@@ -161,13 +159,14 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     }
 
 
-
+    //creates the action tab menu.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_tab, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //manages the ActionTabFragment.
     private void initScreen() {
         // Creato l'actionTab in alto
         actionTabFragment = new ActionTabFragment();
@@ -177,7 +176,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 .commit();
     }
 
-
+    //Manages the back button.
     @Override
     public void onBackPressed() {
         if (!actionTabFragment.onBackPressed()) {
@@ -190,6 +189,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
+    //Manages the drawer.
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
@@ -208,18 +208,20 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         return true;
     }
 
+    //Moves the user to MainActivity.
     public void goToMainActivity(){
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
-
+    //Check the user's permissions about tracking.
     private boolean checkPermissions() {
         return  PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
+    //Asks to the user permissions about tracking.
     private void requestPermissions() {
         boolean shouldProvideRationale =
                 ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -250,12 +252,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
-    /** FINE ACCETTAZIONE PERMESSI */
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-
+    //Callback received when a permissions request has been completed.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionResult");
@@ -267,7 +264,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
                 try {
-                    MyStalkersListFragment.getInstance().startTracking();
+                    myStalkersListFragment.startTracking();
                 } catch (IOException e) {
                     e.printStackTrace();
 
@@ -298,14 +295,16 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
-    public void statusCheck() {//Controllo se il GPS è attivo
+    //Check if the GPS is active.
+    public void statusCheck() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
         }
     }
 
-    private void buildAlertMessageNoGps() {//Allert nel caso in cui il GPS non sia attivo
+    //Warn the user if the GPS is not active and helps him to active it.
+    private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
                 .setCancelable(false)
@@ -315,7 +314,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                             requestPermissions();
                         } else {
                             try {
-                                MyStalkersListFragment.getInstance().startTracking();
+                                myStalkersListFragment.startTracking();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -332,8 +331,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         alert.show();
     }
 
-
-
+    //Manages the tracking switch in the drawer.
     public void setSwitchState(boolean requestingLocationUpdates) {
         if (requestingLocationUpdates) {
             switcher.setChecked(true);
@@ -342,7 +340,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
-    public static String getuserToken(){
+    //Returns user's token.
+    public String getUserToken(){
         return user.getToken();
     }
 

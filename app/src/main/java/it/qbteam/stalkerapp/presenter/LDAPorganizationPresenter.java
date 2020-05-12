@@ -11,7 +11,7 @@ public class LDAPorganizationPresenter implements LDAPorganizationContract.Prese
     private StalkerLDAP stalkerLDAP;
     private LDAPorganizationContract.View ldapView;
 
-    //HomePresenter costructor.
+    //LDAPorganizationPresenter's constructor.
     public LDAPorganizationPresenter(LDAPorganizationContract.View ldapView){
        this.ldapView = ldapView;
     }

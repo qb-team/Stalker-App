@@ -15,7 +15,7 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     private Storage storage;
     private Server server;
 
-    //HomePresenter costructor.
+    //HomePresenter's constructor.
     public HomePresenter(HomeContract.View OrganizationListView){
         this.OrganizationListView=OrganizationListView;
         storage = new Storage(this,null);

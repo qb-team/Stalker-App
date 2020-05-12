@@ -8,12 +8,12 @@ import it.qbteam.stalkerapp.ui.view.AuthenticationFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-//Activity principale che ti porta nella seconda activity (HomePage) se si è autenticati, altrimenti ti indirizza al MainFragment
 public class MainActivity extends AppCompatActivity {
     public static FragmentManager fragmentManager;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
+    //Method that is invoked when the application is opened, checks if the user is authenticated and if so, the goToHomePage () method is invoked.
     @Override
     protected void onStart() {
         super.onStart();
@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Creates Activity and manages the fragments connected to it.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +32,10 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager=getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.containerID, new AuthenticationFragment(), "Main").commit();
 
-
     }
-    public void goToHomePage(){
 
+    //Moves the user to HomePageActivity.
+    public void goToHomePage(){
         Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

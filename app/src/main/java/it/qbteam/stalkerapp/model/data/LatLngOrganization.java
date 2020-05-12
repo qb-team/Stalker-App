@@ -18,6 +18,7 @@ public class LatLngOrganization {
     private OffsetDateTime timeStamp;
     private long organizationID;
 
+    //Sets the latitude and the longitude of the organization's tracking area.
     public void setLatLng(Organization organization) throws JSONException {
 
         String inline=organization.getTrackingArea();
@@ -33,42 +34,45 @@ public class LatLngOrganization {
 
     }
 
+    //Sets organization's name.
     public void setName(Organization organization){
         name = organization.getName();
     }
 
+    //Sets organization's tracking area.
     public void setTrackingMode(Organization organization){
         this.trackingMode = organization.getTrackingMode().toString();
     }
 
+    //Sets organization's ID.
     public void setOrganizationID(Organization organization){
         this.organizationID = organization.getId();
     }
 
+    //Returns the List of organizations' latitude and longitude.
     public ArrayList<LatLng> getLatLng(){
         return this.polygon;
     }
 
+    //Sets organization's authentication server URL.
     public void setOrgAuthServerid(Organization organization){
         this.orgAuthServerID = organization.getAuthenticationServerURL();
     }
 
+    //Sets organization's timestamp.
     public void setTimeStamp(Organization organization){
         this.timeStamp = organization.getCreationDate();
     }
 
-    public OffsetDateTime getTimeStamp(){ return timeStamp; }
-
+    //Returns the organization's authentication server URL.
     public String getOrgAuthServerID(){return orgAuthServerID;}
 
+    //Returns the organization's name.
     public String  getName(){
         return this.name;
     }
 
+    //Returns the organization's ID.
     public long getOrgID(){return this.organizationID;}
-
-    public String getTrackingMode(){
-        return this.trackingMode;
-    }
 
 }

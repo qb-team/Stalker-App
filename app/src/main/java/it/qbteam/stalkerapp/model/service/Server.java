@@ -26,6 +26,7 @@ public class Server {
     MyStalkersListContract.MyStalkerListener myStalkerListener;
     HomeContract.HomeListener homeListener;
 
+    //Server's constructor.
     public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
         this.myStalkerListener = myStalkerListener;
         this.homeListener = homeListener;
@@ -116,7 +117,12 @@ public class Server {
         place.enqueue(new Callback<List<Place>>() {
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
-                System.out.println(response.body());
+                try {
+                    Storage.serializePlaceInLocal(response.body());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             @Override

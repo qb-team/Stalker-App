@@ -11,7 +11,7 @@ public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract
     private SignUpContract.View mSignUpView;
     private SignUpModel mSignUpInteractor;
 
-    //SignUpPresenter costructor
+    //SignUpPresenter's constructor
     public SignUpPresenter(SignUpContract.View signUpView){
         this.mSignUpView = signUpView;
         mSignUpInteractor = new SignUpModel(this);

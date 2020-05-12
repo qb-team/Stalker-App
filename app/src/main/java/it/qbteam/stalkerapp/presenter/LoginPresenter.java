@@ -10,7 +10,7 @@ public class LoginPresenter implements LoginContract.Presenter, LoginContract.on
     private LoginContract.View mLoginView;
     private LoginModel mLoginInteractor;
 
-    //LoginPresenter costructor.
+    //LoginPresenter's constructor.
     public LoginPresenter(LoginContract.View mLoginView){
         this.mLoginView = mLoginView;
         mLoginInteractor = new LoginModel(this);

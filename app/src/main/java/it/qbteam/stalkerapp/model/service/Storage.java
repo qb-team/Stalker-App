@@ -18,6 +18,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
@@ -27,6 +28,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     HomeContract.HomeListener homeListener;
     MyStalkersListContract.MyStalkerListener myStalkerListener;
 
+    //Storage's constructor.
     public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener){
          this.homeListener = homeListener;
          this.myStalkerListener = myStalkerListener;
@@ -176,7 +178,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             w.close();
     }
 
-    public static void serializePlaceInLocal(Place place) throws IOException {
+    public static void serializePlaceInLocal(List<Place> place) throws IOException {
         //Saving of OrganizationMovement in a file
         File toWrite = new File("data/user/0/it.qbteam.stalkerapp/files/Place.txt");
         FileOutputStream fos=new FileOutputStream(toWrite);
@@ -203,17 +205,19 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     }
 
-    public static Place deserializePlaceInLocal() throws IOException, ClassNotFoundException{
-        Place place= new Place();
+    public static List<Place> deserializePlaceInLocal() throws IOException, ClassNotFoundException{
+
+        List<Place> place;
         //Reading the OrganizationMovement from a file
         FileInputStream fis= new FileInputStream("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
         ObjectInputStream ois = new ObjectInputStream(fis);
         //Method for deserialization of object
-        place = (Place)ois.readObject();
+        place = (ArrayList)ois.readObject();
         ois.close();
         fis.close();
         return place;
     }
+
     //Deserializes the object OrganizationMovement from a local file.
     public static OrganizationMovement deserializeMovementInLocal() throws IOException, ClassNotFoundException {
 

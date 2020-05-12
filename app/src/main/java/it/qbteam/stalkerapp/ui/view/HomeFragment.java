@@ -186,6 +186,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             try {
                 MyStalkersListFragment mMyStalkersListFragment = new MyStalkersListFragment();
                 mMyStalkersListFragment.addOrganization(organizationList.get(position));
+                mMyStalkersListFragment.downloadPlaceServer(organizationList.get(position));
 
             } catch (JSONException e) {
                 e.printStackTrace();

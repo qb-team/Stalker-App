@@ -17,12 +17,13 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     private Context context;
     private OrganizationListener organizationListener;
 
+    //Interface to manage the type of click.
     public interface OrganizationListener{
         void organizationClick(int position);
         void organizationLongClick(int position);
     }
 
-
+    //OrganizationViewAdapter's constructor.
     public OrganizationViewAdapter(ArrayList<Organization> organizationList, Context context, OrganizationListener organizationListener){
         this.organizationList = organizationList;
         this.context=context;
@@ -30,6 +31,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     }
 
 
+    //Returns the layout of the organizations' list.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,6 +42,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
         return new ViewHolder(v,organizationListener);
     }
 
+    //Sets to the holder the organization's name.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -47,11 +50,13 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
         holder.textNome.setText(organization.getName());
     }
 
+    //Returns the organizations' list size.
     @Override
     public int getItemCount() {
         return organizationList.size();
     }
 
+    //Inner class to manage the organizations' list layout with its actions.
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public TextView textNome;

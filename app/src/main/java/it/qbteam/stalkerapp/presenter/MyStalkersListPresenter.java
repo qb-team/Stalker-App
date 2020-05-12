@@ -16,7 +16,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     private Storage storage;
     private Server server;
 
-    //MyStalkersListPresenter costructor.
+    //MyStalkersListPresenter's constructor.
     public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView = myStalkersView;
     storage= new Storage(null,this);

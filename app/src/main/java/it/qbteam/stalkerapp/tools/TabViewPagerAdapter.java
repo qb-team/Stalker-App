@@ -9,21 +9,16 @@ import java.util.List;
 
 public class TabViewPagerAdapter extends FragmentPagerAdapter {
 
-    private final Resources resources;//IN REALTA' NON LO USO, DEVO IMPLEMENTARE
 
     private final List<Fragment> registeredFragments = new ArrayList();
     private final List<String> titol = new ArrayList<>();
-    /**
-     * Create pager adapter
 
-     * @param resources
-     * @param fragmentManager
-     */
+    //TabViewPagerAdapter's constructor, creates page adapter.
     public TabViewPagerAdapter(final Resources resources, FragmentManager fragmentManager) {
         super(fragmentManager);
-        this.resources = resources;
     }
 
+    //Returns the fragment from its position in the view pager.
     @Override
     public Fragment getItem(int position) {
 
@@ -31,6 +26,7 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
 
     }
 
+    //Returns the view pager's size.
     @Override
     public int getCount() {
         return registeredFragments.size();
@@ -42,12 +38,13 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
         return titol.get(position);
     }
 
-
+    //Adds a fragment in the view pager.
     public void addFragment(Fragment fragment, String title){
 
         registeredFragments.add(fragment);
         titol.add(title);
     }
+
    /* @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Fragment fragment = (Fragment) super.instantiateItem(container, position);

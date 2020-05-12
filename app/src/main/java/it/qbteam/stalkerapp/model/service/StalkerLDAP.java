@@ -21,6 +21,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
         private int serverPort;
         private SearchResultEntry entry;
 
+        //StalkerLDAP's constructor.
         public StalkerLDAP(String serverAddress, int port, String binDn, String password,LDAPorganizationContract.LDAPlistener ldaPlistener) {
             this.serverAddress = serverAddress;
             this.serverPort = port;
@@ -45,8 +46,6 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
             });
             new Thread(bindFutureTask).start();
             this.result = bindFutureTask.get();
-
-
 
         }
 

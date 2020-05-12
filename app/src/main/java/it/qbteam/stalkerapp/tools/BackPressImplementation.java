@@ -7,10 +7,12 @@ public class BackPressImplementation implements OnBackPressListener {
 
     private Fragment parentFragment;
 
+    //BackPressImplementation's constructor.
     public BackPressImplementation(Fragment parentFragment) {
         this.parentFragment = parentFragment;
     }
 
+    //Manages the back button.
     @Override
     public boolean onBackPressed() {
 

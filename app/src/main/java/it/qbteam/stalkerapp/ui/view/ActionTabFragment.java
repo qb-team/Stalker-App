@@ -17,7 +17,8 @@ public class ActionTabFragment extends Fragment {
     protected TabLayout tabLayout;
     protected ViewPager viewPager;
     private TabViewPagerAdapter adapter;
-
+    private static MyStalkersListFragment myStalkersListFragment;
+    private static HomeFragment homeFragment;
     public ActionTabFragment() {
         // Required empty public constructor.
     }
@@ -47,8 +48,10 @@ public class ActionTabFragment extends Fragment {
         // Note that we are passing childFragmentManager, not FragmentManager.
         adapter = new TabViewPagerAdapter(getResources(),getChildFragmentManager());
         //add fragment
-        adapter.addFragment(new HomeFragment(),"");
-        adapter.addFragment(new MyStalkersListFragment(),"");
+        myStalkersListFragment= new MyStalkersListFragment();
+        homeFragment= new HomeFragment();
+        adapter.addFragment(homeFragment,"");
+        adapter.addFragment(myStalkersListFragment,"");
 
         viewPager.setAdapter(adapter);
         // The one-stop shop for setting up this TabLayout with a ViewPager.
@@ -73,4 +76,12 @@ public class ActionTabFragment extends Fragment {
         // this Fragment couldn't handle the onBackPressed call
         return false;
     }
+    public static Fragment getMyStalkerFragment(){
+        return myStalkersListFragment;
+    }
+    public static Fragment getHomeFragment(){
+        return homeFragment;
+    }
+
+
 }

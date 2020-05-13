@@ -32,16 +32,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
+public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener, FragmentListener {
 
     private MyStalkersListPresenter myStalkersListPresenter;
     private List<Organization> organizationList;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
+    public final static String TAG = "MyStalkersList_Fragment";
     private static String path;
     private User user;
-
-
     //Creation of the fragment as a component.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +100,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             transaction.replace(R.id.ListaPreferitiID, LDAPFragment).commit();
         }
     }
-
     //Notifies the user through a dialog box, the possibility of deleting the organization selected by the user after a long click.
     @Override
     public void organizationLongClick(int position) {
@@ -111,6 +109,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                 .setMessage("Sei sicuro di voler eliminare l'organizzazione?")
                 .setPositiveButton("Elimina", (dialog, whichButton) -> {
                     try {
+                                System.out.print(Storage.deserializeMovementInLocal());
 
                         if (Storage.deserializeMovementInLocal()!=null&&organizationList.get(position).getId().equals(Storage.deserializeMovementInLocal().getOrganizationId())){
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -147,7 +146,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         searchView.setOnQueryTextListener(this);
         super.onPrepareOptionsMenu(menu);
     }
-
     //End click listener.
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -158,7 +156,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     @Override
     public boolean onQueryTextChange(String newText) {
         String userInput = newText.toLowerCase();
-        ArrayList<Organization> newList = new ArrayList<>();
+        List<Organization> newList = new ArrayList<>();
 
         if (organizationList.size() != 0) {
             for (int i = 0; i < organizationList.size(); i++) {
@@ -229,7 +227,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onSuccessLoadMyStalkerList(List<Organization> list) throws IOException, JSONException {
 
         if (list != null) {
-            ArrayList<Organization> aux = new ArrayList<>(list);
+            List<Organization> aux = new ArrayList<>(list);
             //Assegno la lista appena scaricata dal server
             organizationList.addAll(aux);
             adapter = new OrganizationViewAdapter(organizationList, this.getContext(), this);

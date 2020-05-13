@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
@@ -36,8 +38,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     private TextView title,description,positionTextView;
     private Button authentication;
     private ImageView mImageView;
-    private TextView trackingTextView;
-    private Switch anonimousSwitch;
     private Long orgID;
     private OffsetDateTime creationDate;
     private String serverURL;
@@ -79,13 +79,11 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         creationDate = OffsetDateTime.parse(bundle.getString("creationDate"), dateTimeFormatter);
         serverURL = bundle.getString("serverURL");
-        anonimousSwitch = view.findViewById(R.id.switchAnonimousID);
-        anonimousSwitch.setVisibility(View.INVISIBLE);
-        trackingTextView = view.findViewById(R.id.trackingTextID);
-        trackingTextView.setVisibility(View.INVISIBLE);
+
         ldapOrganizationPresenter = new LDAPorganizationPresenter(this);
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
+
 
         return view;
     }
@@ -138,8 +136,8 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     //Success of LDAP authentication
     @Override
     public void onSuccessLdap(String message) {
-        anonimousSwitch.setVisibility(View.VISIBLE);
-        anonimousSwitch.setChecked(false);
+
+        HomePageActivity.setSwitcherTrackingMode(true);
         authentication.setVisibility(View.INVISIBLE);
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
 
@@ -150,7 +148,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             o.setId(orgID);
             o.setAuthenticationServerURL(serverURL);
             o.setCreationDate(creationDate);
-            MyStalkersListFragment mMyStalkersListFragment = new MyStalkersListFragment();
+            MyStalkersListFragment mMyStalkersListFragment = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();
             mMyStalkersListFragment.addOrganization(o);
         }
         catch (JSONException e) {
@@ -166,7 +164,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     public void onFailureLdap(String message) {
         authentication.setVisibility(View.VISIBLE);
         authentication.setVisibility(View.INVISIBLE);
-        anonimousSwitch.setChecked(false);
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
+
 }

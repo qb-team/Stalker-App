@@ -17,6 +17,10 @@
             app:actionLayout="@layout/switch_tracking"
             android:title="Tracciamento" />
 
+        <item android:id="@+id/nav_switch_ModeID"
+            app:actionLayout="@layout/switch_mode"
+            android:title="Modalità autenticata"/>
+
     </menu>
 </item>
 

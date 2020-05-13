@@ -1,7 +1,9 @@
 package it.qbteam.stalkerapp.ui.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import org.json.JSONException;
 import it.qbteam.stalkerapp.HomePageActivity;
+import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
@@ -48,12 +51,31 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public final static String TAG = "Home_Fragment";
     Dialog myDialog;
     Button downloadButton;
+    FragmentListener fragmentListener;
 
+    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+    public interface FragmentListener {
+        void sendOrganization(Organization organization) throws IOException, JSONException;
+    }
+
+    // This method insures that the Activity has actually implemented our
+    // listener and that it isn't null.
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentListener) {
+            fragmentListener = (FragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnGreenFragmentListener");
+        }
+    }
     //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+
         path = getContext().getFilesDir() + "/Organizzazioni.txt";
     }
 
@@ -184,16 +206,17 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
         //Try to add the organization locally and on the server.
         aggPref.setOnClickListener(v -> {
-            try {
-                MyStalkersListFragment mMyStalkersListFragment = new MyStalkersListFragment();
-                mMyStalkersListFragment.addOrganization(organizationList.get(position));
-                mMyStalkersListFragment.downloadPlaceServer(organizationList.get(position));
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+            try {
+
+                fragmentListener.sendOrganization(organizationList.get(position));
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
+
             myDialog.dismiss();
         });
     }
@@ -234,7 +257,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
-        ArrayList<Organization> newList= new ArrayList<>();
+        List<Organization> newList= new ArrayList<>();
 
         if(organizationList.size() != 0){
             for(int i = 0; i< organizationList.size(); i++){
@@ -252,6 +275,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();
     }
+
 }
 
 

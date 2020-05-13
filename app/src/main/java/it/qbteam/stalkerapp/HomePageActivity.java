@@ -48,7 +48,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static User user;
     private SwitchCompat switcher;
     private FirebaseAuth fAuth;
-    private FirebaseFirestore fStore;
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
     private static String userEmail;
@@ -81,7 +80,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     });
         }
         statusCheck();
-        fStore = FirebaseFirestore.getInstance();
         fAuth= FirebaseAuth.getInstance();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
@@ -115,7 +113,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
         //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);
-        TextView emailTextView=(TextView) headerView.findViewById(R.id.emailTextDrawerID);
+        TextView emailTextView= headerView.findViewById(R.id.emailTextDrawerID);
         emailTextView.setText(userEmail);
 
         // Restore the state of the buttons when the activity (re)launches.

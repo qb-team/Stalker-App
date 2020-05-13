@@ -49,6 +49,8 @@ import com.google.maps.android.PolyUtil;
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
@@ -81,7 +83,7 @@ public class TrackingStalker extends Service {
     private LatLngOrganization insideOrganization;
     private boolean insideOrganizationBoolean = false;
     private boolean insidePlaceBoolean = false;
-    private ArrayList<Organization> inOrganization;
+    private List<Organization> inOrganization;
     /**
      * Switch per aggiornare il Locationrequest
      * 0 -> Massima accuretazza
@@ -440,7 +442,7 @@ public class TrackingStalker extends Service {
         }
     }
 
-    public void checkUpdateList(ArrayList<Organization>list) throws JSONException {
+    public void checkUpdateList(List<Organization> list) throws JSONException {
 
         if(list!=null) {
 

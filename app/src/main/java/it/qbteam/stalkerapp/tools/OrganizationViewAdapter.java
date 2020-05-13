@@ -8,12 +8,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+import java.util.List;
+
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.R;
 
 public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationViewAdapter.ViewHolder> {
 
-    private  ArrayList<Organization> organizationList;
+    private  List<Organization> organizationList;
     private Context context;
     private OrganizationListener organizationListener;
 
@@ -24,7 +26,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     }
 
     //OrganizationViewAdapter's constructor.
-    public OrganizationViewAdapter(ArrayList<Organization> organizationList, Context context, OrganizationListener organizationListener){
+    public OrganizationViewAdapter(List<Organization> organizationList, Context context, OrganizationListener organizationListener){
         this.organizationList = organizationList;
         this.context=context;
         this.organizationListener=organizationListener;

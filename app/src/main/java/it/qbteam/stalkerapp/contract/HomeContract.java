@@ -4,6 +4,7 @@ import org.json.JSONException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 //The contract interface describes the communication between view and presenter. It helps us to design in a cleaner way the interaction.
 public interface HomeContract {
@@ -15,15 +16,15 @@ public interface HomeContract {
     }
 
     interface Presenter {
-        ArrayList<Organization> checkLocalFile(String path);
+        List<Organization> checkLocalFile(String path);
         void downloadHomeListServer(String path, String userToken) throws InterruptedException, IOException;
-        void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
+        void updateFile(List<Organization> list, String path) throws IOException, JSONException;
 
     }
 
     interface Interactor {
-        ArrayList<Organization> performCheckFileLocal(String path);
-        void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
+        List<Organization> performCheckFileLocal(String path);
+        void performUpdateFile(List<Organization> list, String path) throws IOException, JSONException;
     }
 
     interface HomeListener {

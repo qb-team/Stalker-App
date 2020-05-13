@@ -8,6 +8,7 @@ import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeListener {
 
@@ -24,13 +25,13 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer of the file system).
     @Override
-    public ArrayList<Organization> checkLocalFile(String path) {
+    public List<Organization> checkLocalFile(String path) {
         return storage.performCheckFileLocal(path);
     }
 
     //Calls the the method performUpdateFile(list,path) of the class Storage(persistent layer of the file system).
     @Override
-    public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
+    public void updateFile(List<Organization> list, String path) throws IOException, JSONException {
         storage.performUpdateFile(list,path);
     }
 

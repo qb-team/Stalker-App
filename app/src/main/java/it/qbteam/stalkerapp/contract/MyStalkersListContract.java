@@ -10,32 +10,32 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 public interface MyStalkersListContract {
 
     interface View {
-        void onSuccessAddOrganization(ArrayList<Organization> list,String message) throws IOException, JSONException;
+        void onSuccessAddOrganization(List<Organization> list,String message) throws IOException, JSONException;
         void onFailureAddOrganization(String message);
-        void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException;
+        void onSuccessRemoveOrganization(List<Organization> list) throws IOException, JSONException;
         void onSuccessLoadMyStalkerList(List<Organization> list) throws IOException, JSONException;
     }
 
     interface Presenter {
-        void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
-        ArrayList<Organization> checkLocalFile(String path);
-        void addOrganizationLocal(Organization organization , ArrayList<Organization> list, String path) throws IOException, JSONException;
+        void updateFile(List<Organization> list, String path) throws IOException, JSONException;
+        List<Organization> checkLocalFile(String path);
+        void addOrganizationLocal(Organization organization , List<Organization> list, String path) throws IOException, JSONException;
         void addOrganizationServer(Organization organization, String UID, String userToken) throws IOException, JSONException;
-        void removeOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException;
+        void removeOrganizationLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException;
         void removeOrganizationServer(Organization organization,String UID, String userToken) throws IOException, ClassNotFoundException;
         void downloadListServer(String UID, String userToken);
     }
 
     interface Interactor {
-        void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException;
-        void performRemoveLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException, ClassNotFoundException;
-        void performAddOrganizationLocal(Organization organization, ArrayList<Organization> list,String path) throws IOException, JSONException;
+        void performUpdateFile(List<Organization> list, String path) throws IOException, JSONException;
+        void performRemoveLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException, ClassNotFoundException;
+        void performAddOrganizationLocal(Organization organization, List<Organization> list,String path) throws IOException, JSONException;
     }
 
     interface MyStalkerListener {
-        void onSuccessAdd(ArrayList<Organization> list,String message) throws IOException, JSONException;
+        void onSuccessAdd(List<Organization> list,String message) throws IOException, JSONException;
         void onFailureAdd(String message);
-        void onSuccesRemove(ArrayList<Organization> list) throws IOException, JSONException;
+        void onSuccesRemove(List<Organization> list) throws IOException, JSONException;
         void onSuccessLoad(List<Organization> list) throws IOException, JSONException;
     }
 }

@@ -46,7 +46,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     private static TrackingStalker mService;
     private MyStalkersListPresenter myStalkersListPresenter;
-    private ArrayList<Organization> organizationList;
+    private List<Organization> organizationList;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private String path;
@@ -218,7 +218,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Notifies the user of the success of the organization's add operation.
     @Override
-    public void onSuccessAddOrganization(ArrayList<Organization> list, String message) throws IOException, JSONException {
+    public void onSuccessAddOrganization(List<Organization> list, String message) throws IOException, JSONException {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
@@ -239,7 +239,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Notifies the user of the success of an organization's removal operation.
     @Override
-    public void onSuccessRemoveOrganization(ArrayList<Organization> list) throws IOException, JSONException {
+    public void onSuccessRemoveOrganization(List<Organization> list) throws IOException, JSONException {
         adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
         myStalkersListPresenter.updateFile(list, path);
@@ -251,7 +251,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //Keeps track of any changes made by the user of his list of organizations in the `MyStalkerListFragment` view.
-     public ArrayList<Organization> checkForUpdate(){
+     public List<Organization> checkForUpdate(){
         return myStalkersListPresenter.checkLocalFile(path);
      }
 

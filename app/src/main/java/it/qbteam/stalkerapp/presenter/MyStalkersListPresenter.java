@@ -25,19 +25,19 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     //Calls the the method performUpdateFile(list,path) of the class Storage(persistent layer that comunicates with FileSystem).
     @Override
-    public void updateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
+    public void updateFile(List<Organization> list, String path) throws IOException, JSONException {
         storage.performUpdateFile(list,path);
     }
 
     //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer that comunicates with FileSystem).
     @Override
-    public ArrayList<Organization> checkLocalFile(String path) {
+    public List<Organization> checkLocalFile(String path) {
         return storage.performCheckFileLocal(path);
     }
 
     //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer that comunicates with FileSystem).
     @Override
-    public void addOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {
+    public void addOrganizationLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException {
         storage.performAddOrganizationLocal(organization, list,path);
     }
 
@@ -49,7 +49,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     //Comunicates the success result of adding an organization to the view.
     @Override
-    public void onSuccessAdd(ArrayList<Organization>list,String message) throws IOException, JSONException {
+    public void onSuccessAdd(List<Organization>list,String message) throws IOException, JSONException {
         myStalkersView.onSuccessAddOrganization(list,message);
     }
 
@@ -61,7 +61,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     //Calls the the method performRemoveLocal(organization, list, path) of the class Storage(persistent layer that comunicates with FileSystem).
     @Override
-    public void removeOrganizationLocal(Organization organization, ArrayList<Organization> list, String path) throws IOException, JSONException {
+    public void removeOrganizationLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException {
         storage.performRemoveLocal(organization, list, path);
     }
 
@@ -73,7 +73,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     //Comunicates the failure result of remove an organization to the view.
     @Override
-    public void onSuccesRemove(ArrayList<Organization> list) throws IOException, JSONException {
+    public void onSuccesRemove(List<Organization> list) throws IOException, JSONException {
         myStalkersView.onSuccessRemoveOrganization(list);
     }
 

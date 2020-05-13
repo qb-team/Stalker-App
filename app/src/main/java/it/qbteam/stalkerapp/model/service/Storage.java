@@ -36,9 +36,9 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     //Checks if the list of organizations already exists in local file.
     @Override
-    public ArrayList<Organization> performCheckFileLocal(String path) {
+    public List<Organization> performCheckFileLocal(String path) {
 
-        ArrayList<Organization> aux = new ArrayList<>();
+        List<Organization> aux = new ArrayList<>();
         File organizationFile = new File(path);
         if(organizationFile.length()==0 || !organizationFile.exists()) {
             if(homeListener != null)
@@ -95,7 +95,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     //Removes an organization from the local file and update the local file.
     @Override
-    public void performRemoveLocal(Organization organization, ArrayList<Organization>list, String path) throws IOException, JSONException {
+    public void performRemoveLocal(Organization organization, List<Organization>list, String path) throws IOException, JSONException {
         boolean trovato = false;
         for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
             Organization o = iterator.next();
@@ -114,7 +114,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     //Adds an organization to the list of organizations and update the local file.
     @Override
-    public void performAddOrganizationLocal(Organization organization, ArrayList<Organization> list,String path) throws IOException, JSONException {
+    public void performAddOrganizationLocal(Organization organization, List<Organization> list,String path) throws IOException, JSONException {
         boolean trovato = false;
         if(list != null){
             for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
@@ -145,7 +145,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     }
 
     //Updates the list of organizations in the local file.
-    public void performUpdateFile(ArrayList<Organization> list, String path) throws IOException, JSONException {
+    public void performUpdateFile(List<Organization> list, String path) throws IOException, JSONException {
 
     JSONArray ja = new JSONArray();
 

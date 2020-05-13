@@ -35,11 +35,12 @@ import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class HomeFragment extends Fragment implements HomeContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
     private HomePresenter OrganizationListPresenter;
-    private ArrayList<Organization> organizationList;
+    private List<Organization> organizationList;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private SwipeRefreshLayout refresh;

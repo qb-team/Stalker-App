@@ -46,8 +46,17 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.android.PolyUtil;
+
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +67,6 @@ import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
-import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
 /**
  * A bound and started service that is promoted to a foreground service when location updates have
@@ -420,8 +428,7 @@ public class TrackingStalker extends Service {
 
         //Faccio il check se la lista myStalker è cambiata
         if (location != null) {
-            MyStalkersListFragment myStalkersListFragment = new MyStalkersListFragment();
-            checkUpdateList(myStalkersListFragment.checkForUpdate());
+            updateLatLngList(checkUpdateList());
             handleOrganizations(location);
         }
 
@@ -442,22 +449,71 @@ public class TrackingStalker extends Service {
         }
     }
 
-    public void checkUpdateList(List<Organization> list) throws JSONException {
+    public List<Organization> checkUpdateList(){
 
+        List<Organization> aux = new ArrayList<>();
+        File organizationFile = new File("data/user/0/it.qbteam.stalkerapp/files/Preferiti.txt");
+        try {
+            FileInputStream fin = new FileInputStream(organizationFile);
+            byte[] buffer = new byte[(int) organizationFile.length()];
+            new DataInputStream(fin).readFully(buffer);
+            fin.close();
+            String s = new String(buffer, "UTF-8");
+            JSONObject jsonObject = new JSONObject(s);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("organisationList");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObj = jsonArray.getJSONObject(i);
+                String name = jsonObj.getString("name");
+                String description = jsonObj.getString("description");
+                String image = jsonObj.getString("image");
+                String city = jsonObj.getString("city");
+                String trackingMode = jsonObj.getString("trackingMode");
+                Long orgId = jsonObj.getLong("id");
+                String creationDate = jsonObj.getString("creationDate");
+                String serverUrl;
+                String trackingArea = jsonObj.getString("trackingArea");
+                Organization organization = new Organization();
+                organization.setName(name);
+                organization.setImage(image);
+                organization.setDescription(description);
+                organization.setCity(city);
+                organization.setId(orgId);
+                organization.setTrackingArea(trackingArea);
+                organization.setTrackingMode(trackingMode);
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+                OffsetDateTime offsetDateTime = OffsetDateTime.parse(creationDate, dateTimeFormatter);
+                organization.setCreationDate(offsetDateTime);
+
+                if (trackingMode.equals("authenticated")) {
+                    serverUrl = jsonObj.getString("authenticationServerURL");
+                    organization.setAuthenticationServerURL(serverUrl);
+                }
+
+                aux.add(organization);
+            }
+
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return aux;
+
+    }
+    public void updateLatLngList(List<Organization>list) throws JSONException {
         if(list!=null) {
 
             latLngOrganizations = new ArrayList<>();
 
             for (int i = 0; i < list.size(); i++) {
-                LatLngOrganization aux = new LatLngOrganization();
-                aux.setLatLng(list.get(i));
-                aux.setName(list.get(i));
+                LatLngOrganization latLngOrganization = new LatLngOrganization();
+                latLngOrganization.setLatLng(list.get(i));
+                latLngOrganization.setName(list.get(i));
                 System.out.println("nome organizzazione"+list.get(i).getName());
-                aux.setTrackingMode(list.get(i));
-                aux.setOrganizationID(list.get(i));
-                aux.setOrgAuthServerid(list.get(i));
-                aux.setTimeStamp(list.get(i));
-                latLngOrganizations.add(aux);
+                latLngOrganization.setTrackingMode(list.get(i));
+                latLngOrganization.setOrganizationID(list.get(i));
+                latLngOrganization.setOrgAuthServerid(list.get(i));
+                latLngOrganization.setTimeStamp(list.get(i));
+                latLngOrganizations.add(latLngOrganization);
             }
         }
     }

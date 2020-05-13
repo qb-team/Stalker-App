@@ -2,13 +2,18 @@ package it.qbteam.stalkerapp;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -36,12 +41,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.Storage;
+import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
-import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
-public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
+public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -51,7 +57,27 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
     private static String userEmail;
-    private MyStalkersListFragment myStalkersListFragment;
+    private static TrackingStalker mService;
+    private boolean mBound = false;
+
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            TrackingStalker.LocalBinder binder = (TrackingStalker.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        //Method of the internal class `ServiceConnection` which allows you to disconnect the connection with the` Bind Service`.
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };
+
 
     //Method that is invoked when the application is opened.
     @Override
@@ -129,14 +155,14 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     }
                     else {
                         try {
-                            myStalkersListFragment.startTracking();
+                            startTracking();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }
                 else{
-                    myStalkersListFragment.stopTracking();
+                    stopTracking();
 
                 }
             }
@@ -152,6 +178,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             // and getting the reference
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
+        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
+                Context.BIND_AUTO_CREATE);
 
     }
 
@@ -262,7 +290,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 // Permission was granted.
                 try {
 
-                    myStalkersListFragment.startTracking();
+                   startTracking();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -293,6 +321,48 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             }
         }
     }
+    //This method is invoked when the main Activity comes is paused and its return is expected in a short time.
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
+    @Override
+    public void onStop() {
+
+        if (mBound) {
+            this.unbindService(mServiceConnection);
+            mBound = false;
+        }
+
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+        super.onStop();
+    }
+
+    //Method that is called when a shared resource between two views is modified, added or removed.
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+
+        if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
+            HomePageActivity homePageActivity= new HomePageActivity();
+            homePageActivity.setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
+                    false));
+        }
+
+    }
+
+    //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
+    public void startTracking() throws IOException {
+        Storage.deleteMovement();
+        mService.requestLocationUpdates();
+    }
+
+
+    //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
+    public void stopTracking() {
+        mService.removeLocationUpdates();
+    }
 
     //Check if the GPS is active.
     public void statusCheck() {
@@ -313,7 +383,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                             requestPermissions();
                         } else {
                             try {
-                                myStalkersListFragment.startTracking();
+                                startTracking();
 
                             }
                             catch (IOException e) {

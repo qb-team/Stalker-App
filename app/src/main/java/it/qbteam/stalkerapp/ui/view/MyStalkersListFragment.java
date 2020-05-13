@@ -1,15 +1,8 @@
 package it.qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,53 +17,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
-import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.presenter.MyStalkersListPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
-import it.qbteam.stalkerapp.tools.Utils;
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
-    private static TrackingStalker mService;
     private MyStalkersListPresenter myStalkersListPresenter;
     private List<Organization> organizationList;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private String path;
-    private static MyStalkersListFragment instance = null;
+    private static String path;
     private User user;
-    private boolean mBound = false;
 
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            TrackingStalker.LocalBinder binder = (TrackingStalker.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        //Method of the internal class `ServiceConnection` which allows you to disconnect the connection with the` Bind Service`.
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-            mBound = false;
-        }
-    };
 
     //Creation of the fragment as a component.
     @Override
@@ -91,9 +61,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                         }
                     });
         }
-        instance = this;
-        getContext().bindService(new Intent(getContext(), TrackingStalker.class), mServiceConnection,
-                Context.BIND_AUTO_CREATE);
+
+
     }
 
     //Creation of the graphic part displayed by the user.
@@ -251,9 +220,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //Keeps track of any changes made by the user of his list of organizations in the `MyStalkerListFragment` view.
-     public List<Organization> checkForUpdate(){
+   /*  public List<Organization> checkForUpdate(){
         return myStalkersListPresenter.checkLocalFile(path);
-     }
+     }*/
 
     //It notifies the user of the successful download of his list of organizations included in `MyStalkersList` and shows them on the screen.
     @Override
@@ -273,48 +242,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             Toast.makeText(getContext(), "Lista MyStalker ancora vuota", Toast.LENGTH_SHORT).show();
     }
 
-    //This method is invoked when the main Activity comes is paused and its return is expected in a short time.
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
-    @Override
-    public void onStop() {
-
-        if (mBound) {
-            getContext().unbindService(mServiceConnection);
-            mBound = false;
-        }
-
-        PreferenceManager.getDefaultSharedPreferences(getContext()).unregisterOnSharedPreferenceChangeListener(this);
-        super.onStop();
-    }
-
-    //Method that is called when a shared resource between two views is modified, added or removed.
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
-        if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
-            HomePageActivity homePageActivity= new HomePageActivity();
-            homePageActivity.setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
-                    false));
-        }
-
-    }
-
-    //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public void startTracking() throws IOException {
-        Storage.deleteMovement();
-        mService.requestLocationUpdates();
-    }
-
-
-    //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public void stopTracking() {
-        mService.removeLocationUpdates();
-    }
 
     //Returns the user to the previous Activity or Fragment.
     @Override

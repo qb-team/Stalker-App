@@ -170,7 +170,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     JSONObject mainObj = new JSONObject();
     mainObj.put("organisationList", ja);
 
-    String inline=mainObj.toString();
+   String inline=mainObj.toString();
             FileWriter w;
             w = new FileWriter(path);
             w.write(inline);
@@ -202,7 +202,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         oos.flush();
         oos.close();
         fos.close();
-
     }
 
     public static List<Place> deserializePlaceInLocal() throws IOException, ClassNotFoundException{
@@ -217,6 +216,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fis.close();
         return place;
     }
+
+
 
     //Deserializes the object OrganizationMovement from a local file.
     public static OrganizationMovement deserializeMovementInLocal() throws IOException, ClassNotFoundException {

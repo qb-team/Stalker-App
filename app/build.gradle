@@ -28,6 +28,9 @@ android {
     }
     buildToolsVersion = '28.0.3'
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+}
 }
 ext {
     oltu_version = "1.0.1"
@@ -82,4 +85,11 @@ dependencies {
     implementation "io.gsonfire:gson-fire:$json_fire_version"
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation files('libs/urlimageviewhelper-1.0.4.jar')
+    implementation 'org.mockito:mockito-all:2.0.2-beta'
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation 'org.powermock:powermock:1.6.5'
+    testImplementation 'org.powermock:powermock-module-junit4:1.6.5'
+    testImplementation 'org.powermock:powermock-api-mockito:1.6.5'
+    testImplementation 'org.json:json:20140107'
+    testImplementation "org.robolectric:robolectric:4.0.2"
 }

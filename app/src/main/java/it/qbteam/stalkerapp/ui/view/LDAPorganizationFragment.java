@@ -137,7 +137,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     @Override
     public void onSuccessLdap(String message) {
 
-        HomePageActivity.setSwitcherTrackingMode(true);
         authentication.setVisibility(View.INVISIBLE);
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
 

@@ -34,5 +34,6 @@ public class LoginModel implements LoginContract.Interactor {
                         mOnLoginListener.onFailure((FirebaseException) task.getException());
                     }
                 });
-    }
+
+}
 }

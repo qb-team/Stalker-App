@@ -451,6 +451,7 @@ public class TrackingStalker extends Service {
 
     public List<Organization> checkUpdateList(){
 
+
         List<Organization> aux = new ArrayList<>();
         File organizationFile = new File("data/user/0/it.qbteam.stalkerapp/files/Preferiti.txt");
         try {
@@ -497,8 +498,8 @@ public class TrackingStalker extends Service {
             e.printStackTrace();
         }
         return aux;
-
     }
+
     public void updateLatLngList(List<Organization>list) throws JSONException {
         if(list!=null) {
 

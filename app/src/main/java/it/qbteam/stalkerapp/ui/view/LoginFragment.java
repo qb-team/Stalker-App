@@ -61,7 +61,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
     }
 
     //Check if the user has written their credentials and send them to the `initLogin (email: String, password: String)` method, otherwise it signals the absence of them.
-    void checkLoginDetails() {
+    public void checkLoginDetails() {
 
         if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())) {
             checkLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
@@ -120,4 +120,5 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();
     }
-}
+
+    }

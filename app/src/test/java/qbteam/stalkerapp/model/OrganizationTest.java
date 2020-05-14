@@ -8,8 +8,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 
@@ -32,8 +30,8 @@ public class OrganizationTest {
     private static final String trackingMode = "authenticated";
     private static final String authenticationServerURL="www.LDAP.com";
     private static final Organization org = new Organization();
-
     private  Organization organization;
+
     @Before
     public void setUp(){
         org.setId(id);
@@ -95,7 +93,6 @@ public class OrganizationTest {
         assertEquals(org.getAuthenticationServerURL(), organization.getAuthenticationServerURL());
         assertEquals(org.hashCode(), org.hashCode());
         assertEquals(org, org);
-
 
     }
 }

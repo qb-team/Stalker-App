@@ -151,6 +151,15 @@ public class Organization implements Comparable<Organization> {
     return this;
   }
 
+  public Long getId() {
+    return id;
+  }
+
+  public Organization setId(Long id) {
+    this.id = id;
+    return this;
+  }
+
   /**
    * Unique identifier for an organization.
    * minimum: 1
@@ -159,14 +168,14 @@ public class Organization implements Comparable<Organization> {
   @NotNull
   @Min(1L)  @ApiModelProperty(required = true, value = "Unique identifier for an organization.")
 
-  public Long getId() {
+  /*public Long getId() {
     return id;
   }
 
 
   public void setId(Long id) {
     this.id = id;
-  }
+  }*/
 
 
   public Organization name(String name) {
@@ -187,8 +196,9 @@ public class Organization implements Comparable<Organization> {
   }
 
 
-  public void setName(String name) {
+  public Organization setName(String name) {
     this.name = name;
+    return this;
   }
 
 

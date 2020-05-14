@@ -78,7 +78,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     };
 
-
     //Method that is invoked when the application is opened.
     @Override
     protected void onStart() {

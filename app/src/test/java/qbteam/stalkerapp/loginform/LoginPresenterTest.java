@@ -2,35 +2,52 @@ package qbteam.stalkerapp.loginform;
 
 
 
+import android.content.Context;
+
+import androidx.fragment.app.Fragment;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.InjectMocks;
 
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import it.qbteam.stalkerapp.contract.LoginContract;
+import it.qbteam.stalkerapp.model.authentication.LoginModel;
+import it.qbteam.stalkerapp.presenter.LoginPresenter;
 import it.qbteam.stalkerapp.ui.view.LoginFragment;
+
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoginPresenterTest {
-
-  /*  private FirebaseAuth mockAuth;
+/*
+    private FirebaseAuth mockAuth;
     private LoginContract.View loginView;
     private LoginModel loginModel;
     private LoginPresenter loginPresenter;
     private LoginContract.onLoginListener onLoginListener;
     public static final FirebaseApp MOCK_APP;
     private static final String DEFAULT_APP_NAME = "[DEFAULT]";
-    private static Context CONTEXT = ApplicationProvider.getApplicationContext();
+    private static Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
 
     static {
         FirebaseApp app = mock(FirebaseApp.class);
         when(app.get(eq(FirebaseAuth.class))).thenReturn(mock(FirebaseAuth.class));
-        when(app.getApplicationContext()).thenReturn(CONTEXT);
+        when(app.getApplicationContext()).thenReturn(appContext);
         when(app.getName()).thenReturn(DEFAULT_APP_NAME);
         MOCK_APP = app;
     }
@@ -53,32 +70,4 @@ public class LoginPresenterTest {
         loginModel.performFirebaseLogin(fragment,email,password);
     }
 */
-  /*
-  private static String email="prova@prova.it";
-  private static String password="12345678";
-
-
-  @InjectMocks
-  private LoginFragment loginFragment;
-  @Before
-  public void setUpCredentials(){
-    loginFragment= new LoginFragment();
-
-  }
-  @Test
-    public void testCredentials(){
-
-      loginFragment.setEmail(email);
-      loginFragment.setPass(password);
-      verify(loginFragment).checkLoginDetails();
-
-     // assertEquals(loginFragment.getEmailEditText().getText().toString(),email);
-     // assertEquals(loginFragment.getPasswordEditText().getText().toString(),password);
-
-
-
-
-
-
-  }*/
 }

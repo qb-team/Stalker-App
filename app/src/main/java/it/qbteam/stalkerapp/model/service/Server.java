@@ -132,6 +132,7 @@ public class Server {
         });
 
     }
+
     //Tracks the user movement inside the trackingArea of an organization.
     public static void performMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken) {
 
@@ -157,16 +158,15 @@ public class Server {
                             Storage.serializeMovementInLocal(movementUpload);
                         }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-                @Override
-                public void onFailure(Call<OrganizationMovement> call, Throwable t) {
-                }
+    @Override
+    public void onFailure(Call<OrganizationMovement> call, Throwable t) {
+    }
         });
-
     }
 
     //Returns the list of all organizations.

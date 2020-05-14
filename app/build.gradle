@@ -93,6 +93,5 @@ dependencies {
     testImplementation 'org.json:json:20140107'
     testImplementation "org.robolectric:robolectric:4.0.2"
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
     annotationProcessor files("libs/lombok.jar")
 }

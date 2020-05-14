@@ -1,18 +1,21 @@
 package it.qbteam.stalkerapp.model.data;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 
 public class LatLngOrganization {
 
     private String name;
-    private ArrayList<LatLng> polygon;
+    private List<LatLng> polygon;
     private String trackingMode;
     private String orgAuthServerID;
     private OffsetDateTime timeStamp;
@@ -50,7 +53,7 @@ public class LatLngOrganization {
     }
 
     //Returns the List of organizations' latitude and longitude.
-    public ArrayList<LatLng> getLatLng(){
+    public List<LatLng> getLatLng(){
         return this.polygon;
     }
 

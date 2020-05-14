@@ -21,7 +21,7 @@ public class TrackingDistance {
         LatLng test = new LatLng(location.getLatitude(), location.getLongitude());
 
         for(int i=0;i<latLngOrganizations.size();i++) {
-            final ArrayList<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
+            final List<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
             if (distance==0){
                 nearestPoint = findNearestPoint(test, poligono);
                 distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);

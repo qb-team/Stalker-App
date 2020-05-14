@@ -5,6 +5,10 @@ public class User {
     private String token;
     private String uid;
 
+    public User() {
+
+    }
+
     //User's constructor.
     public User(String token, String uid) {
         this.token=token;
@@ -19,7 +23,13 @@ public class User {
         return this.token;
     }
 
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
 
 
 }

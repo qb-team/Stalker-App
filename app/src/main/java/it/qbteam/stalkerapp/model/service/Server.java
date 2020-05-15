@@ -17,6 +17,7 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
+import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,10 +108,10 @@ public class Server {
         });
 
     }
-    public static void performDownloadPlaceServer(Organization organization, String userToken){
+    public static void performDownloadPlaceServer(Long orgID, String userToken){
 
         Place placeDownload = new Place();
-        placeDownload.setOrganizationId(organization.getId());
+        placeDownload.setOrganizationId(orgID);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         PlaceApi service = ac.createService(PlaceApi.class);
         Call<List<Place>> place = service.getPlaceListOfOrganization(placeDownload.getOrganizationId());
@@ -118,7 +119,9 @@ public class Server {
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
                 try {
+                    System.out.print(response.code());
                     Storage.serializePlaceInLocal(response.body());
+                    System.out.print(response.body());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -149,25 +152,62 @@ public class Server {
         MovementApi service = ac.createService(MovementApi.class);
         Call<OrganizationMovement> movement = service.trackMovementInOrganization(movementUpload);
         movement.enqueue(new Callback<OrganizationMovement>() {
-                @Override
-                public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
+            @Override
+            public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
-                    try {
-                        if(type==1){
-                            movementUpload.setExitToken(response.body().getExitToken());
-                            Storage.serializeMovementInLocal(movementUpload);
-                        }
+                try {
+                    if(type==1){
+                        movementUpload.setExitToken(response.body().getExitToken());
+                        Storage.serializeMovementInLocal(movementUpload);
+                    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
-    @Override
-    public void onFailure(Call<OrganizationMovement> call, Throwable t) {
-    }
+            @Override
+            public void onFailure(Call<OrganizationMovement> call, Throwable t) {
+            }
         });
+
     }
+    public static void performPlaceMovementServer(String exitToken,int type, Long placeId, String authServerID, Long orgId, String userToken){
+        PlaceMovement movementUpload= new PlaceMovement();
+        movementUpload.setMovementType(type);
+        OffsetDateTime dateTime= OffsetDateTime.now();
+        movementUpload.setTimestamp(dateTime);
+        movementUpload.setPlaceId(placeId);
+        if(authServerID != null)
+            movementUpload.setOrgAuthServerId(authServerID);
+        if(type == -1)
+            movementUpload.setExitToken(exitToken);
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
+        MovementApi service= ac.createService(MovementApi.class);
+        Call<PlaceMovement> movement= service.trackMovementInPlace(movementUpload);
+        movement.enqueue(new Callback<PlaceMovement>() {
+            @Override
+            public void onResponse(Call<PlaceMovement> call, Response<PlaceMovement> response) {
+
+                try {
+                    if(type==1){
+                        movementUpload.setExitToken(response.body().getExitToken());
+                        Storage.serializePlaceMovement(movementUpload);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlaceMovement> call, Throwable t) {
+
+            }
+        });
+
+    }
+
 
     //Returns the list of all organizations.
     public void performDownloadFileServer(String path, String userToken)  {

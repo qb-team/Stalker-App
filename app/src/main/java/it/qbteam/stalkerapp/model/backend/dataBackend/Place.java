@@ -12,6 +12,7 @@
 
 package it.qbteam.stalkerapp.model.backend.dataBackend;
 
+import java.io.Serializable;
 import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
@@ -23,7 +24,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Area of an organization subjected to tracking.")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
-public class Place {
+public class Place implements Serializable {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private Long id;

@@ -13,6 +13,7 @@
 
 package it.qbteam.stalkerapp.model.backend.dataBackend;
 
+import java.io.Serializable;
 import java.util.Objects;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
@@ -31,7 +32,7 @@ import javax.validation.Valid;
  */
 @ApiModel(description = "Subject interested in tracking people's presence inside its own places, in either an anonymous or authenticated way.")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
-public class Organization implements Comparable<Organization> {
+public class Organization implements Comparable<Organization>, Serializable {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private Long id;

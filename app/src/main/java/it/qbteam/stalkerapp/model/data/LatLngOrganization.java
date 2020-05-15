@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.service.Storage;
 
 public class LatLngOrganization {
 
@@ -19,7 +20,8 @@ public class LatLngOrganization {
     private String trackingMode;
     private String orgAuthServerID;
     private OffsetDateTime timeStamp;
-    private long organizationID;
+    private Long organizationID;
+    private static String path="data/user/0/it.qbteam.stalkerapp/files/Preferiti.txt";
 
     //Sets the latitude and the longitude of the organization's tracking area.
     public void setLatLng(Organization organization) throws JSONException {
@@ -36,6 +38,27 @@ public class LatLngOrganization {
         }
 
     }
+
+    public static List<LatLngOrganization> checkUpdateList() throws JSONException {
+         List<LatLngOrganization> latLngOrganizationList= new ArrayList<>();
+         List<Organization> list;
+         Storage storage= new Storage(null, null);
+         list=storage.performCheckFileLocal(path);
+        if(list!=null) {
+            for (int i = 0; i < list.size(); i++) {
+                LatLngOrganization latLngOrganization = new LatLngOrganization();
+                latLngOrganization.setLatLng(list.get(i));
+                latLngOrganization.setName(list.get(i));
+                latLngOrganization.setTrackingMode(list.get(i));
+                latLngOrganization.setOrganizationID(list.get(i));
+                latLngOrganization.setOrgAuthServerid(list.get(i));
+                latLngOrganization.setTimeStamp(list.get(i));
+                latLngOrganizationList.add(latLngOrganization);
+            }
+
+        }
+        return latLngOrganizationList;
+     }
 
     //Sets organization's name.
     public void setName(Organization organization){
@@ -76,6 +99,6 @@ public class LatLngOrganization {
     }
 
     //Returns the organization's ID.
-    public long getOrgID(){return this.organizationID;}
+    public Long getOrgID(){return this.organizationID;}
 
 }

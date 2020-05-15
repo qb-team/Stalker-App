@@ -139,9 +139,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //Hide the 'add to favorites' option from the application's action tab menu and make the search command visible.
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.searchID);
+        MenuItem item= menu.findItem(R.id.searchID);
         item.setVisible(true);
-        SearchView searchView = (SearchView) item.getActionView();
+        SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
         super.onPrepareOptionsMenu(menu);
     }
@@ -162,7 +162,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
                 if (organizationList.get(i).getName().toLowerCase().contains(userInput))
                     newList.add(organizationList.get(i));
-
             }
             adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
             recyclerView.setAdapter(adapter);
@@ -177,10 +176,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
 
     }
-    public void downloadPlaceServer(Organization organization){
-        Server.performDownloadPlaceServer(organization,user.getToken());
 
-    }
 
     //Notifies the user of the success of the organization's add operation.
     @Override

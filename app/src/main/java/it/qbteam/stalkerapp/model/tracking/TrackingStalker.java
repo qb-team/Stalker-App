@@ -450,22 +450,26 @@ public class TrackingStalker extends Service {
         // In caso positivo insideOrganizationBoolean diventa true
         if (isInsideOrganizations(location)) {
             insideOrganizationBoolean=true;
-            System.out.println("Sei dentro");
+            Toast.makeText(getApplicationContext(),"Sei all'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
             latLngPlaceList=LatLngPlace.updatePlace();
 
         } else {
            // int i = TrackingDistance.checkDistance(location, (ArrayList<LatLngOrganization>) latLngOrganizationList);
            // switchPriority(i);
-            System.out.println("Sei fuori");
+            if(insideOrganization!=null)
+            Toast.makeText(getApplicationContext(),"Sei uscito dall'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
         }
     }
     private void handlePlaces(Location location) {
         // Guarda se siamo dentro o no a un LUOGO
         // In caso positivo insidePlaceBoolean diventa true
         if (isInsidePlace(location)){
-
+            Toast.makeText(getApplicationContext(),"Sei dentro al luogo: "+insidePlace.getName(),Toast.LENGTH_SHORT).show();
             insidePlaceBoolean=true;
         }
+        else if(!isInsidePlace(location)&&insidePlace!=null)
+            Toast.makeText(getApplicationContext(),"Sei uscito dal luogo: "+insidePlace.getName(),Toast.LENGTH_SHORT).show();
+
     }
     private boolean isInsidePlace(Location location) {
 
@@ -559,27 +563,6 @@ public class TrackingStalker extends Service {
          * Si avverte sia il SERVER che l'UTENTE che siamo entrati nel nuovo luogo
          * insidePlace = nuovo luogo */
     }
-   /*
-    public void updateLatLngList(List<Organization>list) throws JSONException {
-        if(list!=null) {
-
-            latLngOrganizations = new ArrayList<>();
-
-            for (int i = 0; i < list.size(); i++) {
-                LatLngOrganization latLngOrganization = new LatLngOrganization();
-                latLngOrganization.setLatLng(list.get(i));
-                latLngOrganization.setName(list.get(i));
-                System.out.println("nome organizzazione"+list.get(i).getName());
-                latLngOrganization.setTrackingMode(list.get(i));
-                latLngOrganization.setOrganizationID(list.get(i));
-                latLngOrganization.setOrgAuthServerid(list.get(i));
-                latLngOrganization.setTimeStamp(list.get(i));
-                latLngOrganizations.add(latLngOrganization);
-            }
-        }
-    }*/
-
-
 
     /**
      * Class used for the client Binder.  Since this service runs in the same process as its
@@ -613,46 +596,3 @@ public class TrackingStalker extends Service {
     }
 }
 
-  /*  private void handlePlaces(Location location) {
-        // Guarda se siamo dentro o no a un LUOGO
-        // In caso positivo insidePlaceBoolean diventa true
-        if (isInsidePlace(location)){
-             NOTIFICO IL SERVER CHE SIAMO ENTRATI IN UN LUOGO DELL'ORGANIZZAZIONE
-            insidePlaceBoolean=true;
-        }
-    }
-
-    private void handleInsidePlace(Location location) {
-
-        CONTROLLO SE È USCITO (Si potrebbe usare lo stesso metodo isInsideActualOrganization) {
-             NOTIFICO IL SERVER CHE SIAMO USCITI DAL LUOGO DELL'ORGANIZZAZIONE
-        }
-
-        CONTROLLO SE È COMUNQUE DENTRO UN LUOGO MA UNO DIVERSO{
-            NOTIFICO IL SERVER CHE SIAMO USCITI DAL LUOGO DELL'ORGANIZZAZIONE E SIAMO ENTRATI IN UN ALTRO
-        }
-
-    }
-
-
-    private boolean isInsidePlace(Location location) {
-    // ArrayList<> luoghiorganizzazione = new ArrayList()<> ; // --> Creazione arraylist di luoghi all'interno dell'organizzazione
-        // Costruzione Builder
-        return false;
-    }
-
-    private void isInsideActualOrganization(Location location) {
-
-        LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
-        final LatLngBounds.Builder builder=new LatLngBounds.Builder();
-        for (LatLng point : insideOrganization.getLatLng()) {
-            builder.include(point);
-        }
-        boolean isInsideBoundary = builder.build().contains(actualPosition);
-        boolean isInside = PolyUtil.containsLocation(actualPosition, insideOrganization.getLatLng(), true);
-        if (!isInsideBoundary || !isInside) {
-             NOTIFICO IL SERVER CHE SIAMO USCITI DALL'ORGANIZZAZIONE
-            insideOrganizationBoolean = false;
-        }
-    }
-*/

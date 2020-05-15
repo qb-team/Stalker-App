@@ -246,6 +246,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         super.onPrepareOptionsMenu(menu);
     }
 
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;

@@ -361,6 +361,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     public void startTracking() throws IOException {
         Storage.deleteMovement();
+        Storage.deletePlace();
         mService.requestLocationUpdates();
     }
 

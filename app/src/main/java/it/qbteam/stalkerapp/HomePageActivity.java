@@ -30,7 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.BuildConfig;
-import com.google.firebase.firestore.FirebaseFirestore;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
@@ -38,16 +38,23 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import org.json.JSONException;
+
 import java.io.IOException;
+
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
+import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 
-public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -415,4 +422,10 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         return user.getToken();
     }
 
+
+    @Override
+    public void sendOrganization(Organization organization) throws IOException, JSONException {
+        Fragment frag = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();
+        ((MyStalkersListFragment) frag).addOrganization(organization);
+    }
 }

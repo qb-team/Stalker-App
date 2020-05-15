@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
-    @Override
+   @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof FragmentListener) {

@@ -73,16 +73,16 @@ public class StorageTest {
         storage.performUpdateFile(list,path);
     }
 
-    @Test
+    /*@Test
     public void serializeMovement() throws IOException {
         Storage.serializeMovementInLocal(organizationMovement);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void deserializeMovement() throws IOException, ClassNotFoundException {
         System.out.println(Environment.getExternalStorageState());
         Storage.deserializeMovementInLocal();
-    }
+    }*/
 
 
 

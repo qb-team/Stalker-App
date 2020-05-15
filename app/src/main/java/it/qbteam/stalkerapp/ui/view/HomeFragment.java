@@ -239,7 +239,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.favoriteID).setVisible(false);
         MenuItem item= menu.findItem(R.id.searchID);
         item.setVisible(true);
         SearchView searchView= (SearchView) item.getActionView();

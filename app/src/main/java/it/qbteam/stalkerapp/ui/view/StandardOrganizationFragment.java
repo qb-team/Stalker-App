@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
 
-    public final static String TAG="Home_Fragment";
+    public final static String TAG="StandardOrganizationFragment";
     private TextView title, description ;
     private ImageView image;
 
@@ -48,39 +48,11 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     //Makes the 'add to favorites' option visible to the application's action tab menu and hides the search command.
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.favoriteID).setVisible(true);
+
         menu.findItem(R.id.searchID).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 
-    //Add the organization to the favorites list.
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id= item.getItemId();
-
-        if(id==R.id.preferitiID){
-            Bundle bundle=this.getArguments();
-
-            if(bundle!=null){
-
-                try {
-                    Organization o=new Organization();
-                    o.setName(bundle.getString("name"));
-                    MyStalkersListFragment myStalkersListFragment = new MyStalkersListFragment();
-                    myStalkersListFragment.addOrganization(o);
-
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     //Manages the back button.
     @Override

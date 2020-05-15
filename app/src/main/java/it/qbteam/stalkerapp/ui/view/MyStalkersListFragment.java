@@ -139,7 +139,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //Hide the 'add to favorites' option from the application's action tab menu and make the search command visible.
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.favoriteID).setVisible(false);
         MenuItem item = menu.findItem(R.id.searchID);
         item.setVisible(true);
         SearchView searchView = (SearchView) item.getActionView();

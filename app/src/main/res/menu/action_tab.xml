@@ -6,11 +6,5 @@
         android:icon="@drawable/ic_search_black_24dp"
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
-    <item
-        android:id="@+id/favoriteID"
-        android:visible="false"
-        android:title="Aggiungi ai preferiti"/>
-
-
 
 </menu>

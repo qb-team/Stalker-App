@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             fragmentListener = (FragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnGreenFragmentListener");
+                    + " FragmentListener");
         }
     }
     //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".

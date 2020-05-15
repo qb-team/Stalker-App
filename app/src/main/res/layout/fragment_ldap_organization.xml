@@ -39,9 +39,9 @@
             <ImageView
                 android:id="@+id/imageID"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:src="@drawable/torre_archimede" />
 
             <TextView
@@ -49,24 +49,11 @@
                 android:id="@+id/descriptionID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:padding="15dp"
                 android:text="Torre archimede è un posto bello dove si studia Informatica e ci sono persone brutte come Tommado Azzalin"
-                android:textAlignment="center"
                 android:textColor="@color/blackColor"
                 android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/positionID"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center_horizontal"
-                android:text="Sei dentro"
-                android:textAlignment="center"
-                android:visibility="invisible"
-                android:textSize="28sp"
-                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/LDAPaccessID"

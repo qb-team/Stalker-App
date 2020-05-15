@@ -8,21 +8,29 @@
     android:background="@color/whiteColor"
     android:clickable="true"
     >
-    <TextView
-        android:id="@+id/titleID"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:gravity="center_horizontal"
-        android:text="TITOLO"
-        android:textAlignment="center"
-        android:textSize="28sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/titleID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center_horizontal"
+            android:text="TITOLO"
+            android:textAlignment="center"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/imageID"
         android:layout_gravity="center"
         android:src="@drawable/image"/>
@@ -31,19 +39,13 @@
             android:id="@+id/descriptionID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:textColor="@color/blackColor"
-            android:layout_marginTop="40dp"
+            android:text="nfewonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenofnennpifnfrneiofneionfienfoneonvoefinovenvonwvewovnofnnfewonfonqofnoenqofnoqenofnennpifnfrneiofneionfienfoneonvoefinovenvonwvewovnofnnfewonfonqofnoenqofnoqenofnennpifnfrneiofneionfienfoneonvoefinovenvonwvewovnofnenofnennpifnfrneiofneionfienfoneonvoefinovenvonwvewovnofn vof "
+            android:padding="15dp"
+            android:layout_marginTop="20dp"
             android:textSize="18sp"
-            android:gravity="center_horizontal"/>
+            />
 
-    <TextView
-            android:id="@+id/coordinateID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:layout_marginTop="150dp"/>
 
 
 </LinearLayout>

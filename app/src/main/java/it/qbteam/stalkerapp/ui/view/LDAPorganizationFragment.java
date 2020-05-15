@@ -35,7 +35,7 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
 public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener, LDAPorganizationContract.View {
 
-    private TextView title,description,positionTextView;
+    private TextView title,description;
     private Button authentication;
     private ImageView mImageView;
     private Long orgID;
@@ -72,19 +72,15 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         title.setText(bundle.getString("name"));
         description = view.findViewById(R.id.descriptionID);
         description.setText(bundle.getString("description"));
-        positionTextView = view.findViewById(R.id.positionID);
         authentication = view.findViewById(R.id.LDAPaccessID);
         mImageView = view.findViewById(R.id.imageID);
         orgID = bundle.getLong("orgID");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         creationDate = OffsetDateTime.parse(bundle.getString("creationDate"), dateTimeFormatter);
         serverURL = bundle.getString("serverURL");
-
         ldapOrganizationPresenter = new LDAPorganizationPresenter(this);
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
-
-
         return view;
     }
 

@@ -22,8 +22,7 @@ import java.io.IOException;
 public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
 
     public final static String TAG="Home_Fragment";
-    private static StandardOrganizationFragment instance = null;
-    private TextView title, risultati, description ;
+    private TextView title, description ;
     private ImageView image;
 
     //Creation of the fragment as a component.
@@ -40,7 +39,6 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         title=view.findViewById(R.id.titleID);
         image=view.findViewById(R.id.imageID);
         description=view.findViewById(R.id.descriptionID);
-        risultati=view.findViewById(R.id.coordinateID);
         title.setText(bundle.getString("name"));
         UrlImageViewHelper.setUrlDrawable(image, bundle.getString("image"));
         description.setText(bundle.getString("description"));

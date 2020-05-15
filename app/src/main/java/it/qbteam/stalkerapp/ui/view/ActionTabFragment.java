@@ -58,7 +58,7 @@ public class ActionTabFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_stalkericon);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_stalkericon_);
 
         // Fixed tabs display all tabs concurrently
         tabLayout.setTabMode(TabLayout.MODE_FIXED);

@@ -412,7 +412,7 @@ public class TrackingStalker extends Service {
                 .setContentTitle(Utils.getLocationTitle(this))
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_HIGH)
-                .setSmallIcon(R.drawable.ic_stalkericon)
+                .setSmallIcon(R.drawable.ic_stalkericon_)
                 .setTicker(text)
                 .setWhen(System.currentTimeMillis());
 

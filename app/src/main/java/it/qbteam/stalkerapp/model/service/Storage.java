@@ -244,7 +244,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     public static  void deletePlaceMovement() throws IOException {
         PlaceMovement placeMovement=null;
         //Reading the OrganizationMovement from a file
-        File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
+        File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/PlaceMovement.txt");
         FileOutputStream fos=new FileOutputStream(toDelete);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         //Write the object OrganizationMovement null==delete

@@ -11,25 +11,42 @@
             android:title="Logout" />
     </group>
 
-<item android:title="Impostazioni tracciamento">
-    <menu>
-        <item android:id="@+id/nav_switchID"
-            app:actionLayout="@layout/switch_tracking"
-            android:title="Tracciamento" />
+    <item android:title="Impostazioni tracciamento">
+        <menu>
+            <item android:id="@+id/nav_switchID"
+                app:actionLayout="@layout/switch_tracking"
+                android:title="Tracciamento" />
 
-        <item android:id="@+id/nav_switch_ModeID"
-            app:actionLayout="@layout/switch_mode"
-            android:title="Modalità autenticata"/>
+            <item android:id="@+id/nav_switch_ModeID"
+                app:actionLayout="@layout/switch_mode"
+                android:title="Modalità autenticata"/>
+        </menu>
+    </item>
 
-    </menu>
-</item>
+    <item android:title="Info tracciamento">
+
+        <menu>
+            <item
+                android:id="@+id/navi_org_item"
+                app:actionLayout="@layout/text_layout_name_org"
+                app:showAsAction="always"
+                android:title="Sei dentro a: " />
+            <item android:id="@+id/navi_place_item"
+                app:actionLayout="@layout/text_layout_name_place"
+                app:showAsAction="always"
+                android:title="Nel luogo: " />
+        </menu>
+
+    </item>
+
+
+
 
     <item android:title="Altro">
         <menu>
             <item
                 android:id="@+id/alphabeticalOrderID"
                 android:title="Ordinamento alfabetico" />
-
 
         </menu>
     </item>

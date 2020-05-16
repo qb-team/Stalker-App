@@ -13,6 +13,7 @@
 
 package it.qbteam.stalkerapp.model.backend.dataBackend;
 
+import java.io.Serializable;
 import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
@@ -26,7 +27,8 @@ import javax.validation.Valid;
  */
 @ApiModel(description = "Movement in a place of an organization.")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
-public class PlaceMovement {
+public class PlaceMovement implements Serializable {
+
   public static final String SERIALIZED_NAME_EXIT_TOKEN = "exitToken";
   @SerializedName(SERIALIZED_NAME_EXIT_TOKEN)
   private String exitToken;

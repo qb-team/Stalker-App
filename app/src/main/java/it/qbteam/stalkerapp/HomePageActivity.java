@@ -1,6 +1,7 @@
 package it.qbteam.stalkerapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -42,8 +44,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.text.BreakIterator;
 
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
@@ -59,6 +63,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static User user;
+    private static TextView nameOrg;
+    private static TextView namePlace;
     private SwitchCompat switcher;
     private FirebaseAuth fAuth;
     private ActionTabFragment actionTabFragment;
@@ -66,6 +72,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static String userEmail;
     private static TrackingStalker mService;
     private boolean mBound = false;
+    private NavigationView navigationView;
+    private  View actionView;
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -93,6 +101,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     //Creates Activity and manages the fragments connected to it. In this method there is the user authentication check,
     // in case the user is no longer logged in the goToMainActivity () method is invoked.
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,13 +136,23 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         ActionBarDrawerToggle actionBarDrawerToggle= new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        NavigationView navigationView = findViewById(R.id.nav_viewID);
+        navigationView = findViewById(R.id.nav_viewID);
         navigationView.setNavigationItemSelectedListener( this);
         //setting switch button in drawer menu
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
-        View actionView = MenuItemCompat.getActionView(menuItem);
+        actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
+        //Imposto nome organizzazione in cui l'utente è tracciato del drawer
+        MenuItem itemNameOrg=menu.findItem(R.id.navi_org_item);
+        actionView = MenuItemCompat.getActionView(itemNameOrg);
+        nameOrg = (TextView) actionView.findViewById(R.id.name_orgID);
+
+        //Imposto nome luogo in cui l'utente è tracciato del drawer
+        MenuItem itemNamePlace=menu.findItem(R.id.navi_place_item);
+        actionView = MenuItemCompat.getActionView(itemNamePlace);
+        namePlace = (TextView) actionView.findViewById(R.id.name_placeID);
+
 
 
         // Check that the user hasn't revoked permissions by going to Settings.
@@ -231,8 +250,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 startActivity(intent);
                 break;
             case R.id.alphabeticalOrderID:
-                HomeFragment mHomeFragment = new HomeFragment();
-                mHomeFragment.alphabeticalOrder();
+                Fragment frag = (HomeFragment)ActionTabFragment.getHomeFragment();
+                ((HomeFragment) frag).alphabeticalOrder();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -361,7 +380,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     public void startTracking() throws IOException {
         Storage.deleteMovement();
-        Storage.deletePlace();
+        Storage.deletePlaceMovement();
         mService.requestLocationUpdates();
     }
 
@@ -429,4 +448,14 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         Fragment frag = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();
         ((MyStalkersListFragment) frag).addOrganization(organization);
     }
+    public static void setNameOrg(String name){
+        nameOrg.setText(name);
+
+    }
+    public static void setNamePlace(String name){
+        namePlace.setText(name);
+
+    }
+
+
 }

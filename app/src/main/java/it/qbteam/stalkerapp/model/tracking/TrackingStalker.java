@@ -432,8 +432,7 @@ public class TrackingStalker extends Service {
             if (!insideOrganizationBoolean && !insidePlaceBoolean){
                 handleOrganizations(location);
             }
-            if (insideOrganizationBoolean && !insidePlaceBoolean){
-                isInsideActualOrganization(location);
+            if (isInsideActualOrganization(location) && !insidePlaceBoolean){
                 handlePlaces(location);
             }
             if (insideOrganizationBoolean && insidePlaceBoolean){
@@ -515,7 +514,7 @@ public class TrackingStalker extends Service {
         }
         return found;
     }
-    private void isInsideActualOrganization(Location location) throws IOException, ClassNotFoundException {
+    private boolean isInsideActualOrganization(Location location) throws IOException, ClassNotFoundException {
         LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
         final LatLngBounds.Builder builder=new LatLngBounds.Builder();
         for (LatLng point : insideOrganization.getLatLng()) {
@@ -529,6 +528,7 @@ public class TrackingStalker extends Service {
             Storage.deletePlace();
             insideOrganizationBoolean = false;
         }
+        return insideOrganizationBoolean;
     }
     private void isInsideActualPlace(Location location) throws IOException, ClassNotFoundException {
         LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());

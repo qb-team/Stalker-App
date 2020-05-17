@@ -46,29 +46,19 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.android.PolyUtil;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.data.LatLngPlace;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
-import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import lombok.SneakyThrows;
 
 /**
@@ -93,79 +83,22 @@ public class TrackingStalker extends Service {
     private static final String TAG = TrackingStalker.class.getSimpleName();
     private LatLngOrganization insideOrganization;
     private LatLngPlace insidePlace;
-    private List<Organization> inOrganization;
-    /**
-     * Switch per aggiornare il Locationrequest
-     * 0 -> Massima accuretazza
-     * 1 -> Acurattezza bilanciata
-     * 2 -> Bassa accuratezza
-     */
-    public int NUMERO = 0;
-
-    /**
-     * The name of the channel for notifications.
-     */
     private static final String CHANNEL_ID = "channel_01";
-
-//    static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-
-    //    static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
-    private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
-            ".started_from_notification";
-
+    private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
     private final IBinder mBinder = new LocalBinder();
-
-    /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-     */
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-
-    /**
-     * The fastest rate for active location updates. Updates will never be more frequent
-     * than this value.
-     */
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
-    /**
-     * The identifier for the notification displayed for the foreground service.
-     */
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private static final int NOTIFICATION_ID = 12345678;
-
-    /**
-     * Used to check whether the bound activity has really gone away and not unbound as part of an
-     * orientation change. We create a foreground service notification only if the former takes
-     * place.
-     */
     private boolean mChangingConfiguration = false;
-
     private NotificationManager mNotificationManager;
-
-    /**
-     * Contains parameters used by {@link com.google.android.gms.location.FusedLocationProviderApi}.
-     */
     private LocationRequest mLocationRequest;
-
-    /**
-     * Provides access to the Fused Location Provider API.
-     */
     private FusedLocationProviderClient mFusedLocationClient;
-
-    /**
-     * Callback for changes in location.
-     */
     private LocationCallback mLocationCallback;
-
     private Handler mServiceHandler;
-
-    /**
-     * The current location.
-     */
     private Location mLocation;
     private List<LatLngOrganization> latLngOrganizationList;
     private List<LatLngPlace> latLngPlaceList;
-    private boolean insidePlaceBoolean=false;
-    private boolean insideOrganizationBoolean= false;
+
 
     public TrackingStalker()  {
     }
@@ -173,15 +106,9 @@ public class TrackingStalker extends Service {
     @SneakyThrows
     @Override
     public void onCreate() {
-
-        inOrganization=new ArrayList<>();
-        latLngOrganizationList= new ArrayList<>();
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);  // Instanzazione FusedLocationProviderClient
-
-        /** Creazione del CallBack
-         * https://developers.google.com/android/reference/com/google/android/gms/location/LocationCallback
-         * */
+        latLngOrganizationList=null;
+        latLngPlaceList=null;
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
             @SneakyThrows
             @Override
@@ -212,22 +139,6 @@ public class TrackingStalker extends Service {
 
     }
 
-    /**
-     * Sets the location request parameters.
-     * https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest
-     * Constant Summary
-     * int 	PRIORITY_BALANCED_POWER_ACCURACY 	Used with setPriority(int) to request "block" level accuracy.
-     * int 	PRIORITY_HIGH_ACCURACY 	Used with setPriority(int) to request the most accurate locations available.
-     * int 	PRIORITY_LOW_POWER 	Used with setPriority(int) to request "city" level accuracy.
-     * int 	PRIORITY_NO_POWER 	Used with setPriority(int) to request the best accuracy possible with zero additional power consumption.
-     * <p>
-     * setSmallestDisplacement(float smallestDisplacementMeters) --> Set the minimum displacement between location updates in meters
-     *
-     * Switch per aggiornare il Locationrequest
-     * 0 -> Massima accuretazza
-     * 1 -> Acurattezza bilanciata
-     * 2 -> Bassa accuratezza
-     */
     public void switchPriority(int i) {
         System.out.println("Switch priority avvenuto");
         switch (i) {
@@ -256,11 +167,6 @@ public class TrackingStalker extends Service {
         }
     }
 
-    /**
-     * Creazione FusedLocation
-     * https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient
-     * getlastlocation() --> Ritorna l'ultima posizione     *
-     */
     private void getLastLocation() {
         try {
             mFusedLocationClient.getLastLocation()
@@ -279,11 +185,6 @@ public class TrackingStalker extends Service {
         }
     }
 
-    /**
-     * Makes a request for location updates. Note that in this sample we merely log the
-     * {@link SecurityException}.
-     */
-
     public void requestLocationUpdates() {
         Log.i(TAG, "Requesting location updates");
         Utils.setRequestingLocationUpdates(this, true);
@@ -297,10 +198,6 @@ public class TrackingStalker extends Service {
         }
     }
 
-    /**
-     * Removes location updates. Note that in this sample we merely log the
-     * {@link SecurityException}.
-     */
     public void removeLocationUpdates() {
         Log.i(TAG, "Removing location updates");
         try {
@@ -312,7 +209,6 @@ public class TrackingStalker extends Service {
             Log.e(TAG, "Lost location permission. Could not remove updates. " + unlikely);
         }
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -330,9 +226,6 @@ public class TrackingStalker extends Service {
         return START_NOT_STICKY;
     }
 
-    /**
-     * Non so bene come viene gestito --> Forse non serve nella nostra app
-     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -379,10 +272,7 @@ public class TrackingStalker extends Service {
     public void onDestroy() {
         mServiceHandler.removeCallbacksAndMessages(null);
     }
-    /**
-     * La notifica a schermo viene gestita qui
-     * Returns the {@link NotificationCompat} used as part of the foreground service.
-     */
+
     private Notification getNotification() {
         Intent intent = new Intent(this, TrackingStalker.class);
 
@@ -438,15 +328,12 @@ public class TrackingStalker extends Service {
 
         if (isInsideOrganizations(location)) {
             HomePageActivity.setNameOrg(insideOrganization.getName());
-            latLngPlaceList=LatLngPlace.updatePlace();
-
 
         }
 
         else {
 
-                HomePageActivity.setNameOrg("Nessuna organizzazione");
-
+            HomePageActivity.setNameOrg("Nessuna organizzazione");
         }
 
         if(isInsidePlace(location)){
@@ -462,9 +349,10 @@ public class TrackingStalker extends Service {
 
 
 
-    private boolean isInsidePlace(Location location) throws IOException, ClassNotFoundException {
+    private boolean isInsidePlace(Location location) throws IOException, ClassNotFoundException, JSONException {
 
         boolean found = false;
+
         if(latLngPlaceList!=null){
             LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
             final LatLngBounds.Builder builder=new LatLngBounds.Builder();
@@ -477,18 +365,15 @@ public class TrackingStalker extends Service {
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngPlaceList.get(i).getLatLng(), true);
                 if (isInsideBoundary && isInside){
                    if(Storage.deserializePlaceMovement()==null){
-                       insidePlaceBoolean=true;
                        System.out.print("Sono dentro al luogo la prima volta");
                        insidePlace=latLngPlaceList.get(i);
                        Toast.makeText(getApplicationContext(),"Sei dentro al luogo: "+insidePlace.getName(),Toast.LENGTH_SHORT).show();
                        Server.performPlaceMovementServer(null,1, latLngPlaceList.get(i).getId(),insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken());
-
                    }
                     found= true;
                 }
                 else{
                     if(Storage.deserializePlaceMovement()!=null&&insidePlace.getId() == Storage.deserializePlaceMovement().getPlaceId()){
-                        insidePlaceBoolean=false;
                         Toast.makeText(getApplicationContext(),"Sei uscito dal luogo: "+insidePlace.getName(),Toast.LENGTH_SHORT).show();
                         Server.performPlaceMovementServer(Storage.deserializePlaceMovement().getExitToken(),-1, latLngPlaceList.get(i).getId(),insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken());
                         Storage.deletePlaceMovement();
@@ -502,12 +387,14 @@ public class TrackingStalker extends Service {
     }
 
 
-    public boolean isInsideOrganizations(Location location) throws IOException, ClassNotFoundException {
+    public boolean isInsideOrganizations(Location location) throws IOException, ClassNotFoundException, JSONException {
         boolean found = false;
         if(latLngOrganizationList!=null){
             LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
             final LatLngBounds.Builder builder=new LatLngBounds.Builder();
             for(int i=0;i<latLngOrganizationList.size();i++) {
+                Server.performDownloadPlaceServer(latLngOrganizationList.get(i).getOrgID(),HomePageActivity.getUserToken());
+
                 for (LatLng point : latLngOrganizationList.get(i).getLatLng()) {
                     builder.include(point);
                 }
@@ -518,16 +405,17 @@ public class TrackingStalker extends Service {
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
                         Toast.makeText(getApplicationContext(),"Sei dentro all'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
                         Server.performMovementServer(latLngOrganizationList.get(i).getOrgAuthServerID(), latLngOrganizationList.get(i).getOrgID(), HomePageActivity.getUserToken(), 1, null);
-                        Server.performDownloadPlaceServer(latLngOrganizationList.get(i).getOrgID(), HomePageActivity.getUserToken());
 
+                        latLngPlaceList=LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
                     }
                     found = true;
                 }
                 else {
                     if(Storage.deserializeMovementInLocal()!=null && insideOrganization.getOrgID()==Storage.deserializeMovementInLocal().getOrganizationId()){
                         Toast.makeText(getApplicationContext(),"Sei uscito dall'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
-                    Server.performMovementServer(insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken(),-1,Storage.deserializeMovementInLocal().getExitToken());
-                    Storage.deleteMovement();
+                        Server.performMovementServer(insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken(),-1,Storage.deserializeMovementInLocal().getExitToken());
+                        Storage.deleteMovement();
+                        Storage.deletePlace();
                         insideOrganization=null;
                     }
                 }

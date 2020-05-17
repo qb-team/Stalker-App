@@ -6,6 +6,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
 import it.qbteam.stalkerapp.model.backend.api.MovementApi;
@@ -108,8 +110,8 @@ public class Server {
         });
 
     }
-    public static void performDownloadPlaceServer(Long orgID, String userToken){
 
+    public static void performDownloadPlaceServer(Long orgID, String userToken) throws IOException {
         Place placeDownload = new Place();
         placeDownload.setOrganizationId(orgID);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
@@ -118,13 +120,13 @@ public class Server {
         place.enqueue(new Callback<List<Place>>() {
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
+                System.out.print(response.code());
                 try {
-                    System.out.print(response.code());
                     Storage.serializePlaceInLocal(response.body());
-                    System.out.print(response.body());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                System.out.print(response.body());
 
             }
 
@@ -133,6 +135,10 @@ public class Server {
                 System.out.println("ERRORE PLACE");
             }
         });
+
+
+
+
 
     }
 

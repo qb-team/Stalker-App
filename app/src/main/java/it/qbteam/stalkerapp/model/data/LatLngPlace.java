@@ -35,9 +35,10 @@ public class LatLngPlace {
     }
 
 
-    public static List<LatLngPlace> updatePlace() throws JSONException, IOException, ClassNotFoundException {
+    public static List<LatLngPlace> updatePlace(Long orgID) throws JSONException, IOException, ClassNotFoundException {
         List<LatLngPlace> latLngPlaceList= new ArrayList<>();
         List<Place> list;
+        Server.performDownloadPlaceServer(orgID,HomePageActivity.getUserToken());
         list=Storage.deserializePlaceInLocal();
         if(list!=null){
             for(int i=0;i<list.size();i++){
@@ -67,5 +68,5 @@ public class LatLngPlace {
 
     public Long getId(){
         return this.id;
-
-    }}
+    }
+}

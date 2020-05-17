@@ -1,5 +1,6 @@
 package it.qbteam.stalkerapp.model.service;
 
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.contract.HomeContract;
@@ -23,6 +24,7 @@ import java.util.List;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
+import it.qbteam.stalkerapp.model.data.LatLngPlace;
 
 public class Storage implements HomeContract.Interactor, MyStalkersListContract.Interactor {
 
@@ -228,6 +230,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         oos.flush();
         oos.close();
         fos.close();
+
     }
     public static PlaceMovement deserializePlaceMovement() throws IOException, ClassNotFoundException {
         PlaceMovement placeMovement;
@@ -265,6 +268,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         oos.flush();
         oos.close();
         fos.close();
+
     }
 
 

@@ -15,7 +15,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:usesCleartextTraffic="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_computer"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="it.qbteam.stalkerapp.HomePageActivity"

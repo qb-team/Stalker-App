@@ -362,16 +362,16 @@ public class TrackingStalker extends Service {
             final LatLngBounds.Builder builder=new LatLngBounds.Builder();
             for(int i=0;i<latLngPlaceList.size();i++) {
 
-                System.out.print("NOME LUOGO:  "+latLngOrganizationList.get(i).getName()+"  ");
+                System.out.print("NOME LUOGO:  "+latLngPlaceList.get(i).getName()+"  ");
                 for (LatLng point : latLngPlaceList.get(i).getLatLng()) {
                     builder.include(point);
                 }
                 boolean isInsideBoundary = builder.build().contains(actualPosition);
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngPlaceList.get(i).getLatLng(), true);
                 if (isInsideBoundary && isInside){
-                    System.out.print("NOME LUOGO INSIDEBOUNDARY:  "+latLngOrganizationList.get(i).getName()+"  ");
+                    System.out.print("NOME LUOGO INSIDEBOUNDARY:  "+latLngPlaceList.get(i).getName()+"  ");
                    if(Storage.deserializePlaceMovement()==null){
-                       System.out.print("NOME LUOGO IF DESERIALIZE==NULL:  "+latLngOrganizationList.get(i).getName()+"  ");
+                       System.out.print("NOME LUOGO IF DESERIALIZE==NULL:  "+latLngPlaceList.get(i).getName()+"  ");
 
                        insidePlace=latLngPlaceList.get(i);
 

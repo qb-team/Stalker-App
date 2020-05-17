@@ -114,7 +114,15 @@ public class TrackingStalker extends Service {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                onNewLocation(locationResult.getLastLocation());
+                try {
+                    onNewLocation(locationResult.getLastLocation());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 

@@ -29,11 +29,6 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
         storage.performUpdateFile(list,path);
     }
 
-    //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer that comunicates with FileSystem).
-    /*@Override
-    public List<Organization> checkLocalFile(String path) {
-        return storage.performCheckFileLocal(path);
-    }*/
 
     //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer that comunicates with FileSystem).
     @Override

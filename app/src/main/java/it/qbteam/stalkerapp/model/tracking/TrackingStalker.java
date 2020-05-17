@@ -116,11 +116,7 @@ public class TrackingStalker extends Service {
                 super.onLocationResult(locationResult);
                 try {
                     onNewLocation(locationResult.getLastLocation());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException | JSONException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -365,17 +361,22 @@ public class TrackingStalker extends Service {
             LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
             final LatLngBounds.Builder builder=new LatLngBounds.Builder();
             for(int i=0;i<latLngPlaceList.size();i++) {
-                System.out.print("COORDINATE   "+latLngPlaceList.get(i).getLatLng()+"  "+"Name "+latLngPlaceList.get(i).getName() );
+
+                System.out.print("NOME LUOGO:  "+latLngOrganizationList.get(i).getName()+"  ");
                 for (LatLng point : latLngPlaceList.get(i).getLatLng()) {
                     builder.include(point);
                 }
                 boolean isInsideBoundary = builder.build().contains(actualPosition);
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngPlaceList.get(i).getLatLng(), true);
                 if (isInsideBoundary && isInside){
+                    System.out.print("NOME LUOGO INSIDEBOUNDARY:  "+latLngOrganizationList.get(i).getName()+"  ");
                    if(Storage.deserializePlaceMovement()==null){
-                       System.out.print("Sono dentro al luogo la prima volta");
+                       System.out.print("NOME LUOGO IF DESERIALIZE==NULL:  "+latLngOrganizationList.get(i).getName()+"  ");
+
                        insidePlace=latLngPlaceList.get(i);
+
                        Toast.makeText(getApplicationContext(),"Sei dentro al luogo: "+insidePlace.getName(),Toast.LENGTH_SHORT).show();
+                       //Comunicates the server that user is outside the place
                        Server.performPlaceMovementServer(null,1, latLngPlaceList.get(i).getId(),insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken());
                    }
                     found= true;
@@ -383,7 +384,10 @@ public class TrackingStalker extends Service {
                 else{
                     if(Storage.deserializePlaceMovement()!=null&&insidePlace.getId() == Storage.deserializePlaceMovement().getPlaceId()){
                         Toast.makeText(getApplicationContext(),"Sei uscito dal luogo: "+insidePlace.getName(),Toast.LENGTH_SHORT).show();
+
+                        //Comunicates the server that user is outside the place
                         Server.performPlaceMovementServer(Storage.deserializePlaceMovement().getExitToken(),-1, latLngPlaceList.get(i).getId(),insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken());
+                        //Deletes the place movement
                         Storage.deletePlaceMovement();
                         insidePlace=null;
                     }
@@ -401,7 +405,6 @@ public class TrackingStalker extends Service {
             LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
             final LatLngBounds.Builder builder=new LatLngBounds.Builder();
             for(int i=0;i<latLngOrganizationList.size();i++) {
-                Server.performDownloadPlaceServer(latLngOrganizationList.get(i).getOrgID(),HomePageActivity.getUserToken());
 
                 for (LatLng point : latLngOrganizationList.get(i).getLatLng()) {
                     builder.include(point);
@@ -412,8 +415,11 @@ public class TrackingStalker extends Service {
                     if(Storage.deserializeMovementInLocal()==null) {
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
                         Toast.makeText(getApplicationContext(),"Sei dentro all'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
+
+                        //Comunicates the server that user is inside the organization
                         Server.performMovementServer(latLngOrganizationList.get(i).getOrgAuthServerID(), latLngOrganizationList.get(i).getOrgID(), HomePageActivity.getUserToken(), 1, null);
 
+                        //Saves the place's list of the organization I'm inside.
                         latLngPlaceList=LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
                     }
                     found = true;
@@ -421,8 +427,17 @@ public class TrackingStalker extends Service {
                 else {
                     if(Storage.deserializeMovementInLocal()!=null && insideOrganization.getOrgID()==Storage.deserializeMovementInLocal().getOrganizationId()){
                         Toast.makeText(getApplicationContext(),"Sei uscito dall'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
+
+                        //Comunicates the server that user is outside the organization
                         Server.performMovementServer(insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken(),-1,Storage.deserializeMovementInLocal().getExitToken());
+
+                        //Deletes the organization movement
                         Storage.deleteMovement();
+
+                        //Deletes the place movement
+                        Storage.deletePlaceMovement();
+
+                        //Deletes the place's list of the organization
                         Storage.deletePlace();
                         insideOrganization=null;
                     }

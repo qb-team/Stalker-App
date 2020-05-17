@@ -210,7 +210,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
         List<Place> placeList=null;
         //Reading the OrganizationMovement from a file
-        File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
+        File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/Place.txt");
         FileOutputStream fos=new FileOutputStream(toDelete);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         //Write the object OrganizationMovement null==delete

@@ -160,7 +160,7 @@ public class Server {
         movement.enqueue(new Callback<OrganizationMovement>() {
             @Override
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
-
+                System.out.println(response.code());
                 try {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
@@ -194,7 +194,7 @@ public class Server {
         movement.enqueue(new Callback<PlaceMovement>() {
             @Override
             public void onResponse(Call<PlaceMovement> call, Response<PlaceMovement> response) {
-
+                System.out.println(response.code());
                 try {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());

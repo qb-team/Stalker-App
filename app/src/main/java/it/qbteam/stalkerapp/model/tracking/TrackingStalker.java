@@ -53,6 +53,7 @@ import java.util.List;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.data.LatLngPlace;
 import it.qbteam.stalkerapp.model.service.Server;
@@ -339,7 +340,7 @@ public class TrackingStalker extends Service {
 
             HomePageActivity.setNameOrg("Nessuna organizzazione");
         }
-
+    /*
         if(isInsidePlace(location)){
             HomePageActivity.setNamePlace(insidePlace.getName());
         }
@@ -349,6 +350,8 @@ public class TrackingStalker extends Service {
                 HomePageActivity.setNamePlace("Nessun Luogo");
 
         }
+
+     */
     }
 
 
@@ -412,6 +415,7 @@ public class TrackingStalker extends Service {
                 boolean isInsideBoundary = builder.build().contains(actualPosition);
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngOrganizationList.get(i).getLatLng(), true);
                 if(isInsideBoundary && isInside ){
+                    System.out.println("isInsideOrganizations: RAMO TRUE");
                     if(Storage.deserializeMovementInLocal()==null) {
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
                         Toast.makeText(getApplicationContext(),"Sei dentro all'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
@@ -420,12 +424,16 @@ public class TrackingStalker extends Service {
                         Server.performMovementServer(latLngOrganizationList.get(i).getOrgAuthServerID(), latLngOrganizationList.get(i).getOrgID(), HomePageActivity.getUserToken(), 1, null);
 
                         //Saves the place's list of the organization I'm inside.
-                        latLngPlaceList=LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
+                        // latLngPlaceList=LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
                     }
                     found = true;
                 }
                 else {
-                    if(Storage.deserializeMovementInLocal()!=null && insideOrganization.getOrgID()==Storage.deserializeMovementInLocal().getOrganizationId()){
+                    System.out.println("isInsideOrganizations: RAMO FALSE");
+                    OrganizationMovement orgMovement = Storage.deserializeMovementInLocal();
+
+                    if(orgMovement !=null && insideOrganization.getOrgID().equals(orgMovement.getOrganizationId())){
+                        System.out.println("FARO' IL MOVIMENTO");
                         Toast.makeText(getApplicationContext(),"Sei uscito dall'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
 
                         //Comunicates the server that user is outside the organization
@@ -435,11 +443,13 @@ public class TrackingStalker extends Service {
                         Storage.deleteMovement();
 
                         //Deletes the place movement
-                        Storage.deletePlaceMovement();
+                        // Storage.deletePlaceMovement();
 
                         //Deletes the place's list of the organization
-                        Storage.deletePlace();
+                        // Storage.deletePlace();
                         insideOrganization=null;
+                    } else {
+                        System.out.println("NON FARO' IL MOVIMENTO");
                     }
                 }
             }

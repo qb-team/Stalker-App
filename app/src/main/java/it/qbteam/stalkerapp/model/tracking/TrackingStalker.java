@@ -100,7 +100,7 @@ public class TrackingStalker extends Service {
     private Location mLocation;
     private List<LatLngOrganization> latLngOrganizationList;
     private List<LatLngPlace> latLngPlaceList;
-
+    private boolean downloadOnceListPlace;
 
 
     public TrackingStalker()  {
@@ -111,7 +111,11 @@ public class TrackingStalker extends Service {
     public void onCreate() {
         latLngOrganizationList=null;
         latLngPlaceList=null;
-        latLngOrganizationList=LatLngOrganization.checkUpdateList();
+        try {
+            latLngOrganizationList=LatLngOrganization.checkUpdateList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
             @SneakyThrows
@@ -403,9 +407,8 @@ public class TrackingStalker extends Service {
         return found;
     }
 
-
     public boolean isInsideOrganizations(Location location) throws IOException, ClassNotFoundException, JSONException {
-
+        downloadOnceListPlace= false;
         boolean found = false;
         if(latLngOrganizationList!=null) {
             LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
@@ -427,8 +430,11 @@ public class TrackingStalker extends Service {
                         Server.performDownloadPlaceServer(insideOrganization.getOrgID(),HomePageActivity.getUserToken());
                     }
 
-                    //Saves the place's list of the organization I'm inside.
-                    latLngPlaceList = LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
+                    if(downloadOnceListPlace==false) {
+                        //Saves the place's list of the organization I'm inside.
+                        latLngPlaceList = LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
+                        downloadOnceListPlace=true;
+                    }
                     found = true;
 
                 } else {

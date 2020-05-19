@@ -55,6 +55,7 @@ import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
+import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
 import it.qbteam.stalkerapp.model.data.LatLngPlace;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
@@ -101,6 +102,7 @@ public class TrackingStalker extends Service {
     private List<LatLngPlace> latLngPlaceList;
 
 
+
     public TrackingStalker()  {
     }
 
@@ -109,6 +111,7 @@ public class TrackingStalker extends Service {
     public void onCreate() {
         latLngOrganizationList=null;
         latLngPlaceList=null;
+        latLngOrganizationList=LatLngOrganization.checkUpdateList();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
             @SneakyThrows
@@ -318,7 +321,6 @@ public class TrackingStalker extends Service {
 
         mLocation = location;
         if (location != null) {
-            latLngOrganizationList=LatLngOrganization.checkUpdateList();
             handleOrganizations(location);
 
         }
@@ -332,6 +334,7 @@ public class TrackingStalker extends Service {
     private void handleOrganizations(Location location) throws IOException, JSONException, ClassNotFoundException {
 
         if (isInsideOrganizations(location)) {
+            if(insideOrganization!=null)
             HomePageActivity.setNameOrg(insideOrganization.getName());
 
         }
@@ -340,18 +343,17 @@ public class TrackingStalker extends Service {
 
             HomePageActivity.setNameOrg("Nessuna organizzazione");
         }
-    /*
         if(isInsidePlace(location)){
-            HomePageActivity.setNamePlace(insidePlace.getName());
+            if(insidePlace!=null)
+                HomePageActivity.setNamePlace(insidePlace.getName());
         }
 
         else{
 
-                HomePageActivity.setNamePlace("Nessun Luogo");
-
+            HomePageActivity.setNamePlace("Nessun Luogo");
         }
 
-     */
+
     }
 
 
@@ -359,101 +361,102 @@ public class TrackingStalker extends Service {
     private boolean isInsidePlace(Location location) throws IOException, ClassNotFoundException, JSONException {
 
         boolean found = false;
-
-        if(latLngPlaceList!=null){
+        if (latLngPlaceList != null) {
             LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            final LatLngBounds.Builder builder=new LatLngBounds.Builder();
-            for(int i=0;i<latLngPlaceList.size();i++) {
+            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (int i = 0; i < latLngPlaceList.size(); i++) {
 
-                System.out.print("NOME LUOGO:  "+latLngPlaceList.get(i).getName()+"  ");
                 for (LatLng point : latLngPlaceList.get(i).getLatLng()) {
                     builder.include(point);
                 }
                 boolean isInsideBoundary = builder.build().contains(actualPosition);
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngPlaceList.get(i).getLatLng(), true);
-                if (isInsideBoundary && isInside){
-                    System.out.print("NOME LUOGO INSIDEBOUNDARY:  "+latLngPlaceList.get(i).getName()+"  ");
-                   if(Storage.deserializePlaceMovement()==null){
-                       System.out.print("NOME LUOGO IF DESERIALIZE==NULL:  "+latLngPlaceList.get(i).getName()+"  ");
+                if (isInsideBoundary && isInside) {
 
-                       insidePlace=latLngPlaceList.get(i);
+                    if (Storage.deserializePlaceMovement() == null) {
 
-                       Toast.makeText(getApplicationContext(),"Sei dentro al luogo: "+insidePlace.getName(),Toast.LENGTH_SHORT).show();
-                       //Comunicates the server that user is outside the place
-                       Server.performPlaceMovementServer(null,1, latLngPlaceList.get(i).getId(),insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken());
-                   }
-                    found= true;
-                }
-                else{
-                    if(Storage.deserializePlaceMovement()!=null&&insidePlace.getId() == Storage.deserializePlaceMovement().getPlaceId()){
-                        Toast.makeText(getApplicationContext(),"Sei uscito dal luogo: "+insidePlace.getName(),Toast.LENGTH_SHORT).show();
+                        insidePlace = latLngPlaceList.get(i);
+
+                        Toast.makeText(getApplicationContext(), "Sei dentro al luogo: " + insidePlace.getName(), Toast.LENGTH_SHORT).show();
+                        //Comunicates the server that user is outside the place
+                        Server.performPlaceMovementServer(null, 1, latLngPlaceList.get(i).getId(), insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken());
+                    }
+                    found = true;
+                } else {
+
+                    PlaceMovement placeMovement = Storage.deserializePlaceMovement();
+
+                    if (placeMovement != null && latLngPlaceList.get(i).getId().equals(Storage.deserializePlaceMovement().getPlaceId())) {
+                        Toast.makeText(getApplicationContext(), "Sei uscito dal luogo: " + insidePlace.getName(), Toast.LENGTH_SHORT).show();
 
                         //Comunicates the server that user is outside the place
-                        Server.performPlaceMovementServer(Storage.deserializePlaceMovement().getExitToken(),-1, latLngPlaceList.get(i).getId(),insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken());
+                        Server.performPlaceMovementServer(Storage.deserializePlaceMovement().getExitToken(), -1, latLngPlaceList.get(i).getId(), insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken());
                         //Deletes the place movement
                         Storage.deletePlaceMovement();
-                        insidePlace=null;
+                        insidePlace = null;
                     }
                 }
 
             }
+
         }
         return found;
     }
 
 
     public boolean isInsideOrganizations(Location location) throws IOException, ClassNotFoundException, JSONException {
+
         boolean found = false;
-        if(latLngOrganizationList!=null){
+        if(latLngOrganizationList!=null) {
             LatLng actualPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            final LatLngBounds.Builder builder=new LatLngBounds.Builder();
-            for(int i=0;i<latLngOrganizationList.size();i++) {
+            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (int i = 0; i < latLngOrganizationList.size(); i++) {
 
                 for (LatLng point : latLngOrganizationList.get(i).getLatLng()) {
                     builder.include(point);
                 }
                 boolean isInsideBoundary = builder.build().contains(actualPosition);
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngOrganizationList.get(i).getLatLng(), true);
-                if(isInsideBoundary && isInside ){
-                    System.out.println("isInsideOrganizations: RAMO TRUE");
-                    if(Storage.deserializeMovementInLocal()==null) {
+                if (isInsideBoundary && isInside) {
+                    if (Storage.deserializeMovementInLocal() == null) {
+
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
-                        Toast.makeText(getApplicationContext(),"Sei dentro all'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getApplicationContext(), "Sei dentro all'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
                         //Comunicates the server that user is inside the organization
-                        Server.performMovementServer(latLngOrganizationList.get(i).getOrgAuthServerID(), latLngOrganizationList.get(i).getOrgID(), HomePageActivity.getUserToken(), 1, null);
-
-                        //Saves the place's list of the organization I'm inside.
-                        // latLngPlaceList=LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
+                        Server.performMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null);
+                        Server.performDownloadPlaceServer(insideOrganization.getOrgID(),HomePageActivity.getUserToken());
                     }
+
+                    //Saves the place's list of the organization I'm inside.
+                    latLngPlaceList = LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
                     found = true;
-                }
-                else {
-                    System.out.println("isInsideOrganizations: RAMO FALSE");
+
+                } else {
                     OrganizationMovement orgMovement = Storage.deserializeMovementInLocal();
 
-                    if(orgMovement !=null && insideOrganization.getOrgID().equals(orgMovement.getOrganizationId())){
-                        System.out.println("FARO' IL MOVIMENTO");
-                        Toast.makeText(getApplicationContext(),"Sei uscito dall'organizzazione: "+insideOrganization.getName(),Toast.LENGTH_SHORT).show();
+                    if (orgMovement != null && latLngOrganizationList.get(i).getOrgID().equals(orgMovement.getOrganizationId())) {
+
+                        Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 
                         //Comunicates the server that user is outside the organization
-                        Server.performMovementServer(insideOrganization.getOrgAuthServerID(),insideOrganization.getOrgID(),HomePageActivity.getUserToken(),-1,Storage.deserializeMovementInLocal().getExitToken());
+                        Server.performMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, Storage.deserializeMovementInLocal().getExitToken());
 
                         //Deletes the organization movement
                         Storage.deleteMovement();
 
                         //Deletes the place movement
-                        // Storage.deletePlaceMovement();
+                        Storage.deletePlaceMovement();
 
                         //Deletes the place's list of the organization
-                        // Storage.deletePlace();
-                        insideOrganization=null;
-                    } else {
-                        System.out.println("NON FARO' IL MOVIMENTO");
+                        Storage.deletePlace();
+                        insidePlace = null;
+                        insideOrganization = null;
                     }
+
                 }
             }
         }
+
         return found;
     }
 

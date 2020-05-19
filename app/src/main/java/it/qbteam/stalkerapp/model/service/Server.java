@@ -111,7 +111,7 @@ public class Server {
 
     }
 
-    public static void performDownloadPlaceServer(Long orgID, String userToken) throws IOException {
+    public static void performDownloadPlaceServer(Long orgID, String userToken)  {
         Place placeDownload = new Place();
         placeDownload.setOrganizationId(orgID);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
@@ -120,7 +120,8 @@ public class Server {
         place.enqueue(new Callback<List<Place>>() {
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
-                System.out.print(response.code());
+                System.out.print("CODICE DOWNLOAD LUOGO "+response.code());
+                System.out.print("CORPO DELLA RISPOSTA"+response.body());
                 try {
                     Storage.serializePlaceInLocal(response.body());
                 } catch (IOException e) {

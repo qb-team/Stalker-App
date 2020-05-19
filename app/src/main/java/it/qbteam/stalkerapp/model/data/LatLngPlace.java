@@ -32,21 +32,21 @@ public class LatLngPlace {
             double longitude = jsonObj.getDouble("long");
             polygon.add(new LatLng(latitude, longitude));
         }
+        System.out.print("Poligono"+polygon.toArray().toString());
     }
 
 
     public static List<LatLngPlace> updatePlace(Long orgID) throws JSONException, IOException, ClassNotFoundException {
         List<LatLngPlace> latLngPlaceList= new ArrayList<>();
         List<Place> list;
-        Server.performDownloadPlaceServer(orgID,HomePageActivity.getUserToken());
         list=Storage.deserializePlaceInLocal();
         if(list!=null){
             for(int i=0;i<list.size();i++){
-                LatLngPlace latLngPlace= new LatLngPlace();
-                latLngPlace.setPolygon(list.get(i));
-                latLngPlace.setName(list.get(i));
-                latLngPlace.setId(list.get(i));
-                latLngPlaceList.add(latLngPlace);
+                LatLngPlace aux= new LatLngPlace();
+                aux.setPolygon(list.get(i));
+                aux.setName(list.get(i));
+                aux.setId(list.get(i));
+                latLngPlaceList.add(aux);
             }
         }
         return latLngPlaceList;

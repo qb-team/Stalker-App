@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.qbteam.stalkerapp.HomePageActivity;
+import it.qbteam.stalkerapp.MainActivity;
 import it.qbteam.stalkerapp.contract.LoginContract;
 import it.qbteam.stalkerapp.presenter.LoginPresenter;
 import it.qbteam.stalkerapp.R;
@@ -43,8 +44,8 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
     private LoginPresenter loginPresenter;
     ProgressDialog progressDialog;
     private EditText emailEditText, passwordEditText, insertEmailEditText;
-    private TextView forgotpasswordTextView;
     private Button loginButton;
+    private TextView forgotPasswordTextView;
 
     //Creation of the fragment as a component.
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,11 +59,10 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
         emailEditText = view.findViewById(R.id.Emailtext);
         passwordEditText = view.findViewById(R.id.passwordtextID);
         insertEmailEditText = view.findViewById(R.id.insertEmailID);
-        forgotpasswordTextView = view.findViewById(R.id.forgotpasswordID);
+        forgotPasswordTextView = view.findViewById(R.id.forgotPasswordID);
         loginButton = view.findViewById(R.id.loginButtonID);
         loginButton.setOnClickListener(this);
-        forgotpasswordTextView.setOnClickListener(this);
-
+        forgotPasswordTextView.setOnClickListener(this);
         loginPresenter = new LoginPresenter(this);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Aspetta il completamento del login");
@@ -77,7 +77,7 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
             checkLoginDetails();
         }
 
-        if(v.getId() == R.id.forgotpasswordID) {
+        if(v.getId() == R.id.forgotPasswordID) {
             forgotPassword();
         }
     }
@@ -86,32 +86,22 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
         myDialog = new Dialog(getContext());
         myDialog.setContentView(R.layout.dialog_forgotpassword);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button annul= myDialog.findViewById(R.id.annulID);
-        Button access= myDialog.findViewById(R.id.accessID);
+        Button annulButton= myDialog.findViewById(R.id.annulID);
+        Button accessButton= myDialog.findViewById(R.id.accessID);
         myDialog.show();
 
         //That is the annul button of the pop-up.
-        annul.setOnClickListener(v12 -> myDialog.dismiss());
+        annulButton.setOnClickListener(v12 -> myDialog.dismiss());
 
         //That is the access button of the pop-up.
-        access.setOnClickListener(v1 -> {
+        accessButton.setOnClickListener(v1 -> {
             insertEmailEditText = myDialog.findViewById(R.id.insertEmailID);
             String email = insertEmailEditText.getText().toString();
 
-            FirebaseAuth.getInstance()
-                    .sendPasswordResetEmail(email)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "Email sent.");
-                            }
-                            else
-                                Log.d(TAG, "nope");
-                        }
-                    });
-
-            myDialog.dismiss();
+            if (!email.equals("")) {
+                loginPresenter.forgotPassword(email);
+                myDialog.dismiss();
+            }
         });
     }
 
@@ -138,12 +128,12 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
     //Start the login method in the presenter.
     private void checkLogin(String email, String password) {
         progressDialog.show();
-        loginPresenter.login(this, email, password);
+        loginPresenter.login( email, password);
     }
 
     //If the login was successful, the user is notified and directed to the HomePage screen dedicated to authenticated users.
     @Override
-    public void onLoginSuccess(String message) {
+    public void onLoginSuccess() {
         progressDialog.dismiss();
         Toast.makeText(getActivity(), "Login effettuato con successo" , Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), HomePageActivity.class);
@@ -153,7 +143,7 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
 
     //If the login wasn't successful, the user is notified.
     @Override
-    public void onLoginFailure(FirebaseException e) {
+    public void onCredentialFailure(FirebaseException e) {
         progressDialog.dismiss();
 
         if(e instanceof FirebaseAuthInvalidCredentialsException) {
@@ -170,10 +160,22 @@ public class LoginFragment extends Fragment implements LoginContract.View, View.
 
     }
 
+
+
+    @Override
+    public void onSendEmailSuccess() {
+        Toast.makeText(getActivity(), "Email inviata per il reset della password" , Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
     //Manages the back button.
     @Override
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();
     }
 
+
     }
+

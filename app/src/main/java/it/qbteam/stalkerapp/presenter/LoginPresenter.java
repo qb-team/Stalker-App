@@ -18,21 +18,31 @@ public class LoginPresenter implements LoginContract.Presenter, LoginContract.on
 
     //Calls the the method performFirebaseLogin(fragment, email, password) of the class LoginModel.
     @Override
-    public void login(Fragment fragment, String email, String password) {
-        mLoginInteractor.performFirebaseLogin(fragment, email, password);
+    public void login(String email, String password) {
+        mLoginInteractor.performFirebaseLogin(email, password);
+    }
+
+    public void forgotPassword(String email){
+        mLoginInteractor.performResetEmail(email);
     }
 
     //Comunicates the success result of login to the view.
     @Override
-    public void onSuccess(String message) {
-        mLoginView.onLoginSuccess(message);
+    public void onSuccess() {
+        mLoginView.onLoginSuccess();
     }
 
     //Comunicates the failure result of login to the view.
     @Override
     public void onFailure(FirebaseException e) {
-        mLoginView.onLoginFailure(e);
+        mLoginView.onCredentialFailure(e);
     }
+
+    public void sendEmailResetPasswordSuccess(){
+        mLoginView.onSendEmailSuccess();
+    }
+
+
 }
 
 

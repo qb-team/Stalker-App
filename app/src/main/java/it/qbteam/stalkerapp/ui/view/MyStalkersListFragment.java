@@ -173,8 +173,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void addOrganization(Organization organization) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
         myStalkersListPresenter.addOrganizationServer(organization, user.getUid(), user.getToken());
-
-
     }
 
 

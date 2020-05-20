@@ -70,7 +70,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     private SwitchCompat switcher;
     private static SwitchCompat switcherMode;
-    private FirebaseAuth fAuth;
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
     private static String userEmail;
@@ -79,8 +78,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private NavigationView navigationView;
     private  View actionView;
 
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -97,9 +96,13 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     };
 
-    //Method that is invoked when the application is opened.
     @Override
     protected void onStart() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        }
+        else goToMainActivity();
+
         super.onStart();
     }
 
@@ -125,14 +128,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     });
         }
         statusCheck();
-        fAuth= FirebaseAuth.getInstance();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null){
-
-            userEmail=fAuth.getCurrentUser().getEmail();
-
-        }
-        else goToMainActivity();
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
@@ -200,7 +196,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 }
                 else{
                     stopTracking();
-
                 }
             }
         });
@@ -387,11 +382,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             }
         }
     }
-    //This method is invoked when the main Activity comes is paused and its return is expected in a short time.
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
     @Override
@@ -415,7 +405,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             homePageActivity.setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
                     false));
         }
-
     }
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
@@ -483,19 +472,18 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         return user.getToken();
     }
 
-
     @Override
     public void sendOrganization(Organization organization) throws IOException, JSONException {
         Fragment frag = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();
         ((MyStalkersListFragment) frag).addOrganization(organization);
     }
+
     public static void setNameOrg(String name){
         nameOrg.setText(name);
-
     }
+
     public static void setNamePlace(String name){
         namePlace.setText(name);
-
     }
 
     public static boolean getSwitcherModeStatus(){

@@ -7,7 +7,7 @@
     android:id="@+id/relativeLayoutUserInfoID"
     tools:context=".ui.view.LoginFragment"
     android:background="@android:color/white"
-    >
+    android:clickable="true">
 
     <TextView android:text = "Login" android:layout_width="wrap_content"
         android:layout_height = "wrap_content"
@@ -21,23 +21,14 @@
         android:id="@+id/Emailtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal = "true"
-        android:inputType="textEmailAddress"
-        android:maxLines="1"
-        android:lines="1"
-        android:singleLine="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="220dp"
         android:hint="Email"
-        android:textColorHighlight="#ff7eff15"
+        android:inputType="textEmailAddress"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
         android:textColorHint="#000000" />
-
-<!--    <ImageView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/imageView"-->
-<!--        android:layout_below="@+id/textView"-->
-<!--        android:layout_centerHorizontal="true" />-->
-
 
     <EditText
         android:id="@+id/passwordtextID"
@@ -52,13 +43,7 @@
         android:inputType="textPassword"
         android:textColorHint="#000000" />
 
-    <TextView
-        android:id="@+id/forgotpasswordID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
-        android:text="Password dimenticata"
-        android:gravity="center" />
+
 
     <Button
         android:id="@+id/loginButtonID"
@@ -70,6 +55,22 @@
         android:layout_marginBottom="70dp"
         android:text="Login" />
 
+    <TextView
+        android:id="@+id/forgotPasswordID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="343dp"
+        android:layout_marginRight="70dp"
+        android:background="@drawable/click_highlight"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="Password dimenticata?"
+        android:textColor="#ff0000ff"
+        android:textColorLink="#6DFF7C00"
+        android:textSize="17dp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

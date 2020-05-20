@@ -7,20 +7,24 @@ import com.google.firebase.FirebaseException;
 public interface LoginContract {
 
     interface View{
-        void onLoginSuccess(String message);
-        void onLoginFailure(FirebaseException e);
+        void onLoginSuccess();
+        void onCredentialFailure(FirebaseException e);
+        void onSendEmailSuccess();
     }
 
     interface Presenter{
-        void login(Fragment fragment, String email, String password);
+        void login(String email, String password);
+        void forgotPassword(String email);
     }
     interface Interactor{
-        void performFirebaseLogin(Fragment fragment, String email, String password);
+        void performFirebaseLogin(String email, String password);
+        void performResetEmail(String email);
     }
 
     interface onLoginListener{
-        void onSuccess(String message);
+        void onSuccess();
         void onFailure(FirebaseException e);
+        void sendEmailResetPasswordSuccess();
     }
 }
 

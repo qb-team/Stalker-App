@@ -11,8 +11,6 @@ import it.qbteam.stalkerapp.R;
 
 //Schermata iniziale per gli utenti non autenticati
 public class AuthenticationFragment extends Fragment {
-
-    public final static String TAG = "Main_Fragment";
     final Fragment loginFragment = new LoginFragment();
     final Fragment signUpFragment = new SignUpFragment();
     Button signUpButton;
@@ -27,8 +25,6 @@ public class AuthenticationFragment extends Fragment {
     //Creation of the graphic part displayed by the user.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        MainActivity.fragmentManager.beginTransaction().add(R.id.containerID, loginFragment).hide(loginFragment).commit();
-        MainActivity.fragmentManager.beginTransaction().add(R.id.containerID, signUpFragment).hide(signUpFragment).commit();
         View view = inflater.inflate(R.layout.fragment_authentication,container,false);
         signUpButton = view.findViewById(R.id.buttonSignUpID);
         loginButton = view.findViewById(R.id.buttonLoginID);
@@ -37,12 +33,18 @@ public class AuthenticationFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main")).show(loginFragment).addToBackStack(null).commit();
+                MainActivity.fragmentManager.beginTransaction().replace(R.id.containerID, loginFragment).addToBackStack(null).commit();
             }
         });
 
         //Click on SignUp button and than it will show the signUpFragment
-        signUpButton.setOnClickListener(v -> MainActivity.fragmentManager.beginTransaction().hide(MainActivity.fragmentManager.findFragmentByTag("Main")).show(signUpFragment).addToBackStack(null).commit());
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.fragmentManager.beginTransaction().replace(R.id.containerID, signUpFragment).addToBackStack(null).commit();
+            }
+        });
+
         return view;
     }
 }

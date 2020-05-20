@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.model.authentication;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import it.qbteam.stalkerapp.contract.LoginContract;
@@ -21,19 +23,34 @@ public class LoginModel implements LoginContract.Interactor {
 
     //Firebase's method that allows the user login to Stalker application(in Firebase server).
     @Override
-    public void performFirebaseLogin(Fragment activity, String email, String password) {
+    public void performFirebaseLogin(String email, String password) {
         FirebaseAuth.getInstance()
             .signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
 
-                        mOnLoginListener.onSuccess(task.getResult().toString());
+                        mOnLoginListener.onSuccess();
 
                     }
                     else {
                         mOnLoginListener.onFailure((FirebaseException) task.getException());
                     }
                 });
+    }
 
-}
+    public void performResetEmail(String email){
+        FirebaseAuth.getInstance()
+                .sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            mOnLoginListener.sendEmailResetPasswordSuccess();
+                        }
+                        else
+                            mOnLoginListener.onFailure((FirebaseException) task.getException());
+                    }
+                });
+    }
+
 }

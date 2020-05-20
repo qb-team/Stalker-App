@@ -1,17 +1,22 @@
 package it.qbteam.stalkerapp.ui.view;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.contract.LoginContract;
@@ -19,16 +24,26 @@ import it.qbteam.stalkerapp.presenter.LoginPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
+import com.unboundid.ldap.sdk.LDAPException;
 
-    public class LoginFragment extends Fragment implements LoginContract.View, View.OnClickListener, OnBackPressListener {
+import java.util.concurrent.ExecutionException;
+
+public class LoginFragment extends Fragment implements LoginContract.View, View.OnClickListener, OnBackPressListener {
     public final static String TAG="Login_Fragment";
+    private Dialog myDialog;
     private LoginPresenter loginPresenter;
     ProgressDialog progressDialog;
-    private EditText emailEditText, passwordEditText;
+    private EditText emailEditText, passwordEditText, insertEmailEditText;
+    private TextView forgotpasswordTextView;
     private Button loginButton;
 
     //Creation of the fragment as a component.
@@ -42,8 +57,12 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
         View view=inflater.inflate(R.layout.fragment_login,container,false);
         emailEditText = view.findViewById(R.id.Emailtext);
         passwordEditText = view.findViewById(R.id.passwordtextID);
+        insertEmailEditText = view.findViewById(R.id.insertEmailID);
+        forgotpasswordTextView = view.findViewById(R.id.forgotpasswordID);
         loginButton = view.findViewById(R.id.loginButtonID);
         loginButton.setOnClickListener(this);
+        forgotpasswordTextView.setOnClickListener(this);
+
         loginPresenter = new LoginPresenter(this);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Aspetta il completamento del login");
@@ -58,9 +77,45 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
             checkLoginDetails();
         }
 
+        if(v.getId() == R.id.forgotpasswordID) {
+            forgotPassword();
+        }
     }
 
-    //Check if the user has written their credentials and send them to the `initLogin (email: String, password: String)` method, otherwise it signals the absence of them.
+    private void forgotPassword() {
+        myDialog = new Dialog(getContext());
+        myDialog.setContentView(R.layout.dialog_forgotpassword);
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Button annul= myDialog.findViewById(R.id.annulID);
+        Button access= myDialog.findViewById(R.id.accessID);
+        myDialog.show();
+
+        //That is the annul button of the pop-up.
+        annul.setOnClickListener(v12 -> myDialog.dismiss());
+
+        //That is the access button of the pop-up.
+        access.setOnClickListener(v1 -> {
+            insertEmailEditText = myDialog.findViewById(R.id.insertEmailID);
+            String email = insertEmailEditText.getText().toString();
+
+            FirebaseAuth.getInstance()
+                    .sendPasswordResetEmail(email)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Email sent.");
+                            }
+                            else
+                                Log.d(TAG, "nope");
+                        }
+                    });
+
+            myDialog.dismiss();
+        });
+    }
+
+        //Check if the user has written their credentials and send them to the `initLogin (email: String, password: String)` method, otherwise it signals the absence of them.
     public void checkLoginDetails() {
 
         if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())) {

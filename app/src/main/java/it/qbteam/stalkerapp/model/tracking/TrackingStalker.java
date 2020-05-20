@@ -103,6 +103,7 @@ public class TrackingStalker extends Service {
     private boolean downloadOnceListPlace;
 
 
+
     public TrackingStalker()  {
     }
 

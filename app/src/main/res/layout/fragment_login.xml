@@ -52,6 +52,14 @@
         android:inputType="textPassword"
         android:textColorHint="#000000" />
 
+    <TextView
+        android:id="@+id/forgotpasswordID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="350dp"
+        android:text="Password dimenticata"
+        android:gravity="center" />
+
     <Button
         android:id="@+id/loginButtonID"
         android:layout_width="wrap_content"

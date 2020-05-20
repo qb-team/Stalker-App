@@ -10,6 +10,7 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 public interface MyStalkersListContract {
 
     interface View {
+        void onTrackingError(String message);
         void onSuccessAddOrganization(List<Organization> list,String message) throws IOException, JSONException;
         void onFailureAddOrganization(String message);
         void onSuccessRemoveOrganization(List<Organization> list) throws IOException, JSONException;
@@ -33,6 +34,7 @@ public interface MyStalkersListContract {
     }
 
     interface MyStalkerListener {
+        void trackingError(String message);
         void onSuccessAdd(List<Organization> list,String message) throws IOException, JSONException;
         void onFailureAdd(String message);
         void onSuccesRemove(List<Organization> list) throws IOException, JSONException;

@@ -104,6 +104,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
         checkFile();
         return view;
+
     }
 
     //It takes care of loading the list of organizations and uploading them directly from FileSystem.
@@ -140,6 +141,11 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getUserToken());
     }
 
+    @Override
+    public void onTrackingError(String message) {
+        Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+    }
+
     //It notifies the user of the correct download of the list from the Server.
     @Override
     public void onSuccessDownloadList(String message) {
@@ -150,7 +156,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //It notifies the user of the false download of the list from the Server.
     @Override
     public void onFailureDownloadList(String message) {
-        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     //Initializing and displaying of the fragment of the organization to the user, this method is invoked following a user click.

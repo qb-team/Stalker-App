@@ -3,6 +3,7 @@ package it.qbteam.stalkerapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.assist.AssistStructure;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -57,6 +58,7 @@ import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
+import lombok.SneakyThrows;
 
 public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener {
 
@@ -65,7 +67,9 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static User user;
     private static TextView nameOrg;
     private static TextView namePlace;
+
     private SwitchCompat switcher;
+    private static SwitchCompat switcherMode;
     private FirebaseAuth fAuth;
     private ActionTabFragment actionTabFragment;
     private DrawerLayout drawer;
@@ -138,11 +142,13 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         actionBarDrawerToggle.syncState();
         navigationView = findViewById(R.id.nav_viewID);
         navigationView.setNavigationItemSelectedListener( this);
+
         //setting switch button in drawer menu
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
+
         //Imposto nome organizzazione in cui l'utente è tracciato del drawer
         MenuItem itemNameOrg=menu.findItem(R.id.navi_org_item);
         actionView = MenuItemCompat.getActionView(itemNameOrg);
@@ -152,6 +158,11 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         MenuItem itemNamePlace=menu.findItem(R.id.navi_place_item);
         actionView = MenuItemCompat.getActionView(itemNamePlace);
         namePlace = (TextView) actionView.findViewById(R.id.name_placeID);
+
+        //sets the switcherMode
+        MenuItem itemSwitchMode= menu.findItem(R.id.nav_switch_ModeID);
+        actionView = MenuItemCompat.getActionView(itemSwitchMode);
+        switcherMode=(SwitchCompat) actionView.findViewById(R.id.switcherModeID);
 
 
 
@@ -172,6 +183,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
 
         switcher.setOnClickListener(new View.OnClickListener() {
+            @SneakyThrows
             @Override
             public void onClick(View v) {
                 if(switcher.isChecked()){
@@ -189,6 +201,35 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 else{
                     stopTracking();
 
+                }
+            }
+        });
+
+        switcherMode.setOnClickListener(v -> {
+            if(switcher.isChecked()&&switcherMode.isChecked()){
+                try {
+                    stopTracking();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    startTracking();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else if(switcher.isChecked()&&!switcherMode.isChecked())
+            {
+                try {
+                    stopTracking();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    startTracking();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -386,7 +427,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public void stopTracking() {
+    public void stopTracking() throws IOException, ClassNotFoundException {
         mService.removeLocationUpdates();
     }
 
@@ -455,6 +496,13 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     public static void setNamePlace(String name){
         namePlace.setText(name);
 
+    }
+
+    public static boolean getSwitcherModeStatus(){
+        if(switcherMode.isChecked())
+            return true;
+        else
+            return false;
     }
 
 

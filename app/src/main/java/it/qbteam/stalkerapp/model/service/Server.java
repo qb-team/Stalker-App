@@ -120,14 +120,14 @@ public class Server {
         place.enqueue(new Callback<List<Place>>() {
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
-                System.out.print("CODICE DOWNLOAD LUOGO "+response.code());
-                System.out.print("CORPO DELLA RISPOSTA"+response.body());
+
                 try {
                     Storage.serializePlaceInLocal(response.body());
                 } catch (IOException e) {
                     e.printStackTrace();
+                    System.out.print("Errore durante lo scaricamento dei luoghi dell'organizzazione ");
                 }
-                System.out.print(response.body());
+
 
             }
 

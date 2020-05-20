@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MyStalkersListPresenter implements MyStalkersListContract.Presenter, MyStalkersListContract.MyStalkerListener{
 
-    MyStalkersListContract.View myStalkersView;
+    private MyStalkersListContract.View myStalkersView;
     private Storage storage;
     private Server server;
 
@@ -40,6 +40,11 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     @Override
     public void addOrganizationServer(Organization organization,String UID, String userToken) {
         server.performAddOrganizationServer(organization,UID,userToken);
+    }
+
+    @Override
+    public void trackingError(String message) {
+        myStalkersView.onTrackingError(message);
     }
 
     //Comunicates the success result of adding an organization to the view.

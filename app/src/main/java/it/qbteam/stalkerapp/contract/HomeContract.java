@@ -10,6 +10,7 @@ import java.util.List;
 public interface HomeContract {
 
     interface View {
+        void onTrackingError(String message);
         void onSuccessDownloadList(String message);
         void onFailureDownloadList(String message);
         void onFailureCheckFile(String message);
@@ -28,6 +29,7 @@ public interface HomeContract {
     }
 
     interface HomeListener {
+        void trackingError(String message);
         void onSuccessDownload(String message);
         void onFailureDownload(String message);
         void onFailureCheck(String message);

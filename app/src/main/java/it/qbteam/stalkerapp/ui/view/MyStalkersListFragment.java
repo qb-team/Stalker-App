@@ -178,6 +178,11 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
 
+    @Override
+    public void onTrackingError(String message) {
+        Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+    }
+
     //Notifies the user of the success of the organization's add operation.
     @Override
     public void onSuccessAddOrganization(List<Organization> list, String message) throws IOException, JSONException {

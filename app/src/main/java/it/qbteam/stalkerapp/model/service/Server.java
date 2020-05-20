@@ -6,8 +6,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
-
-import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
 import it.qbteam.stalkerapp.model.backend.api.MovementApi;
@@ -26,8 +24,9 @@ import retrofit2.Response;
 
 public class Server {
 
-    MyStalkersListContract.MyStalkerListener myStalkerListener;
-    HomeContract.HomeListener homeListener;
+
+    private static MyStalkersListContract.MyStalkerListener myStalkerListener;
+    private static HomeContract.HomeListener homeListener;
 
     //Server's constructor.
     public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
@@ -120,27 +119,22 @@ public class Server {
         place.enqueue(new Callback<List<Place>>() {
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
-                System.out.print("CODICE DOWNLOAD LUOGO "+response.code());
-                System.out.print("CORPO DELLA RISPOSTA"+response.body());
+
                 try {
                     Storage.serializePlaceInLocal(response.body());
                 } catch (IOException e) {
                     e.printStackTrace();
+                    System.out.print("Errore durante lo scaricamento dei luoghi dell'organizzazione ");
                 }
-                System.out.print(response.body());
+
 
             }
 
             @Override
             public void onFailure(Call<List<Place>> call, Throwable t) {
-                System.out.println("ERRORE PLACE");
+
             }
         });
-
-
-
-
-
     }
 
     //Tracks the user movement inside the trackingArea of an organization.
@@ -161,7 +155,9 @@ public class Server {
         movement.enqueue(new Callback<OrganizationMovement>() {
             @Override
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
-                System.out.println(response.code());
+                if(response.code()==400)
+                    trackingError();
+
                 try {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
@@ -262,6 +258,17 @@ public class Server {
             public void onFailure(Call<List<Organization>> call, Throwable t) {
                 homeListener.onFailureDownload("Errore durante lo scaricamento della lista");
             }});
+    }
+
+    private static void trackingError(){
+
+        if(homeListener!=null&&myStalkerListener==null)
+
+            homeListener.trackingError("Errore durante la registrazione del movimento");
+
+        else if(homeListener==null&&myStalkerListener!=null)
+
+            myStalkerListener.trackingError("Errore durante la registrazione del movimento");
     }
 
 }

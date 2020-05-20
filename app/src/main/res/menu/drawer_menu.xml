@@ -19,7 +19,7 @@
 
             <item android:id="@+id/nav_switch_ModeID"
                 app:actionLayout="@layout/switch_mode"
-                android:title="Modalità autenticata"/>
+                android:title="Modalità autenticata" />
         </menu>
     </item>
 

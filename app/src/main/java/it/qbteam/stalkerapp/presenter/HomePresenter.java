@@ -12,13 +12,13 @@ import java.util.List;
 
 public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeListener {
 
-    private HomeContract.View OrganizationListView;
+    private HomeContract.View homeView;
     private Storage storage;
     private Server server;
 
     //HomePresenter's constructor.
-    public HomePresenter(HomeContract.View OrganizationListView){
-        this.OrganizationListView=OrganizationListView;
+    public HomePresenter(HomeContract.View homeView){
+        this.homeView=homeView;
         storage = new Storage(this,null);
         server = new Server(null, this);
     }
@@ -41,21 +41,26 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
         server.performDownloadFileServer(path,userToken);
     }
 
+    @Override
+    public void trackingError(String message) {
+        homeView.onTrackingError(message);
+    }
+
     //Comunicates the success result of the list download to the view.
     @Override
     public void onSuccessDownload(String message) {
-        OrganizationListView.onSuccessDownloadList(message);
+        homeView.onSuccessDownloadList(message);
     }
 
     //Comunicates the failure result of the list download to the view.
     @Override
     public void onFailureDownload(String message) {
-        OrganizationListView.onFailureDownloadList(message);
+        homeView.onFailureDownloadList(message);
     }
 
     //Communicates the failure to check the existence of the list in the file system.
     @Override
     public void onFailureCheck(String message) {
-        OrganizationListView.onFailureCheckFile(message);
+        homeView.onFailureCheckFile(message);
     }
 }

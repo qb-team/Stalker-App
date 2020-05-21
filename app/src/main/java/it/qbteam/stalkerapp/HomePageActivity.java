@@ -98,10 +98,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     @Override
     protected void onStart() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null){
-            userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        }
-        else goToMainActivity();
 
         super.onStart();
     }
@@ -113,6 +109,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        }
+        else goToMainActivity();
+
         if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
             FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
             mUser.getIdToken(true)
@@ -168,6 +170,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 requestPermissions();
             }
         }
+
+
 
         //setting user email in drawer menu
         View headerView= navigationView.getHeaderView(0);

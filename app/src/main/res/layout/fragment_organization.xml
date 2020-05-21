@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/whiteColor"
-    android:clickable="true"
-    >
+    android:clickable="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +25,10 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="400dp"
+    android:orientation="vertical">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -35,17 +37,39 @@
         android:layout_gravity="center"
         android:src="@drawable/image"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/descriptionID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/blackColor"
-            android:text="nfewonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenofnennpifnfrneiofneionfienfoneonvoefinovenvonwvewovnofnnfewonfonqofnoenqofnoqenofnennpifnfrneiofneionfienfoneonvoefinovenvonwvewovnofnnfewonfonqofnoenqofnoqenofnennpifnfrneiofneionfienfoneonvoefinovenvonwvewovnofnenofnennpifnfrneiofneionfienfoneonvoefinovenvonwvewovnofn vof "
-            android:padding="15dp"
             android:layout_marginTop="20dp"
-            android:textSize="18sp"
-            />
+            android:padding="15dp"
+            android:text="nfewonfonofnennpifnfrneiofneionfiefonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonnfnfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenooneonvoefinovenvonwvewovofneionfienfoneonvoefinovenvonwvewovnofnnfewonfonqofneionfienfoneonvoef"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp" />
+    </ScrollView>
 
+</LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/accessID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="350dp"
+            android:layout_marginBottom="43dp"
+            android:baselineAlignBottom="true"
+            android:contentDescription="@string/submit"
+            android:src="@drawable/ic_history"
+            app:maxImageSize="40dp" />
+    </RelativeLayout>
 
 
 </LinearLayout>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:background="@color/whiteColor"
     android:clickable="true">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
         >
-
         <TextView
             android:id="@+id/titleID"
             android:layout_width="match_parent"
@@ -25,47 +25,70 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        >
-
-        <LinearLayout
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        android:orientation="vertical">
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/imageID"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/torre_archimede" />
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/imageID"
+            android:layout_gravity="center"
+            android:src="@drawable/image"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
-
                 android:id="@+id/descriptionID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:padding="15dp"
-                android:text="Torre archimede è un posto bello dove si studia Informatica e ci sono persone brutte come Tommado Azzalin"
+                android:text="nfewonfonofnennpifnfrneiofneionfiefonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonnfnfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenooneonvoefinovenvonwvewovofneionfienfoneonvoefinovenvonwvewovnofnnfewonfonqofneionfienfoneonvoef"
                 android:textColor="@color/blackColor"
                 android:textSize="18sp" />
+        </ScrollView>
 
-            <Button
-                android:id="@+id/LDAPaccessID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:text="Autenticazione" />
+    </LinearLayout>
 
-        </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:gravity="center"
+         >
+
+        <Button
+            android:id="@+id/LDAPaccessID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Autenticazione" />
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="315dp"
+            android:layout_marginBottom="43dp"
+            android:baselineAlignBottom="true"
+            android:contentDescription="@string/submit"
+            android:src="@drawable/ic_history"
+            app:maxImageSize="40dp" />
+    </RelativeLayout>
+
+</LinearLayout>
+
+
 
 
 

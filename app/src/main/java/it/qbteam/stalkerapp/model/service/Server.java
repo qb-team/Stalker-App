@@ -25,8 +25,8 @@ import retrofit2.Response;
 public class Server {
 
 
-    private static MyStalkersListContract.MyStalkerListener myStalkerListener;
-    private static HomeContract.HomeListener homeListener;
+    private  MyStalkersListContract.MyStalkerListener myStalkerListener;
+    private  HomeContract.HomeListener homeListener;
 
     //Server's constructor.
     public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
@@ -156,7 +156,7 @@ public class Server {
             @Override
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
                 if(response.code()==400)
-                    trackingError();
+                    //Da finire 
 
                 try {
                     if(type==1){
@@ -260,15 +260,6 @@ public class Server {
             }});
     }
 
-    private static void trackingError(){
 
-        if(homeListener!=null&&myStalkerListener==null)
-
-            homeListener.trackingError("Errore durante la registrazione del movimento");
-
-        else if(homeListener==null&&myStalkerListener!=null)
-
-            myStalkerListener.trackingError("Errore durante la registrazione del movimento");
-    }
 
 }

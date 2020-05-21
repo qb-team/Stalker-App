@@ -18,8 +18,11 @@ import java.io.ObjectOutputStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
@@ -301,4 +304,57 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         oos.close();
         fos.close();
     }
-}
+
+    public static void serializeAccessExitInLocal(Map<String, String> hm){
+        try
+        {
+            FileOutputStream fos = new FileOutputStream("data/user/0/it.qbteam.stalkerapp/files/AccessExit.txt");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(hm);
+            oos.close();
+            fos.close();
+            System.out.printf("Serialized HashMap data is saved in AccessExit");
+        }
+        catch(IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+    }
+
+    public static HashMap<String, String> deserializeAccessExitInLocal(){
+        HashMap<String,String> map=null;
+        try
+        {
+            FileInputStream fis = new FileInputStream("data/user/0/it.qbteam.stalkerapp/files/AccessExit.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            map = (HashMap) ois.readObject();
+            ois.close();
+            fis.close();
+        }catch(IOException ioe)
+        {
+            ioe.printStackTrace();
+
+        }catch(ClassNotFoundException c)
+        {
+            System.out.println("Class not found");
+            c.printStackTrace();
+
+        }
+        System.out.println("Deserialized HashMap..");
+        // Display content using Iterator
+        /*Set set = map.entrySet();
+        Iterator iterator = set.iterator();
+        while(iterator.hasNext()) {
+            Map.Entry mentry = (Map.Entry)iterator.next();
+            System.out.print("key: "+ mentry.getKey() + " & Value: ");
+            System.out.println(mentry.getValue());
+        }*/
+
+        return map;
+    }
+
+    }
+
+
+
+

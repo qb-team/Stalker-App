@@ -56,6 +56,7 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
+import it.qbteam.stalkerapp.model.data.Access;
 import it.qbteam.stalkerapp.model.data.LatLngPlace;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
@@ -501,13 +502,16 @@ public class TrackingStalker extends Service {
                         Server.performMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null);
 
                         Server.performDownloadPlaceServer(insideOrganization.getOrgID(),HomePageActivity.getUserToken());
+
+
                     }
 
                     if(!downloadOnceListPlace) {
 
                         //Saves the place's list of the organization I'm inside.
                         latLngPlaceList = LatLngPlace.updatePlace(latLngOrganizationList.get(i).getOrgID());
-
+                        Access access= new Access(insideOrganization.getName(),"12:45");
+                        Storage.serializeAccessExitInLocal(access.getAccessExit());
                         downloadOnceListPlace=true;
                     }
                     found = true;

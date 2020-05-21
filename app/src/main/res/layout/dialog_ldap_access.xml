@@ -63,7 +63,7 @@
                 android:background="@drawable/button_border_left"
                 android:text="Annulla"
                 android:textAlignment="center"
-                android:gravity="center_horizontal" />
+                android:gravity="center" />
 
             <Button
                 android:id="@+id/accessID"
@@ -73,7 +73,7 @@
                 android:layout_marginLeft="1dp"
                 android:text="Accedi"
                 android:textAlignment="center"
-                android:gravity="center_horizontal" />
+                android:gravity="center" />
 
         </LinearLayout>
     </LinearLayout>

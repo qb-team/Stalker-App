@@ -98,10 +98,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     @Override
     protected void onStart() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null){
-            userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        }
-        else goToMainActivity();
+
 
         super.onStart();
     }
@@ -128,6 +125,11 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                     });
         }
         statusCheck();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        }
+        else goToMainActivity();
 
 
         Toolbar toolbar=findViewById(R.id.toolbarID);

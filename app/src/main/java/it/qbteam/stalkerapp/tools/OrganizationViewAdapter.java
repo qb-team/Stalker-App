@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     private  List<Organization> organizationList;
     private Context context;
     private OrganizationListener organizationListener;
+
 
     //Interface to manage the type of click.
     public interface OrganizationListener{
@@ -50,6 +52,9 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
         Organization organization = organizationList.get(position);
         holder.textNome.setText(organization.getName());
+        if(organization.getTrackingMode().getValue().equals("anonymous"))
+            holder.lock.setVisibility(View.INVISIBLE);
+
     }
 
     //Returns the organizations' list size.
@@ -62,6 +67,7 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public TextView textNome;
+        public ImageView lock;
 
         OrganizationListener organizationListenerViewHolder;
 
@@ -69,6 +75,8 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
             super(itemView);
             this.organizationListenerViewHolder=organizationListenerViewHolder;
             textNome = itemView.findViewById(R.id.textView2);
+            lock=itemView.findViewById(R.id.lockID);
+
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }

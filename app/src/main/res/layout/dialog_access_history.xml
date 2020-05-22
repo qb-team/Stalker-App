@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     >
     <LinearLayout
-        android:background="@drawable/custom_border"
+        android:background="@color/whiteColor"
         android:padding="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,8 +20,6 @@
             android:textAlignment="center"
             android:textSize="28dp"
             android:textStyle="bold"/>
-
-
 
         <TableLayout
         android:id="@+id/tableViewID"

@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,24 +18,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.MainActivity;
 import it.qbteam.stalkerapp.contract.LoginContract;
 import it.qbteam.stalkerapp.presenter.LoginPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseUser;
-import com.unboundid.ldap.sdk.LDAPException;
-
-import java.util.concurrent.ExecutionException;
 
 public class LoginFragment extends Fragment implements LoginContract.View, View.OnClickListener, OnBackPressListener {
     public final static String TAG="Login_Fragment";

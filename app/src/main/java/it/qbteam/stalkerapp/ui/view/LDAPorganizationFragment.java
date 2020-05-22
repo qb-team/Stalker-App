@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -24,8 +23,6 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
-
-import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.contract.LDAPorganizationContract;

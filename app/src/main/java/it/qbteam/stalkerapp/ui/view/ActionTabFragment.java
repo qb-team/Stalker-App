@@ -83,5 +83,4 @@ public class ActionTabFragment extends Fragment {
         return homeFragment;
     }
 
-
 }

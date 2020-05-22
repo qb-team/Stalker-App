@@ -1,6 +1,5 @@
 package it.qbteam.stalkerapp.ui.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;

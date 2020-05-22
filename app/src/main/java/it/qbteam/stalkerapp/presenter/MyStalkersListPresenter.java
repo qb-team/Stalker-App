@@ -4,6 +4,7 @@ import org.json.JSONException;
 
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import java.io.IOException;
@@ -27,6 +28,11 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     @Override
     public void updateFile(List<Organization> list, String path) throws IOException, JSONException {
         storage.performUpdateFile(list,path);
+    }
+
+    @Override
+    public OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException {
+        return storage.deserializeMovementInLocal();
     }
 
 

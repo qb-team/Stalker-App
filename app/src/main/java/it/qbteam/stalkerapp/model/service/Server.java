@@ -28,6 +28,7 @@ public class Server {
     private  MyStalkersListContract.MyStalkerListener myStalkerListener;
     private  HomeContract.HomeListener homeListener;
 
+
     //Server's constructor.
     public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
         this.myStalkerListener = myStalkerListener;
@@ -109,7 +110,7 @@ public class Server {
         });
     }
 
-    public static void performDownloadPlaceServer(Long orgID, String userToken)  {
+    public void performDownloadPlaceServer(Long orgID, String userToken,Storage storage)  {
         Place placeDownload = new Place();
         placeDownload.setOrganizationId(orgID);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
@@ -120,7 +121,7 @@ public class Server {
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
 
                 try {
-                    Storage.serializePlaceInLocal(response.body());
+                    storage.serializePlaceInLocal(response.body());
                 } catch (IOException e) {
                     e.printStackTrace();
                     System.out.print("Errore durante lo scaricamento dei luoghi dell'organizzazione ");
@@ -137,7 +138,7 @@ public class Server {
     }
 
     //Tracks the user movement inside the trackingArea of an organization.
-    public static void performMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken) {
+    public void performMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken, Storage storage) {
 
         OrganizationMovement movementUpload = new OrganizationMovement();
         movementUpload.setMovementType(type);
@@ -154,13 +155,13 @@ public class Server {
         movement.enqueue(new Callback<OrganizationMovement>() {
             @Override
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
-                if(response.code()==400)
+
                     //Da finire 
                     try {
 
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
-                        Storage.serializeMovementInLocal(movementUpload);
+                        storage.serializeMovementInLocal(movementUpload);
                     }
 
                 } catch (IOException e) {
@@ -174,7 +175,7 @@ public class Server {
         });
 
     }
-    public static void performPlaceMovementServer(String exitToken,int type, Long placeId, String authServerID, Long orgId, String userToken){
+    public void performPlaceMovementServer(String exitToken,int type, Long placeId, String authServerID, String userToken, Storage storage){
         PlaceMovement movementUpload= new PlaceMovement();
         movementUpload.setMovementType(type);
         OffsetDateTime dateTime= OffsetDateTime.now();
@@ -194,7 +195,7 @@ public class Server {
                 try {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
-                        Storage.serializePlaceMovement(movementUpload);
+                        storage.serializePlaceMovement(movementUpload);
                     }
 
                 } catch (IOException e) {

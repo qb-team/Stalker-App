@@ -80,6 +80,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
 
 
                 HashMap<String, String> map= Storage.deserializeAccessExitInLocal();
+
                 Set set =map.entrySet();
                 Iterator iterator = set.iterator();
                 while(iterator.hasNext()) {

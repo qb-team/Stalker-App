@@ -277,7 +277,13 @@ public class TrackingStalker extends Service {
         // We got here because the user decided to remove location updates from the notification.
 
         if (startedFromNotification) {
-            removeLocationUpdates();
+            try {
+                removeLocationUpdates();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             stopSelf();
         }
         // Tells the system to not try to recreate the service after it has been killed.

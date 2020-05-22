@@ -36,10 +36,10 @@ public class LatLngPlace {
     }
 
 
-    public static List<LatLngPlace> updatePlace(Long orgID) throws JSONException, IOException, ClassNotFoundException {
+    public static List<LatLngPlace> updatePlace(Long orgID, Storage storage) throws JSONException, IOException, ClassNotFoundException {
         List<LatLngPlace> latLngPlaceList= new ArrayList<>();
         List<Place> list;
-        list=Storage.deserializePlaceInLocal();
+        list=storage.deserializePlaceInLocal();
         if(list!=null){
             for(int i=0;i<list.size();i++){
                 LatLngPlace aux= new LatLngPlace();

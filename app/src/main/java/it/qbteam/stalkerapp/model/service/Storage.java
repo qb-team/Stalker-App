@@ -180,7 +180,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             w.close();
     }
 
-    public static void serializePlaceInLocal(List<Place> place) throws IOException {
+    public void serializePlaceInLocal(List<Place> place) throws IOException {
         //Saving of OrganizationMovement in a file
         File toWrite = new File("data/user/0/it.qbteam.stalkerapp/files/Place.txt");
         FileOutputStream fos=new FileOutputStream(toWrite);
@@ -191,7 +191,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         oos.close();
         fos.close();
     }
-    public static List<Place> deserializePlaceInLocal() throws IOException, ClassNotFoundException{
+    public List<Place> deserializePlaceInLocal() throws IOException, ClassNotFoundException{
 
         List<Place> place;
         //Reading the OrganizationMovement from a file
@@ -205,7 +205,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     }
 
     //Deletes the current object OrganizationMovement serialized in a local file.
-    public static void deletePlace() throws IOException {
+    public void deletePlace() throws IOException {
 
         List<Place> placeList=null;
         //Reading the OrganizationMovement from a file
@@ -219,7 +219,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fos.close();
     }
 
-    public static void serializePlaceMovement(PlaceMovement placeMovement) throws IOException {
+    public void serializePlaceMovement(PlaceMovement placeMovement) throws IOException {
         //Saving of OrganizationMovement in a file
         File toWrite = new File("data/user/0/it.qbteam.stalkerapp/files/PlaceMovement.txt");
         FileOutputStream fos=new FileOutputStream(toWrite);
@@ -231,7 +231,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fos.close();
 
     }
-    public static PlaceMovement deserializePlaceMovement() throws IOException, ClassNotFoundException {
+    public PlaceMovement deserializePlaceMovement() throws IOException, ClassNotFoundException {
         PlaceMovement placeMovement;
         //Reading the OrganizationMovement from a file
         FileInputStream fis= new FileInputStream("data/user/0/it.qbteam.stalkerapp/files/PlaceMovement.txt");
@@ -243,7 +243,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         return placeMovement;
     }
 
-    public static  void deletePlaceMovement() throws IOException {
+    public void deletePlaceMovement() throws IOException {
         PlaceMovement placeMovement=null;
         //Reading the OrganizationMovement from a file
         File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/PlaceMovement.txt");
@@ -256,7 +256,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fos.close();
     }
     //Serializes the object OrganizationMovement in a local file.
-    public static void serializeMovementInLocal(OrganizationMovement organizationMovement) throws IOException {
+    public void serializeMovementInLocal(OrganizationMovement organizationMovement) throws IOException {
 
         //Saving of OrganizationMovement in a file
         File toWrite = new File("data/user/0/it.qbteam.stalkerapp/files/Movement.txt");
@@ -272,7 +272,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
 
     //Deserializes the object OrganizationMovement from a local file.
-    public static OrganizationMovement deserializeMovementInLocal() throws IOException, ClassNotFoundException {
+    public OrganizationMovement deserializeMovementInLocal() throws IOException, ClassNotFoundException {
 
         OrganizationMovement organizationMovement;
         //Reading the OrganizationMovement from a file
@@ -287,7 +287,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     }
 
     //Deletes the current object OrganizationMovement serialized in a local file.
-    public static void deleteMovement() throws IOException {
+    public void deleteMovement() throws IOException {
 
         OrganizationMovement organizationMovement=null;
         //Reading the OrganizationMovement from a file
@@ -301,7 +301,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fos.close();
     }
 
-    public static void serializeAccessExitInLocal(Map<String, String> hm){
+    public void serializeAccessExitInLocal(Map<String, String> hm){
         try
         {
             FileOutputStream fos = new FileOutputStream("data/user/0/it.qbteam.stalkerapp/files/AccessExit.txt");
@@ -317,7 +317,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         }
     }
 
-    public static HashMap<String, String> deserializeAccessExitInLocal(){
+    public HashMap<String, String> deserializeAccessExitInLocal(){
         HashMap<String,String> map=null;
         try
         {

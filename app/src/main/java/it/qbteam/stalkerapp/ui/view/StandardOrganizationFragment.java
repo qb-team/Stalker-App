@@ -7,33 +7,20 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import it.qbteam.stalkerapp.R;
-import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
-import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-import org.json.JSONException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
 
 public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
 
@@ -79,7 +66,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
                 });
 
 
-                HashMap<String, String> map= Storage.deserializeAccessExitInLocal();
+                /*HashMap<String, String> map= Storage.deserializeAccessExitInLocal();
                 Set set =map.entrySet();
                 Iterator iterator = set.iterator();
                 while(iterator.hasNext()) {
@@ -92,7 +79,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
                     tableLayout.addView(tr);
                     System.out.print("key: "+ entry.getKey() + " & Value: ");
                     System.out.println(entry.getValue());
-                }
+                }*/
 
 
                 accessDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

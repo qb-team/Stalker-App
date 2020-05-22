@@ -12,6 +12,7 @@ import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.TabViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
+
 public class ActionTabFragment extends Fragment {
 
     protected TabLayout tabLayout;

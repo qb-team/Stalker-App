@@ -4,15 +4,10 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
-import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 
 public class LatLngPlace {

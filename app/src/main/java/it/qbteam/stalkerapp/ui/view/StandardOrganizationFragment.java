@@ -21,7 +21,6 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-
 public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
 
     public final static String TAG="StandardOrganizationFragment";

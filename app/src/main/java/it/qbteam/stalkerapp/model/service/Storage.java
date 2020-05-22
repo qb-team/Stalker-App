@@ -1,6 +1,5 @@
 package it.qbteam.stalkerapp.model.service;
 
-import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.contract.HomeContract;
@@ -22,12 +21,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
-import it.qbteam.stalkerapp.model.data.LatLngPlace;
 
 public class Storage implements HomeContract.Interactor, MyStalkersListContract.Interactor {
 

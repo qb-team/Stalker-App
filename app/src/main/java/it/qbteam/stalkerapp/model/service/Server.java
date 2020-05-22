@@ -107,7 +107,6 @@ public class Server {
                 System.out.println("Errore durante l'aggiunta dell'organizzazione");
             }
         });
-
     }
 
     public static void performDownloadPlaceServer(Long orgID, String userToken)  {
@@ -157,8 +156,8 @@ public class Server {
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
                 if(response.code()==400)
                     //Da finire 
+                    try {
 
-                try {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         Storage.serializeMovementInLocal(movementUpload);

@@ -99,12 +99,9 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
         myDialog = new Dialog(getContext());
         myDialog.setContentView(R.layout.dialog_forgotpassword);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button annulButton= myDialog.findViewById(R.id.annulID);
         Button accessButton= myDialog.findViewById(R.id.accessID);
         myDialog.show();
 
-        //That is the annul button of the pop-up.
-        annulButton.setOnClickListener(v12 -> myDialog.dismiss());
 
         //That is the access button of the pop-up.
         accessButton.setOnClickListener(v1 -> {

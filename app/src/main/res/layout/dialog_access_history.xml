@@ -5,18 +5,20 @@
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+
     >
     <LinearLayout
-        android:background="@color/whiteColor"
+        android:background="@drawable/dialog_border"
         android:padding="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+
         >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Storico accessi"
+            android:text="Ultimo accesso"
             android:textAlignment="center"
             android:textSize="28dp"
             android:textStyle="bold"/>
@@ -29,23 +31,27 @@
                 <TextView android:text="Data"
                     android:layout_width="40dp"
                     android:textStyle="bold"
+                    android:textAlignment="center"
                     android:layout_column="0"
                     android:layout_weight="1"/>
                 <TextView android:text="Accesso"
                     android:layout_width="30dp"
                     android:textStyle="bold"
                     android:layout_column="1"
+                    android:textAlignment="center"
                     android:layout_weight="1">
                 </TextView>
                 <TextView android:text="Uscita"
                     android:textStyle="bold"
+
+                    android:textAlignment="center"
                     android:layout_width="30dp"
                     android:layout_column="2"
                     android:layout_weight="1">
                 </TextView>
             </TableRow>
             <ScrollView
-                android:layout_height="120dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="10dp">
                 <TableLayout android:id="@+id/scroll_table"
                     android:layout_width="match_parent"
@@ -61,16 +67,17 @@
     android:orientation="horizontal">
     <Button
         android:id="@+id/resetID"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Reset "
-        android:background="@drawable/custom_border"
+        android:background="@drawable/dialog_border"
         android:textAlignment="center" />
 
     <Button android:id="@+id/exitID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/custom_border"
+        android:background="@drawable/dialog_border"
         android:text="Esci"
         android:layout_marginLeft="100dp"
         android:textAlignment="center"

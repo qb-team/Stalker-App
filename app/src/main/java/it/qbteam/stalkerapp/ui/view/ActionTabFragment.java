@@ -19,6 +19,7 @@ public class ActionTabFragment extends Fragment {
     private TabViewPagerAdapter adapter;
     private static MyStalkersListFragment myStalkersListFragment;
     private static HomeFragment homeFragment;
+    private static AccessHistoryFragment accessHistoryFragment;
     public ActionTabFragment() {
         // Required empty public constructor.
     }
@@ -50,8 +51,12 @@ public class ActionTabFragment extends Fragment {
         //add fragment
         myStalkersListFragment= new MyStalkersListFragment();
         homeFragment= new HomeFragment();
+        accessHistoryFragment= new AccessHistoryFragment();
         adapter.addFragment(homeFragment,"");
         adapter.addFragment(myStalkersListFragment,"");
+        adapter.addFragment(accessHistoryFragment,"");
+
+
 
         viewPager.setAdapter(adapter);
         // The one-stop shop for setting up this TabLayout with a ViewPager.
@@ -59,6 +64,7 @@ public class ActionTabFragment extends Fragment {
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_stalkericon_);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_history);
 
         // Fixed tabs display all tabs concurrently
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
@@ -82,5 +88,6 @@ public class ActionTabFragment extends Fragment {
     public static Fragment getHomeFragment(){
         return homeFragment;
     }
+    public static Fragment getAccessHistoryFragment(){return accessHistoryFragment;}
 
 }

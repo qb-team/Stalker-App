@@ -6,13 +6,17 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
+import it.qbteam.stalkerapp.model.backend.api.AccessApi;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
 import it.qbteam.stalkerapp.model.backend.api.MovementApi;
 import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
 import it.qbteam.stalkerapp.model.backend.api.PlaceApi;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Favorite;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
@@ -27,12 +31,14 @@ public class Server {
 
     private  MyStalkersListContract.MyStalkerListener myStalkerListener;
     private  HomeContract.HomeListener homeListener;
+    private Storage storage;
 
 
     //Server's constructor.
     public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
         this.myStalkerListener = myStalkerListener;
         this.homeListener = homeListener;
+        storage= new Storage(null, null);
     }
 
     //Removes the organization from the user's favorite organization list.
@@ -110,7 +116,7 @@ public class Server {
         });
     }
 
-    public void performDownloadPlaceServer(Long orgID, String userToken,Storage storage)  {
+    public void performDownloadPlaceServer(Long orgID, String userToken)  {
         Place placeDownload = new Place();
         placeDownload.setOrganizationId(orgID);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
@@ -138,7 +144,7 @@ public class Server {
     }
 
     //Tracks the user movement inside the trackingArea of an organization.
-    public void performMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken, Storage storage) {
+    public void performMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken) {
 
         OrganizationMovement movementUpload = new OrganizationMovement();
         movementUpload.setMovementType(type);
@@ -156,12 +162,14 @@ public class Server {
             @Override
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
-                    //Da finire 
+
                     try {
 
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializeMovementInLocal(movementUpload);
+
+
                     }
 
                 } catch (IOException e) {
@@ -175,7 +183,7 @@ public class Server {
         });
 
     }
-    public void performPlaceMovementServer(String exitToken,int type, Long placeId, String authServerID, String userToken, Storage storage){
+    public void performPlaceMovementServer(String exitToken,int type, Long placeId, String authServerID, String userToken){
         PlaceMovement movementUpload= new PlaceMovement();
         movementUpload.setMovementType(type);
         OffsetDateTime dateTime= OffsetDateTime.now();
@@ -196,6 +204,7 @@ public class Server {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializePlaceMovement(movementUpload);
+
                     }
 
                 } catch (IOException e) {
@@ -223,35 +232,38 @@ public class Server {
             @Override
             public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
 
-                for(int i=0; i<response.body().size(); i++){
-                    Organization o =new Organization();
-                    o.setName(response.body().get(i).getName());
-                    o.setCity(response.body().get(i).getCity());
-                    o.setCountry(response.body().get(i).getCountry());
-                    o.setCreationDate(response.body().get(i).getCreationDate());
-                    o.setDescription(response.body().get(i).getDescription());
-                    o.setId(response.body().get(i).getId());
-                    o.setImage(response.body().get(i).getImage());
-                    o.setLastChangeDate(response.body().get(i).getLastChangeDate());
-                    o.setNumber(response.body().get(i).getNumber());
-                    o.setPostCode(response.body().get(i).getPostCode());
-                    o.setStreet(response.body().get(i).getStreet());
-                    o.setTrackingArea(response.body().get(i).getTrackingArea());
-                    o.setTrackingMode(response.body().get(i).getTrackingMode().toString());
-                    if(response.body().get(i).getTrackingMode().getValue()=="authenticated")
-                        o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
-                    returnList.add(o);
+                if(response.body()!=null){
+                    for(int i=0; i<response.body().size(); i++){
+                        Organization o =new Organization();
+                        o.setName(response.body().get(i).getName());
+                        o.setCity(response.body().get(i).getCity());
+                        o.setCountry(response.body().get(i).getCountry());
+                        o.setCreationDate(response.body().get(i).getCreationDate());
+                        o.setDescription(response.body().get(i).getDescription());
+                        o.setId(response.body().get(i).getId());
+                        o.setImage(response.body().get(i).getImage());
+                        o.setLastChangeDate(response.body().get(i).getLastChangeDate());
+                        o.setNumber(response.body().get(i).getNumber());
+                        o.setPostCode(response.body().get(i).getPostCode());
+                        o.setStreet(response.body().get(i).getStreet());
+                        o.setTrackingArea(response.body().get(i).getTrackingArea());
+                        o.setTrackingMode(response.body().get(i).getTrackingMode().toString());
+                        if(response.body().get(i).getTrackingMode().getValue()=="authenticated")
+                            o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
+                        returnList.add(o);
+                    }
+
+                    try {
+                        Storage save = new Storage(null,null);
+                        save.performUpdateFile(returnList,path);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    homeListener.onSuccessDownload("Lista scaricata con successo");
                 }
 
-                try {
-                    Storage save = new Storage(null,null);
-                    save.performUpdateFile(returnList,path);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                homeListener.onSuccessDownload("Lista scaricata con successo");
             }
 
             @Override
@@ -260,6 +272,101 @@ public class Server {
             }});
     }
 
+public void anonymousOrganizationAccess(String exitToken , Long orgID) {
+        System.out.print("NEL METODO DI ACCESS");
+        List<String> list= new ArrayList<>();
+        list.add(exitToken);
+
+        System.out.print("Prima della chiamata");
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
+        AccessApi service = ac.createService(AccessApi.class);
+        Call<List<OrganizationAccess>> access= service.getAnonymousAccessListInOrganization(list,orgID);
+        access.enqueue(new Callback<List<OrganizationAccess>>() {
+        @Override
+        public void onResponse(Call<List<OrganizationAccess>> call, Response<List<OrganizationAccess>> response) {
+            System.out.print("RESPONSE BODY ANONIMOUS ORG MOVEMENT"+response.body());
+            System.out.print(response.code());
 
 
+        }
+
+        @Override
+        public void onFailure(Call<List<OrganizationAccess>> call, Throwable t) {
+
+        }
+    });
+}
+    public List<OrganizationAccess> getAnonymousOrganizationAccess(String exitToken , Long orgID) throws IOException {
+        System.out.print("NEL METODO DI ACCESS");
+        List<String> list= new ArrayList<>();
+        list.add(exitToken);
+        List<OrganizationAccess> accessList;
+        System.out.print("Prima della chiamata");
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
+        AccessApi service = ac.createService(AccessApi.class);
+        Call<List<OrganizationAccess>> access= service.getAnonymousAccessListInOrganization(list,orgID);
+        accessList=access.execute().body();
+        return accessList;
+
+    }
+
+public void anonymousPlaceAccess(Long placeID, String exitToken){
+
+        List<String> list= new ArrayList<>();
+        list.add(exitToken);
+        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
+        AccessApi service = ac.createService(AccessApi.class);
+        Call<List<OrganizationAccess>> access= service.getAnonymousAccessListInOrganization(list,placeID);
+        access.enqueue(new Callback<List<OrganizationAccess>>() {
+        @Override
+        public void onResponse(Call<List<OrganizationAccess>> call, Response<List<OrganizationAccess>> response) {
+                            System.out.print("ANONIMOUS PLACE BODY  "+response.body());
+                         System.out.print(response.code());
+
+        }
+
+        @Override
+        public void onFailure(Call<List<OrganizationAccess>> call, Throwable t) {
+
+        }
+    });
+}
+public void authenticatedOrganizationAccess(Long orgID, String orgAuthServerID){
+
+    List<String> list= new ArrayList<>();
+    list.add(orgAuthServerID);
+    ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
+    AccessApi service = ac.createService(AccessApi.class);
+    Call<List<OrganizationAccess>> access= service.getAnonymousAccessListInOrganization(list,orgID);
+    access.enqueue(new Callback<List<OrganizationAccess>>() {
+        @Override
+        public void onResponse(Call<List<OrganizationAccess>> call, Response<List<OrganizationAccess>> response) {
+
+        }
+
+        @Override
+        public void onFailure(Call<List<OrganizationAccess>> call, Throwable t) {
+
+        }
+    });
+}
+public void authenticatedPlaceAccess(Long placeID, String orgAuthServerID){
+
+    List<String> list= new ArrayList<>();
+    list.add(orgAuthServerID);
+    ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
+    AccessApi service = ac.createService(AccessApi.class);
+    Call<List<OrganizationAccess>> access= service.getAnonymousAccessListInOrganization(list,placeID);
+    access.enqueue(new Callback<List<OrganizationAccess>>() {
+        @Override
+        public void onResponse(Call<List<OrganizationAccess>> call, Response<List<OrganizationAccess>> response) {
+
+        }
+
+        @Override
+        public void onFailure(Call<List<OrganizationAccess>> call, Throwable t) {
+
+        }
+    });
+}
 }

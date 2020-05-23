@@ -41,10 +41,6 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
         server.performDownloadFileServer(path,userToken);
     }
 
-    @Override
-    public void trackingError(String message) {
-        homeView.onTrackingError(message);
-    }
 
     //Comunicates the success result of the list download to the view.
     @Override

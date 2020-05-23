@@ -48,7 +48,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private String path;
     public final static String TAG = "Home_Fragment";
     Dialog myDialog;
-    Button downloadButton;
     FragmentListener fragmentListener;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
@@ -73,7 +72,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-
         path = getContext().getFilesDir() + "/Organizzazioni.txt";
     }
 
@@ -82,7 +80,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
-        downloadButton = view.findViewById(R.id.scaricoID);
         refresh = view.findViewById(R.id.swiperefreshID);
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
@@ -93,12 +90,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         refresh.setOnRefreshListener(() -> {
             downloadList();
             refresh.setRefreshing(false);
-        });
-
-        //Download button.
-        downloadButton.setOnClickListener(view1 -> {
-            downloadList();
-            downloadButton.setVisibility(View.INVISIBLE);
         });
 
         checkFile();
@@ -138,11 +129,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
     public void downloadList() {
         OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getUserToken());
-    }
-
-    @Override
-    public void onTrackingError(String message) {
-        Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
     }
 
     //It notifies the user of the correct download of the list from the Server.

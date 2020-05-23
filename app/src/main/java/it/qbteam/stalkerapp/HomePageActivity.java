@@ -44,6 +44,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
@@ -410,13 +411,16 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     public void startTracking() throws IOException {
-
+        Storage storage= new Storage(null,null);
+        storage.deleteMovement();
+        storage.deletePlaceMovement();
         mService.requestLocationUpdates();
     }
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     public void stopTracking() throws IOException, ClassNotFoundException {
+
         mService.removeLocationUpdates();
     }
 

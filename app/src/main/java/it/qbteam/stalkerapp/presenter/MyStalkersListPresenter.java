@@ -48,10 +48,6 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
         server.performAddOrganizationServer(organization,UID,userToken);
     }
 
-    @Override
-    public void trackingError(String message) {
-        myStalkersView.onTrackingError(message);
-    }
 
     //Comunicates the success result of adding an organization to the view.
     @Override

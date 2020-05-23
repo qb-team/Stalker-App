@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -14,25 +16,33 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.contract.StandardOrganizationContract;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
+import it.qbteam.stalkerapp.presenter.StandardOrganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
+import lombok.SneakyThrows;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class StandardOrganizationFragment extends Fragment implements OnBackPressListener {
+public class StandardOrganizationFragment extends Fragment implements OnBackPressListener, StandardOrganizationContract.View {
 
     public final static String TAG="StandardOrganizationFragment";
     private TextView title, description ;
     private ImageView image;
     private FloatingActionButton access;
     private Dialog accessDialog;
+    private StandardOrganizationPresenter standardOrganizationPresenter;
 
 
     //Creation of the fragment as a component.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        standardOrganizationPresenter= new StandardOrganizationPresenter(this);
         setHasOptionsMenu(true);
     }
 
@@ -49,6 +59,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
         description.setText(bundle.getString("description"));
         access= view.findViewById(R.id.accessID);
         access.setOnClickListener(new View.OnClickListener() {
+            @SneakyThrows
             @Override
             public void onClick(View v) {
                 accessDialog = new Dialog(getContext());
@@ -63,29 +74,20 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
                 reset.setOnClickListener(view -> {
                     tableLayout.removeAllViews();
                 });
+                OrganizationMovement om= standardOrganizationPresenter.getOrganizationMovement();
+                standardOrganizationPresenter.anonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
 
 
-<<<<<<< HEAD
-                HashMap<String, String> map= Storage.deserializeAccessExitInLocal();
-
-=======
-                /*HashMap<String, String> map= Storage.deserializeAccessExitInLocal();
->>>>>>> 11d387cba1a17d4a49f15ff0a1b080c3109d3e73
-                Set set =map.entrySet();
-                Iterator iterator = set.iterator();
-                while(iterator.hasNext()) {
-                    Map.Entry entry = (Map.Entry)iterator.next();
-                    TableRow tr=new TableRow(getContext());
+                Long orgId=bundle.getLong("orgID");
+                if(orgId.equals(om.getOrganizationId()))
+                {   TableRow tr=new TableRow(getContext());
                     TextView tv= new TextView(getContext());
-                    tv.setText(entry.getValue().toString());
+                    tv.setText(om.getTimestamp().getYear()+"-"+om.getTimestamp().getMonthValue()+"-"+om.getTimestamp().getDayOfMonth()+
+                            "          "+om.getTimestamp().getHour()+":"+om.getTimestamp().getMinute()+":"+om.getTimestamp().getSecond());
                     tv.setGravity(Gravity.CENTER);
                     tr.addView(tv);
                     tableLayout.addView(tr);
-                    System.out.print("key: "+ entry.getKey() + " & Value: ");
-                    System.out.println(entry.getValue());
-                }*/
-
-
+                }
                 accessDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 

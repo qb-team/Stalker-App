@@ -82,7 +82,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
                 if(orgId.equals(om.getOrganizationId()))
                 {   TableRow tr=new TableRow(getContext());
                     TextView tv= new TextView(getContext());
-                    tv.setText(om.getTimestamp().getYear()+"-"+om.getTimestamp().getMonthValue()+"-"+om.getTimestamp().getDayOfMonth()+
+                    tv.setText("      "+om.getTimestamp().getYear()+"-"+om.getTimestamp().getMonthValue()+"-"+om.getTimestamp().getDayOfMonth()+
                             "          "+om.getTimestamp().getHour()+":"+om.getTimestamp().getMinute()+":"+om.getTimestamp().getSecond());
                     tv.setGravity(Gravity.CENTER);
                     tr.addView(tv);

@@ -20,7 +20,7 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     public HomePresenter(HomeContract.View homeView){
         this.homeView=homeView;
         storage = new Storage(this,null);
-        server = new Server(null, this);
+        server = new Server(null, this, null);
     }
 
     //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer of the file system).

@@ -11,8 +11,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import it.qbteam.stalkerapp.R;
@@ -53,8 +55,8 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         refresh = view.findViewById(R.id.downloadAccessListID);
         recyclerView = view.findViewById(R.id.recyclerAccessViewID);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         accessHistoryPresenter= new AccessHistoryPresenter(this);
+        organizationAccessList= new ArrayList<>();
 
 
         //Refresh to download the organizations' access list (swipe down).
@@ -63,25 +65,24 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             @Override
             public void onRefresh() {
                 downloadAccess();
-
+                refresh.setRefreshing(false);
 
             }
         });
         return view;
     }
   public void downloadAccess() throws IOException, ClassNotFoundException {
-      OrganizationMovement om= accessHistoryPresenter.getOrganizationMovement();
-      organizationAccessList=accessHistoryPresenter.getAnonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
-      if(organizationAccessList != null){
-          adapter = new AccessHistoryViewAdapter(organizationAccessList, this.getContext(),this);
-          recyclerView.setAdapter(adapter);
-      }
+
+      OrganizationMovement om=accessHistoryPresenter.getOrganizationMovement();
+      accessHistoryPresenter.getAnonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
+
 
   }
 
     @Override
     public void onSuccessDownloadAccess(List<OrganizationAccess> list) {
-
+        adapter = new AccessHistoryViewAdapter(list, this.getContext(),this);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

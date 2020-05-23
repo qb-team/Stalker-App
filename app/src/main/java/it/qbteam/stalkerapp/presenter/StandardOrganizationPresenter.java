@@ -16,7 +16,7 @@ public class StandardOrganizationPresenter implements StandardOrganizationContra
 
     public StandardOrganizationPresenter(StandardOrganizationContract.View StandardOrganizationView){
         this.StandardOrganizationView = StandardOrganizationView;
-        server= new Server(null,null);
+        server= new Server(null,null, null);
         storage= new Storage(null,null);
 
 

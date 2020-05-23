@@ -115,7 +115,7 @@ public class TrackingStalker extends Service {
         latLngOrganizationList=null;
         latLngPlaceList=null;
         storage = new Storage(null,null);
-        server = new Server(null,null);
+        server = new Server(null,null, null);
 
         try {
             latLngOrganizationList=LatLngOrganization.checkUpdateList();

@@ -14,7 +14,7 @@ public interface AccessHistoryContract {
 
     interface Presenter {
 
-        List<OrganizationAccess> getAnonymousOrganizationAccess(String exitToken, Long orgID) throws IOException, ClassNotFoundException;
+        void getAnonymousOrganizationAccess(String exitToken, Long orgID) throws IOException, ClassNotFoundException;
         OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException;
 
 

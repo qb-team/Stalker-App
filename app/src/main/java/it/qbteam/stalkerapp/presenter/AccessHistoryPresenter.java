@@ -11,18 +11,19 @@ import it.qbteam.stalkerapp.model.service.Storage;
 
 public class AccessHistoryPresenter implements AccessHistoryContract.Presenter, AccessHistoryContract.AccessHistoryListener {
 
-    private Server server;
     private AccessHistoryContract.View accessHistoryView;
     private Storage storage;
+    private Server server;
     public AccessHistoryPresenter(AccessHistoryContract.View accessHistoryView){
         this.accessHistoryView=accessHistoryView;
-        server= new Server(null,null);
+        server= new Server(null,null, this);
+        storage= new Storage(null,null);
 
     }
 
     @Override
-    public List<OrganizationAccess> getAnonymousOrganizationAccess(String exitToken, Long orgID) throws IOException {
-        return server.getAnonymousOrganizationAccess(exitToken, orgID);
+    public void getAnonymousOrganizationAccess(String exitToken, Long orgID) throws IOException {
+         server.getAnonymousOrganizationAccess(exitToken, orgID);
     }
 
 
@@ -32,7 +33,7 @@ public class AccessHistoryPresenter implements AccessHistoryContract.Presenter, 
     }
     @Override
     public void onSuccessDownloadAccess(List<OrganizationAccess> list) {
-
+      accessHistoryView.onSuccessDownloadAccess(list);
     }
 
 }

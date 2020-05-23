@@ -8,6 +8,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import it.qbteam.stalkerapp.HomePageActivity;
+import it.qbteam.stalkerapp.contract.AccessHistoryContract;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.AccessApi;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
@@ -31,13 +32,15 @@ public class Server {
 
     private  MyStalkersListContract.MyStalkerListener myStalkerListener;
     private  HomeContract.HomeListener homeListener;
+    private AccessHistoryContract.AccessHistoryListener accessHistoryListener;
     private Storage storage;
 
 
     //Server's constructor.
-    public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
+    public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener, AccessHistoryContract.AccessHistoryListener accessHistoryListener) {
         this.myStalkerListener = myStalkerListener;
         this.homeListener = homeListener;
+        this.accessHistoryListener= accessHistoryListener;
         storage= new Storage(null, null);
     }
 
@@ -286,6 +289,8 @@ public void anonymousOrganizationAccess(String exitToken , Long orgID) {
         public void onResponse(Call<List<OrganizationAccess>> call, Response<List<OrganizationAccess>> response) {
             System.out.print("RESPONSE BODY ANONIMOUS ORG MOVEMENT"+response.body());
             System.out.print(response.code());
+            if(accessHistoryListener!=null)
+            accessHistoryListener.onSuccessDownloadAccess(response.body());
 
 
         }
@@ -296,18 +301,30 @@ public void anonymousOrganizationAccess(String exitToken , Long orgID) {
         }
     });
 }
-    public List<OrganizationAccess> getAnonymousOrganizationAccess(String exitToken , Long orgID) throws IOException {
+    public void getAnonymousOrganizationAccess(String exitToken , Long orgID) {
         System.out.print("NEL METODO DI ACCESS");
         List<String> list= new ArrayList<>();
         list.add(exitToken);
-        List<OrganizationAccess> accessList;
         System.out.print("Prima della chiamata");
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
         AccessApi service = ac.createService(AccessApi.class);
         Call<List<OrganizationAccess>> access= service.getAnonymousAccessListInOrganization(list,orgID);
-        accessList=access.execute().body();
-        return accessList;
+        access.enqueue(new Callback<List<OrganizationAccess>>() {
+            @Override
+            public void onResponse(Call<List<OrganizationAccess>> call, Response<List<OrganizationAccess>> response) {
+                System.out.print("RESPONSE BODY ANONIMOUS ORG MOVEMENT"+response.body());
+                System.out.print(response.code());
 
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<OrganizationAccess>> call, Throwable t) {
+
+            }
+        });
     }
 
 public void anonymousPlaceAccess(Long placeID, String exitToken){

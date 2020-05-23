@@ -21,7 +21,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView = myStalkersView;
     storage= new Storage(null,this);
-    server = new Server(this, null);
+    server = new Server(this, null, null);
     }
 
     //Calls the the method performUpdateFile(list,path) of the class Storage(persistent layer that comunicates with FileSystem).

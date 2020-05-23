@@ -38,7 +38,7 @@ import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
 //Schermata iniziale per gli utenti non autenticati
-public class AuthenticationFragment extends Fragment implements LoginContract.View, View.OnClickListener, OnBackPressListener {
+public class AuthenticationFragment extends Fragment implements LoginContract.View, View.OnClickListener{
     private Dialog myDialog;
     private LoginPresenter loginPresenter;
     ProgressDialog progressDialog;
@@ -183,11 +183,6 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
 
 
 
-    //Manages the back button.
-    @Override
-    public boolean onBackPressed() {
-        return new BackPressImplementation(this).onBackPressed();
-    }
 
 
 }

@@ -2,28 +2,9 @@ package qbteam.stalkerapp.loginform;
 
 
 
-import android.content.Context;
-
-import androidx.fragment.app.Fragment;
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.mockito.InjectMocks;
-
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import it.qbteam.stalkerapp.contract.LoginContract;
-import it.qbteam.stalkerapp.model.authentication.LoginModel;
-import it.qbteam.stalkerapp.presenter.LoginPresenter;
-import it.qbteam.stalkerapp.ui.view.LoginFragment;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;

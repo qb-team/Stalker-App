@@ -67,10 +67,11 @@
                     android:id="@+id/emailID"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_email"
                     android:drawablePadding="10dp"
                     android:singleLine="true"
                     android:layout_marginBottom="10dp"
-                    android:hint="prova@gmail.com"
+                    android:hint="esempio@gmail.com"
                     android:inputType="textEmailAddress"/>
 
                 <TextView
@@ -85,6 +86,7 @@
                     android:drawablePadding="10dp"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_lock"
                     android:singleLine="true"
                     android:hint="Password"
                     android:inputType="textPassword"/>
@@ -101,6 +103,7 @@
                     android:drawablePadding="10dp"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_lock"
                     android:singleLine="true"
                     android:hint="Conferma Password"
                     android:inputType="textPassword"/>

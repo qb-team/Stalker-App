@@ -24,13 +24,15 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.presenter.AccessHistoryPresenter;
 import it.qbteam.stalkerapp.presenter.HomePresenter;
 import it.qbteam.stalkerapp.tools.AccessHistoryViewAdapter;
+import it.qbteam.stalkerapp.tools.BackPressImplementation;
+import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import lombok.SneakyThrows;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccessHistoryFragment extends Fragment implements AccessHistoryContract.View, AccessHistoryViewAdapter.OrganizationAccessListener {
+public class AccessHistoryFragment extends Fragment implements AccessHistoryContract.View, AccessHistoryViewAdapter.OrganizationAccessListener, OnBackPressListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -93,5 +95,10 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     @Override
     public void organizationLongClick(int position) {
 
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return new BackPressImplementation(this).onBackPressed();
     }
 }

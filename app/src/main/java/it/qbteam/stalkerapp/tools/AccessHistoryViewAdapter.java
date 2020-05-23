@@ -18,7 +18,7 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
 
     private List<OrganizationAccess> organizationAccessList;
     private Context context;
-    private OrganizationAccessListener organizationAcccessListener;
+    private OrganizationAccessListener organizationAccessListener;
 
 
     //Interface to manage the type of click.
@@ -32,7 +32,7 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
     public AccessHistoryViewAdapter(List<OrganizationAccess> organizationAccessList, Context context, OrganizationAccessListener organizationAccessListener){
         this.organizationAccessList = organizationAccessList;
         this.context=context;
-        this.organizationAcccessListener=organizationAccessListener;
+        this.organizationAccessListener=organizationAccessListener;
     }
 
 
@@ -43,8 +43,7 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
         View v= LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.access_history_row,parent,false);
 
-
-        return new ViewHolder(v,organizationAcccessListener);
+        return new ViewHolder(v,organizationAccessListener);
     }
 
     //Sets to the holder the organization's name.
@@ -57,7 +56,6 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
         holder.access.setText(oa.getEntranceTimestamp().toString());
         holder.exit.setText(oa.getExitTimestamp().toString());
 
-
     }
 
     //Returns the organizations' list size.
@@ -66,7 +64,7 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
         return organizationAccessList.size();
     }
 
-    //Inner class to manage the organizations' list layout with its actions.
+    //Inner class to manage the organizations' access layout with its actions.
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public TextView nameOrg;

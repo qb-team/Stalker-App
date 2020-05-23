@@ -147,7 +147,7 @@ public class Server {
     }
 
     //Tracks the user movement inside the trackingArea of an organization.
-    public void performMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken) {
+    public void performOrganizationMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken) {
 
         OrganizationMovement movementUpload = new OrganizationMovement();
         movementUpload.setMovementType(type);
@@ -171,8 +171,6 @@ public class Server {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializeMovementInLocal(movementUpload);
-
-
                     }
 
                 } catch (IOException e) {
@@ -202,12 +200,11 @@ public class Server {
         movement.enqueue(new Callback<PlaceMovement>() {
             @Override
             public void onResponse(Call<PlaceMovement> call, Response<PlaceMovement> response) {
-                System.out.println(response.code());
+
                 try {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializePlaceMovement(movementUpload);
-
                     }
 
                 } catch (IOException e) {

@@ -33,6 +33,8 @@ import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.presenter.HomePresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
+import lombok.SneakyThrows;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,14 +70,17 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         }
     }
     //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+
         path = getContext().getFilesDir() + "/Organizzazioni.txt";
     }
 
     //Creation of the graphic part displayed by the user.
+    @SneakyThrows
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -85,6 +90,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         OrganizationListPresenter = new HomePresenter(this);
+        OrganizationListPresenter.createAllFile();
 
         //Refresh to upload the organization list (swipe down).
         refresh.setOnRefreshListener(() -> {
@@ -117,6 +123,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 .setMessage("La tua lista delle organizzazioni è ancora vuota, vuoi scaricarla?")
                 .setPositiveButton("Scarica", (dialog, which) -> {
                     downloadList();
+
                     dialog.dismiss();
                 })
                 .setNegativeButton("Annulla", (dialog, which) -> {
@@ -124,10 +131,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 })
                 .create();
         download.show();
+
+
+
     }
 
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
     public void downloadList() {
+        if(HomePageActivity.getUserToken()!=null)
         OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getUserToken());
     }
 

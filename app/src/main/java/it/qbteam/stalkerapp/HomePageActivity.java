@@ -189,11 +189,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         requestPermissions();
                     }
                     else {
-                        try {
-                            startTracking();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        startTracking();
                     }
                 }
                 else{
@@ -209,11 +205,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                try {
-                    startTracking();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                startTracking();
 
             }
             else if(switcher.isChecked()&&!switcherMode.isChecked())
@@ -223,11 +215,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                try {
-                    startTracking();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                startTracking();
             }
         });
 
@@ -351,14 +339,9 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                try {
 
-                   startTracking();
+                startTracking();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                }
             } else {
                 // Permission denied.
                 setSwitchState(false);
@@ -410,10 +393,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     }
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public void startTracking() throws IOException {
-        Storage storage= new Storage(null,null);
-        storage.deleteMovement();
-        storage.deletePlaceMovement();
+    public void startTracking()  {
+
         mService.requestLocationUpdates();
     }
 
@@ -442,13 +423,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         if (!checkPermissions()) {
                             requestPermissions();
                         } else {
-                            try {
-                                startTracking();
+                            startTracking();
 
-                            }
-                            catch (IOException e) {
-                                e.printStackTrace();
-                            }
                         }
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }

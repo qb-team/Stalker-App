@@ -36,10 +36,9 @@ public class LatLngOrganization {
 
     }
 
-    public static List<LatLngOrganization> checkUpdateList() throws JSONException {
+    public static List<LatLngOrganization> checkUpdateList(Storage storage) throws JSONException {
          List<LatLngOrganization> latLngOrganizationList= new ArrayList<>();
          List<Organization> list;
-         Storage storage= new Storage(null, null);
          list=storage.performCheckFileLocal(path);
         if(list!=null) {
             for (int i = 0; i < list.size(); i++) {

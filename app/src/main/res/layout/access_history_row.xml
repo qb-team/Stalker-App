@@ -33,14 +33,14 @@
 
             <TextView
                 android:id="@+id/dateID"
-                android:layout_width="70dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:text="data"
                 android:textColor="@color/blackColor"
                 android:textSize="20sp" />
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/accessID"
                 android:text="access"
@@ -57,7 +57,6 @@
                 android:textColor="@color/blackColor"
                 android:textSize="20sp"
             />
-
 
         </LinearLayout>
     </LinearLayout>

@@ -20,6 +20,7 @@ public interface HomeContract {
         List<Organization> checkLocalFile(String path);
         void downloadHomeListServer(String path, String userToken) throws InterruptedException, IOException;
         void updateFile(List<Organization> list, String path) throws IOException, JSONException;
+        void createAllFile() throws IOException;
 
     }
 

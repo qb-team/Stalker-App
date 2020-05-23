@@ -67,23 +67,20 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
                 TableLayout tableLayout= accessDialog.findViewById(R.id.scroll_table);
                 accessDialog.show();
                 Button exit=accessDialog.findViewById(R.id.exitID);
-                Button reset= accessDialog.findViewById(R.id.resetID);
                 exit.setOnClickListener(view -> {
                     accessDialog.dismiss();
                 });
-                reset.setOnClickListener(view -> {
-                    tableLayout.removeAllViews();
-                });
+
                 OrganizationMovement om= standardOrganizationPresenter.getOrganizationMovement();
-                standardOrganizationPresenter.anonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
-
-
                 Long orgId=bundle.getLong("orgID");
-                if(orgId.equals(om.getOrganizationId()))
-                {   TableRow tr=new TableRow(getContext());
+
+                if(om!=null&&orgId.equals(om.getOrganizationId()))
+                {
+                    standardOrganizationPresenter.anonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
+                    TableRow tr=new TableRow(getContext());
                     TextView tv= new TextView(getContext());
-                    tv.setText("      "+om.getTimestamp().getYear()+"-"+om.getTimestamp().getMonthValue()+"-"+om.getTimestamp().getDayOfMonth()+
-                            "          "+om.getTimestamp().getHour()+":"+om.getTimestamp().getMinute()+":"+om.getTimestamp().getSecond());
+                    tv.setText("     "+om.getTimestamp().getYear()+"-"+om.getTimestamp().getMonthValue()+"-"+om.getTimestamp().getDayOfMonth()+
+                            "         "+om.getTimestamp().getHour()+":"+om.getTimestamp().getMinute()+":"+om.getTimestamp().getSecond());
                     tv.setGravity(Gravity.CENTER);
                     tr.addView(tv);
                     tableLayout.addView(tr);

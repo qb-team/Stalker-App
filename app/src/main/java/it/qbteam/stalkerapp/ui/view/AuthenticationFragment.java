@@ -55,8 +55,6 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_authentication,container,false);
-        TextView registerTextView = view.findViewById(R.id.textViewRegisterID);
-
         emailEditText = view.findViewById(R.id.Emailtext);
         passwordEditText = view.findViewById(R.id.passwordtextID);
         insertEmailEditText = view.findViewById(R.id.insertEmailID);
@@ -67,6 +65,9 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
         loginPresenter = new LoginPresenter(this);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Aspetta il completamento del login");
+
+        //Clickable string
+        TextView registerTextView = view.findViewById(R.id.textViewRegisterID);
         String registerString = "Non hai un account?\n Clicca qui";
         SpannableString registerSpannableString = new SpannableString(registerString);
         ClickableSpan registerSpan = new ClickableSpan() {

@@ -3,85 +3,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.SignUpFragment"
-    android:background="@android:color/white"
-    android:clickable="true">
+    android:background="#008577"
+    android:orientation="vertical"
+    android:id="@+id/relativeLayoutUserInfoID"
+    tools:context=".ui.view.AuthenticationFragment"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
 
-    <TextView
-        android:text = "Registrati"
-        android:layout_width="wrap_content"
-        android:layout_height = "wrap_content"
-        android:id = "@+id/textview"
-        android:layout_marginTop="80dp"
-        android:textSize = "35dp"
-        android:layout_alignParentTop = "true"
-        android:layout_centerHorizontal = "true" />
-
-
-    <EditText
-        android:id="@+id/emailID"
+    <RelativeLayout
+        android:id="@+id/loginLayout"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:layout_centerHorizontal = "true"
-        android:layout_marginTop="220dp"
-        android:hint="Email"
-        android:maxLines="1"
-        android:lines="1"
-        android:singleLine="true"
-        android:textColorHighlight="#ff7eff15"
-        android:textColorHint="#000000" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/signUpTitleID"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
+            android:text = "Registrazione Account"
+            android:textColor="#fff"
+            android:textSize="26sp"
+            android:textStyle="bold"/>
 
 
-    <EditText
-        android:id="@+id/passwordID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="270dp"
-        android:layout_centerHorizontal = "true"
-        android:hint="Password"
-        android:maxLines="1"
-        android:lines="1"
-        android:singleLine="true"
-        android:inputType="textPassword"
-        android:textColorHint="#000000" />
+        <ImageButton
+            android:id="@+id/stalkerIconID"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/signUpTitleID"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ic_stalkericon_"
+            android:elevation="4dp"/>
 
-    <EditText
-        android:id="@+id/confPasswordID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="320dp"
-        android:hint="Conferma Password"
-        android:maxLines="1"
-        android:lines="1"
-        android:singleLine="true"
-        android:inputType="textPassword"
-        android:textColorHint="#000000" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stalkerIconID"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="30dp"
+            android:background="#fff"
+            android:elevation="4dp"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    <Button
-        android:id="@+id/TermsofUseButtonID"
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="30dp">
+
+
+                <TextView
+                    android:labelFor="@id/emailID"
+                    android:text="email"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/emailID"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="10dp"
+                    android:singleLine="true"
+                    android:layout_marginBottom="10dp"
+                    android:hint="prova@gmail.com"
+                    android:inputType="textEmailAddress"/>
+
+                <TextView
+                    android:labelFor="@id/passwordID"
+                    android:text="password"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/passwordID"
+                    android:drawablePadding="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:hint="Password"
+                    android:inputType="textPassword"/>
+
+                <TextView
+                    android:labelFor="@id/confPasswordID"
+                    android:text="conferma password"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/confPasswordID"
+                    android:drawablePadding="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:hint="Conferma Password"
+                    android:inputType="textPassword"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/TermsofUseID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/TermsofUseTextID"
+                        android:labelFor="@+id/TermsofUseID"
+                        android:text="Accetta le condizioni d'uso"
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/signUpButtonID"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="22dp"
+                    android:background="#d67601"
+                    android:text="Registrati"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/textViewLoginID"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textAlignment="center"
+                    android:text="Hai già un account?\n Clicca qui"
+                    android:textSize="22sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="370dp"
-        android:text="Leggi le condizioni d'uso"
-        />
-
-    <CheckBox
-        android:id="@+id/TermsofUseID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="370dp"
-        android:layout_marginLeft="200dp"
-        android:text="Accetta le condizioni d'uso" />
-
-    <Button
-        android:id="@+id/signUpButtonID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Sign Up" />
-
-
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

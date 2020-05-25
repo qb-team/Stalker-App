@@ -21,7 +21,7 @@ public class SignUpModel implements SignUpContract.Interactor {
 
     //Firebase's method that allows the user sign up to Stalker application(in Firebase server).
     @Override
-    public void performFirebaseRegistration(Fragment fragment, String email, String password) {
+    public void performFirebaseRegistration(String email, String password) {
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {

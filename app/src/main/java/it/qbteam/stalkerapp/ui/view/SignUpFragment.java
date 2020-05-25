@@ -29,13 +29,13 @@ import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener, SignUpContract.View, OnBackPressListener {
     EditText emailEditText, passwordEditText, confPasswordEditText;
-    Button signUpButton;
     private SignUpPresenter signUpPresenter;
     ProgressDialog progressDialog;
     CheckBox termsofUseCheckBox;
@@ -54,7 +54,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         passwordEditText = view.findViewById(R.id.passwordID);
         confPasswordEditText = view.findViewById(R.id.confPasswordID);
         termsofUseCheckBox = view.findViewById(R.id.TermsofUseID);
-        signUpButton= view.findViewById(R.id.signUpButtonID);
+        Button signUpButton= view.findViewById(R.id.signUpButtonID);
         signUpPresenter=new SignUpPresenter(this);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Stiamo registrando il tuo account sul Database");
@@ -104,14 +104,13 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     //Check if the user has written their credentials, confirmed the password and accepted the conditions of use, if so, send them to the `checkSignUp (email: String, password: String)` method, otherwise report the user of absence of them.
     private void checkSignUpDetails() {
 
-        if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())&&calculate(passwordEditText.getText().toString())){
+        if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString()) && (passwordEditText.getText().toString().length() >= 6) && termsofUseCheckBox.isChecked()){
             checkSignUp(emailEditText.getText().toString(), passwordEditText.getText().toString());
-
         }
         else {
 
-            if(!calculate(passwordEditText.getText().toString()))
-                Toast.makeText(getContext(), "Inserire una password che comprenda: una lettera maiuscola e minuscola,un numero, un carattere speciale e una lunghezza minima di 6 caratteri", Toast.LENGTH_LONG).show();
+            if(passwordEditText.getText().toString().length() < 6)
+                Toast.makeText(getContext(), "Inserire una password di lunghezza minima di 6 caratteri", Toast.LENGTH_LONG).show();
 
             if(TextUtils.isEmpty(emailEditText.getText().toString()))
                 emailEditText.setError("Inserisci una email valida");
@@ -119,18 +118,15 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
             if(TextUtils.isEmpty(passwordEditText.getText().toString()))
                 passwordEditText.setError("Inserisci una password valida");
 
+            if(!termsofUseCheckBox.isChecked())
+                Toast.makeText(getContext(), "Per poterti registrare devi accettare le condizioni d'uso", Toast.LENGTH_SHORT).show();
         }
     }
 
     //Invokes the Firebase methods to register the email and the password, in case of success the `onSignUpSuccess (message: String)` method will be invoked while, in case of failure it will be invoked `onSignUpFailure (e: FirebaseException)`.
     private void checkSignUp(String email, String password) {
-
-        if(termsofUseCheckBox.isChecked()) {
             progressDialog.show();
-            signUpPresenter.signUp(this, email, password);
-        }
-
-        else Toast.makeText(getContext(), "Per poterti registrare devi accettare le condizioni d'uso", Toast.LENGTH_SHORT).show();
+            signUpPresenter.signUp(email, password);
     }
 
     //Opens a pop-up showing the conditions of use that the user will have to accept.
@@ -161,51 +157,14 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     public void onSignUpFailure(FirebaseException e) {
         progressDialog.dismiss();
 
-        if (e instanceof FirebaseAuthInvalidCredentialsException) {
+        if (e instanceof FirebaseNetworkException)
+            Toast.makeText(getActivity(), "La tua connessione a internet è assente" , Toast.LENGTH_LONG).show();
+
+        if (e instanceof FirebaseAuthInvalidCredentialsException)
             Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();
-        }
 
-        if (e instanceof FirebaseAuthUserCollisionException){ //Credo che sia quello in caso l'utente esista già --> registrazione
+        if (e instanceof FirebaseAuthUserCollisionException)
             Toast.makeText(getActivity(), "L'e-mail è già presente nel sistema" , Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    //Calculate the complexity of the password to verify its security.
-    public boolean calculate(String password) {
-        boolean upper = false;
-        boolean lower = false;
-        boolean number = false;
-        boolean specialChar = false;
-        for (int i = 0; i < password.length(); i++) {
-            char c = password.charAt(i);
-            if (!specialChar  &&  !Character.isLetterOrDigit(c)) {
-                specialChar = true;
-            } else {
-                if (!number  &&  Character.isDigit(c)) {
-                    number = true;
-                } else {
-                    if (!upper || !lower) {
-                        if (Character.isUpperCase(c)) {
-                            upper = true;
-                        } else {
-                            lower = true;
-                        }
-
-                        if (upper && lower) {
-
-                        }
-                    }
-                }
-            }
-        }
-
-        if(upper && lower && number && specialChar && password.length()>=6)
-            return true;
-
-        else
-            return false;
-
     }
 
     //Manages the back button.

@@ -39,12 +39,9 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
 //Schermata iniziale per gli utenti non autenticati
 public class AuthenticationFragment extends Fragment implements LoginContract.View, View.OnClickListener{
-    private Dialog myDialog;
     private LoginPresenter loginPresenter;
     ProgressDialog progressDialog;
     private EditText emailEditText, passwordEditText, insertEmailEditText;
-    private Button loginButton;
-    private TextView forgotPasswordTextView;
 
     //Creation of the fragment as a component.
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,8 +55,8 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
         emailEditText = view.findViewById(R.id.Emailtext);
         passwordEditText = view.findViewById(R.id.passwordtextID);
         insertEmailEditText = view.findViewById(R.id.insertEmailID);
-        forgotPasswordTextView = view.findViewById(R.id.forgotPasswordID);
-        loginButton = view.findViewById(R.id.loginButtonID);
+        TextView forgotPasswordTextView = view.findViewById(R.id.forgotPasswordID);
+        Button loginButton = view.findViewById(R.id.loginButtonID);
         loginButton.setOnClickListener(this);
         forgotPasswordTextView.setOnClickListener(this);
         loginPresenter = new LoginPresenter(this);
@@ -96,7 +93,7 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
     }
 
     private void forgotPassword() {
-        myDialog = new Dialog(getContext());
+        Dialog myDialog = new Dialog(getContext());
         myDialog.setContentView(R.layout.dialog_forgotpassword);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Button annulButton= myDialog.findViewById(R.id.annulID);
@@ -159,17 +156,17 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
     public void onCredentialFailure(FirebaseException e) {
         progressDialog.dismiss();
 
-        if(e instanceof FirebaseAuthInvalidCredentialsException) {
+        if (e instanceof FirebaseNetworkException)
+            Toast.makeText(getActivity(), "La tua connessione a internet è assente" , Toast.LENGTH_LONG).show();
+
+        if (e instanceof FirebaseAuthInvalidCredentialsException)
             Toast.makeText(getActivity(), "Le credenziali non sono state inserite correttamente" , Toast.LENGTH_LONG).show();
-        }
 
-        if(e instanceof FirebaseNetworkException){ //Credo che sia quello in caso l'utente esista già --> registrazione
+        if (e instanceof FirebaseNetworkException)
             Toast.makeText(getActivity(), "Non sei connesso a internet" , Toast.LENGTH_LONG).show();
-        }
 
-        if(e instanceof FirebaseAuthInvalidUserException) {
+        if (e instanceof FirebaseAuthInvalidUserException)
             Toast.makeText(getActivity(), "L'e-mail non esiste" , Toast.LENGTH_LONG).show();
-        }
 
     }
 

@@ -19,8 +19,8 @@ public class SignUpPresenter implements SignUpContract.Presenter, SignUpContract
 
     //Calls the the method performFirebaseRegistration(fragment,email,password) of the class SignUpModel.
     @Override
-    public void signUp(Fragment fragment, String email, String password) {
-        mSignUpInteractor.performFirebaseRegistration(fragment,email,password);
+    public void signUp(String email, String password) {
+        mSignUpInteractor.performFirebaseRegistration(email,password);
     }
 
     //Comunicates the success result of sign up to the view.

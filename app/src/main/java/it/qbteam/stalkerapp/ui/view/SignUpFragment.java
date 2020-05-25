@@ -5,16 +5,24 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import it.qbteam.stalkerapp.HomePageActivity;
+import it.qbteam.stalkerapp.MainActivity;
 import it.qbteam.stalkerapp.contract.SignUpContract;
 import it.qbteam.stalkerapp.presenter.SignUpPresenter;
 import it.qbteam.stalkerapp.R;
@@ -26,11 +34,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener, SignUpContract.View, OnBackPressListener {
-
-    public final static String TAG="Registrati_Fragment";
     EditText emailEditText, passwordEditText, confPasswordEditText;
     Button signUpButton;
-    Button termsofUseButton;
     private SignUpPresenter signUpPresenter;
     ProgressDialog progressDialog;
     CheckBox termsofUseCheckBox;
@@ -50,12 +55,39 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         confPasswordEditText = view.findViewById(R.id.confPasswordID);
         termsofUseCheckBox = view.findViewById(R.id.TermsofUseID);
         signUpButton= view.findViewById(R.id.signUpButtonID);
-        termsofUseButton= view.findViewById(R.id.TermsofUseButtonID);
         signUpPresenter=new SignUpPresenter(this);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Stiamo registrando il tuo account sul Database");
         signUpButton.setOnClickListener(this);
-        termsofUseButton.setOnClickListener(this);
+
+        //Clickable string accept Term of Use
+        TextView termsofUseTextView = view.findViewById(R.id.TermsofUseTextID);
+        String termsofUseString = "Accetta le condizioni d'uso";
+        SpannableString termsofUseSpannableString = new SpannableString(termsofUseString);
+        ClickableSpan termsofUseSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                showTermsofUse();
+                widget.invalidate();
+            }
+        };
+        termsofUseSpannableString.setSpan(termsofUseSpan, 11, 27, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        termsofUseTextView.setText(termsofUseSpannableString);
+        termsofUseTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        //Clickable string go back to login
+        TextView loginTextView = view.findViewById(R.id.textViewLoginID);
+        String loginString = "Hai già un account?\n Clicca qui";
+        SpannableString loginSpannableString = new SpannableString(loginString);
+        ClickableSpan loginSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                MainActivity.fragmentManager.popBackStack();
+            }
+        };
+        loginSpannableString.setSpan(loginSpan, 21, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        loginTextView.setText(loginSpannableString);
+        loginTextView.setMovementMethod(LinkMovementMethod.getInstance());
         return view;
     }
 
@@ -65,9 +97,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         switch (view.getId()){
             case R.id.signUpButtonID:
                 checkSignUpDetails();
-                break;
-            case R.id.TermsofUseButtonID:
-                showTermsofUse();
                 break;
         }
     }

@@ -1,5 +1,8 @@
 package it.qbteam.stalkerapp.ui.view;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -8,10 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -37,9 +47,10 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private SwipeRefreshLayout refresh;
+    private FloatingActionButton buttonAccess;
     private AccessHistoryPresenter accessHistoryPresenter;
     private  List<OrganizationAccess> organizationAccessList1;
+
     public AccessHistoryFragment() {
         // Required empty public constructor
     }
@@ -56,33 +67,30 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_access_history, container, false);
-        refresh = view.findViewById(R.id.downloadAccessListID);
         recyclerView = view.findViewById(R.id.recyclerAccessViewID);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter( adapter );
-
         accessHistoryPresenter= new AccessHistoryPresenter(this);
         organizationAccessList1= new ArrayList<>();
-
         adapter = new AccessHistoryViewAdapter(organizationAccessList1,getActivity(),this);
         recyclerView.setAdapter(adapter);
-
-
-        //Refresh to download the organizations' access list (swipe down).
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        buttonAccess= view.findViewById(R.id.accessID);
+        buttonAccess.setOnClickListener(new View.OnClickListener() {
             @SneakyThrows
             @Override
-            public void onRefresh() {
+            public void onClick(View v) {
+
                 accessHistoryPresenter.getOrganizationAccess();
-                refresh.setRefreshing(false);
 
             }
         });
+
         return view;
     }
+
 
 
     @Override

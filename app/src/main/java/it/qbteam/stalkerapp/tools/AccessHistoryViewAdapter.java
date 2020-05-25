@@ -56,7 +56,7 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
         holder.nameOrg.setText(oa.getOrgName());
         holder.date.setText(oa.getEntranceTimestamp().getYear()+"/"+oa.getEntranceTimestamp().getMonthValue()+"/"+oa.getEntranceTimestamp().getDayOfMonth());
         holder.access.setText(oa.getEntranceTimestamp().getHour()+":"+oa.getEntranceTimestamp().getMinute()+":"+oa.getEntranceTimestamp().getSecond());
-
+        holder.exit.setText(oa.getExitTimestamp().getHour()+":"+oa.getExitTimestamp().getMinute()+":"+oa.getExitTimestamp().getSecond());
 
     }
 

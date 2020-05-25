@@ -169,15 +169,15 @@ public class Server {
             @Override
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
-
-                    try {
+                try {
 
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializeMovementInLocal(movementUpload);
+                    }
+                    else if(type==-1){
                         //serialize in local the object List<OrganizationAccess>.
                         storage.serializeOrganizationAccessInLocal(organizationAccessList);
-
                     }
 
                 } catch (IOException e) {

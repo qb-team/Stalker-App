@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/lightGrayColor"
     android:id="@+id/AccessHistoryID"
     android:orientation="vertical">
@@ -73,22 +74,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/downloadAccessListID"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerAccessViewID"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        tools:listitem="@layout/access_history_row"
+
+        />
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerAccessViewID"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/access_history_row"
-
+        android:orientation="horizontal"
+        >
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/accessID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_update_black_24dp"
+            android:layout_alignParentBottom="true"
+            app:maxImageSize="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
             />
 
+    </RelativeLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </LinearLayout>
 
 

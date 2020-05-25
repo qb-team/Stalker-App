@@ -64,7 +64,7 @@ public class ActionTabFragment extends Fragment {
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_stalkericon_);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_history);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_update_black_24dp);
 
         // Fixed tabs display all tabs concurrently
         tabLayout.setTabMode(TabLayout.MODE_FIXED);

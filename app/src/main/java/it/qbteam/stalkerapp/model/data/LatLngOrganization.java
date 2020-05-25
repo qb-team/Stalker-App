@@ -14,9 +14,7 @@ public class LatLngOrganization {
 
     private String name;
     private List<LatLng> polygon;
-    private String trackingMode;
     private String orgAuthServerID;
-    private OffsetDateTime timeStamp;
     private Long organizationID;
     private static String path="data/user/0/it.qbteam.stalkerapp/files/Preferiti.txt";
 
@@ -45,10 +43,8 @@ public class LatLngOrganization {
                 LatLngOrganization latLngOrganization = new LatLngOrganization();
                 latLngOrganization.setLatLng(list.get(i));
                 latLngOrganization.setName(list.get(i));
-                latLngOrganization.setTrackingMode(list.get(i));
                 latLngOrganization.setOrganizationID(list.get(i));
                 latLngOrganization.setOrgAuthServerid(list.get(i));
-                latLngOrganization.setTimeStamp(list.get(i));
                 latLngOrganizationList.add(latLngOrganization);
             }
 
@@ -61,10 +57,6 @@ public class LatLngOrganization {
         name = organization.getName();
     }
 
-    //Sets organization's tracking area.
-    public void setTrackingMode(Organization organization){
-        this.trackingMode = organization.getTrackingMode().toString();
-    }
 
     //Sets organization's ID.
     public void setOrganizationID(Organization organization){
@@ -81,11 +73,6 @@ public class LatLngOrganization {
         this.orgAuthServerID = organization.getAuthenticationServerURL();
     }
 
-    //Sets organization's timestamp.
-    public void setTimeStamp(Organization organization){
-        this.timeStamp = organization.getCreationDate();
-    }
-
     //Returns the organization's authentication server URL.
     public String getOrgAuthServerID(){return orgAuthServerID;}
 
@@ -97,6 +84,5 @@ public class LatLngOrganization {
     //Returns the organization's ID.
     public Long getOrgID(){return this.organizationID;}
 
-    public OffsetDateTime getTimeStamp(){return this.timeStamp;}
 
 }

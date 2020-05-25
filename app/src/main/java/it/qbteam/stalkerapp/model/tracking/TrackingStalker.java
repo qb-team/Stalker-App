@@ -107,6 +107,7 @@ public class TrackingStalker extends Service {
     private Storage storage;
     private Server server;
     private List<OrganizationAccess> organizationAccessList;
+    private OffsetDateTime accessTime;
 
     public TrackingStalker()  {
 
@@ -505,11 +506,7 @@ public class TrackingStalker extends Service {
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
                         Toast.makeText(getApplicationContext(), "Sei dentro all'organizzazione: " + insideOrganization.getName()+" in modo autenticato", Toast.LENGTH_SHORT).show();
-
-                        OrganizationAccess organizationAccess = new OrganizationAccess();
-                        organizationAccess.setEntranceTimestamp(OffsetDateTime.now());
-                        organizationAccess.setOrgName(insideOrganization.getName());
-                        organizationAccessList.add(organizationAccess);
+                        accessTime=OffsetDateTime.now();
 
                         //Comunicates the server that user is inside the organization
                         server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null, organizationAccessList);
@@ -535,11 +532,8 @@ public class TrackingStalker extends Service {
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
                         Toast.makeText(getApplicationContext(), "Sei dentro all'organizzazione: " + insideOrganization.getName()+" in modo non autenticato", Toast.LENGTH_SHORT).show();
+                        accessTime=OffsetDateTime.now();
 
-                        OrganizationAccess organizationAccess = new OrganizationAccess();
-                        organizationAccess.setEntranceTimestamp(OffsetDateTime.now());
-                        organizationAccess.setOrgName(insideOrganization.getName());
-                        organizationAccessList.add(organizationAccess);
                         //Comunicates the server that user is inside the organization
                         server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null, organizationAccessList);
 
@@ -577,6 +571,13 @@ public class TrackingStalker extends Service {
                     if (orgMovement != null && latLngOrganizationList.get(i).getOrgID().equals(orgMovement.getOrganizationId())) {
 
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
+
+                        //Update the access' list when the user exits from organization.
+                        OrganizationAccess organizationAccess = new OrganizationAccess();
+                        organizationAccess.setEntranceTimestamp(accessTime);
+                        organizationAccess.setOrgName(insideOrganization.getName());
+                        organizationAccess.setExitTimestamp(OffsetDateTime.now());
+                        organizationAccessList.add(organizationAccess);
 
                         //Comunicates the server that user is outside the organization
                         server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccessList);

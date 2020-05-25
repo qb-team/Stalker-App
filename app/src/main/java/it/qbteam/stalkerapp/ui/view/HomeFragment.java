@@ -1,6 +1,5 @@
 package it.qbteam.stalkerapp.ui.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -34,6 +33,8 @@ import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.presenter.HomePresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
+import lombok.SneakyThrows;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +50,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private String path;
     public final static String TAG = "Home_Fragment";
     Dialog myDialog;
-    Button downloadButton;
     FragmentListener fragmentListener;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
@@ -70,6 +70,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         }
     }
     //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -79,27 +80,22 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
 
     //Creation of the graphic part displayed by the user.
+    @SneakyThrows
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
-        downloadButton = view.findViewById(R.id.scaricoID);
         refresh = view.findViewById(R.id.swiperefreshID);
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         OrganizationListPresenter = new HomePresenter(this);
+        OrganizationListPresenter.createAllFile();
 
         //Refresh to upload the organization list (swipe down).
         refresh.setOnRefreshListener(() -> {
             downloadList();
             refresh.setRefreshing(false);
-        });
-
-        //Download button.
-        downloadButton.setOnClickListener(view1 -> {
-            downloadList();
-            downloadButton.setVisibility(View.INVISIBLE);
         });
 
         checkFile();
@@ -127,6 +123,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 .setMessage("La tua lista delle organizzazioni è ancora vuota, vuoi scaricarla?")
                 .setPositiveButton("Scarica", (dialog, which) -> {
                     downloadList();
+
                     dialog.dismiss();
                 })
                 .setNegativeButton("Annulla", (dialog, which) -> {
@@ -134,16 +131,15 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 })
                 .create();
         download.show();
+
+
+
     }
 
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
     public void downloadList() {
+        if(HomePageActivity.getUserToken()!=null)
         OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getUserToken());
-    }
-
-    @Override
-    public void onTrackingError(String message) {
-        Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
     }
 
     //It notifies the user of the correct download of the list from the Server.

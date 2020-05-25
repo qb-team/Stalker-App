@@ -19,8 +19,8 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     //HomePresenter's constructor.
     public HomePresenter(HomeContract.View homeView){
         this.homeView=homeView;
-        storage = new Storage(this,null);
-        server = new Server(null, this);
+        storage = new Storage(this,null, null);
+        server = new Server(null, this, null);
     }
 
     //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer of the file system).
@@ -35,16 +35,17 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
         storage.performUpdateFile(list,path);
     }
 
+    @Override
+    public void createAllFile() throws IOException {
+        storage.performCreateAllFile();
+    }
+
     //Calls the the method performDownloadFileServer(path,userToken) of the class Server(persistent layer of the server).
     @Override
     public void downloadHomeListServer(String path, String userToken)  {
         server.performDownloadFileServer(path,userToken);
     }
 
-    @Override
-    public void trackingError(String message) {
-        homeView.onTrackingError(message);
-    }
 
     //Comunicates the success result of the list download to the view.
     @Override

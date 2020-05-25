@@ -10,7 +10,7 @@ import java.util.List;
 public interface HomeContract {
 
     interface View {
-        void onTrackingError(String message);
+
         void onSuccessDownloadList(String message);
         void onFailureDownloadList(String message);
         void onFailureCheckFile(String message);
@@ -20,6 +20,7 @@ public interface HomeContract {
         List<Organization> checkLocalFile(String path);
         void downloadHomeListServer(String path, String userToken) throws InterruptedException, IOException;
         void updateFile(List<Organization> list, String path) throws IOException, JSONException;
+        void createAllFile() throws IOException;
 
     }
 
@@ -29,7 +30,6 @@ public interface HomeContract {
     }
 
     interface HomeListener {
-        void trackingError(String message);
         void onSuccessDownload(String message);
         void onFailureDownload(String message);
         void onFailureCheck(String message);

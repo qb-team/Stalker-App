@@ -19,8 +19,8 @@ public interface LDAPorganizationContract {
     }
 
     interface Interactor {
-         void performBind() throws LDAPException, ExecutionException, InterruptedException;
-         void performSearch() throws ExecutionException, InterruptedException;
+        void performBind() throws LDAPException, ExecutionException, InterruptedException;
+        void performSearch() throws ExecutionException, InterruptedException;
     }
 
     interface LDAPlistener {

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 
 //The contract interface describes the communication between view and presenter. It helps us to design in a cleaner way the interaction.
 public interface MyStalkersListContract {
@@ -19,7 +20,7 @@ public interface MyStalkersListContract {
 
     interface Presenter {
         void updateFile(List<Organization> list, String path) throws IOException, JSONException;
-       // List<Organization> checkLocalFile(String path);
+        OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException;
         void addOrganizationLocal(Organization organization , List<Organization> list, String path) throws IOException, JSONException;
         void addOrganizationServer(Organization organization, String UID, String userToken) throws IOException, JSONException;
         void removeOrganizationLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException;
@@ -34,7 +35,6 @@ public interface MyStalkersListContract {
     }
 
     interface MyStalkerListener {
-        void trackingError(String message);
         void onSuccessAdd(List<Organization> list,String message) throws IOException, JSONException;
         void onFailureAdd(String message);
         void onSuccesRemove(List<Organization> list) throws IOException, JSONException;

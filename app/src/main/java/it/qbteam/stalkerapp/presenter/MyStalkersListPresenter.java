@@ -4,6 +4,7 @@ import org.json.JSONException;
 
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import java.io.IOException;
@@ -19,14 +20,19 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     //MyStalkersListPresenter's constructor.
     public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView = myStalkersView;
-    storage= new Storage(null,this);
-    server = new Server(this, null);
+    storage= new Storage(null,this, null);
+    server = new Server(this, null, null);
     }
 
     //Calls the the method performUpdateFile(list,path) of the class Storage(persistent layer that comunicates with FileSystem).
     @Override
     public void updateFile(List<Organization> list, String path) throws IOException, JSONException {
         storage.performUpdateFile(list,path);
+    }
+
+    @Override
+    public OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException {
+        return storage.deserializeMovementInLocal();
     }
 
 
@@ -42,10 +48,6 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
         server.performAddOrganizationServer(organization,UID,userToken);
     }
 
-    @Override
-    public void trackingError(String message) {
-        myStalkersView.onTrackingError(message);
-    }
 
     //Comunicates the success result of adding an organization to the view.
     @Override

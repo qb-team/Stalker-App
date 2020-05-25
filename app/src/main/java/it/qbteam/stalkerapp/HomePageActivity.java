@@ -3,7 +3,6 @@ package it.qbteam.stalkerapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.assist.AssistStructure;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -33,7 +31,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.BuildConfig;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
@@ -43,13 +40,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import org.json.JSONException;
-import org.w3c.dom.Text;
-
 import java.io.IOException;
-import java.text.BreakIterator;
-
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.Storage;
@@ -197,11 +189,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         requestPermissions();
                     }
                     else {
-                        try {
-                            startTracking();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        startTracking();
                     }
                 }
                 else{
@@ -217,11 +205,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                try {
-                    startTracking();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                startTracking();
 
             }
             else if(switcher.isChecked()&&!switcherMode.isChecked())
@@ -231,11 +215,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                try {
-                    startTracking();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                startTracking();
             }
         });
 
@@ -359,14 +339,9 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-                try {
 
-                   startTracking();
+                startTracking();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                }
             } else {
                 // Permission denied.
                 setSwitchState(false);
@@ -418,15 +393,15 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     }
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public void startTracking() throws IOException {
-        Storage.deleteMovement();
-        Storage.deletePlaceMovement();
+    public void startTracking()  {
+
         mService.requestLocationUpdates();
     }
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     public void stopTracking() throws IOException, ClassNotFoundException {
+
         mService.removeLocationUpdates();
     }
 
@@ -448,13 +423,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                         if (!checkPermissions()) {
                             requestPermissions();
                         } else {
-                            try {
-                                startTracking();
+                            startTracking();
 
-                            }
-                            catch (IOException e) {
-                                e.printStackTrace();
-                            }
                         }
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }

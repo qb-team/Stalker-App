@@ -19,8 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.service.Server;
-import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
@@ -109,9 +107,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                 .setMessage("Sei sicuro di voler eliminare l'organizzazione?")
                 .setPositiveButton("Elimina", (dialog, whichButton) -> {
                     try {
-                                System.out.print(Storage.deserializeMovementInLocal());
 
-                        if (Storage.deserializeMovementInLocal()!=null&&organizationList.get(position).getId().equals(Storage.deserializeMovementInLocal().getOrganizationId())){
+
+                        if (myStalkersListPresenter.getOrganizationMovement()!=null&&organizationList.get(position).getId().equals(myStalkersListPresenter.getOrganizationMovement().getOrganizationId())){
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setTitle("Condizioni di eliminazione organizzazione")
                                     .setMessage("Attualmente sei tracciato in questa organizzazione, prima di eliminarla devi uscire dall'organizzazione")

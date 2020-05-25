@@ -14,6 +14,7 @@
 package it.qbteam.stalkerapp.model.backend.dataBackend;
 
 
+import java.io.Serializable;
 import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
@@ -28,7 +29,7 @@ import javax.validation.Valid;
  */
 @ApiModel(description = "Access to an organization.")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
-public class OrganizationAccess {
+public class OrganizationAccess implements Serializable {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private Long id;
@@ -53,6 +54,17 @@ public class OrganizationAccess {
   @SerializedName(SERIALIZED_NAME_ORG_AUTH_SERVER_ID)
   private String orgAuthServerId;
 
+  public static final String SERIALIZED_NAME_ORG= "orgName";
+  @SerializedName(SERIALIZED_NAME_ORG)
+  private String orgName;
+
+  public void setOrgName(String orgName) {
+    this.orgName = orgName;
+  }
+
+  public String getOrgName() {
+    return orgName;
+  }
 
   public OrganizationAccess id(Long id) {
 

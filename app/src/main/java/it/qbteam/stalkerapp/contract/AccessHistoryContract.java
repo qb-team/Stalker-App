@@ -8,17 +8,13 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 
 public interface AccessHistoryContract {
     interface View {
-        void onSuccessDownloadAccess(OrganizationAccess organizationAccess);
-        void onSuccessGetOrganizationName(String orgName);
+        void onSuccessGetOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList);
 
     }
 
     interface Presenter {
 
-        void getAnonymousOrganizationAccess(String exitToken, Long orgID) throws IOException, ClassNotFoundException;
-        OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException;
-        void getOrganizationName(Long orgID);
-
+     void getOrganizationAccess() throws IOException, ClassNotFoundException;
 
 
     }
@@ -28,8 +24,7 @@ public interface AccessHistoryContract {
     }
 
     interface AccessHistoryListener {
-        void onSuccessDownloadAccess(OrganizationAccess organizationAccess);
-        void onSuccessGetOrganizationName(String orgName);
+        void onSuccessGetOrganizationAccess(List<OrganizationAccess> organizationAccessList);
 
     }
 }

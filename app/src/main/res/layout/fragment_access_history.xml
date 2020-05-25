@@ -68,9 +68,10 @@
 
     </LinearLayout>
 
-<RelativeLayout
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/downloadAccessListID"
@@ -83,12 +84,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/access_history_row"
-            tools:layout_editor_absoluteX="16dp"
+
             />
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</RelativeLayout>
+</LinearLayout>
 
 
 </LinearLayout>

@@ -19,7 +19,6 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
     private List<OrganizationAccess> organizationAccessList;
     private Context context;
     private OrganizationAccessListener organizationAccessListener;
-    private String orgaName;
 
 
     //Interface to manage the type of click.
@@ -30,9 +29,9 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
 
 
     //OrganizationViewAdapter's constructor.
-    public AccessHistoryViewAdapter(List<OrganizationAccess> organizationAccessList,String orgName,Context context, OrganizationAccessListener organizationAccessListener){
+    public AccessHistoryViewAdapter(List<OrganizationAccess> organizationAccessList,Context context, OrganizationAccessListener organizationAccessListener){
         this.organizationAccessList = organizationAccessList;
-        this.orgaName=orgName;
+
         this.context=context;
         this.organizationAccessListener=organizationAccessListener;
     }
@@ -54,17 +53,19 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
 
         OrganizationAccess oa = organizationAccessList.get(position);
         System.out.print(oa);
-        holder.nameOrg.setText(orgaName);
+        holder.nameOrg.setText(oa.getOrgName());
         holder.date.setText(oa.getEntranceTimestamp().getYear()+"/"+oa.getEntranceTimestamp().getMonthValue()+"/"+oa.getEntranceTimestamp().getDayOfMonth());
         holder.access.setText(oa.getEntranceTimestamp().getHour()+":"+oa.getEntranceTimestamp().getMinute()+":"+oa.getEntranceTimestamp().getSecond());
-        holder.exit.setText("");
+
 
     }
 
     //Returns the organizations' list size.
     @Override
     public int getItemCount() {
+
         return organizationAccessList.size();
+
     }
 
     //Inner class to manage the organizations' access layout with its actions.

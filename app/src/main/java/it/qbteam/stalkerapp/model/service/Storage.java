@@ -1,6 +1,8 @@
 package it.qbteam.stalkerapp.model.service;
 
+import it.qbteam.stalkerapp.contract.AccessHistoryContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.contract.HomeContract;
 import org.json.JSONArray;
@@ -9,7 +11,6 @@ import org.json.JSONObject;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,10 +19,8 @@ import java.io.ObjectOutputStream;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
@@ -30,11 +29,13 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     HomeContract.HomeListener homeListener;
     MyStalkersListContract.MyStalkerListener myStalkerListener;
+    AccessHistoryContract.AccessHistoryListener accessHistoryListener;
 
     //Storage's constructor.
-    public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener){
+    public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener,  AccessHistoryContract.AccessHistoryListener accessHistoryListener){
          this.homeListener = homeListener;
          this.myStalkerListener = myStalkerListener;
+         this.accessHistoryListener = accessHistoryListener;
     }
 
     //Checks if the list of organizations already exists in local file.
@@ -302,23 +303,46 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     }
     public void performCreateAllFile() throws IOException {
         String[] paths={"data/user/0/it.qbteam.stalkerapp/files/OrganizationMovement.txt","data/user/0/it.qbteam.stalkerapp/files/PlaceMovement.txt",
-                "data/user/0/it.qbteam.stalkerapp/files/PlaceList.txt"};
+                "data/user/0/it.qbteam.stalkerapp/files/PlaceList.txt","data/user/0/it.qbteam.stalkerapp/files/OrganizationAccess.txt"};
 
-   for(int i=0; i<paths.length; i++){
-       File file=new File(paths[i]);
-       FileOutputStream fos=new FileOutputStream(file);
-       ObjectOutputStream oos=new ObjectOutputStream(fos);
-       oos.writeObject(null);
-       oos.flush();
-       oos.close();
-       fos.close();
+        for(int i=0; i<paths.length; i++){
+           File file=new File(paths[i]);
+           FileOutputStream fos=new FileOutputStream(file);
+           ObjectOutputStream oos=new ObjectOutputStream(fos);
+           oos.writeObject(null);
+           oos.flush();
+           oos.close();
+           fos.close();
 
-   }
+        }
+    }
 
+    //Serializes the object OrganizationAccess in a local file.
+    public void serializeOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList) throws IOException {
+        //Saving of OrganizationAccess in a file
+        File toWrite = new File("data/user/0/it.qbteam.stalkerapp/files/OrganizationAccess.txt");
+        FileOutputStream fos=new FileOutputStream(toWrite);
+        ObjectOutputStream oos=new ObjectOutputStream(fos);
+        // Method for serialization of OrganizationMovement
+        oos.writeObject(organizationAccessList);
+        oos.flush();
+        oos.close();
+        fos.close();
 
+    }
 
+    //Deserializes the object OrganizationAccess from a local file.
+    public void deserializeOrganizationAccessInLocal() throws IOException, ClassNotFoundException {
 
-
+        List<OrganizationAccess> organizationAccessList;
+        //Reading the OrganizationMovement from a file
+        FileInputStream fis= new FileInputStream("data/user/0/it.qbteam.stalkerapp/files/OrganizationAccess.txt");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        //Method for deserialization of object
+        organizationAccessList= (List<OrganizationAccess>) ois.readObject();
+        ois.close();
+        fis.close();
+        accessHistoryListener.onSuccessGetOrganizationAccess(organizationAccessList);
     }
 
     }

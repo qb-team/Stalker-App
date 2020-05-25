@@ -20,7 +20,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     //MyStalkersListPresenter's constructor.
     public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView = myStalkersView;
-    storage= new Storage(null,this);
+    storage= new Storage(null,this, null);
     server = new Server(this, null, null);
     }
 

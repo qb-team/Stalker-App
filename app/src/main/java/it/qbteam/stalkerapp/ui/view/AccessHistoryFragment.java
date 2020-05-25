@@ -39,7 +39,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     private RecyclerView.Adapter adapter;
     private SwipeRefreshLayout refresh;
     private AccessHistoryPresenter accessHistoryPresenter;
-    private  List<OrganizationAccess> organizationAccessList;
+    private  List<OrganizationAccess> organizationAccessList1;
     public AccessHistoryFragment() {
         // Required empty public constructor
     }
@@ -58,14 +58,17 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         View view = inflater.inflate(R.layout.fragment_access_history, container, false);
         refresh = view.findViewById(R.id.downloadAccessListID);
         recyclerView = view.findViewById(R.id.recyclerAccessViewID);
-        //recyclerView.setHasFixedSize(true);
-        //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        //recyclerView.setLayoutManager(layoutManager);
-        accessHistoryPresenter= new AccessHistoryPresenter(this);
-        organizationAccessList= new ArrayList<>();
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter( adapter );
 
-       /* adapter = new AccessHistoryViewAdapter(organizationAccessList,null ,this.getContext(),this);
-        recyclerView.setAdapter(adapter);*/
+        accessHistoryPresenter= new AccessHistoryPresenter(this);
+        organizationAccessList1= new ArrayList<>();
+
+        adapter = new AccessHistoryViewAdapter(organizationAccessList1,getActivity(),this);
+        recyclerView.setAdapter(adapter);
 
 
         //Refresh to download the organizations' access list (swipe down).
@@ -73,31 +76,22 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             @SneakyThrows
             @Override
             public void onRefresh() {
-                //downloadAccess();
+                accessHistoryPresenter.getOrganizationAccess();
                 refresh.setRefreshing(false);
 
             }
         });
         return view;
     }
-   /*public void downloadAccess() throws IOException, ClassNotFoundException {
-        OrganizationMovement om=accessHistoryPresenter.getOrganizationMovement();
-        accessHistoryPresenter.getAnonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
 
-
-    }*/
 
     @Override
-    public void onSuccessDownloadAccess(OrganizationAccess organizationAccess) {
-        organizationAccessList.add(organizationAccess);
-        accessHistoryPresenter.getOrganizationName(organizationAccess.getId());
+    public void onSuccessGetOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList) {
+        if(organizationAccessList!=null){
+            adapter = new AccessHistoryViewAdapter(organizationAccessList, getActivity(), this);
+            recyclerView.setAdapter(adapter);
+        }
 
-    }
-
-    @Override
-    public void onSuccessGetOrganizationName(String orgName) {
-        adapter = new AccessHistoryViewAdapter(organizationAccessList,orgName, this.getContext(),this);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -114,4 +108,6 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();
     }
+
+
 }

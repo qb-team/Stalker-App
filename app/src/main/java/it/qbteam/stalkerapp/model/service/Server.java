@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
+
 import javax.validation.constraints.NotNull;
 
 import it.qbteam.stalkerapp.HomePageActivity;
@@ -41,7 +45,7 @@ public class Server {
         this.myStalkerListener = myStalkerListener;
         this.homeListener = homeListener;
         this.accessHistoryListener= accessHistoryListener;
-        storage= new Storage(null, null);
+        storage= new Storage(null, null, null);
     }
 
     //Removes the organization from the user's favorite organization list.
@@ -147,7 +151,7 @@ public class Server {
     }
 
     //Tracks the user movement inside the trackingArea of an organization.
-    public void performOrganizationMovementServer(String authServerID,Long orgID,String userToken,int type,String exitToken) {
+    public void performOrganizationMovementServer(String authServerID,Long orgID,String userToken,int type,String exitToken, List<OrganizationAccess> organizationAccessList) {
 
         OrganizationMovement movementUpload = new OrganizationMovement();
         movementUpload.setMovementType(type);
@@ -171,7 +175,8 @@ public class Server {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializeMovementInLocal(movementUpload);
-                        anonymousOrganizationAccess(response.body().getExitToken(),orgID);
+                        //serialize in local the object List<OrganizationAccess>.
+                        storage.serializeOrganizationAccessInLocal(organizationAccessList);
 
                     }
 
@@ -207,6 +212,7 @@ public class Server {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializePlaceMovement(movementUpload);
+
                     }
 
                 } catch (IOException e) {
@@ -256,7 +262,7 @@ public class Server {
                     }
 
                     try {
-                        Storage save = new Storage(null,null);
+                        Storage save = new Storage(null,null, null);
                         save.performUpdateFile(returnList,path);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -273,22 +279,7 @@ public class Server {
                 homeListener.onFailureDownload("Errore durante lo scaricamento della lista");
             }});
     }
-public void performGetOrganization(Long orgID){
-    ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
-    OrganizationApi service = ac.createService(OrganizationApi.class);
-    Call<Organization> organization= service.getOrganization(orgID);
-    organization.enqueue(new Callback<Organization>() {
-        @Override
-        public void onResponse(Call<Organization> call, Response<Organization> response) {
-                    accessHistoryListener.onSuccessGetOrganizationName(response.body().getName());
-        }
 
-        @Override
-        public void onFailure(Call<Organization> call, Throwable t) {
-
-        }
-    });
-}
 public void anonymousOrganizationAccess(String exitToken , Long orgID) {
 
         List<String> list= new ArrayList<>();
@@ -301,8 +292,9 @@ public void anonymousOrganizationAccess(String exitToken , Long orgID) {
         public void onResponse(Call<List<OrganizationAccess>> call, Response<List<OrganizationAccess>> response) {
             System.out.print("RESPONSE BODY ANONIMOUS ORG MOVEMENT"+response.body());
             System.out.print(response.code());
-            if(accessHistoryListener!=null)
-            accessHistoryListener.onSuccessDownloadAccess(response.body().get(0));
+            System.out.print(response.body());
+          // if(accessHistoryListener!=null)
+              // accessHistoryListener.onSuccessDownloadAccess(response.body());
 
 
         }

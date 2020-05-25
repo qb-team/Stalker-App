@@ -69,12 +69,10 @@ public class ActionTabFragment extends Fragment {
         // Fixed tabs display all tabs concurrently
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
-    }
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+        viewPager.setOffscreenPageLimit(2);
 
-        super.onSaveInstanceState(outState);
     }
+
     //Management of the back button.
     public boolean onBackPressed() {
         // currently visible tab Fragment

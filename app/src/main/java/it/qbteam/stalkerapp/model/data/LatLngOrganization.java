@@ -97,4 +97,6 @@ public class LatLngOrganization {
     //Returns the organization's ID.
     public Long getOrgID(){return this.organizationID;}
 
+    public OffsetDateTime getTimeStamp(){return this.timeStamp;}
+
 }

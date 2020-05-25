@@ -63,8 +63,9 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
     //Returns the organizations' list size.
     @Override
     public int getItemCount() {
-
-        return organizationAccessList.size();
+          if(organizationAccessList!=null)
+                return organizationAccessList.size();
+          else return 0;
 
     }
 

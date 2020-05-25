@@ -452,6 +452,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         return user.getToken();
     }
 
+    //Comunicates with MyStalkerListFragment to add the organization.
     @Override
     public void sendOrganization(Organization organization) throws IOException, JSONException {
         Fragment frag = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();

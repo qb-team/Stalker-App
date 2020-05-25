@@ -106,7 +106,7 @@ public class TrackingStalker extends Service {
     private boolean authenticated;
     private Storage storage;
     private Server server;
-    private List<OrganizationAccess> organizationAccessList;
+    private OrganizationAccess organizationAccess;
     private OffsetDateTime accessTime;
 
     public TrackingStalker()  {
@@ -119,7 +119,7 @@ public class TrackingStalker extends Service {
 
         latLngOrganizationList=new ArrayList<>();
         latLngPlaceList=new ArrayList<>();
-        organizationAccessList=new ArrayList<>();
+        organizationAccess=new OrganizationAccess();
         storage = new Storage(null,null, null);
         server = new Server(null,null, null);
 
@@ -227,13 +227,13 @@ public class TrackingStalker extends Service {
             if(HomePageActivity.getSwitcherModeStatus()) {
 
                 //Comunicates the server that user is outside the organization(authenticated).
-                server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccessList);
+                server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 
             }
             else{
 
                 //Comunicates the server that user is outside the organization(anonymous).
-                server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccessList);
+                server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
             }
 
             //Deletes the organization movement.
@@ -509,7 +509,7 @@ public class TrackingStalker extends Service {
                         accessTime=OffsetDateTime.now();
 
                         //Comunicates the server that user is inside the organization
-                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null, organizationAccessList);
+                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null, organizationAccess);
 
                         //Download the places' list.
                         server.performDownloadPlaceServer(insideOrganization.getOrgID(),HomePageActivity.getUserToken());
@@ -535,7 +535,7 @@ public class TrackingStalker extends Service {
                         accessTime=OffsetDateTime.now();
 
                         //Comunicates the server that user is inside the organization
-                        server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null, organizationAccessList);
+                        server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null, organizationAccess);
 
                         //Download the places' list.
                         server.performDownloadPlaceServer(insideOrganization.getOrgID(),HomePageActivity.getUserToken());
@@ -573,14 +573,14 @@ public class TrackingStalker extends Service {
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 
                         //Update the access' list when the user exits from organization.
-                        OrganizationAccess organizationAccess = new OrganizationAccess();
+
                         organizationAccess.setEntranceTimestamp(accessTime);
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
-                        organizationAccessList.add(organizationAccess);
+
 
                         //Comunicates the server that user is outside the organization
-                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccessList);
+                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 
                         //Deletes the organization movement
                         storage.deleteOrganizationMovement();

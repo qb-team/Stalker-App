@@ -1,5 +1,6 @@
 package it.qbteam.stalkerapp.model.service;
 
+import io.grpc.internal.Stream;
 import it.qbteam.stalkerapp.contract.AccessHistoryContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -208,13 +210,13 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     //Deletes the current object Place serialized in a local file.
     public void deletePlace() throws IOException {
 
-        List<Place> placeList=null;
+
         //Reading the OrganizationMovement from a file
         File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/PlaceList.txt");
         FileOutputStream fos=new FileOutputStream(toDelete);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         //Write the object OrganizationMovement null==delete
-        oos.writeObject(placeList);
+        oos.writeObject(null);
         oos.flush();
         oos.close();
         fos.close();
@@ -245,13 +247,13 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     }
 
     public void deletePlaceMovement() throws IOException {
-        PlaceMovement placeMovement=null;
+
         //Reading the OrganizationMovement from a file
         File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/PlaceMovement.txt");
         FileOutputStream fos=new FileOutputStream(toDelete);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         //Write the object OrganizationMovement null==delete
-        oos.writeObject(placeMovement);
+        oos.writeObject(null);
         oos.flush();
         oos.close();
         fos.close();
@@ -290,20 +292,19 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     //Deletes the current object OrganizationMovement serialized in a local file.
     public void deleteOrganizationMovement() throws IOException {
 
-        OrganizationMovement organizationMovement=null;
         //Reading the OrganizationMovement from a file
         File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/OrganizationMovement.txt");
         FileOutputStream fos=new FileOutputStream(toDelete);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         //Write the object OrganizationMovement null==delete
-        oos.writeObject(organizationMovement);
+        oos.writeObject(null);
         oos.flush();
         oos.close();
         fos.close();
     }
     public void performCreateAllFile() throws IOException {
         String[] paths={"data/user/0/it.qbteam.stalkerapp/files/OrganizationMovement.txt","data/user/0/it.qbteam.stalkerapp/files/PlaceMovement.txt",
-                "data/user/0/it.qbteam.stalkerapp/files/PlaceList.txt","data/user/0/it.qbteam.stalkerapp/files/OrganizationAccess.txt"};
+                "data/user/0/it.qbteam.stalkerapp/files/PlaceList.txt"};
 
         for(int i=0; i<paths.length; i++){
            File file=new File(paths[i]);
@@ -318,13 +319,28 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     }
 
     //Serializes the object OrganizationAccess in a local file.
-    public void serializeOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList) throws IOException {
+    public void serializeOrganizationAccessInLocal(OrganizationAccess organizationAccess) throws IOException, ClassNotFoundException {
         //Saving of OrganizationAccess in a file
+        List<OrganizationAccess> oldList;
+        //Reading the OrganizationMovement from a file
+        FileInputStream fis= new FileInputStream("data/user/0/it.qbteam.stalkerapp/files/OrganizationAccess.txt");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        //Method for deserialization of object
+        oldList= (List<OrganizationAccess>) ois.readObject();
+        ois.close();
+        fis.close();
+        if(oldList!=null) {
+            oldList.add(organizationAccess);
+        }
+        else{
+            oldList=new ArrayList<>();
+            oldList.add(organizationAccess);
+        }
         File toWrite = new File("data/user/0/it.qbteam.stalkerapp/files/OrganizationAccess.txt");
         FileOutputStream fos=new FileOutputStream(toWrite);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         // Method for serialization of OrganizationMovement
-        oos.writeObject(organizationAccessList);
+        oos.writeObject(oldList);
         oos.flush();
         oos.close();
         fos.close();
@@ -343,6 +359,33 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         ois.close();
         fis.close();
         accessHistoryListener.onSuccessGetOrganizationAccess(organizationAccessList);
+    }
+
+    public void performDeleteOrganizationAccess() throws IOException {
+        //Reading the OrganizationMovement from a file
+        File toDelete=new File("data/user/0/it.qbteam.stalkerapp/files/OrganizationAccess.txt");
+        FileOutputStream fos=new FileOutputStream(toDelete);
+        ObjectOutputStream oos=new ObjectOutputStream(fos);
+        //Write the object OrganizationMovement null==delete
+        oos.writeObject(null);
+        oos.flush();
+        oos.close();
+        fos.close();
+        accessHistoryListener.onSuccessDelete();
+    }
+
+    public List<OrganizationAccess> performGetAccessList() throws IOException, ClassNotFoundException {
+
+        List<OrganizationAccess> organizationAccessList;
+        //Reading the OrganizationMovement from a file
+        FileInputStream fis= new FileInputStream("data/user/0/it.qbteam.stalkerapp/files/OrganizationAccess.txt");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        //Method for deserialization of object
+        organizationAccessList= (List<OrganizationAccess>) ois.readObject();
+        ois.close();
+        fis.close();
+        return organizationAccessList;
+
     }
 
     }

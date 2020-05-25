@@ -151,7 +151,7 @@ public class Server {
     }
 
     //Tracks the user movement inside the trackingArea of an organization.
-    public void performOrganizationMovementServer(String authServerID,Long orgID,String userToken,int type,String exitToken, List<OrganizationAccess> organizationAccessList) {
+    public void performOrganizationMovementServer(String authServerID,Long orgID,String userToken,int type,String exitToken, OrganizationAccess organizationAccess) {
 
         OrganizationMovement movementUpload = new OrganizationMovement();
         movementUpload.setMovementType(type);
@@ -177,10 +177,11 @@ public class Server {
                     }
                     else if(type==-1){
                         //serialize in local the object List<OrganizationAccess>.
-                        storage.serializeOrganizationAccessInLocal(organizationAccessList);
+                        storage.serializeOrganizationAccessInLocal(organizationAccess);
+
                     }
 
-                } catch (IOException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }

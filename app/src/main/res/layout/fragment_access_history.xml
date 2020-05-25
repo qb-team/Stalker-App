@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Storico accessi"
@@ -91,7 +92,7 @@
             android:id="@+id/accessID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_update_black_24dp"
+            android:src="@drawable/ic_delete_black_24dp"
             android:layout_alignParentBottom="true"
             app:maxImageSize="30dp"
             android:layout_alignParentRight="true"

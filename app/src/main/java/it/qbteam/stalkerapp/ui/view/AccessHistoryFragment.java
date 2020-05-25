@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,10 +14,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -43,13 +47,13 @@ import lombok.SneakyThrows;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccessHistoryFragment extends Fragment implements AccessHistoryContract.View, AccessHistoryViewAdapter.OrganizationAccessListener, OnBackPressListener {
+public class AccessHistoryFragment extends Fragment implements AccessHistoryContract.View, SearchView.OnQueryTextListener, AccessHistoryViewAdapter.OrganizationAccessListener, OnBackPressListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private FloatingActionButton buttonAccess;
+    private FloatingActionButton buttonDelete;
     private AccessHistoryPresenter accessHistoryPresenter;
-    private  List<OrganizationAccess> organizationAccessList1;
+    private List<OrganizationAccess> organizationAccessList1;
 
     public AccessHistoryFragment() {
         // Required empty public constructor
@@ -58,10 +62,11 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
+    @SneakyThrows
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,16 +79,19 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter( adapter );
         accessHistoryPresenter= new AccessHistoryPresenter(this);
-        organizationAccessList1= new ArrayList<>();
-        adapter = new AccessHistoryViewAdapter(organizationAccessList1,getActivity(),this);
-        recyclerView.setAdapter(adapter);
-        buttonAccess= view.findViewById(R.id.accessID);
-        buttonAccess.setOnClickListener(new View.OnClickListener() {
+        accessHistoryPresenter.getOrganizationAccess();
+
+       /* if(organizationAccessList1!=null){
+            adapter = new AccessHistoryViewAdapter(organizationAccessList1,getActivity(),this);
+            recyclerView.setAdapter(adapter);
+        }*/
+        buttonDelete= view.findViewById(R.id.accessID);
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
             @SneakyThrows
             @Override
             public void onClick(View v) {
 
-                accessHistoryPresenter.getOrganizationAccess();
+                accessHistoryPresenter.deleteOrganizationAccess();
 
             }
         });
@@ -103,6 +111,44 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     }
 
     @Override
+    public void onSuccessDeleteOrganizationAccess() {
+        adapter = new AccessHistoryViewAdapter(null, getActivity(), this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    //It hides to menu actionTab the option "Aggiungi a MyStalkers".
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem item= menu.findItem(R.id.searchID);
+        item.setVisible(true);
+        SearchView searchView= (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @SneakyThrows
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String userInput= newText.toLowerCase();
+        List<OrganizationAccess> newList= new ArrayList<>();
+        List<OrganizationAccess> oldList= accessHistoryPresenter.getOrganizationAccessList();
+        if(oldList.size() != 0){
+            for(int i = 0; i< oldList.size(); i++){
+                if(oldList.get(i).getOrgName().toLowerCase().contains(userInput))
+                    newList.add(oldList.get(i));
+            }
+            adapter=new AccessHistoryViewAdapter(newList,getActivity(),this);
+            recyclerView.setAdapter(adapter);
+        }
+        return false;
+    }
+
+    @Override
     public void organizationClick(int position) {
 
     }
@@ -116,6 +162,4 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();
     }
-
-
 }

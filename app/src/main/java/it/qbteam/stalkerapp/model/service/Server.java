@@ -147,7 +147,7 @@ public class Server {
     }
 
     //Tracks the user movement inside the trackingArea of an organization.
-    public void performOrganizationMovementServer(String authServerID,long orgID,String userToken,int type,String exitToken) {
+    public void performOrganizationMovementServer(String authServerID,Long orgID,String userToken,int type,String exitToken) {
 
         OrganizationMovement movementUpload = new OrganizationMovement();
         movementUpload.setMovementType(type);
@@ -171,6 +171,8 @@ public class Server {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializeMovementInLocal(movementUpload);
+                        anonymousOrganizationAccess(response.body().getExitToken(),orgID);
+
                     }
 
                 } catch (IOException e) {
@@ -271,13 +273,26 @@ public class Server {
                 homeListener.onFailureDownload("Errore durante lo scaricamento della lista");
             }});
     }
+public void performGetOrganization(Long orgID){
+    ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
+    OrganizationApi service = ac.createService(OrganizationApi.class);
+    Call<Organization> organization= service.getOrganization(orgID);
+    organization.enqueue(new Callback<Organization>() {
+        @Override
+        public void onResponse(Call<Organization> call, Response<Organization> response) {
+                    accessHistoryListener.onSuccessGetOrganizationName(response.body().getName());
+        }
 
+        @Override
+        public void onFailure(Call<Organization> call, Throwable t) {
+
+        }
+    });
+}
 public void anonymousOrganizationAccess(String exitToken , Long orgID) {
-        System.out.print("NEL METODO DI ACCESS");
+
         List<String> list= new ArrayList<>();
         list.add(exitToken);
-
-        System.out.print("Prima della chiamata");
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
         AccessApi service = ac.createService(AccessApi.class);
         Call<List<OrganizationAccess>> access= service.getAnonymousAccessListInOrganization(list,orgID);
@@ -287,7 +302,7 @@ public void anonymousOrganizationAccess(String exitToken , Long orgID) {
             System.out.print("RESPONSE BODY ANONIMOUS ORG MOVEMENT"+response.body());
             System.out.print(response.code());
             if(accessHistoryListener!=null)
-            accessHistoryListener.onSuccessDownloadAccess(response.body());
+            accessHistoryListener.onSuccessDownloadAccess(response.body().get(0));
 
 
         }
@@ -298,31 +313,6 @@ public void anonymousOrganizationAccess(String exitToken , Long orgID) {
         }
     });
 }
-    public void getAnonymousOrganizationAccess(String exitToken , Long orgID) {
-        System.out.print("NEL METODO DI ACCESS");
-        List<String> list= new ArrayList<>();
-        list.add(exitToken);
-        System.out.print("Prima della chiamata");
-        ApiClient ac = new ApiClient("bearerAuth").setBearerToken(HomePageActivity.getUserToken());
-        AccessApi service = ac.createService(AccessApi.class);
-        Call<List<OrganizationAccess>> access= service.getAnonymousAccessListInOrganization(list,orgID);
-        access.enqueue(new Callback<List<OrganizationAccess>>() {
-            @Override
-            public void onResponse(Call<List<OrganizationAccess>> call, Response<List<OrganizationAccess>> response) {
-                System.out.print("RESPONSE BODY ANONIMOUS ORG MOVEMENT"+response.body());
-                System.out.print(response.code());
-
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<List<OrganizationAccess>> call, Throwable t) {
-
-            }
-        });
-    }
 
 public void anonymousPlaceAccess(Long placeID, String exitToken){
 

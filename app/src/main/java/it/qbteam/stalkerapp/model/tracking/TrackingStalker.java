@@ -76,7 +76,6 @@ import lombok.SneakyThrows;
  */
 public class TrackingStalker extends Service {
 
-
     private static final String PACKAGE_NAME = "it.qbteam.stalkerapp.model.Tracking.TrackingStalker";
     public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
@@ -528,12 +527,14 @@ public class TrackingStalker extends Service {
 
                         HomePageActivity.setNameOrg(insideOrganization.getName());
 
+
                     }
 
                     if(!downloadOnceListPlace) {
 
                         //Saves the place's list of the organization I'm inside.
                         latLngPlaceList = LatLngPlace.updatePlace(storage);
+
 
                         //if true the list is already downloaded.
                         downloadOnceListPlace=true;

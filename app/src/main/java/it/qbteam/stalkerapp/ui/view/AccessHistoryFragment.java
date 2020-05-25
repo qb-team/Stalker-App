@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public AccessHistoryFragment() {
         // Required empty public constructor
     }
+
     //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,9 +58,14 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         View view = inflater.inflate(R.layout.fragment_access_history, container, false);
         refresh = view.findViewById(R.id.downloadAccessListID);
         recyclerView = view.findViewById(R.id.recyclerAccessViewID);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
+        //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        //recyclerView.setLayoutManager(layoutManager);
         accessHistoryPresenter= new AccessHistoryPresenter(this);
         organizationAccessList= new ArrayList<>();
+
+       /* adapter = new AccessHistoryViewAdapter(organizationAccessList,null ,this.getContext(),this);
+        recyclerView.setAdapter(adapter);*/
 
 
         //Refresh to download the organizations' access list (swipe down).
@@ -66,24 +73,30 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             @SneakyThrows
             @Override
             public void onRefresh() {
-                downloadAccess();
+                //downloadAccess();
                 refresh.setRefreshing(false);
 
             }
         });
         return view;
     }
-  public void downloadAccess() throws IOException, ClassNotFoundException {
+   /*public void downloadAccess() throws IOException, ClassNotFoundException {
+        OrganizationMovement om=accessHistoryPresenter.getOrganizationMovement();
+        accessHistoryPresenter.getAnonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
 
-      OrganizationMovement om=accessHistoryPresenter.getOrganizationMovement();
-      accessHistoryPresenter.getAnonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
 
-
-  }
+    }*/
 
     @Override
-    public void onSuccessDownloadAccess(List<OrganizationAccess> list) {
-        adapter = new AccessHistoryViewAdapter(list, this.getContext(),this);
+    public void onSuccessDownloadAccess(OrganizationAccess organizationAccess) {
+        organizationAccessList.add(organizationAccess);
+        accessHistoryPresenter.getOrganizationName(organizationAccess.getId());
+
+    }
+
+    @Override
+    public void onSuccessGetOrganizationName(String orgName) {
+        adapter = new AccessHistoryViewAdapter(organizationAccessList,orgName, this.getContext(),this);
         recyclerView.setAdapter(adapter);
     }
 

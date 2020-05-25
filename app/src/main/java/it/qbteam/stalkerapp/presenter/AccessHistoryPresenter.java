@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.presenter;
 
+import org.mockito.internal.matchers.Or;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class AccessHistoryPresenter implements AccessHistoryContract.Presenter, 
 
     @Override
     public void getAnonymousOrganizationAccess(String exitToken, Long orgID) throws IOException {
-         server.getAnonymousOrganizationAccess(exitToken, orgID);
+         server.anonymousOrganizationAccess(exitToken, orgID);
     }
 
 
@@ -31,9 +33,20 @@ public class AccessHistoryPresenter implements AccessHistoryContract.Presenter, 
     public OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException {
         return storage.deserializeMovementInLocal();
     }
+
     @Override
-    public void onSuccessDownloadAccess(List<OrganizationAccess> list) {
-      accessHistoryView.onSuccessDownloadAccess(list);
+    public void getOrganizationName(Long orgID) {
+        server.performGetOrganization(orgID);
+    }
+
+    @Override
+    public void onSuccessDownloadAccess(OrganizationAccess organizationAccess) {
+      accessHistoryView.onSuccessDownloadAccess(organizationAccess);
+    }
+
+    @Override
+    public void onSuccessGetOrganizationName(String orgName) {
+        accessHistoryView.onSuccessGetOrganizationName(orgName);
     }
 
 }

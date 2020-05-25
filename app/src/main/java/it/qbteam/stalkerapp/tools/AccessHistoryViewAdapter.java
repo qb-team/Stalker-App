@@ -19,6 +19,7 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
     private List<OrganizationAccess> organizationAccessList;
     private Context context;
     private OrganizationAccessListener organizationAccessListener;
+    private String orgaName;
 
 
     //Interface to manage the type of click.
@@ -29,8 +30,9 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
 
 
     //OrganizationViewAdapter's constructor.
-    public AccessHistoryViewAdapter(List<OrganizationAccess> organizationAccessList, Context context, OrganizationAccessListener organizationAccessListener){
+    public AccessHistoryViewAdapter(List<OrganizationAccess> organizationAccessList,String orgName,Context context, OrganizationAccessListener organizationAccessListener){
         this.organizationAccessList = organizationAccessList;
+        this.orgaName=orgName;
         this.context=context;
         this.organizationAccessListener=organizationAccessListener;
     }
@@ -51,10 +53,11 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         OrganizationAccess oa = organizationAccessList.get(position);
-        holder.nameOrg.setText("Torre archimede");
+        System.out.print(oa);
+        holder.nameOrg.setText(orgaName);
         holder.date.setText(oa.getEntranceTimestamp().getYear()+"/"+oa.getEntranceTimestamp().getMonthValue()+"/"+oa.getEntranceTimestamp().getDayOfMonth());
-        holder.access.setText(oa.getEntranceTimestamp().toString());
-        holder.exit.setText(oa.getExitTimestamp().toString());
+        holder.access.setText(oa.getEntranceTimestamp().getHour()+":"+oa.getEntranceTimestamp().getMinute()+":"+oa.getEntranceTimestamp().getSecond());
+        holder.exit.setText("");
 
     }
 

@@ -13,11 +13,11 @@ public interface SignUpContract {
     }
 
     interface Presenter {
-        void signUp(Fragment fragment, String email, String password);
+        void signUp(String email, String password);
     }
 
     interface Interactor {
-        void performFirebaseRegistration(Fragment fragment, String email, String password);
+        void performFirebaseRegistration(String email, String password);
     }
 
     interface onRegistrationListener {

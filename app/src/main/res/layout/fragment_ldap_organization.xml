@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -7,71 +7,58 @@
     android:orientation="vertical"
     android:background="@color/whiteColor"
     android:clickable="true">
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/titleID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_horizontal"
+        android:text="TITOLO"
+        android:textAlignment="center"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/imageID"
+        android:layout_gravity="center"
+        android:src="@drawable/image"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+
         <TextView
-            android:id="@+id/titleID"
+            android:id="@+id/descriptionID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:gravity="center_horizontal"
-            android:text="TITOLO"
-            android:textAlignment="center"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="400dp"
-        android:orientation="vertical">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
             android:layout_marginTop="20dp"
-            android:id="@+id/imageID"
-            android:layout_gravity="center"
-            android:src="@drawable/image"/>
+            android:padding="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp" />
+    </ScrollView>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-            <TextView
-                android:id="@+id/descriptionID"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:padding="15dp"
-                android:text="nfewonfonofnennpifnfrneiofneionfiefonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonfonofnennpifnfrneiofneionfienfnfonnfnfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenooneonvoefinovenvonwvewovofneionfienfoneonvoefinovenvonwvewovnofnnfewonfonqofneionfienfoneonvoef"
-                android:textColor="@color/blackColor"
-                android:textSize="18sp" />
-        </ScrollView>
-
-    </LinearLayout>
-
-
+    <Button
+        android:id="@+id/LDAPaccessID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/custom_border"
+        android:textAlignment="center"
+        android:padding="10dp"
+        android:text="Autenticazione"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-
-        >
-
-        <Button
-            android:id="@+id/LDAPaccessID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Autenticazione"
-            />
-
+        android:orientation="horizontal">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/accessID"
@@ -82,14 +69,11 @@
             app:maxImageSize="30dp"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-
-            />
+            android:layout_marginRight="10dp"/>
     </RelativeLayout>
 
+
 </LinearLayout>
-
-
 
 
 

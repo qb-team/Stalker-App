@@ -3,13 +3,16 @@ package it.qbteam.stalkerapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,12 +24,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.common.eventbus.EventBus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -40,6 +46,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import org.json.JSONException;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
@@ -59,7 +67,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private static User user;
     private static TextView nameOrg;
     private static TextView namePlace;
-
+    // The BroadcastReceiver used to listen from broadcasts from the service.
+    private MyReceiver myReceiver;
     private SwitchCompat switcher;
     private static SwitchCompat switcherMode;
     private ActionTabFragment actionTabFragment;
@@ -89,13 +98,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     };
 
-    @Override
-    protected void onStart() {
-
-
-        super.onStart();
-    }
-
     //Creates Activity and manages the fragments connected to it. In this method there is the user authentication check,
     // in case the user is no longer logged in the goToMainActivity () method is invoked.
     @SuppressLint("WrongViewCast")
@@ -103,7 +105,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-
+        myReceiver = new MyReceiver();
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
             userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
         }
@@ -221,7 +223,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             }
         });
 
-       if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             // withholding the previously created fragment from being created again
             // On orientation change, it will prevent fragment recreation
             // its necessary to reserve the fragment stack inside each tab
@@ -231,10 +233,44 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             // and getting the reference
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
-        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
-                Context.BIND_AUTO_CREATE);
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
+                Context.BIND_AUTO_CREATE);
+        setSwitchState(Utils.requestingLocationUpdates(this));
+    }
+
+    //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
+    @Override
+    public void onStop() {
+
+        if (mBound) {
+            this.unbindService(mServiceConnection);
+            mBound = false;
+        }
+
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+        super.onStop();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
+                new IntentFilter(TrackingStalker.ACTION_BROADCAST));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        super.onPause();
+    }
+
 
 
     //creates the action tab menu.
@@ -370,26 +406,13 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     }
 
-    //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
-    @Override
-    public void onStop() {
-
-        if (mBound) {
-            this.unbindService(mServiceConnection);
-            mBound = false;
-        }
-
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
-        super.onStop();
-    }
-
     //Method that is called when a shared resource between two views is modified, added or removed.
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 
         if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
-            HomePageActivity homePageActivity= new HomePageActivity();
-            homePageActivity.setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
+
+            setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
                     false));
         }
     }
@@ -476,7 +499,18 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             return false;
     }
 
-public static String getPath(){
+     public static String getPath(){
         return path;
 }
+
+
+    private class MyReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Location location = intent.getParcelableExtra(TrackingStalker.EXTRA_LOCATION);
+            if (location != null) {
+                   //in caso volessi usare la location in HomaPageActivity
+            }
+        }
+    }
 }

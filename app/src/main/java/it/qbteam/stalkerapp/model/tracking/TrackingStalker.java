@@ -285,7 +285,6 @@ public class TrackingStalker extends Service {
         }
     }
 
-    @SuppressLint("WrongConstant")
     @SneakyThrows
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -305,10 +304,10 @@ public class TrackingStalker extends Service {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            stopSelf();
+           stopSelf();
         }
         // Tells the system to not try to recreate the service after it has been killed.
-        return START_TASK_REMOVED_COMPLETE;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -356,7 +355,9 @@ public class TrackingStalker extends Service {
 
     @Override
     public void onDestroy() {
+
         mServiceHandler.removeCallbacksAndMessages(null);
+
     }
 
     private Notification getNotification() {
@@ -397,6 +398,7 @@ public class TrackingStalker extends Service {
 
     private void onNewLocation(Location location) throws IOException, ClassNotFoundException, JSONException {
 
+        mLocation=location;
 
         if (location != null) {
             authenticated = HomePageActivity.getSwitcherModeStatus();
@@ -409,6 +411,7 @@ public class TrackingStalker extends Service {
             mNotificationManager.notify(NOTIFICATION_ID, getNotification());
         }
     }
+
 
     private void handleOrganizations(Location location) throws IOException, JSONException, ClassNotFoundException {
 

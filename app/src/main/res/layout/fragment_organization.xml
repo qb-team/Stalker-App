@@ -7,28 +7,20 @@
     android:orientation="vertical"
     android:background="@color/whiteColor"
     android:clickable="true">
-    <LinearLayout
+
+
+    <TextView
+        android:id="@+id/titleID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/titleID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:gravity="center_horizontal"
-            android:text="TITOLO"
-            android:textAlignment="center"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_horizontal"
+        android:text="TITOLO"
+        android:textAlignment="center"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="400dp"
-    android:orientation="vertical">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -39,9 +31,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-
-        >
+        android:layout_height="250dp">
 
         <TextView
             android:id="@+id/descriptionID"
@@ -51,20 +41,17 @@
             android:padding="15dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-
             android:scrollbarStyle="outsideOverlay"
-            android:text="nfewonnnpifnfrneiofneionfienfnfonnfnfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenonfonqofnoenqofnoqnfewonfonqofnoenqofnoqenooneonvoefinovenvonwvewovofneionfienfoneonvoefinovenvonwvewovnofnnfewonfonqofneionfienfoneonvoef"
             android:textColor="@color/blackColor"
             android:textSize="18sp" />
     </ScrollView>
 
-</LinearLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/accessID"

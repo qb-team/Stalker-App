@@ -64,7 +64,8 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
        // recyclerView.setAdapter(adapter );
         accessHistoryPresenter= new AccessHistoryPresenter(this);
         try {
-            accessHistoryPresenter.getOrganizationAccess();
+            printAccess();
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -89,9 +90,13 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         return view;
     }
 
+    public void printAccess() throws IOException, ClassNotFoundException {
+        accessHistoryPresenter.getOrganizationAccess();
+    }
     @Override
     public void onSuccessGetOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList) {
         if(organizationAccessList!=null){
+
             adapter = new AccessHistoryViewAdapter(organizationAccessList, getActivity(), this);
             recyclerView.setAdapter(adapter);
         }

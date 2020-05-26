@@ -24,15 +24,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.common.eventbus.EventBus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -47,14 +44,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import org.json.JSONException;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.Utils;
+import it.qbteam.stalkerapp.ui.view.AccessHistoryFragment;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
@@ -270,9 +267,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
         super.onPause();
     }
-
-
-
+    
     //creates the action tab menu.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -504,12 +499,16 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 }
 
 
+
     private class MyReceiver extends BroadcastReceiver {
+        @SneakyThrows
         @Override
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(TrackingStalker.EXTRA_LOCATION);
             if (location != null) {
-                   //in caso volessi usare la location in HomaPageActivity
+                System.out.print("ONRECEIVEDDDDDDDDD");
+                Fragment frag = (AccessHistoryFragment )ActionTabFragment.getAccessHistoryFragment();
+                ((AccessHistoryFragment) frag).printAccess();
             }
         }
     }

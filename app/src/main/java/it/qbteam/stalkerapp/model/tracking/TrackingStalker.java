@@ -57,6 +57,7 @@ import java.util.TimerTask;
 
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
@@ -65,6 +66,7 @@ import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
+import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import lombok.SneakyThrows;
 
 /**
@@ -112,6 +114,7 @@ public class TrackingStalker extends Service {
     private OrganizationAccess organizationAccess;
     private OffsetDateTime accessTime;
 
+
     public TrackingStalker()  {
 
     }
@@ -125,6 +128,7 @@ public class TrackingStalker extends Service {
         organizationAccess=new OrganizationAccess();
         storage = new Storage(null,null, null);
         server = new Server(null,null, null);
+
 
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -530,11 +534,7 @@ public class TrackingStalker extends Service {
                             public void run() {
                                 try {
                                     latLngPlaceList = LatLngPlace.updatePlace(storage);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (ClassNotFoundException e) {
+                                } catch (JSONException | IOException | ClassNotFoundException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -566,11 +566,7 @@ public class TrackingStalker extends Service {
                             public void run() {
                                 try {
                                     latLngPlaceList = LatLngPlace.updatePlace(storage);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (ClassNotFoundException e) {
+                                } catch (JSONException | ClassNotFoundException | IOException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -601,9 +597,9 @@ public class TrackingStalker extends Service {
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
 
-
                         //Comunicates the server that user is outside the organization
                         server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
+
 
                         //Deletes the organization movement
                         storage.deleteOrganizationMovement();

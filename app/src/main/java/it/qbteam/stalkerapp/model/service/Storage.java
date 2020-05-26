@@ -304,6 +304,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fos.close();
     }
     public void performCreateAllFile() throws IOException {
+
         String[] paths={HomePageActivity.getPath()+"/OrganizationMovement.txt",HomePageActivity.getPath()+"/PlaceMovement.txt",
                 HomePageActivity.getPath()+"/PlaceList.txt"};
 
@@ -353,6 +354,16 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
         List<OrganizationAccess> organizationAccessList;
         //Reading the OrganizationMovement from a file
+        File organizationAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
+        if(organizationAccessFile.length()==0 || !organizationAccessFile.exists()) {
+            FileOutputStream fos=new FileOutputStream(organizationAccessFile);
+            ObjectOutputStream oos=new ObjectOutputStream(fos);
+            oos.writeObject(null);
+            oos.flush();
+            oos.close();
+            fos.close();
+        }
+        else{
         FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/OrganizationAccess.txt");
         ObjectInputStream ois = new ObjectInputStream(fis);
         //Method for deserialization of object
@@ -360,6 +371,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         ois.close();
         fis.close();
         accessHistoryListener.onSuccessGetOrganizationAccess(organizationAccessList);
+        }
     }
 
     public void performDeleteOrganizationAccess() throws IOException {

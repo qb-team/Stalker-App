@@ -59,7 +59,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter( adapter );
+       // recyclerView.setAdapter(adapter );
         accessHistoryPresenter= new AccessHistoryPresenter(this);
         accessHistoryPresenter.getOrganizationAccess();
 

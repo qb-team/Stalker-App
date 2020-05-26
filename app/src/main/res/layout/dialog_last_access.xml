@@ -26,7 +26,8 @@
         <TableLayout
         android:id="@+id/tableViewID"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
             <TableRow>
                 <TextView android:text="Data"
                     android:layout_width="40dp"

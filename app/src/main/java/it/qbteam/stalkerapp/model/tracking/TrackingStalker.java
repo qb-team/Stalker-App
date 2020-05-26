@@ -37,6 +37,8 @@ import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -404,6 +406,7 @@ public class TrackingStalker extends Service {
         mLocation=location;
 
         if (location != null) {
+
             authenticated = HomePageActivity.getSwitcherModeStatus();
             handleOrganizations(location);
 
@@ -591,6 +594,10 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the organization
                         server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 
+                        // Notify anyone listening for broadcasts about the new location.
+                        Intent intent = new Intent(ACTION_BROADCAST);
+                        intent.putExtra(EXTRA_LOCATION, location);
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
                         //Deletes the organization movement
                         storage.deleteOrganizationMovement();

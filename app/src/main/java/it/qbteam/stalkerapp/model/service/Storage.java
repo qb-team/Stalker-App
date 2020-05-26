@@ -435,7 +435,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             ois.close();
             fis.close();
 
-System.out.print("LEGGO LAST ACCESS:"+organizationMovement);
         return organizationMovement;
     }
     }

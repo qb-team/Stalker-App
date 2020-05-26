@@ -62,7 +62,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
             @Override
             public void onClick(View v) {
                 accessDialog = new Dialog(getContext());
-                accessDialog.setContentView(R.layout.dialog_access_history);
+                accessDialog.setContentView(R.layout.dialog_last_access);
                 TableLayout tableLayout= accessDialog.findViewById(R.id.scroll_table);
                 accessDialog.show();
                 Button exit=accessDialog.findViewById(R.id.exitID);

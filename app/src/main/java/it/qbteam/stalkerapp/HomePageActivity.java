@@ -267,7 +267,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
         super.onPause();
     }
-    
+
     //creates the action tab menu.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -506,7 +506,6 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(TrackingStalker.EXTRA_LOCATION);
             if (location != null) {
-                System.out.print("ONRECEIVEDDDDDDDDD");
                 Fragment frag = (AccessHistoryFragment )ActionTabFragment.getAccessHistoryFragment();
                 ((AccessHistoryFragment) frag).printAccess();
             }

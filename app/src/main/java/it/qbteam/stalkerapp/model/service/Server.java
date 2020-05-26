@@ -328,6 +328,7 @@ public void anonymousPlaceAccess(Long placeID, String exitToken){
         }
     });
 }
+
 public void authenticatedOrganizationAccess(Long orgID, String orgAuthServerID){
 
     List<String> list= new ArrayList<>();

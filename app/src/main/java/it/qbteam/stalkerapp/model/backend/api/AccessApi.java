@@ -26,6 +26,7 @@ public interface AccessApi {
    * @param placeId ID of a place. (required)
    * @return Call&lt;List&lt;PlaceAccess&gt;&gt;
    */
+
   @GET("access/place/{placeId}/anonymous/{exitTokens}")
   Call<List<PlaceAccess>> getAnonymousAccessListInPlace(
     @retrofit2.http.Path("exitTokens") List<String> exitTokens, @retrofit2.http.Path("placeId") Long placeId

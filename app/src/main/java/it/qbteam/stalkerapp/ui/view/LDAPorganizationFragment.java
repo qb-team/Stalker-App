@@ -42,7 +42,6 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
     private LDAPorganizationPresenter ldapOrganizationPresenter;
     Dialog myDialog;
 
-
     public LDAPorganizationFragment() {
         // Required empty public constructor.
     }

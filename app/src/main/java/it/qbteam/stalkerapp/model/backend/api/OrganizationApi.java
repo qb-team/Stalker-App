@@ -9,7 +9,8 @@ public interface OrganizationApi {
 
   /**
    * Gets the available data for a single organization.
-   * Gets the data available for a single organization.  Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
+   * Gets the data available for a single organization.
+   * Both app users and web-app administrators can access this end-point but,  app users can request information for all the organizations while web-app  administrators can only for the organizations they have access to.
    * @param organizationId ID of an organization. (required)
    * @return Call&lt;Organization&gt;
    */

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -76,11 +75,10 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
 
                 if(om!=null&&orgId.equals(om.getOrganizationId()))
                 {
-                    standardOrganizationPresenter.anonymousOrganizationAccess(om.getExitToken(),om.getOrganizationId());
                     TableRow tr=new TableRow(getContext());
                     TextView tv= new TextView(getContext());
-                    tv.setText("     "+om.getTimestamp().getYear()+"-"+om.getTimestamp().getMonthValue()+"-"+om.getTimestamp().getDayOfMonth()+
-                            "         "+om.getTimestamp().getHour()+":"+om.getTimestamp().getMinute()+":"+om.getTimestamp().getSecond());
+                    tv.setText("       "+om.getTimestamp().getYear()+"-"+om.getTimestamp().getMonthValue()+"-"+om.getTimestamp().getDayOfMonth()+
+                            "                  "+om.getTimestamp().getHour()+":"+om.getTimestamp().getMinute()+":"+om.getTimestamp().getSecond());
                     tv.setGravity(Gravity.CENTER);
                     tr.addView(tv);
                     tableLayout.addView(tr);

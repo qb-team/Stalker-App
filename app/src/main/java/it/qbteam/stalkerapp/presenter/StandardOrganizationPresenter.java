@@ -23,12 +23,6 @@ public class StandardOrganizationPresenter implements StandardOrganizationContra
     }
 
     @Override
-    public void anonymousOrganizationAccess(String exitToken, Long orgID)  {
-        server.anonymousOrganizationAccess(exitToken, orgID);
-    }
-
-
-    @Override
     public OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException {
         return storage.deserializeMovementInLocal();
     }

@@ -41,14 +41,7 @@
                     android:textAlignment="center"
                     android:layout_weight="1">
                 </TextView>
-                <TextView android:text="Uscita"
-                    android:textStyle="bold"
 
-                    android:textAlignment="center"
-                    android:layout_width="30dp"
-                    android:layout_column="2"
-                    android:layout_weight="1">
-                </TextView>
             </TableRow>
             <ScrollView
                 android:layout_height="50dp"

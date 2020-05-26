@@ -281,7 +281,7 @@ public class Server {
             }});
     }
 
-public void anonymousOrganizationAccess(String exitToken , Long orgID) {
+/*public void anonymousOrganizationAccess(String exitToken , Long orgID) {
 
         List<String> list= new ArrayList<>();
         list.add(exitToken);
@@ -365,5 +365,6 @@ public void authenticatedPlaceAccess(Long placeID, String orgAuthServerID){
 
         }
     });
-}
+}*/
+
 }

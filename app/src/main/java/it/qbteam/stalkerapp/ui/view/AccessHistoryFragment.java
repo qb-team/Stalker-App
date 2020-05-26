@@ -53,7 +53,8 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     private RecyclerView.Adapter adapter;
     private FloatingActionButton buttonDelete;
     private AccessHistoryPresenter accessHistoryPresenter;
-    private List<OrganizationAccess> organizationAccessList1;
+    private SwipeRefreshLayout refresh;
+    private List<OrganizationAccess> accessList;
 
     public AccessHistoryFragment() {
         // Required empty public constructor
@@ -73,6 +74,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
 
         View view = inflater.inflate(R.layout.fragment_access_history, container, false);
         recyclerView = view.findViewById(R.id.recyclerAccessViewID);
+        refresh = view.findViewById(R.id.swiperefreshID);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -81,10 +83,19 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         accessHistoryPresenter= new AccessHistoryPresenter(this);
         accessHistoryPresenter.getOrganizationAccess();
 
-       /* if(organizationAccessList1!=null){
-            adapter = new AccessHistoryViewAdapter(organizationAccessList1,getActivity(),this);
+        refresh.setOnRefreshListener(()->{
+            try{
+            accessList=accessHistoryPresenter.getOrganizationAccessList();}
+            catch ( IOException i ){
+                i.printStackTrace();
+            } catch (ClassNotFoundException e){
+                e.getException();
+            }
+            adapter = new AccessHistoryViewAdapter(accessList, getActivity(), this);
             recyclerView.setAdapter(adapter);
-        }*/
+            refresh.setRefreshing(false);
+        });
+
         buttonDelete= view.findViewById(R.id.accessID);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @SneakyThrows

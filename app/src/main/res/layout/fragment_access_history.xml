@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Storico accessi"
@@ -75,14 +75,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:id="@+id/swiperefreshID"
+    android:layout_height="450dp">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:id="@+id/recyclerAccessViewID"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="450dp"
         tools:listitem="@layout/access_history_row"
 
         />
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

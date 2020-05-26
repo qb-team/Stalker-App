@@ -15,7 +15,6 @@ public interface StandardOrganizationContract {
     }
 
     interface Presenter {
-        void anonymousOrganizationAccess(String exitToken, Long orgID) throws IOException, ClassNotFoundException;
         OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException;
     }
 

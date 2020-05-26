@@ -69,6 +69,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     private boolean mBound = false;
     private NavigationView navigationView;
     private  View actionView;
+    private static String path;
 
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -129,7 +130,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
         else goToMainActivity();
 
-
+        path = this.getFilesDir().getPath();
+        System.out.print("PATH"+path);
         Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layoutID);
@@ -474,5 +476,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             return false;
     }
 
-
+public static String getPath(){
+        return path;
+}
 }

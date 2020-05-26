@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import it.qbteam.stalkerapp.R;
@@ -23,7 +25,7 @@ import it.qbteam.stalkerapp.presenter.AccessHistoryPresenter;
 import it.qbteam.stalkerapp.tools.AccessHistoryViewAdapter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-import lombok.SneakyThrows;
+//import lombok.SneakyThrows;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +50,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         setHasOptionsMenu(true);
     }
 
-    @SneakyThrows
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,15 +63,25 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         recyclerView.setHasFixedSize(true);
        // recyclerView.setAdapter(adapter );
         accessHistoryPresenter= new AccessHistoryPresenter(this);
-        accessHistoryPresenter.getOrganizationAccess();
+        try {
+            accessHistoryPresenter.getOrganizationAccess();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         buttonDelete= view.findViewById(R.id.accessID);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @SneakyThrows
+
             @Override
             public void onClick(View v) {
 
-                accessHistoryPresenter.deleteOrganizationAccess();
+                try {
+                    accessHistoryPresenter.deleteOrganizationAccess();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -107,12 +119,19 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         return false;
     }
 
-    @SneakyThrows
+
     @Override
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
         List<OrganizationAccess> newList= new ArrayList<>();
-        List<OrganizationAccess> oldList= accessHistoryPresenter.getOrganizationAccessList();
+        List<OrganizationAccess> oldList= null;
+        try {
+            oldList = accessHistoryPresenter.getOrganizationAccessList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         if(oldList.size() != 0){
             for(int i = 0; i< oldList.size(); i++){
                 if(oldList.get(i).getOrgName().toLowerCase().contains(userInput))

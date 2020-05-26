@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.service.Storage;
 
@@ -16,7 +18,7 @@ public class LatLngOrganization {
     private List<LatLng> polygon;
     private String orgAuthServerID;
     private Long organizationID;
-    private static String path="data/user/0/it.qbteam.stalkerapp/files/Preferiti.txt";
+
 
     //Sets the latitude and the longitude of the organization's tracking area.
     public void setLatLng(Organization organization) throws JSONException {
@@ -37,7 +39,7 @@ public class LatLngOrganization {
     public static List<LatLngOrganization> checkUpdateList(Storage storage) throws JSONException {
          List<LatLngOrganization> latLngOrganizationList= new ArrayList<>();
          List<Organization> list;
-         list=storage.performCheckFileLocal(path);
+         list=storage.performCheckFileLocal(HomePageActivity.getPath()+"/Preferiti.txt");
         if(list!=null) {
             for (int i = 0; i < list.size(); i++) {
                 LatLngOrganization latLngOrganization = new LatLngOrganization();

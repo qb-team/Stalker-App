@@ -1,5 +1,6 @@
 package it.qbteam.stalkerapp.ui.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,13 +29,10 @@ import lombok.SneakyThrows;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class StandardOrganizationFragment extends Fragment implements OnBackPressListener, StandardOrganizationContract.View {
+import java.io.IOException;
 
-    public final static String TAG="StandardOrganizationFragment";
-    private TextView title, description ;
-    private ImageView image;
-    private FloatingActionButton access;
-    private Dialog accessDialog;
+public class StandardOrganizationFragment extends Fragment implements View.OnClickListener, OnBackPressListener, StandardOrganizationContract.View {
+    private Bundle bundle;
     private StandardOrganizationPresenter standardOrganizationPresenter;
 
 
@@ -49,28 +47,61 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
-        Bundle bundle=this.getArguments();
-        title=view.findViewById(R.id.titleID);
-        image=view.findViewById(R.id.imageID);
-        description=view.findViewById(R.id.descriptionID);
+        bundle=this.getArguments();
+        Button accessHistoryButton = view.findViewById(R.id.AccessHistoryButtonID);
+        accessHistoryButton.setOnClickListener(this);
+        TextView title=view.findViewById(R.id.titleID);
+        ImageView image=view.findViewById(R.id.imageID);
+        TextView description=view.findViewById(R.id.descriptionID);
         title.setText(bundle.getString("name"));
         UrlImageViewHelper.setUrlDrawable(image, bundle.getString("image"));
         description.setText(bundle.getString("description"));
-        access= view.findViewById(R.id.accessID);
-        access.setOnClickListener(new View.OnClickListener() {
-            @SneakyThrows
-            @Override
-            public void onClick(View v) {
-                accessDialog = new Dialog(getContext());
+        FloatingActionButton access= view.findViewById(R.id.accessID);
+        access.setOnClickListener(this);
+        return view;
+    }
+
+    //Makes the 'add to favorites' option visible to the application's action tab menu and hides the search command.
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.searchID).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+
+    //Manages the back button.
+    @Override
+    public boolean onBackPressed() {
+        return new BackPressImplementation(this).onBackPressed();
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.AccessHistoryButtonID:
+                System.out.println("Ciao");
+                break;
+            case R.id.accessID:
+                Dialog accessDialog = new Dialog(getContext());
                 accessDialog.setContentView(R.layout.dialog_last_access);
                 TableLayout tableLayout= accessDialog.findViewById(R.id.scroll_table);
                 accessDialog.show();
                 Button exit=accessDialog.findViewById(R.id.exitID);
-                exit.setOnClickListener(view -> {
-                    accessDialog.dismiss();
+                exit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        accessDialog.dismiss();
+                    }
                 });
 
-                OrganizationMovement om= standardOrganizationPresenter.getLastAccess();
+                OrganizationMovement om= null;
+                try {
+                    om = standardOrganizationPresenter.getLastAccess();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 Long orgId=bundle.getLong("orgID");
 
                 if(om!=null&&orgId.equals(om.getOrganizationId()))
@@ -84,27 +115,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
                     tableLayout.addView(tr);
                 }
                 accessDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-            }
-        });
-        return view;
+                break;
+        }
     }
-
-    //Makes the 'add to favorites' option visible to the application's action tab menu and hides the search command.
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-
-        menu.findItem(R.id.searchID).setVisible(false);
-        super.onPrepareOptionsMenu(menu);
-    }
-
-
-    //Manages the back button.
-    @Override
-    public boolean onBackPressed() {
-        return new BackPressImplementation(this).onBackPressed();
-    }
-
-
 }

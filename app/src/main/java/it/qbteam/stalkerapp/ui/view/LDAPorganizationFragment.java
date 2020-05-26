@@ -30,33 +30,20 @@ import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
-public class LDAPorganizationFragment extends Fragment implements OnBackPressListener , View.OnClickListener, LDAPorganizationContract.View {
-
-    private TextView title,description;
+public class LDAPorganizationFragment extends Fragment implements View.OnClickListener, OnBackPressListener , LDAPorganizationContract.View {
+    private TextView title;
     private Button authentication;
-    private ImageView mImageView;
     private Long orgID;
     private OffsetDateTime creationDate;
     private String serverURL;
-    private EditText userNameLDAP, passwordLDAP;
     private LDAPorganizationPresenter ldapOrganizationPresenter;
-    Dialog myDialog;
-
-    public LDAPorganizationFragment() {
-        // Required empty public constructor.
-    }
+    private Dialog myDialog;
 
     //Creation of the fragment as a component.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ldapOrganizationPresenter = new LDAPorganizationPresenter(this);
         setHasOptionsMenu(true);
-    }
-
-    //Set invisible menu item.
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.searchID).setVisible(false);
-        super.onPrepareOptionsMenu(menu);
     }
 
     //Creation of the graphic part displayed by the user.
@@ -66,18 +53,24 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
         Bundle bundle = this.getArguments();
         title = view.findViewById(R.id.titleID);
         title.setText(bundle.getString("name"));
-        description = view.findViewById(R.id.descriptionID);
+        TextView description = view.findViewById(R.id.descriptionID);
         description.setText(bundle.getString("description"));
         authentication = view.findViewById(R.id.LDAPaccessID);
-        mImageView = view.findViewById(R.id.imageID);
+        ImageView mImageView = view.findViewById(R.id.imageID);
         orgID = bundle.getLong("orgID");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         creationDate = OffsetDateTime.parse(bundle.getString("creationDate"), dateTimeFormatter);
         serverURL = bundle.getString("serverURL");
-        ldapOrganizationPresenter = new LDAPorganizationPresenter(this);
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
         return view;
+    }
+
+    //Set invisible menu item.
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.searchID).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
     //Management of the back button.
@@ -88,24 +81,30 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
 
     //Authentication Button in the LDAP Organization.
     @Override
-    public void onClick(View v) {
-        myDialog = new Dialog(getContext());
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.LDAPaccessID:
+                myDialog = new Dialog(view.getContext());
+                LDAPAuthentication();
+                break;
+        }
+
+    }
+
+    private void LDAPAuthentication(){
         myDialog.setContentView(R.layout.dialog_ldap_access);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        EditText userName = myDialog.findViewById(R.id.userNameID);
-        EditText password = myDialog.findViewById(R.id.passwordID);
         Button annul= myDialog.findViewById(R.id.annulID);
         Button access= myDialog.findViewById(R.id.accessID);
         myDialog.show();
 
-        //That is the annul button of the pop-up.
+        //This is the annul button of the pop-up.
         annul.setOnClickListener(v12 -> myDialog.dismiss());
 
-        //That is the access button of the pop-up.
+        //This is the access button of the pop-up.
         access.setOnClickListener(v1 -> {
-            userNameLDAP = myDialog.findViewById(R.id.userNameID);
-            passwordLDAP = myDialog.findViewById(R.id.passwordID);
-
+            EditText userNameLDAP = myDialog.findViewById(R.id.userNameID);
+            EditText passwordLDAP = myDialog.findViewById(R.id.passwordID);
             //Try to connect of the LDAP server and it sends the credentials to the model (to the presenter).
             ldapOrganizationPresenter.setLDAP("2.234.128.81",389, userNameLDAP.getText().toString(), passwordLDAP.getText().toString());
             try {
@@ -142,10 +141,7 @@ public class LDAPorganizationFragment extends Fragment implements OnBackPressLis
             MyStalkersListFragment mMyStalkersListFragment = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();
             mMyStalkersListFragment.addOrganization(o);
         }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
+        catch (JSONException | IOException e) {
             e.printStackTrace();
         }
     }

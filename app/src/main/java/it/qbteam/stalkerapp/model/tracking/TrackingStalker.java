@@ -16,6 +16,7 @@
 
 package it.qbteam.stalkerapp.model.tracking;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -86,6 +87,8 @@ public class TrackingStalker extends Service {
     public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
     private static final String TAG = TrackingStalker.class.getSimpleName();
+    private static final int START_TASK_REMOVED_COMPLETE = 1000;
+
     private LatLngOrganization insideOrganization;
     private LatLngPlace insidePlace;
     private static final String CHANNEL_ID = "channel_01";
@@ -282,6 +285,7 @@ public class TrackingStalker extends Service {
         }
     }
 
+    @SuppressLint("WrongConstant")
     @SneakyThrows
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -304,7 +308,7 @@ public class TrackingStalker extends Service {
             stopSelf();
         }
         // Tells the system to not try to recreate the service after it has been killed.
-        return START_NOT_STICKY;
+        return START_TASK_REMOVED_COMPLETE;
     }
 
     @Override
@@ -521,7 +525,15 @@ public class TrackingStalker extends Service {
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
-                                latLngPlaceList = LatLngPlace.updatePlace(storage);
+                                try {
+                                    latLngPlaceList = LatLngPlace.updatePlace(storage);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }, delay);
 
@@ -549,7 +561,15 @@ public class TrackingStalker extends Service {
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
-                                latLngPlaceList = LatLngPlace.updatePlace(storage);
+                                try {
+                                    latLngPlaceList = LatLngPlace.updatePlace(storage);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }, delay);
 

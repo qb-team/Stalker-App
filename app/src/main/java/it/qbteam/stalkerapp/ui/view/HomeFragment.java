@@ -90,7 +90,11 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         OrganizationListPresenter = new HomePresenter(this);
-        OrganizationListPresenter.createAllFile();
+        try {
+            OrganizationListPresenter.createAllFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //Refresh to upload the organization list (swipe down).
         refresh.setOnRefreshListener(() -> {

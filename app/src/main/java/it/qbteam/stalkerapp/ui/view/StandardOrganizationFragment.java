@@ -70,7 +70,7 @@ public class StandardOrganizationFragment extends Fragment implements OnBackPres
                     accessDialog.dismiss();
                 });
 
-                OrganizationMovement om= standardOrganizationPresenter.getOrganizationMovement();
+                OrganizationMovement om= standardOrganizationPresenter.getLastAccess();
                 Long orgId=bundle.getLong("orgID");
 
                 if(om!=null&&orgId.equals(om.getOrganizationId()))

@@ -174,6 +174,7 @@ public class Server {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializeMovementInLocal(movementUpload);
+                        storage.saveLastAccess(movementUpload);
                     }
                     else if(type==-1){
                         //serialize in local the object List<OrganizationAccess>.

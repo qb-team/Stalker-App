@@ -23,7 +23,7 @@ public class StandardOrganizationPresenter implements StandardOrganizationContra
     }
 
     @Override
-    public OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException {
-        return storage.deserializeMovementInLocal();
+    public OrganizationMovement getLastAccess() throws IOException, ClassNotFoundException {
+        return storage.performGetLastAccess();
     }
 }

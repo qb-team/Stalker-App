@@ -15,7 +15,7 @@ public interface StandardOrganizationContract {
     }
 
     interface Presenter {
-        OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException;
+        OrganizationMovement getLastAccess() throws IOException, ClassNotFoundException;
     }
 
     interface Interactor {

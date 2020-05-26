@@ -237,6 +237,7 @@ public class TrackingStalker extends Service {
                 server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 
             }
+
             else{
 
                 //Comunicates the server that user is outside the organization(anonymous).
@@ -247,8 +248,6 @@ public class TrackingStalker extends Service {
             storage.deleteOrganizationMovement();
 
             HomePageActivity.setNameOrg("");
-
-
 
         }
          if(insidePlace!=null){
@@ -492,7 +491,7 @@ public class TrackingStalker extends Service {
 
     }
 
-    public void isInsideOrganizations(Location location) throws IOException, ClassNotFoundException, JSONException {
+    public void isInsideOrganizations(Location location) throws IOException, ClassNotFoundException {
 
         //downloadOnceListPlace= false;
 
@@ -574,14 +573,6 @@ public class TrackingStalker extends Service {
 
 
                     }
-
-                  /*  if(!downloadOnceListPlace) {
-
-                        //Saves the place's list of the organization I'm inside.
-
-                        //if true the list is already downloaded.
-                        downloadOnceListPlace=true;
-                    }*/
 
                 }
                 else {

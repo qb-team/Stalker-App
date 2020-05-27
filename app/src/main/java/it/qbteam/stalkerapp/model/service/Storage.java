@@ -324,29 +324,36 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     public void serializeOrganizationAccessInLocal(OrganizationAccess organizationAccess) throws IOException, ClassNotFoundException {
         //Saving of OrganizationAccess in a file
         List<OrganizationAccess> oldList;
-        //Reading the OrganizationMovement from a file
-        FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        //Method for deserialization of object
-        oldList= (List<OrganizationAccess>) ois.readObject();
-        ois.close();
-        fis.close();
-        if(oldList!=null) {
+        File organizationAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
+        if(organizationAccessFile.length()==0 || !organizationAccessFile.exists()) {
+            FileOutputStream fos=new FileOutputStream(organizationAccessFile);
+            ObjectOutputStream oos=new ObjectOutputStream(fos);
+            oldList= new ArrayList<>();
             oldList.add(organizationAccess);
+            oos.writeObject(oldList);
+            oos.flush();
+            oos.close();
+            fos.close();
         }
-        else{
-            oldList=new ArrayList<>();
-            oldList.add(organizationAccess);
-        }
-        File toWrite = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        FileOutputStream fos=new FileOutputStream(toWrite);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        // Method for serialization of OrganizationMovement
-        oos.writeObject(oldList);
-        oos.flush();
-        oos.close();
-        fos.close();
+        else {
+            FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/OrganizationAccess.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            //Method for deserialization of object
 
+            oldList= (List<OrganizationAccess>) ois.readObject();
+            ois.close();
+            fis.close();
+            oldList.add(organizationAccess);
+            File toWrite = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
+            FileOutputStream fos=new FileOutputStream(toWrite);
+            ObjectOutputStream oos=new ObjectOutputStream(fos);
+            // Method for serialization of OrganizationMovement
+            oos.writeObject(oldList);
+            oos.flush();
+            oos.close();
+            fos.close();
+
+        }
     }
 
     //Deserializes the object OrganizationAccess from a local file.
@@ -364,6 +371,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             fos.close();
         }
         else{
+
         FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/OrganizationAccess.txt");
         ObjectInputStream ois = new ObjectInputStream(fis);
         //Method for deserialization of object

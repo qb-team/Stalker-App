@@ -17,7 +17,7 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
     public TabViewPagerAdapter(final Resources resources, FragmentManager fragmentManager) {
         super(fragmentManager);
     }
-  
+
     //Returns the fragment from its position in the view pager.
     @Override
     public Fragment getItem(int position) {

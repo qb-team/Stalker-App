@@ -64,6 +64,7 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
 import it.qbteam.stalkerapp.model.data.LatLngPlace;
+import it.qbteam.stalkerapp.model.service.Firebase;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.data.LatLngOrganization;
@@ -115,7 +116,6 @@ public class TrackingStalker extends Service {
     private Server server;
     private OrganizationAccess organizationAccess;
     private OffsetDateTime accessTime;
-
 
     public TrackingStalker()  {
 
@@ -549,6 +549,7 @@ public class TrackingStalker extends Service {
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
                         Toast.makeText(getApplicationContext(), "Sei dentro all'organizzazione: " + insideOrganization.getName()+" in modo non autenticato", Toast.LENGTH_SHORT).show();
+
                         accessTime=OffsetDateTime.now();
 
                         //Comunicates the server that user is inside the organization
@@ -623,6 +624,7 @@ public class TrackingStalker extends Service {
         public TrackingStalker getService() {
             return TrackingStalker.this;
         }
+
     }
 
     /**

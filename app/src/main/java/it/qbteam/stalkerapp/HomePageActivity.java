@@ -49,6 +49,7 @@ import java.io.IOException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.Firebase;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.AccessHistoryFragment;
@@ -77,6 +78,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private  View actionView;
     private static String path;
 
+    private FirebaseReceiver firebaseReceiver;
+    private static Firebase fireService;
+    private boolean fireBound = false;
+
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
@@ -85,6 +90,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             TrackingStalker.LocalBinder binder = (TrackingStalker.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
+
+            Firebase.LocalBinder binder1= (Firebase.LocalBinder) service;
+            fireService = binder1.getService();
+            fireBound=true;
         }
 
         //Method of the internal class `ServiceConnection` which allows you to disconnect the connection with the` Bind Service`.
@@ -92,6 +101,28 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         public void onServiceDisconnected(ComponentName name) {
             mService = null;
             mBound = false;
+
+            fireService = null;
+            fireBound = false;
+
+        }
+    };
+
+    private final ServiceConnection firebaseServiceConnection = new ServiceConnection() {
+        //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Firebase.LocalBinder binder1= (Firebase.LocalBinder) service;
+            fireService = binder1.getService();
+            fireBound=true;
+        }
+
+        //Method of the internal class `ServiceConnection` which allows you to disconnect the connection with the` Bind Service`.
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            fireService = null;
+            fireBound = false;
+
         }
     };
 
@@ -104,10 +135,14 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
         myReceiver = new MyReceiver();
+        firebaseReceiver = new FirebaseReceiver();
 
         checkFirebase();
         statusCheck();
+
+        startFirebaseService();
 
         path = this.getFilesDir().getPath();
         System.out.print("PATH"+path);
@@ -176,8 +211,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
-        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection,
-                Context.BIND_AUTO_CREATE);
+
+        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        this.bindService(new Intent(this, Firebase.class), firebaseServiceConnection, Context.BIND_AUTO_CREATE);
+
         setSwitchState(Utils.requestingLocationUpdates(this));
     }
 
@@ -188,6 +226,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             this.unbindService(mServiceConnection);
             mBound = false;
         }
+
+        if(fireBound){
+            this.unbindService(firebaseServiceConnection);
+            fireBound = false;
+        }
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
     }
@@ -197,11 +240,16 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(TrackingStalker.ACTION_BROADCAST));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(firebaseReceiver,
+                new IntentFilter(Firebase.ACTION_BROADCAST));
+
     }
 
     @Override
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(firebaseReceiver);
         super.onPause();
     }
 
@@ -363,15 +411,25 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public void startTracking()  {
+    private void startTracking() {
         mService.requestLocationUpdates();
     }
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    public void stopTracking() throws IOException, ClassNotFoundException {
+    private void stopTracking() throws IOException, ClassNotFoundException {
         mService.removeLocationUpdates();
     }
+
+    private void startFirebaseService(){
+        fireService.getFireBaseToken();
+    }
+
+    private void stopFirebaseService(){
+        fireService.stopFirebaseService();
+    }
+
+
 
     //Check if the GPS is active.
     public void statusCheck() {
@@ -503,4 +561,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     }
+    private class FirebaseReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+             user=intent.getParcelableExtra(Firebase.EXTRA_FIREBASE);
+             System.out.print(user.getToken());
+
+            }
+        }
+
 }

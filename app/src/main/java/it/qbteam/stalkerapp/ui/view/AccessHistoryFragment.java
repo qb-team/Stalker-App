@@ -129,7 +129,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
         List<OrganizationAccess> newList= new ArrayList<>();
-        List<OrganizationAccess> oldList= null;
+        List<OrganizationAccess> oldList=null;
         try {
             oldList = accessHistoryPresenter.getOrganizationAccessList();
         } catch (IOException e) {
@@ -137,7 +137,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        if(oldList.size() != 0){
+        if(oldList!=null){
             for(int i = 0; i< oldList.size(); i++){
                 if(oldList.get(i).getOrgName().toLowerCase().contains(userInput))
                     newList.add(oldList.get(i));

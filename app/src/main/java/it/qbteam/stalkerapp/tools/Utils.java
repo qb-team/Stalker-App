@@ -5,6 +5,8 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
+
 import androidx.preference.PreferenceManager;
 import java.text.DateFormat;
 import java.util.Date;
@@ -15,6 +17,7 @@ import it.qbteam.stalkerapp.model.service.FirebaseJob;
 public class Utils {
 
     public static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_location_updates";
+    private static final String TAG = "Utils";
 
     //Returns true if requesting location updates, otherwise returns false.
     public static boolean requestingLocationUpdates(Context context) {
@@ -44,15 +47,23 @@ public class Utils {
 
     // schedule the start of the service every 10 - 30 seconds
     public static void scheduleJob(Context context) {
+
         ComponentName serviceComponent = new ComponentName(context, FirebaseJob.class);
-        JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
-        builder.setMinimumLatency(40 * 1000); // wait at least
-        builder.setOverrideDeadline(50 * 1000); // maximum delay
-        //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
+        JobInfo.Builder builder = new JobInfo.Builder(123, serviceComponent);
+        builder.setMinimumLatency(5 * 1000); // wait at least
+        builder.setOverrideDeadline(6* 1000); // maximum delay
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
         //builder.setRequiresDeviceIdle(true); // device should be idle
         //builder.setRequiresCharging(false); // we don't care if the device is charging or not
         JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
         jobScheduler.schedule(builder.build());
+
+
+    }
+    public static void cancelJob(Context context){
+        JobScheduler scheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        scheduler.cancel(123);
+        Log.d(TAG, "Job cancelled");
     }
 
 

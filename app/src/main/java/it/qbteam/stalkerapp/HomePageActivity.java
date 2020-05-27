@@ -52,6 +52,7 @@ import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 import lombok.SneakyThrows;
+import okhttp3.internal.Util;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener{
 
@@ -72,6 +73,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private NavigationView navigationView;
     private  View actionView;
     private static String path;
+    private static boolean flag=false;
 
 
 
@@ -102,8 +104,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 String token = bundle.getString("token");
                 String uID = bundle.getString("uID");
                 user= new User(token,uID);
+                if(flag==false){//call the mystalkerList's view adapter only the first time.
                 Fragment frag = ActionTabFragment.getMyStalkerFragment();
                 ((MyStalkersListFragment) frag).loadMyStalkerList(uID,token);
+                }
+                flag=true;
 
             }
             Utils.scheduleJob(context);
@@ -208,20 +213,23 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             this.unbindService(mServiceConnection);
             mBound = false;
         }
-
-
+        Utils.cancelJob(this);
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
     }
-
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        Utils.cancelJob(this);
+    }
     @Override
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(TrackingStalker.ACTION_BROADCAST));
-        registerReceiver(firebaseReceiver, new IntentFilter(
+        LocalBroadcastManager.getInstance(this).registerReceiver(firebaseReceiver, new IntentFilter(
                 Firebase.NOTIFICATION));
-
 
     }
 
@@ -229,7 +237,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
-        unregisterReceiver(firebaseReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(firebaseReceiver);
+
+
 
     }
 

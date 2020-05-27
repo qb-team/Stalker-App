@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/whiteColor"
-    android:clickable="true">
+    android:clickable="true"
+    android:id="@+id/standardOrganizationID">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/titleID"
@@ -44,37 +49,32 @@
             android:scrollbarStyle="outsideOverlay"
             android:textColor="@color/blackColor"
             android:textSize="18sp" />
+
     </ScrollView>
 
-
-    <Button
-        android:id="@+id/AccessHistoryButtonID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/custom_border"
-        android:textAlignment="center"
-        android:padding="10dp"
-        android:text="Storico Accessi"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/accessID"
+        <Button
+            android:id="@+id/AccessHistoryButtonID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_update_black_24dp"
-            android:layout_alignParentBottom="true"
-            app:maxImageSize="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            />
-    </RelativeLayout>
+            android:layout_gravity="center"
+            android:background="@drawable/custom_border"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:text="Storico Accessi"/>
 
+    </LinearLayout>
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/accessID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_update_black_24dp"
+        android:layout_alignParentBottom="true"
+        app:maxImageSize="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        />
+
+</RelativeLayout>
 

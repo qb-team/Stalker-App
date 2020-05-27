@@ -55,6 +55,17 @@
         android:padding="10dp"
         android:text="Autenticazione"/>
 
+    <Button
+        android:id="@+id/AccessHistoryButtonID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/custom_border"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        android:padding="10dp"
+        android:text="Storico Accessi"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

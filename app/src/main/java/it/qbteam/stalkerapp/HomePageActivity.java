@@ -57,7 +57,7 @@ import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 import lombok.SneakyThrows;
 
-public class HomePageActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener {
+public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -95,6 +95,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         }
     };
 
+
+
     //Creates Activity and manages the fragments connected to it. In this method there is the user authentication check,
     // in case the user is no longer logged in the goToMainActivity () method is invoked.
     @SuppressLint("WrongViewCast")
@@ -103,31 +105,9 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         myReceiver = new MyReceiver();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null){
-            userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        }
-        else goToMainActivity();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null ) {
-            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-            mUser.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-                                user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                System.out.println("TOKEN CREATO:"+task.getResult().getToken()+"UID CREATO:"+FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            } else {
-                                // Handle error -> task.getException();
-                            }
-                        }
-                    });
-        }
+        checkFirebase();
         statusCheck();
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null){
-            userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        }
-        else goToMainActivity();
 
         path = this.getFilesDir().getPath();
         System.out.print("PATH"+path);
@@ -140,11 +120,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         navigationView = findViewById(R.id.nav_viewID);
         navigationView.setNavigationItemSelectedListener( this);
 
-        //setting switch button in drawer menu
+        //setting switch button tracking in drawer menu
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
+        switcher.setOnClickListener(this);
 
         //Imposto nome organizzazione in cui l'utente è tracciato del drawer
         MenuItem itemNameOrg=menu.findItem(R.id.navi_org_item);
@@ -160,8 +141,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         MenuItem itemSwitchMode= menu.findItem(R.id.nav_switch_ModeID);
         actionView = MenuItemCompat.getActionView(itemSwitchMode);
         switcherMode=(SwitchCompat) actionView.findViewById(R.id.switcherModeID);
+        switcherMode.setOnClickListener(this);
 
-
+        //setting user email in drawer menu
+        View headerView= navigationView.getHeaderView(0);
+        TextView emailTextView= headerView.findViewById(R.id.emailTextDrawerID);
+        emailTextView.setText(userEmail);
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
@@ -170,55 +155,8 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
             }
         }
 
-
-
-        //setting user email in drawer menu
-        View headerView= navigationView.getHeaderView(0);
-        TextView emailTextView= headerView.findViewById(R.id.emailTextDrawerID);
-        emailTextView.setText(userEmail);
-
         // Restore the state of the buttons when the activity (re)launches.
         setSwitchState(Utils.requestingLocationUpdates(this));
-
-
-        switcher.setOnClickListener(new View.OnClickListener() {
-            @SneakyThrows
-            @Override
-            public void onClick(View v) {
-                if(switcher.isChecked()){
-                    if (!checkPermissions()) {
-                        requestPermissions();
-                    }
-                    else {
-                        startTracking();
-                    }
-                }
-                else{
-                    stopTracking();
-                }
-            }
-        });
-
-        switcherMode.setOnClickListener(v -> {
-            if(switcher.isChecked()&&switcherMode.isChecked()){
-                try {
-                    stopTracking();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                startTracking();
-
-            }
-            else if(switcher.isChecked()&&!switcherMode.isChecked())
-            {
-                try {
-                    stopTracking();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                startTracking();
-            }
-        });
 
         if (savedInstanceState == null) {
             // withholding the previously created fragment from being created again
@@ -246,15 +184,14 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
     @Override
     public void onStop() {
-
         if (mBound) {
             this.unbindService(mServiceConnection);
             mBound = false;
         }
-
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -303,10 +240,9 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case  R.id.logoutID:
+                setSwitchState(false);
                 FirebaseAuth.getInstance().signOut();   //logout
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                goToMainActivity();
                 break;
             case R.id.alphabeticalOrderID:
                 Fragment frag = (HomeFragment)ActionTabFragment.getHomeFragment();
@@ -317,9 +253,28 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         return true;
     }
 
+    private void checkFirebase(){
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+            mUser.getIdToken(true)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+                                user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                System.out.println("TOKEN CREATO:"+task.getResult().getToken()+"UID CREATO:"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            } else {
+                                // Handle error -> task.getException();
+                            }
+                        }
+                    });
+        }
+        else goToMainActivity();
+    }
+
     //Moves the user to MainActivity.
     public void goToMainActivity(){
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -332,8 +287,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     //Asks to the user permissions about tracking.
     private void requestPermissions() {
-        boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
+        boolean shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.ACCESS_FINE_LOCATION);
 
         // Provide an additional rationale to the user. This would happen if the user denied the
@@ -372,9 +326,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-
                 startTracking();
-
             } else {
                 // Permission denied.
                 setSwitchState(false);
@@ -404,9 +356,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
     //Method that is called when a shared resource between two views is modified, added or removed.
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
         if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
-
             setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
                     false));
         }
@@ -414,14 +364,12 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     public void startTracking()  {
-
         mService.requestLocationUpdates();
     }
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     public void stopTracking() throws IOException, ClassNotFoundException {
-
         mService.removeLocationUpdates();
     }
 
@@ -479,6 +427,7 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         ((MyStalkersListFragment) frag).addOrganization(organization);
     }
 
+    //Metodi per segnalare la tua posizione all'interno di un organizzazione o luogo
     public static void setNameOrg(String name){
         nameOrg.setText(name);
     }
@@ -498,6 +447,49 @@ public class HomePageActivity extends AppCompatActivity implements  NavigationVi
         return path;
 }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.switcherID:
+                if(switcher.isChecked()){
+                    if (!checkPermissions()) {
+                        requestPermissions();
+                    }
+                    else {
+                        startTracking();
+                    }
+                }
+                else{
+                    try {
+                        stopTracking();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case R.id.switcherModeID:
+                if(switcher.isChecked()&&switcherMode.isChecked()){
+                    try {
+                        stopTracking();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    startTracking();
+
+                }
+                else if(switcher.isChecked()&&!switcherMode.isChecked())
+                {
+                    try {
+                        stopTracking();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    startTracking();
+                }
+                break;
+        }
+
+    }
 
 
     private class MyReceiver extends BroadcastReceiver {

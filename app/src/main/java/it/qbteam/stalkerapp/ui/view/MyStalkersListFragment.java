@@ -36,7 +36,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private List<Organization> organizationList;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    public final static String TAG = "MyStalkersList_Fragment";
     private static String path;
     private User user;
     //Creation of the fragment as a component.
@@ -44,6 +43,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        myStalkersListPresenter = new MyStalkersListPresenter(this);
         organizationList = new ArrayList<>();
         path = getContext().getFilesDir() + "/Preferiti.txt";
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -69,7 +69,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        myStalkersListPresenter = new MyStalkersListPresenter(this);
         return view;
     }
 

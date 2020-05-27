@@ -213,7 +213,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             this.unbindService(mServiceConnection);
             mBound = false;
         }
-        Utils.cancelJob(this);
+       // Utils.cancelJob(this);
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
     }

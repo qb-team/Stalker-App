@@ -1,14 +1,10 @@
 package it.qbteam.stalkerapp.model.authentication;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import it.qbteam.stalkerapp.contract.LoginContract;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 //Modello di Login

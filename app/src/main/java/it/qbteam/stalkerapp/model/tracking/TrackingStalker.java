@@ -228,6 +228,7 @@ public class TrackingStalker extends Service {
             Utils.setRequestingLocationUpdates(this, false);
             Log.e(TAG, "Lost location permission. Could not request updates. " + unlikely);
         }
+
     }
 
     public void removeLocationUpdates() throws IOException, ClassNotFoundException {

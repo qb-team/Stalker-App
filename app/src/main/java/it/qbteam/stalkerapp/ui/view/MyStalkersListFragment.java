@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
@@ -37,28 +39,16 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private static String path;
-    private User user;
+    
     //Creation of the fragment as a component.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.print("MYSTALKER CREATO");
         setHasOptionsMenu(true);
         myStalkersListPresenter = new MyStalkersListPresenter(this);
         organizationList = new ArrayList<>();
         path = getContext().getFilesDir() + "/Preferiti.txt";
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-            mUser.getIdToken(true)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            user = new User(task.getResult().getToken(), FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            loadMyStalkerList(user.getUid(), user.getToken());
-                        } else {
-                            // Handle error -> task.getException();
-                        }
-                    });
-        }
-
 
     }
 
@@ -169,7 +159,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //Add the organization received as input to both the FileSystem and the Server.
     public void addOrganization(Organization organization) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
-        myStalkersListPresenter.addOrganizationServer(organization, user.getUid(), user.getToken());
+        myStalkersListPresenter.addOrganizationServer(organization, HomePageActivity.getUserID(), HomePageActivity.getUserToken());
     }
 
 
@@ -195,7 +185,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Removes an organization from both the FileSystem and the Server.
     public void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
-        myStalkersListPresenter.removeOrganizationServer(organizationList.get(position), user.getUid(), user.getToken());
+        myStalkersListPresenter.removeOrganizationServer(organizationList.get(position),HomePageActivity.getUserID(), HomePageActivity.getUserToken());
         myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
     }
 

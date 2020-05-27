@@ -26,13 +26,9 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.BuildConfig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -47,7 +43,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.json.JSONException;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
-import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.Firebase;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
@@ -98,7 +93,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BroadcastReceiver firebaseReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -111,6 +106,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 ((MyStalkersListFragment) frag).loadMyStalkerList(uID,token);
 
             }
+            Utils.scheduleJob(context);
         }
     };
 
@@ -130,14 +126,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (savedInstanceState == null) {
-            // withholding the previously created fragment from being created again
-            // On orientation change, it will prevent fragment recreation
-            // its necessary to reserve the fragment stack inside each tab
+
             initScreen();
 
         } else {
-            // restoring the previously created fragment
-            // and getting the reference
+
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
 
@@ -226,7 +219,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(TrackingStalker.ACTION_BROADCAST));
-        registerReceiver(receiver, new IntentFilter(
+        registerReceiver(firebaseReceiver, new IntentFilter(
                 Firebase.NOTIFICATION));
 
 
@@ -236,7 +229,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
-        unregisterReceiver(receiver);
+        unregisterReceiver(firebaseReceiver);
 
     }
 

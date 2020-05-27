@@ -41,7 +41,15 @@
 
         <!-- Foreground services in Q+ require type. -->
         <service
-            android:name=".model.service.Firebase" />
+            android:name=".model.service.Firebase"
+             >
+        </service>
+           ​
+        <!-- Foreground services in Q+ require type. -->
+        <service
+            android:name=".model.service.FirebaseJob"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
 
     </application>
 

@@ -1,29 +1,10 @@
 package it.qbteam.stalkerapp.model.service;
 
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.IBinder;
-import android.os.Parcelable;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-
-import java.io.IOException;
-
-import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
-
 public class Firebase extends IntentService {
     public static final String NOTIFICATION = "it.qbteam.stalkerapp.model.service";
 

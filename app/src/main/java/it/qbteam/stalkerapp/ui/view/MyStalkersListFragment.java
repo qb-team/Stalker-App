@@ -39,12 +39,11 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private static String path;
-    
+
     //Creation of the fragment as a component.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.print("MYSTALKER CREATO");
         setHasOptionsMenu(true);
         myStalkersListPresenter = new MyStalkersListPresenter(this);
         organizationList = new ArrayList<>();

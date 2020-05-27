@@ -116,6 +116,8 @@ public class TrackingStalker extends Service {
     private Server server;
     private OrganizationAccess organizationAccess;
     private OffsetDateTime accessTime;
+    private static int delay = 3000;
+    private  Timer timer;
 
     public TrackingStalker()  {
 
@@ -130,8 +132,7 @@ public class TrackingStalker extends Service {
         organizationAccess=new OrganizationAccess();
         storage = new Storage(null,null, null);
         server = new Server(null,null, null);
-
-
+        timer = new Timer();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
@@ -529,8 +530,6 @@ public class TrackingStalker extends Service {
 
                         HomePageActivity.setNameOrg(insideOrganization.getName());
 
-                        int delay = 3000;
-                        Timer timer = new Timer();
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
@@ -558,12 +557,8 @@ public class TrackingStalker extends Service {
                         //Download the places' list.
                         server.performDownloadPlaceServer(insideOrganization.getOrgID(),HomePageActivity.getUserToken());
 
-
-
                         HomePageActivity.setNameOrg(insideOrganization.getName());
 
-                        int delay = 3000;
-                        Timer timer = new Timer();
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
@@ -587,7 +582,6 @@ public class TrackingStalker extends Service {
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 
                         //Update the access' list when the user exits from organization.
-
                         organizationAccess.setEntranceTimestamp(accessTime);
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
@@ -596,18 +590,20 @@ public class TrackingStalker extends Service {
                         server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 
                         // Notify anyone listening for broadcasts about the new location.
-                        Intent intent = new Intent(ACTION_BROADCAST);
-                        intent.putExtra(EXTRA_LOCATION, location);
-                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        timer.schedule( new TimerTask(){
+                            @SneakyThrows
+                            public void run() {
+                                Intent intent = new Intent(ACTION_BROADCAST);
+                                intent.putExtra(EXTRA_LOCATION, location);
+                                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                            }
+                        }, delay);
 
                         //Deletes the organization movement
                         storage.deleteOrganizationMovement();
-
                         insideOrganization = null;
-
                         HomePageActivity.setNameOrg("");
                     }
-
                 }
             }
         }

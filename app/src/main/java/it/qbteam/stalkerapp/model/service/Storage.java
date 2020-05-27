@@ -336,14 +336,18 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             fos.close();
         }
         else {
-            FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/OrganizationAccess.txt");
+            FileInputStream fis= new FileInputStream(organizationAccessFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //Method for deserialization of object
-
             oldList= (List<OrganizationAccess>) ois.readObject();
             ois.close();
             fis.close();
-            oldList.add(organizationAccess);
+            if(oldList!=null)
+                oldList.add(organizationAccess);
+            else{
+                oldList = new ArrayList<>();
+                oldList.add(organizationAccess);
+            }
             File toWrite = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
             FileOutputStream fos=new FileOutputStream(toWrite);
             ObjectOutputStream oos=new ObjectOutputStream(fos);
@@ -352,7 +356,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             oos.flush();
             oos.close();
             fos.close();
-
         }
     }
 

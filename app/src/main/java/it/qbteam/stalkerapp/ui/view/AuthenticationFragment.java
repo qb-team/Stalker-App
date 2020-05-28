@@ -106,7 +106,7 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
         //That is the access button of the pop-up.
         accessButton.setOnClickListener(v1 -> {
             insertEmailEditText = myDialog.findViewById(R.id.insertEmailID);
-            String email = insertEmailEditText.getText().toString();
+            String email = insertEmailEditText.getText().toString().trim();
 
             if (!email.equals("")) {
                 loginPresenter.forgotPassword(email);
@@ -118,13 +118,13 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
     //Check if the user has written their credentials and send them to the `initLogin (email: String, password: String)` method, otherwise it signals the absence of them.
     public void checkLoginDetails() {
 
-        if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString())) {
-            checkLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+        if(!TextUtils.isEmpty(emailEditText.getText().toString().trim()) && !TextUtils.isEmpty(passwordEditText.getText().toString())) {
+            checkLogin(emailEditText.getText().toString().trim(), passwordEditText.getText().toString());
         }
 
         else {
 
-            if(TextUtils.isEmpty(emailEditText.getText().toString())) {
+            if(TextUtils.isEmpty(emailEditText.getText().toString().trim())) {
                 emailEditText.setError("Inserisci una email valida");
             }
 

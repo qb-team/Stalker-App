@@ -104,15 +104,15 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     //Check if the user has written their credentials, confirmed the password and accepted the conditions of use, if so, send them to the `checkSignUp (email: String, password: String)` method, otherwise report the user of absence of them.
     private void checkSignUpDetails() {
 
-        if(!TextUtils.isEmpty(emailEditText.getText().toString()) && !TextUtils.isEmpty(passwordEditText.getText().toString()) && (passwordEditText.getText().toString().length() >= 6) && termsofUseCheckBox.isChecked()){
-            checkSignUp(emailEditText.getText().toString(), passwordEditText.getText().toString());
+        if(!TextUtils.isEmpty(emailEditText.getText().toString().trim()) && !TextUtils.isEmpty(passwordEditText.getText().toString()) && (passwordEditText.getText().toString().length() >= 6) && termsofUseCheckBox.isChecked()){
+            checkSignUp(emailEditText.getText().toString().trim(), passwordEditText.getText().toString());
         }
         else {
 
             if(passwordEditText.getText().toString().length() < 6)
                 Toast.makeText(getContext(), "Inserire una password di lunghezza minima di 6 caratteri", Toast.LENGTH_LONG).show();
 
-            if(TextUtils.isEmpty(emailEditText.getText().toString()))
+            if(TextUtils.isEmpty(emailEditText.getText().toString().trim()))
                 emailEditText.setError("Inserisci una email valida");
 
             if(TextUtils.isEmpty(passwordEditText.getText().toString()))

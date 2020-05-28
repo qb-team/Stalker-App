@@ -47,8 +47,7 @@
             android:exported="true"
              >
         </service>
-           ​
-        <!-- Foreground services in Q+ require type. -->
+           <!-- Foreground services in Q+ require type. -->
         <service
             android:name=".model.service.FirebaseJob"
             android:enabled="true"

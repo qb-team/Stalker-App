@@ -22,7 +22,17 @@ public class PlaceAccessPresenter implements PlaceAccessContract.Presenter, Plac
     }
 
     @Override
+    public void deletePlaceAccess() throws IOException {
+        storage.performDeletePlaceAccess();
+    }
+
+    @Override
     public void onSuccessGetPlaceAccess(List<PlaceAccess> organizationAccessList) {
          placeAccessView.onSuccessGetPlaceAccessInLocal(organizationAccessList);
+    }
+
+    @Override
+    public void onSuccessDelete() {
+        placeAccessView.onSuccessDeletePlaceAccess();
     }
 }

@@ -8,13 +8,14 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 public interface PlaceAccessContract {
     interface View {
         void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> organizationAccessList);
-
+        void onSuccessDeletePlaceAccess();
 
     }
 
     interface Presenter {
 
         void getPlaceAccessList() throws IOException, ClassNotFoundException;
+        void deletePlaceAccess() throws IOException;
 
 
 
@@ -23,6 +24,6 @@ public interface PlaceAccessContract {
 
     interface PlaceAccessListener {
         void onSuccessGetPlaceAccess(List<PlaceAccess> organizationAccessList);
-
+        void onSuccessDelete();
     }
 }

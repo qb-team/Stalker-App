@@ -387,7 +387,18 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             placeAccessListener.onSuccessGetPlaceAccess(placeAccessList);
         }
     }
-
+    public void performDeletePlaceAccess() throws IOException {
+        //Reading the OrganizationMovement from a file
+        File toDelete=new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
+        FileOutputStream fos=new FileOutputStream(toDelete);
+        ObjectOutputStream oos=new ObjectOutputStream(fos);
+        //Write the object OrganizationMovement null==delete
+        oos.writeObject(null);
+        oos.flush();
+        oos.close();
+        fos.close();
+        placeAccessListener.onSuccessDelete();
+    }
     //Serializes the object OrganizationAccess in a local file.
     public void serializeOrganizationAccessInLocal(OrganizationAccess organizationAccess) throws IOException, ClassNotFoundException {
         //Saving of OrganizationAccess in a file

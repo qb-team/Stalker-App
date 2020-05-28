@@ -46,11 +46,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private List<Organization> organizationList;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private SwipeRefreshLayout refresh;
     private String path;
-    public final static String TAG = "Home_Fragment";
-    Dialog myDialog;
-    FragmentListener fragmentListener;
+    private FragmentListener fragmentListener;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface FragmentListener {
@@ -69,12 +66,19 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                     + " FragmentListener");
         }
     }
-    //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".
 
+    //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+
+        OrganizationListPresenter = new HomePresenter(this);
+        try {
+            OrganizationListPresenter.createAllFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         path = getContext().getFilesDir() + "/Organizzazioni.txt";
     }
@@ -85,16 +89,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
-        refresh = view.findViewById(R.id.swiperefreshID);
+        SwipeRefreshLayout refresh = view.findViewById(R.id.swiperefreshID);
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        OrganizationListPresenter = new HomePresenter(this);
-        try {
-            OrganizationListPresenter.createAllFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         //Refresh to upload the organization list (swipe down).
         refresh.setOnRefreshListener(() -> {
@@ -135,9 +133,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 })
                 .create();
         download.show();
-
-
-
     }
 
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
@@ -189,7 +184,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //Notification received through a dialog, additional information of the organization selected by the user afterwards and a long click.
     @Override
     public void organizationLongClick(int position) {
-        myDialog = new Dialog(getContext());
+        Dialog myDialog = new Dialog(getContext());
         myDialog.setContentView(R.layout.dialog_organizzazione);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView dialog_nomeOrganizzazione = myDialog.findViewById(R.id.dialog_nomeOrganizzazione);
@@ -215,12 +210,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             try {
 
                 fragmentListener.sendOrganization(organizationList.get(position));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-
 
             myDialog.dismiss();
         });
@@ -234,10 +226,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             recyclerView.setAdapter(adapter);
             OrganizationListPresenter.updateFile(organizationList,path);
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (JSONException e) {
+        catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }

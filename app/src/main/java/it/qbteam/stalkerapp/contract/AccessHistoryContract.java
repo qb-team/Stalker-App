@@ -24,10 +24,6 @@ public interface AccessHistoryContract {
 
     }
 
-    interface Interactor {
-
-    }
-
     interface AccessHistoryListener {
         void onSuccessGetOrganizationAccess(List<OrganizationAccess> organizationAccessList);
         void onSuccessDelete();

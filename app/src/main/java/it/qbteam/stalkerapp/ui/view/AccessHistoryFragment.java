@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -96,7 +97,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     @Override
     public void onSuccessGetOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList) {
         if(organizationAccessList!=null){
-
+            accessList=organizationAccessList;
             adapter = new AccessHistoryViewAdapter(organizationAccessList, getActivity(), this);
             recyclerView.setAdapter(adapter);
         }
@@ -150,8 +151,16 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
 
     @Override
     public void organizationClick(int position) {
+        Bundle bundle = new Bundle();
 
-    }
+        bundle.putString("name", accessList.get(position).getOrgName());
+        PlaceAccessFragment placeAccessFragment= new PlaceAccessFragment();
+        placeAccessFragment.setArguments(bundle);
+        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.AccessHistoryID, placeAccessFragment).commit();
+        }
+
 
     @Override
     public void organizationLongClick(int position) {

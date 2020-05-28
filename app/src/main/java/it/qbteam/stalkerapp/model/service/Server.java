@@ -26,6 +26,7 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
+import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +46,7 @@ public class Server {
         this.myStalkerListener = myStalkerListener;
         this.homeListener = homeListener;
         this.accessHistoryListener= accessHistoryListener;
-        storage= new Storage(null, null, null);
+        storage= new Storage(null, null, null, null);
     }
 
     //Removes the organization from the user's favorite organization list.
@@ -193,7 +194,7 @@ public class Server {
         });
 
     }
-    public void performPlaceMovementServer(String exitToken,int type, Long placeId, String authServerID, String userToken){
+    public void performPlaceMovementServer(String exitToken, int type, Long placeId, String authServerID, String userToken, PlaceAccess placeAccess){
         PlaceMovement movementUpload= new PlaceMovement();
         movementUpload.setMovementType(type);
         OffsetDateTime dateTime= OffsetDateTime.now();
@@ -214,10 +215,14 @@ public class Server {
                     if(type==1){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializePlaceMovement(movementUpload);
+                    }
+                    else if(type==-1){
+                        //serialize in local the object List<PlaceAccess>.
+                        storage.serializePlaceAccessInLocal(placeAccess);
 
                     }
 
-                } catch (IOException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -264,7 +269,7 @@ public class Server {
                     }
 
                     try {
-                        Storage save = new Storage(null,null, null);
+                        Storage save = new Storage(null,null, null, null);
                         save.performUpdateFile(returnList,path);
                     } catch (JSONException e) {
                         e.printStackTrace();

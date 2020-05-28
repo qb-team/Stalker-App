@@ -122,6 +122,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         myQuittingDialogBox.show();
     }
 
+    public boolean organizationListEmpty(){
+        return organizationList.size()==0;
+    }
     //Hide the 'add to favorites' option from the application's action tab menu and make the search command visible.
     @Override
     public void onPrepareOptionsMenu(Menu menu) {

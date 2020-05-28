@@ -3,6 +3,7 @@ package it.qbteam.stalkerapp.model.service;
 import io.grpc.internal.Stream;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.contract.AccessHistoryContract;
+import it.qbteam.stalkerapp.contract.PlaceAccessContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
@@ -26,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
+import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
 
 public class Storage implements HomeContract.Interactor, MyStalkersListContract.Interactor {
@@ -33,12 +35,14 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     HomeContract.HomeListener homeListener;
     MyStalkersListContract.MyStalkerListener myStalkerListener;
     AccessHistoryContract.AccessHistoryListener accessHistoryListener;
+    PlaceAccessContract.PlaceAccessListener placeAccessListener;
 
     //Storage's constructor.
-    public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener,  AccessHistoryContract.AccessHistoryListener accessHistoryListener){
+    public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener,  AccessHistoryContract.AccessHistoryListener accessHistoryListener, PlaceAccessContract.PlaceAccessListener placeAccessListener){
          this.homeListener = homeListener;
          this.myStalkerListener = myStalkerListener;
          this.accessHistoryListener = accessHistoryListener;
+         this.placeAccessListener = placeAccessListener;
     }
 
     //Checks if the list of organizations already exists in local file.
@@ -320,13 +324,77 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         }
     }
 
+    public void serializePlaceAccessInLocal(PlaceAccess placeAccess) throws IOException, ClassNotFoundException {
+        //Saving of PlaceAccess in a file
+        List<PlaceAccess> oldList;
+        File placeAccessFile = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
+        if(placeAccessFile.length()==0 || !placeAccessFile.exists()) {
+            FileOutputStream fos=new FileOutputStream(placeAccessFile);
+            ObjectOutputStream oos=new ObjectOutputStream(fos);
+            oldList= new ArrayList<>();
+            oldList.add(placeAccess);
+            oos.writeObject(oldList);
+            oos.flush();
+            oos.close();
+            fos.close();
+        }
+        else {
+            FileInputStream fis= new FileInputStream(placeAccessFile);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            //Method for deserialization of object
+            oldList= (List<PlaceAccess>) ois.readObject();
+            ois.close();
+            fis.close();
+            if(oldList!=null)
+                oldList.add(placeAccess);
+            else{
+                oldList = new ArrayList<>();
+                oldList.add(placeAccess);
+            }
+            File toWrite = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
+            FileOutputStream fos=new FileOutputStream(toWrite);
+            ObjectOutputStream oos=new ObjectOutputStream(fos);
+            // Method for serialization of PlaceAccess
+            oos.writeObject(oldList);
+            oos.flush();
+            oos.close();
+            fos.close();
+        }
+    }
+
+    //Deserializes the object PlaceAccess from a local file.
+    public void deserializePlaceAccessInLocal() throws IOException, ClassNotFoundException {
+
+        List<PlaceAccess> placeAccessList;
+        //Reading the OrganizationMovement from a file
+        File placeAccessFile = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
+        if(placeAccessFile.length() == 0 || !placeAccessFile.exists()) {
+            FileOutputStream fos=new FileOutputStream(placeAccessFile);
+            ObjectOutputStream oos=new ObjectOutputStream(fos);
+            oos.writeObject(null);
+            oos.flush();
+            oos.close();
+            fos.close();
+        }
+        else{
+
+            FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/PlaceAccess.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            //Method for deserialization of object
+            placeAccessList= (List<PlaceAccess>) ois.readObject();
+            ois.close();
+            fis.close();
+            placeAccessListener.onSuccessGetPlaceAccess(placeAccessList);
+        }
+    }
+
     //Serializes the object OrganizationAccess in a local file.
     public void serializeOrganizationAccessInLocal(OrganizationAccess organizationAccess) throws IOException, ClassNotFoundException {
         //Saving of OrganizationAccess in a file
         List<OrganizationAccess> oldList;
-        File organizationAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        if(organizationAccessFile.length()==0 || !organizationAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(organizationAccessFile);
+        File placeAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
+        if(placeAccessFile.length()==0 || !placeAccessFile.exists()) {
+            FileOutputStream fos=new FileOutputStream(placeAccessFile);
             ObjectOutputStream oos=new ObjectOutputStream(fos);
             oldList= new ArrayList<>();
             oldList.add(organizationAccess);
@@ -336,7 +404,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             fos.close();
         }
         else {
-            FileInputStream fis= new FileInputStream(organizationAccessFile);
+            FileInputStream fis= new FileInputStream(placeAccessFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //Method for deserialization of object
             oldList= (List<OrganizationAccess>) ois.readObject();

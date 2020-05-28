@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,28 +33,12 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-
         <!-- Foreground services in Q+ require type. -->
         <service
         android:name=".model.tracking.TrackingStalker"
         android:enabled="true"
         android:exported="true"
         android:foregroundServiceType="location"/>
-
-        <!-- Foreground services in Q+ require type. -->
-        <service
-            android:name=".model.service.Firebase"
-            android:enabled="true"
-            android:exported="true"
-             >
-        </service>
-           <!-- Foreground services in Q+ require type. -->
-        <service
-            android:name=".model.service.FirebaseJob"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE">
-        </service>
 
     </application>
 

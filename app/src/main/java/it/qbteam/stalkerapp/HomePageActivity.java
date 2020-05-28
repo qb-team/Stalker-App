@@ -24,12 +24,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.BuildConfig;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
@@ -44,7 +51,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.service.Firebase;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.AccessHistoryFragment;
@@ -52,7 +58,6 @@ import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
 import lombok.SneakyThrows;
-import okhttp3.internal.Util;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener{
 
@@ -73,9 +78,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private NavigationView navigationView;
     private  View actionView;
     private static String path;
-    private static boolean flag=false;
-
-
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
@@ -95,26 +97,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-    private BroadcastReceiver firebaseReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                String token = bundle.getString("token");
-                String uID = bundle.getString("uID");
-                user= new User(token,uID);
-                if(flag==false){//call the mystalkerList's view adapter only the first time.
-                Fragment frag = ActionTabFragment.getMyStalkerFragment();
-                ((MyStalkersListFragment) frag).loadMyStalkerList(uID,token);
-                }
-                flag=true;
-
-            }
-            Utils.scheduleJob(context);
-        }
-    };
-
     //Creates Activity and manages the fragments connected to it. In this method there is the user authentication check,
     // in case the user is no longer logged in the goToMainActivity () method is invoked.
     @SuppressLint("WrongViewCast")
@@ -122,10 +104,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
         //user==null
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            updateFirebaseToken();
         }
+
         else{
             goToMainActivity();
         }
@@ -138,6 +123,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
+
+
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
@@ -189,21 +176,18 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         // Restore the state of the buttons when the activity (re)launches.
         setSwitchState(Utils.requestingLocationUpdates(this));
 
-
     }
 
     @Override
     protected void onStart() {
-        super.onStart();
+
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
         this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
 
-        Intent intent = new Intent(this, Firebase.class);
-        startService(intent);
-
         setSwitchState(Utils.requestingLocationUpdates(this));
+        super.onStart();
     }
 
     //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
@@ -213,23 +197,17 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             this.unbindService(mServiceConnection);
             mBound = false;
         }
-       // Utils.cancelJob(this);
+
+
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
     }
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        Utils.cancelJob(this);
-    }
+
     @Override
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(TrackingStalker.ACTION_BROADCAST));
-        LocalBroadcastManager.getInstance(this).registerReceiver(firebaseReceiver, new IntentFilter(
-                Firebase.NOTIFICATION));
 
     }
 
@@ -237,12 +215,25 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(firebaseReceiver);
-
-
 
     }
 
+    public void updateFirebaseToken(){
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+                            user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            Fragment frag = (MyStalkersListFragment )ActionTabFragment.getMyStalkerFragment();
+                            if( ((MyStalkersListFragment) frag).organizationListEmpty()==true){
+                                ((MyStalkersListFragment) frag).loadMyStalkerList(user.getUid(),user.getToken());
+                            }
+                        } else {
+                            // Handle error -> task.getException();
+                        }
+                    }
+                });}
     //creates the action tab menu.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -530,6 +521,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     }
+
 
 
 }

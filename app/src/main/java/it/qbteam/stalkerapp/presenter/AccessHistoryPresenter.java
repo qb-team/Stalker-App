@@ -15,11 +15,10 @@ public class AccessHistoryPresenter implements AccessHistoryContract.Presenter, 
 
     private AccessHistoryContract.View accessHistoryView;
     private Storage storage;
-    private Server server;
+
     public AccessHistoryPresenter(AccessHistoryContract.View accessHistoryView){
             this.accessHistoryView=accessHistoryView;
-            server= new Server(null,null, this);
-            storage= new Storage(null,null, this);
+            storage= new Storage(null,null, this, null);
 
     }
 

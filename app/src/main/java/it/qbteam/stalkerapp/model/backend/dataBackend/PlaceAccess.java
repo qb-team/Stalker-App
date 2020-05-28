@@ -13,6 +13,7 @@
 
 package it.qbteam.stalkerapp.model.backend.dataBackend;
 
+import java.io.Serializable;
 import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
@@ -26,7 +27,7 @@ import javax.validation.Valid;
  */
 @ApiModel(description = "Access to a place of an organization.")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2020-05-02T17:39:19.016+02:00[Europe/Rome]")
-public class PlaceAccess {
+public class PlaceAccess implements Serializable {
   public static final String SERIALIZED_NAME_ID = "id";
   @SerializedName(SERIALIZED_NAME_ID)
   private Long id;
@@ -51,6 +52,17 @@ public class PlaceAccess {
   @SerializedName(SERIALIZED_NAME_ORG_AUTH_SERVER_ID)
   private String orgAuthServerId;
 
+  public static final String SERIALIZED_NAME_PLACE= "placeName";
+  @SerializedName(SERIALIZED_NAME_PLACE)
+  private String placeName;
+
+  public void setPlaceName(String placeName) {
+    this.placeName = placeName;
+  }
+
+  public String getPlaceName() {
+    return placeName;
+  }
 
   public PlaceAccess id(Long id) {
 

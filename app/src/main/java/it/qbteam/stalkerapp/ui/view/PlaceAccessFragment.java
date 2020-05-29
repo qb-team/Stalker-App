@@ -91,13 +91,14 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     //Makes the 'add to favorites' option visible to the application's action tab menu and hides the search command.
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
+
         menu.findItem(R.id.searchID).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onBackPressed() {
+        HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
         placeAccessFragmentListener.disableScroll(true);
         return new BackPressImplementation(this).onBackPressed();
 

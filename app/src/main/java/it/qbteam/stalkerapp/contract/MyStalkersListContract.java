@@ -26,6 +26,7 @@ public interface MyStalkersListContract {
         void removeOrganizationLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException;
         void removeOrganizationServer(Organization organization,String UID, String userToken) throws IOException, ClassNotFoundException;
         void downloadListServer(String UID, String userToken);
+        void updateTrackingList() throws JSONException;
     }
 
     interface Interactor {

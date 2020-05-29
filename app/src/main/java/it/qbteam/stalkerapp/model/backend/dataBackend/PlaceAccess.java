@@ -48,6 +48,10 @@ public class PlaceAccess implements Serializable {
   @SerializedName(SERIALIZED_NAME_PLACE_ID)
   private Long placeId;
 
+  public static final String SERIALIZED_NAME_ORG_ID = "orgId";
+  @SerializedName(SERIALIZED_NAME_ORG_ID)
+  private Long orgId;
+
   public static final String SERIALIZED_NAME_ORG_AUTH_SERVER_ID = "orgAuthServerId";
   @SerializedName(SERIALIZED_NAME_ORG_AUTH_SERVER_ID)
   private String orgAuthServerId;
@@ -55,6 +59,10 @@ public class PlaceAccess implements Serializable {
   public static final String SERIALIZED_NAME_PLACE= "placeName";
   @SerializedName(SERIALIZED_NAME_PLACE)
   private String placeName;
+
+  public void setOrgId(Long orgId){this.orgId=orgId;}
+
+  public Long getOrgId(){return orgId;}
 
   public void setPlaceName(String placeName) {
     this.placeName = placeName;
@@ -221,8 +229,8 @@ public class PlaceAccess implements Serializable {
             Objects.equals(this.exitToken, placeAccess.exitToken) &&
             Objects.equals(this.placeId, placeAccess.placeId) &&
             Objects.equals(this.orgAuthServerId, placeAccess.orgAuthServerId);
-  }
 
+  }
   @Override
   public int hashCode() {
     return Objects.hash(id, entranceTimestamp, exitTimestamp, exitToken, placeId, orgAuthServerId);

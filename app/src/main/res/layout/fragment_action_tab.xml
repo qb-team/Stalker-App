@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/actionTabId">
 
 
     <com.google.android.material.tabs.TabLayout
@@ -15,7 +16,7 @@
         app:tabMode="fixed"
         app:tabTextColor="#fff" />
 
-    <androidx.viewpager.widget.ViewPager
+   <!-- <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpagerID"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,7 +24,15 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        />
+        /> -->
+    <it.qbteam.stalkerapp.ui.view.MyViewPager
+        android:id="@+id/viewpagerID"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        ></it.qbteam.stalkerapp.ui.view.MyViewPager>
 
 
 </LinearLayout>

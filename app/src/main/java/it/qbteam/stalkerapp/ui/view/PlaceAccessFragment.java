@@ -1,18 +1,22 @@
 package it.qbteam.stalkerapp.ui.view;
 
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.io.IOException;
 import java.util.List;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.contract.PlaceAccessContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
@@ -21,21 +25,37 @@ import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import lombok.SneakyThrows;
 
-
 public class PlaceAccessFragment extends Fragment implements OnBackPressListener, PlaceAccessContract.View {
     private Bundle bundle;
     private PlaceAccessPresenter placeAccessPresenter;
-    private  TextView placeName;
-    private  TextView placeDate;
-    private  TextView placeAccess;
-    private  TextView placeExit;
     private TableRow.LayoutParams  params1;
     private TableRow.LayoutParams  params2;
     private TableLayout tbl;
     private FloatingActionButton buttonDelete;
+    PlaceAccessFragmentListener placeAccessFragmentListener;
+
+    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+    public interface PlaceAccessFragmentListener {
+
+        void disableScroll(boolean enable);
+    }
+
+    // This method insures that the Activity has actually implemented our
+    // listener and that it isn't null.
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof PlaceAccessFragmentListener) {
+            placeAccessFragmentListener = (PlaceAccessFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " PlaceAccessFragmentListener");
+        }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @SneakyThrows
@@ -51,10 +71,6 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         params1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f);
         params2 = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tbl=(TableLayout) view.findViewById(R.id.accessTableID);
-        /*placeName= view.findViewById(R.id.placeNameID);
-        placeDate= view.findViewById(R.id.placeDateID);
-        placeAccess= view.findViewById(R.id.placeAccessID);
-        placeExit= view.findViewById(R.id.placeExitID);*/
         placeAccessPresenter.getPlaceAccessList();
         buttonDelete= view.findViewById(R.id.deleteAccessID);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -63,8 +79,8 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
             public void onClick(View v) {
 
                 try {
-                    placeAccessPresenter.deletePlaceAccess();
-                } catch (IOException e) {
+                    placeAccessPresenter.deletePlaceAccess(bundle.getLong("orgID"));
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
 
@@ -72,52 +88,57 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         });
         return view;
     }
+    //Makes the 'add to favorites' option visible to the application's action tab menu and hides the search command.
     @Override
-    public boolean onBackPressed() {
-        return new BackPressImplementation(this).onBackPressed();
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+
+        menu.findItem(R.id.searchID).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> organizationAccessList) {
+    public boolean onBackPressed() {
+        HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
+        placeAccessFragmentListener.disableScroll(true);
+        return new BackPressImplementation(this).onBackPressed();
 
-        if(organizationAccessList!=null){
-            System.out.print(organizationAccessList+"  numero elementi"+organizationAccessList.size());
-            for(int i=0;i<organizationAccessList.size();i++){
+    }
 
-                    //Creating new tablerows and textviews
-                    TableRow row = new TableRow(getContext());
-                    TextView txt1 = new TextView(getContext());
-                    txt1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    TextView txt2 = new TextView(getContext());
-                    txt2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    TextView txt3 = new TextView(getContext());
-                    txt3.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    TextView txt4 = new TextView(getContext());
-                    txt4.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    //setting the textViews
-                    txt1.setText(organizationAccessList.get(i).getPlaceName());
-                    txt2.setText(organizationAccessList.get(i).getEntranceTimestamp().getYear() + "/" + organizationAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + organizationAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
-                    txt3.setText(organizationAccessList.get(i).getEntranceTimestamp().getHour()+":"+organizationAccessList.get(i).getEntranceTimestamp().getMinute()+":"+organizationAccessList.get(i).getEntranceTimestamp().getSecond());
-                    txt4.setText(organizationAccessList.get(i).getExitTimestamp().getHour()+":"+organizationAccessList.get(i).getExitTimestamp().getMinute()+":"+organizationAccessList.get(i).getExitTimestamp().getSecond());
-                    txt1.setLayoutParams(params1);
-                    txt2.setLayoutParams(params1);
-                    txt3.setLayoutParams(params1);
-                    txt4.setLayoutParams(params1);
-                    //the textViews have to be added to the row created
-                    row.addView(txt1);
-                    row.addView(txt2);
-                    row.addView(txt3);
-                    row.addView(txt4);
-                    row.setLayoutParams(params2);
-                    tbl.addView(row);
-                    /*placeName.setText(organizationAccessList.get(i).getPlaceName());
-                    placeDate.setText(organizationAccessList.get(i).getEntranceTimestamp().getDayOfMonth()+"/"+organizationAccessList.get(0).getEntranceTimestamp().getMonthValue()+"/"+organizationAccessList.get(0).getEntranceTimestamp().getYear());
-                    placeAccess.setText(organizationAccessList.get(i).getEntranceTimestamp().getHour()+":"+organizationAccessList.get(0).getEntranceTimestamp().getMinute()+":"+organizationAccessList.get(0).getEntranceTimestamp().getSecond());
-                    placeExit.setText(organizationAccessList.get(i).getExitTimestamp().getHour()+":"+organizationAccessList.get(0).getExitTimestamp().getMinute()+":"+organizationAccessList.get(0).getExitTimestamp().getSecond());*/
+    @Override
+    public void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> PlaceAccessList) {
 
-             }
+        if(PlaceAccessList!=null){
+            for(int i=0;i<PlaceAccessList.size();i++){
+                    if((PlaceAccessList.get(i).getOrgId()).equals(bundle.getLong("orgID"))){
+                        //Creating new tablerows and textviews
+                        TableRow row = new TableRow(getContext());
+                        TextView txt1 = new TextView(getContext());
+                        txt1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        TextView txt2 = new TextView(getContext());
+                        txt2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        TextView txt3 = new TextView(getContext());
+                        txt3.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        TextView txt4 = new TextView(getContext());
+                        txt4.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        //setting the textViews
+                        txt1.setText(PlaceAccessList.get(i).getPlaceName());
+                        txt2.setText(PlaceAccessList.get(i).getEntranceTimestamp().getYear() + "/" + PlaceAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + PlaceAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
+                        txt3.setText(PlaceAccessList.get(i).getEntranceTimestamp().getHour()+":"+PlaceAccessList.get(i).getEntranceTimestamp().getMinute()+":"+PlaceAccessList.get(i).getEntranceTimestamp().getSecond());
+                        txt4.setText(PlaceAccessList.get(i).getExitTimestamp().getHour()+":"+PlaceAccessList.get(i).getExitTimestamp().getMinute()+":"+PlaceAccessList.get(i).getExitTimestamp().getSecond());
+                        txt1.setLayoutParams(params1);
+                        txt2.setLayoutParams(params1);
+                        txt3.setLayoutParams(params1);
+                        txt4.setLayoutParams(params1);
+                        //the textViews have to be added to the row created
+                        row.addView(txt1);
+                        row.addView(txt2);
+                        row.addView(txt3);
+                        row.addView(txt4);
+                        row.setLayoutParams(params2);
+                        tbl.addView(row);
+                    }
+            }
         }
-
     }
 
     @Override

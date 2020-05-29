@@ -22,8 +22,8 @@ public class PlaceAccessPresenter implements PlaceAccessContract.Presenter, Plac
     }
 
     @Override
-    public void deletePlaceAccess() throws IOException {
-        storage.performDeletePlaceAccess();
+    public void deletePlaceAccess(Long orgID) throws IOException, ClassNotFoundException {
+        storage.performDeletePlaceAccess(orgID);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package it.qbteam.stalkerapp.ui.view;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
@@ -38,6 +41,27 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     private String serverURL;
     private LDAPorganizationPresenter ldapOrganizationPresenter;
     private Dialog myDialog;
+
+    LDAPorganizationFragmentListener iLDAPorganizationFragmentListener;
+
+    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+    public interface LDAPorganizationFragmentListener {
+
+        void disableScroll(boolean enable);
+    }
+
+    // This method insures that the Activity has actually implemented our
+    // listener and that it isn't null.
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof LDAPorganizationFragmentListener) {
+            iLDAPorganizationFragmentListener = (LDAPorganizationFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " LDAPorganizationFragmentListener");
+        }
+    }
 
     //Creation of the fragment as a component.
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +100,8 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     //Management of the back button.
     @Override
     public boolean onBackPressed() {
+        HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
+        iLDAPorganizationFragmentListener.disableScroll(true);
         return new BackPressImplementation(this).onBackPressed();
     }
 

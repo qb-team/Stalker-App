@@ -1,6 +1,7 @@
 package it.qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,6 +40,25 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private static String path;
+    private MyStalkersListFragmentListener myStalkersListFragmentListener;
+
+    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+    public interface MyStalkersListFragmentListener {
+        void disableScroll(boolean enable);
+    }
+
+    // This method insures that the Activity has actually implemented our
+    // listener and that it isn't null.
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MyStalkersListFragmentListener) {
+            myStalkersListFragmentListener = (MyStalkersListFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " MyStalkersListFragmentListener");
+        }
+    }
 
     //Creation of the fragment as a component.
     @Override
@@ -78,12 +98,16 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.ListaPreferitiID, stdOrgFragment).commit();
+            HomePageActivity.getTabLayout().setVisibility(View.GONE);
+            myStalkersListFragmentListener.disableScroll(false);
         } else {
             LDAPorganizationFragment LDAPFragment = new LDAPorganizationFragment();
             LDAPFragment.setArguments(bundle);
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.ListaPreferitiID, LDAPFragment).commit();
+            HomePageActivity.getTabLayout().setVisibility(View.GONE);
+            myStalkersListFragmentListener.disableScroll(false);
         }
     }
     //Notifies the user through a dialog box, the possibility of deleting the organization selected by the user after a long click.
@@ -177,6 +201,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
         myStalkersListPresenter.updateFile(list, path);
+        myStalkersListPresenter.updateTrackingList();
     }
 
     //Notifies the user that the organization's addition operation has failed.
@@ -197,6 +222,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
         myStalkersListPresenter.updateFile(list, path);
+        myStalkersListPresenter.updateTrackingList();
     }
 
     //Downloads from the Server the list of organizations previously added by the user.

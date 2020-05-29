@@ -97,8 +97,8 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                     //setting the textViews
                     txt1.setText(organizationAccessList.get(i).getPlaceName());
                     txt2.setText(organizationAccessList.get(i).getEntranceTimestamp().getYear() + "/" + organizationAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + organizationAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
-                    txt3.setText(organizationAccessList.get(i).getEntranceTimestamp().getHour()+":"+organizationAccessList.get(0).getEntranceTimestamp().getMinute()+":"+organizationAccessList.get(0).getEntranceTimestamp().getSecond());
-                    txt4.setText(organizationAccessList.get(i).getExitTimestamp().getHour()+":"+organizationAccessList.get(0).getExitTimestamp().getMinute()+":"+organizationAccessList.get(0).getExitTimestamp().getSecond());
+                    txt3.setText(organizationAccessList.get(i).getEntranceTimestamp().getHour()+":"+organizationAccessList.get(i).getEntranceTimestamp().getMinute()+":"+organizationAccessList.get(i).getEntranceTimestamp().getSecond());
+                    txt4.setText(organizationAccessList.get(i).getExitTimestamp().getHour()+":"+organizationAccessList.get(i).getExitTimestamp().getMinute()+":"+organizationAccessList.get(i).getExitTimestamp().getSecond());
                     txt1.setLayoutParams(params1);
                     txt2.setLayoutParams(params1);
                     txt3.setLayoutParams(params1);

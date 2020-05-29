@@ -1,6 +1,7 @@
 package it.qbteam.stalkerapp.ui.view;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.contract.AccessHistoryContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
@@ -39,6 +42,25 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     private FloatingActionButton buttonDelete;
     private AccessHistoryPresenter accessHistoryPresenter;
     private List<OrganizationAccess> accessList;
+    private AccessHistoryFragmentListener accessHistoryFragmentListener;
+
+    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+    public interface AccessHistoryFragmentListener {
+        void disableScroll(boolean enable);
+    }
+
+    // This method insures that the Activity has actually implemented our
+    // listener and that it isn't null.
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof AccessHistoryFragmentListener) {
+            accessHistoryFragmentListener = (AccessHistoryFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " AccessHistoryFragmentListener");
+        }
+    }
 
     public AccessHistoryFragment() {
         // Required empty public constructor
@@ -161,6 +183,8 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
         transaction.replace(R.id.AccessHistoryID, placeAccessFragment).commit();
+        HomePageActivity.getTabLayout().setVisibility(View.GONE);
+        accessHistoryFragmentListener.disableScroll(false);
     }
 
 

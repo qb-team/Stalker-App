@@ -1,8 +1,12 @@
 package it.qbteam.stalkerapp.ui.view;
 
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
@@ -11,6 +15,8 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import java.util.List;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.contract.PlaceAccessContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
@@ -26,9 +32,30 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     private TableRow.LayoutParams  params2;
     private TableLayout tbl;
     private FloatingActionButton buttonDelete;
+    PlaceAccessFragmentListener placeAccessFragmentListener;
+
+    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+    public interface PlaceAccessFragmentListener {
+
+        void disableScroll(boolean enable);
+    }
+
+    // This method insures that the Activity has actually implemented our
+    // listener and that it isn't null.
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof PlaceAccessFragmentListener) {
+            placeAccessFragmentListener = (PlaceAccessFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " PlaceAccessFragmentListener");
+        }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @SneakyThrows
@@ -61,9 +88,19 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         });
         return view;
     }
+    //Makes the 'add to favorites' option visible to the application's action tab menu and hides the search command.
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
+        menu.findItem(R.id.searchID).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onBackPressed() {
+        placeAccessFragmentListener.disableScroll(true);
         return new BackPressImplementation(this).onBackPressed();
+
     }
 
     @Override

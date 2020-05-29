@@ -23,6 +23,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.tabs.TabLayout;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import org.json.JSONException;
 import it.qbteam.stalkerapp.HomePageActivity;
@@ -52,6 +54,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface FragmentListener {
         void sendOrganization(Organization organization) throws IOException, JSONException;
+        void disableScroll(boolean enable);
     }
 
     // This method insures that the Activity has actually implemented our
@@ -66,6 +69,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                     + " FragmentListener");
         }
     }
+
 
     //Creation of the fragment as a component and instantiation of the path of the file "/Organizzazioni.txt".
     @Override
@@ -171,6 +175,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.HomeFragmentID, stdOrgFragment).commit();
+            HomePageActivity.getTabLayout().setVisibility(View.GONE);
+            fragmentListener.disableScroll(false);
         }
         else {
             LDAPorganizationFragment LDAPFragment= new LDAPorganizationFragment();
@@ -178,6 +184,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.HomeFragmentID, LDAPFragment).commit();
+            HomePageActivity.getTabLayout().setVisibility(View.GONE);
+            fragmentListener.disableScroll(false);
         }
     }
 

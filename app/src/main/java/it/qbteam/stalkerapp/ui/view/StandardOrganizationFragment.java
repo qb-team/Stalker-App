@@ -2,6 +2,7 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,8 +19,11 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.contract.StandardOrganizationContract;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.presenter.StandardOrganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
@@ -29,12 +33,33 @@ import lombok.SneakyThrows;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 
 public class StandardOrganizationFragment extends Fragment implements View.OnClickListener, OnBackPressListener, StandardOrganizationContract.View {
     private Bundle bundle;
     private StandardOrganizationPresenter standardOrganizationPresenter;
+    StandardOrganizationFragmentListener standardOrganizationFragmentListener;
 
+    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+    public interface StandardOrganizationFragmentListener {
+
+        void disableScroll(boolean enable);
+    }
+
+    // This method insures that the Activity has actually implemented our
+    // listener and that it isn't null.
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof StandardOrganizationFragmentListener) {
+            standardOrganizationFragmentListener = (StandardOrganizationFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " StandardOrganizationFragmentListener");
+        }
+    }
 
     //Creation of the fragment as a component.
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,8 +73,8 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
         bundle=this.getArguments();
-        Button accessHistoryButton = view.findViewById(R.id.AccessHistoryButtonID);
-        accessHistoryButton.setOnClickListener(this);
+
+
         TextView title=view.findViewById(R.id.titleID);
         ImageView image=view.findViewById(R.id.imageID);
         TextView description=view.findViewById(R.id.descriptionID);
@@ -72,6 +97,8 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     //Manages the back button.
     @Override
     public boolean onBackPressed() {
+        HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
+        standardOrganizationFragmentListener.disableScroll(true);
         return new BackPressImplementation(this).onBackPressed();
     }
 
@@ -80,9 +107,6 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.AccessHistoryButtonID:
-                System.out.println("Ciao");
-                break;
             case R.id.accessID:
                 Dialog accessDialog = new Dialog(getContext());
                 accessDialog.setContentView(R.layout.dialog_last_access);

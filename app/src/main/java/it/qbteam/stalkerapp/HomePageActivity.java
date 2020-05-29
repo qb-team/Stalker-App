@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -56,10 +57,14 @@ import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.AccessHistoryFragment;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
+import it.qbteam.stalkerapp.ui.view.LDAPorganizationFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
+import it.qbteam.stalkerapp.ui.view.MyViewPager;
+import it.qbteam.stalkerapp.ui.view.PlaceAccessFragment;
+import it.qbteam.stalkerapp.ui.view.StandardOrganizationFragment;
 import lombok.SneakyThrows;
 
-public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener{
+public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener, StandardOrganizationFragment.StandardOrganizationFragmentListener, LDAPorganizationFragment.LDAPorganizationFragmentListener, MyStalkersListFragment.MyStalkersListFragmentListener, AccessHistoryFragment.AccessHistoryFragmentListener, PlaceAccessFragment.PlaceAccessFragmentListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -123,8 +128,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
-
-
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
@@ -445,6 +448,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         ((MyStalkersListFragment) frag).addOrganization(organization);
     }
 
+    @Override
+    public void disableScroll(boolean enable) {
+        actionTabFragment.disableScroll(enable);
+    }
+
     //Metodi per segnalare la tua posizione all'interno di un organizzazione o luogo
     public static void setNameOrg(String name){
         nameOrg.setText(name);
@@ -464,6 +472,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
      public static String getPath(){
         return path;
 }
+
+    public static TabLayout getTabLayout(){return ActionTabFragment.getTabLayout();}
 
     @Override
     public void onClick(View view) {
@@ -508,7 +518,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
 
     }
-
 
     private class MyReceiver extends BroadcastReceiver {
         @SneakyThrows

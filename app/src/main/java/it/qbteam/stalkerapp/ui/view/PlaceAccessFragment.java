@@ -52,8 +52,8 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
             public void onClick(View v) {
 
                 try {
-                    placeAccessPresenter.deletePlaceAccess();
-                } catch (IOException e) {
+                    placeAccessPresenter.deletePlaceAccess(bundle.getLong("orgID"));
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
 
@@ -70,7 +70,6 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     public void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> PlaceAccessList) {
 
         if(PlaceAccessList!=null){
-            System.out.print(PlaceAccessList+"numero elementi  "+PlaceAccessList.size());
             for(int i=0;i<PlaceAccessList.size();i++){
                     if((PlaceAccessList.get(i).getOrgId()).equals(bundle.getLong("orgID"))){
                         //Creating new tablerows and textviews

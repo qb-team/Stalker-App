@@ -15,7 +15,7 @@ public interface PlaceAccessContract {
     interface Presenter {
 
         void getPlaceAccessList() throws IOException, ClassNotFoundException;
-        void deletePlaceAccess() throws IOException;
+        void deletePlaceAccess(Long orgID) throws IOException, ClassNotFoundException;
 
 
 

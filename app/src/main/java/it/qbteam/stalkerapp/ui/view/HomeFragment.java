@@ -3,6 +3,7 @@ package it.qbteam.stalkerapp.ui.view;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private RecyclerView.Adapter adapter;
     private String path;
     private FragmentListener fragmentListener;
+    private ArrayList filterItem;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface FragmentListener {
@@ -238,9 +240,50 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         item.setVisible(true);
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchFilter();
+            }
+        });
+
         super.onPrepareOptionsMenu(menu);
     }
 
+    private void searchFilter() {
+        AlertDialog.Builder searchFilter = new AlertDialog.Builder(getContext());
+        searchFilter.setTitle("Cerca per: ");
+        String[] items = {"Nome","Città","Nazione"};
+        boolean[] checkedItems = {false, false, false};
+        searchFilter.setMultiChoiceItems(items, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                switch (which) {
+                    case 0:
+                        if(isChecked) {
+                            Toast.makeText(getContext(), "Clicked on Nome", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                        break;
+                    case 1:
+                        if(isChecked) {
+                            Toast.makeText(getContext(), "Clicked on Città", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                        break;
+                    case 2:
+                        if(isChecked) {
+                            Toast.makeText(getContext(), "Clicked on Data Nazione", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                        break;
+                }
+            }
+        });
+        AlertDialog alert = searchFilter.create();
+        //alert.setCanceledOnTouchOutside(true);
+        alert.show();
+    }
 
     @Override
     public boolean onQueryTextSubmit(String query) {

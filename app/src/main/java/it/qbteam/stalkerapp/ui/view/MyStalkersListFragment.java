@@ -98,7 +98,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.ListaPreferitiID, stdOrgFragment).commit();
-            HomePageActivity.getTabLayout().setVisibility(View.GONE);
             myStalkersListFragmentListener.disableScroll(false);
         } else {
             LDAPorganizationFragment LDAPFragment = new LDAPorganizationFragment();
@@ -106,7 +105,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.ListaPreferitiID, LDAPFragment).commit();
-            HomePageActivity.getTabLayout().setVisibility(View.GONE);
             myStalkersListFragmentListener.disableScroll(false);
         }
     }

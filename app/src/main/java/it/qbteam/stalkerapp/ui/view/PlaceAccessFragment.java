@@ -36,7 +36,6 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface PlaceAccessFragmentListener {
-
         void disableScroll(boolean enable);
     }
 

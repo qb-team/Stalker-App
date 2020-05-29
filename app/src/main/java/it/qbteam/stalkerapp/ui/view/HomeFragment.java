@@ -175,7 +175,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.HomeFragmentID, stdOrgFragment).commit();
-            HomePageActivity.getTabLayout().setVisibility(View.GONE);
             fragmentListener.disableScroll(false);
         }
         else {
@@ -184,7 +183,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.HomeFragmentID, LDAPFragment).commit();
-            HomePageActivity.getTabLayout().setVisibility(View.GONE);
+
             fragmentListener.disableScroll(false);
         }
     }

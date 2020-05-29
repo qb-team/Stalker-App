@@ -507,26 +507,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         accessHistoryListener.onSuccessDelete();
     }
 
-    public List<OrganizationAccess> performGetAccessList() throws IOException, ClassNotFoundException {
-
-        List<OrganizationAccess> organizationAccessList=null;
-        //Reading the OrganizationMovement from a file
-        File organizationAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-
-        if(organizationAccessFile.length()==0 || !organizationAccessFile.exists()){
-
-        FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        //Method for deserialization of object
-        organizationAccessList= (List<OrganizationAccess>) ois.readObject();
-        ois.close();
-        fis.close();}
-
-        return organizationAccessList;
-
-    }
-
-
     public void saveLastAccess(OrganizationMovement organizationMovement) throws IOException {
         System.out.print("salvo LAST ACCESS:"+organizationMovement);
         //Saving of OrganizationMovement in a file
@@ -541,7 +521,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fos.close();
 
     }
-
 
     public OrganizationMovement performGetLastAccess() throws IOException, ClassNotFoundException {
 

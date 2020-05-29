@@ -28,13 +28,6 @@ public class AccessHistoryPresenter implements AccessHistoryContract.Presenter, 
             storage.deserializeOrganizationAccessInLocal();
     }
 
-    //Stesso metodo di storage.deserializeOrganizationAccessInLocal però qui mi torno la lista dirattamente
-    @Override
-    public List<OrganizationAccess> getOrganizationAccessList() throws IOException, ClassNotFoundException {
-            return storage.performGetAccessList();
-    }
-
-
     @Override
     public void onSuccessGetOrganizationAccess(List<OrganizationAccess> organizationAccessList) {
             accessHistoryView.onSuccessGetOrganizationAccessInLocal(organizationAccessList);

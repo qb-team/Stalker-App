@@ -74,6 +74,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ldap_organization, container, false);
+        HomePageActivity.getTabLayout().setVisibility(View.GONE);
         Bundle bundle = this.getArguments();
         title = view.findViewById(R.id.titleID);
         title.setText(bundle.getString("name"));

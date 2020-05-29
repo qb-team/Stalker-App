@@ -22,6 +22,7 @@
         android:layout_marginBottom="15dp"
         android:gravity="center_horizontal"
         android:text="TITOLO"
+        android:textColor="@color/colorPrimary"
         android:textAlignment="center"
         android:textSize="28sp"
         android:textStyle="bold" />
@@ -30,6 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginTop="20dp"
+        android:padding="15dp"
         android:id="@+id/imageID"
         android:layout_gravity="center"
         android:src="@drawable/image"/>
@@ -52,16 +54,6 @@
 
     </ScrollView>
 
-        <!--<Button
-            android:id="@+id/AccessHistoryButtonID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/custom_border"
-            android:padding="10dp"
-            android:text="Storico Accessi"
-            android:textAlignment="center" /> -->
 
     </LinearLayout>
 

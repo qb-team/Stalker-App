@@ -72,9 +72,8 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_organization, container, false);
+        HomePageActivity.getTabLayout().setVisibility(View.GONE);
         bundle=this.getArguments();
-
-
         TextView title=view.findViewById(R.id.titleID);
         ImageView image=view.findViewById(R.id.imageID);
         TextView description=view.findViewById(R.id.descriptionID);

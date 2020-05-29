@@ -18,7 +18,6 @@ public interface AccessHistoryContract {
     interface Presenter {
 
      void getOrganizationAccess() throws IOException, ClassNotFoundException;
-     List<OrganizationAccess> getOrganizationAccessList() throws IOException, ClassNotFoundException;
      void deleteOrganizationAccess() throws IOException;
 
 

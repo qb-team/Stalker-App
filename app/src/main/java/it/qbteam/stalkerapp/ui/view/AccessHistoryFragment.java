@@ -89,9 +89,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         try {
             printAccess();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -116,6 +114,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public void printAccess() throws IOException, ClassNotFoundException {
         accessHistoryPresenter.getOrganizationAccess();
     }
+
     @Override
     public void onSuccessGetOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList) {
         if(organizationAccessList!=null){
@@ -148,23 +147,14 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         return false;
     }
 
-
     @Override
     public boolean onQueryTextChange(String newText) {
         String userInput= newText.toLowerCase();
         List<OrganizationAccess> newList= new ArrayList<>();
-        List<OrganizationAccess> oldList=null;
-        try {
-            oldList = accessHistoryPresenter.getOrganizationAccessList();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        if(oldList!=null){
-            for(int i = 0; i< oldList.size(); i++){
-                if(oldList.get(i).getOrgName().toLowerCase().contains(userInput))
-                    newList.add(oldList.get(i));
+        if(accessList!=null){
+            for(int i = 0; i< accessList.size(); i++){
+                if(accessList.get(i).getOrgName().toLowerCase().contains(userInput))
+                    newList.add(accessList.get(i));
             }
             adapter=new AccessHistoryViewAdapter(newList,getActivity(),this);
             recyclerView.setAdapter(adapter);
@@ -174,8 +164,8 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
 
     @Override
     public void organizationClick(int position) {
-        Bundle bundle = new Bundle();
 
+        Bundle bundle = new Bundle();
         bundle.putString("name", accessList.get(position).getOrgName());
         bundle.putLong("orgID", accessList.get(position).getOrganizationId());
         PlaceAccessFragment placeAccessFragment= new PlaceAccessFragment();

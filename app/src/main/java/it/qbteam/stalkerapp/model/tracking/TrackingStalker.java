@@ -117,6 +117,7 @@ public class TrackingStalker extends Service {
     private OffsetDateTime placeAccessTime;
     private static int delay = 3000;
     private  Timer timer;
+    private Long orgID;
 
     public TrackingStalker()  {
 
@@ -215,13 +216,17 @@ public class TrackingStalker extends Service {
         }
     }
 
+    public void updateTrackingList() throws JSONException {
+
+        latLngOrganizationList=LatLngOrganization.checkUpdateList(storage);
+    }
     public void requestLocationUpdates() {
 
         Log.i(TAG, "Requesting location updates");
         Utils.setRequestingLocationUpdates(this, true);
         startService(new Intent(getApplicationContext(), TrackingStalker.class));
         try {
-            latLngOrganizationList=LatLngOrganization.checkUpdateList(storage);
+            updateTrackingList();
             System.out.println("RequestLocationUpdates è partito ");
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
         } catch (SecurityException | JSONException unlikely) {
@@ -484,6 +489,7 @@ public class TrackingStalker extends Service {
                         //Update the access' list when the user exits from organization.
                         placeAccess.setEntranceTimestamp(placeAccessTime);
                         placeAccess.setPlaceName(insidePlace.getName());
+                        placeAccess.setOrgId(orgID);
                         placeAccess.setExitTimestamp(OffsetDateTime.now());
 
                         //Comunicates the server that user is outside the place
@@ -532,6 +538,8 @@ public class TrackingStalker extends Service {
 
                         organizationAccessTime=OffsetDateTime.now();
 
+                        orgID=insideOrganization.getOrgID();
+
                         //Comunicates the server that user is inside the organization
                         server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null, organizationAccess);
 
@@ -560,6 +568,8 @@ public class TrackingStalker extends Service {
                         Toast.makeText(getApplicationContext(), "Sei dentro all'organizzazione: " + insideOrganization.getName()+" in modo non autenticato", Toast.LENGTH_SHORT).show();
 
                         organizationAccessTime=OffsetDateTime.now();
+
+                        orgID=insideOrganization.getOrgID();
 
                         //Comunicates the server that user is inside the organization
                         server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), 1, null, organizationAccess);
@@ -593,6 +603,7 @@ public class TrackingStalker extends Service {
 
                         //Update the access' list when the user exits from organization.
                         organizationAccess.setEntranceTimestamp(organizationAccessTime);
+                        organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
 

@@ -108,6 +108,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public void onSuccessDeleteOrganizationAccess() {
         adapter = new AccessHistoryViewAdapter(null, getActivity(), this);
         recyclerView.setAdapter(adapter);
+        accessList=null;
     }
 
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".
@@ -154,12 +155,13 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         Bundle bundle = new Bundle();
 
         bundle.putString("name", accessList.get(position).getOrgName());
+        bundle.putLong("orgID", accessList.get(position).getOrganizationId());
         PlaceAccessFragment placeAccessFragment= new PlaceAccessFragment();
         placeAccessFragment.setArguments(bundle);
         FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
         transaction.replace(R.id.AccessHistoryID, placeAccessFragment).commit();
-        }
+    }
 
 
     @Override

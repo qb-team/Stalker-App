@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.io.IOException;
 import java.util.List;
 import it.qbteam.stalkerapp.R;
@@ -21,14 +19,9 @@ import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import lombok.SneakyThrows;
 
-
 public class PlaceAccessFragment extends Fragment implements OnBackPressListener, PlaceAccessContract.View {
     private Bundle bundle;
     private PlaceAccessPresenter placeAccessPresenter;
-    private  TextView placeName;
-    private  TextView placeDate;
-    private  TextView placeAccess;
-    private  TextView placeExit;
     private TableRow.LayoutParams  params1;
     private TableRow.LayoutParams  params2;
     private TableLayout tbl;
@@ -51,10 +44,6 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         params1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f);
         params2 = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tbl=(TableLayout) view.findViewById(R.id.accessTableID);
-        /*placeName= view.findViewById(R.id.placeNameID);
-        placeDate= view.findViewById(R.id.placeDateID);
-        placeAccess= view.findViewById(R.id.placeAccessID);
-        placeExit= view.findViewById(R.id.placeExitID);*/
         placeAccessPresenter.getPlaceAccessList();
         buttonDelete= view.findViewById(R.id.deleteAccessID);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -78,46 +67,41 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     }
 
     @Override
-    public void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> organizationAccessList) {
+    public void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> PlaceAccessList) {
 
-        if(organizationAccessList!=null){
-            System.out.print(organizationAccessList+"  numero elementi"+organizationAccessList.size());
-            for(int i=0;i<organizationAccessList.size();i++){
-
-                    //Creating new tablerows and textviews
-                    TableRow row = new TableRow(getContext());
-                    TextView txt1 = new TextView(getContext());
-                    txt1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    TextView txt2 = new TextView(getContext());
-                    txt2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    TextView txt3 = new TextView(getContext());
-                    txt3.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    TextView txt4 = new TextView(getContext());
-                    txt4.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    //setting the textViews
-                    txt1.setText(organizationAccessList.get(i).getPlaceName());
-                    txt2.setText(organizationAccessList.get(i).getEntranceTimestamp().getYear() + "/" + organizationAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + organizationAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
-                    txt3.setText(organizationAccessList.get(i).getEntranceTimestamp().getHour()+":"+organizationAccessList.get(i).getEntranceTimestamp().getMinute()+":"+organizationAccessList.get(i).getEntranceTimestamp().getSecond());
-                    txt4.setText(organizationAccessList.get(i).getExitTimestamp().getHour()+":"+organizationAccessList.get(i).getExitTimestamp().getMinute()+":"+organizationAccessList.get(i).getExitTimestamp().getSecond());
-                    txt1.setLayoutParams(params1);
-                    txt2.setLayoutParams(params1);
-                    txt3.setLayoutParams(params1);
-                    txt4.setLayoutParams(params1);
-                    //the textViews have to be added to the row created
-                    row.addView(txt1);
-                    row.addView(txt2);
-                    row.addView(txt3);
-                    row.addView(txt4);
-                    row.setLayoutParams(params2);
-                    tbl.addView(row);
-                    /*placeName.setText(organizationAccessList.get(i).getPlaceName());
-                    placeDate.setText(organizationAccessList.get(i).getEntranceTimestamp().getDayOfMonth()+"/"+organizationAccessList.get(0).getEntranceTimestamp().getMonthValue()+"/"+organizationAccessList.get(0).getEntranceTimestamp().getYear());
-                    placeAccess.setText(organizationAccessList.get(i).getEntranceTimestamp().getHour()+":"+organizationAccessList.get(0).getEntranceTimestamp().getMinute()+":"+organizationAccessList.get(0).getEntranceTimestamp().getSecond());
-                    placeExit.setText(organizationAccessList.get(i).getExitTimestamp().getHour()+":"+organizationAccessList.get(0).getExitTimestamp().getMinute()+":"+organizationAccessList.get(0).getExitTimestamp().getSecond());*/
-
-             }
+        if(PlaceAccessList!=null){
+            System.out.print(PlaceAccessList+"numero elementi  "+PlaceAccessList.size());
+            for(int i=0;i<PlaceAccessList.size();i++){
+                    if((PlaceAccessList.get(i).getOrgId()).equals(bundle.getLong("orgID"))){
+                        //Creating new tablerows and textviews
+                        TableRow row = new TableRow(getContext());
+                        TextView txt1 = new TextView(getContext());
+                        txt1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        TextView txt2 = new TextView(getContext());
+                        txt2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        TextView txt3 = new TextView(getContext());
+                        txt3.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        TextView txt4 = new TextView(getContext());
+                        txt4.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        //setting the textViews
+                        txt1.setText(PlaceAccessList.get(i).getPlaceName());
+                        txt2.setText(PlaceAccessList.get(i).getEntranceTimestamp().getYear() + "/" + PlaceAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + PlaceAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
+                        txt3.setText(PlaceAccessList.get(i).getEntranceTimestamp().getHour()+":"+PlaceAccessList.get(i).getEntranceTimestamp().getMinute()+":"+PlaceAccessList.get(i).getEntranceTimestamp().getSecond());
+                        txt4.setText(PlaceAccessList.get(i).getExitTimestamp().getHour()+":"+PlaceAccessList.get(i).getExitTimestamp().getMinute()+":"+PlaceAccessList.get(i).getExitTimestamp().getSecond());
+                        txt1.setLayoutParams(params1);
+                        txt2.setLayoutParams(params1);
+                        txt3.setLayoutParams(params1);
+                        txt4.setLayoutParams(params1);
+                        //the textViews have to be added to the row created
+                        row.addView(txt1);
+                        row.addView(txt2);
+                        row.addView(txt3);
+                        row.addView(txt4);
+                        row.setLayoutParams(params2);
+                        tbl.addView(row);
+                    }
+            }
         }
-
     }
 
     @Override

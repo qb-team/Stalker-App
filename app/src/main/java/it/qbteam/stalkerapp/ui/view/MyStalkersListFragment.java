@@ -177,6 +177,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
         myStalkersListPresenter.updateFile(list, path);
+        myStalkersListPresenter.updateTrackingList();
     }
 
     //Notifies the user that the organization's addition operation has failed.
@@ -197,6 +198,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
         myStalkersListPresenter.updateFile(list, path);
+        myStalkersListPresenter.updateTrackingList();
     }
 
     //Downloads from the Server the list of organizations previously added by the user.

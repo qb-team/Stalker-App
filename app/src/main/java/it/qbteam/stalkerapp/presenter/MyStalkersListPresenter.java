@@ -7,6 +7,8 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
+import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +18,14 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     private MyStalkersListContract.View myStalkersView;
     private Storage storage;
     private Server server;
+    private TrackingStalker trackingStalker;
 
     //MyStalkersListPresenter's constructor.
     public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView = myStalkersView;
     storage= new Storage(null,this, null, null);
     server = new Server(this, null, null);
+    trackingStalker = new TrackingStalker();
     }
 
     //Calls the the method performUpdateFile(list,path) of the class Storage(persistent layer that comunicates with FileSystem).
@@ -83,6 +87,11 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     @Override
     public void downloadListServer(String UID, String userToken) {
         server.performLoadListServer(UID, userToken);
+    }
+
+    @Override
+    public void updateTrackingList() throws JSONException {
+         // trackingStalker.updateTrackingList();
     }
 
     //Comunicates the success result of download organization list to the view.

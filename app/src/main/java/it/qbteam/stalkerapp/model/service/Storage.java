@@ -388,15 +388,25 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         }
     }
     public void performDeletePlaceAccess() throws IOException {
+        List<PlaceAccess> placeAccessList;
         //Reading the OrganizationMovement from a file
-        File toDelete=new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
-        FileOutputStream fos=new FileOutputStream(toDelete);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        //Write the object OrganizationMovement null==delete
-        oos.writeObject(null);
-        oos.flush();
-        oos.close();
-        fos.close();
+        File placeAccessFile = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
+        if(placeAccessFile.length() == 0 || !placeAccessFile.exists()) {
+            FileOutputStream fos=new FileOutputStream(placeAccessFile);
+            ObjectOutputStream oos=new ObjectOutputStream(fos);
+            oos.writeObject(null);
+            oos.flush();
+            oos.close();
+            fos.close();
+        }
+        else{
+
+            FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/PlaceAccess.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            //Method for deserialization of object
+            placeAccessList= (List<PlaceAccess>) ois.readObject();
+            ois.close();
+            fis.close();
         placeAccessListener.onSuccessDelete();
     }
     //Serializes the object OrganizationAccess in a local file.

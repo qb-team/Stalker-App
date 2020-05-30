@@ -52,6 +52,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private String path;
     private FragmentListener fragmentListener;
     private ArrayList filterItem;
+    private int searchInt = 0;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface FragmentListener {
@@ -247,6 +248,13 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         item.setVisible(true);
         SearchView searchView= (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                System.out.println("Testing. 1, 2, 3...");
+                return false;
+            }
+        });
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,27 +268,44 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private void searchFilter() {
         AlertDialog.Builder searchFilter = new AlertDialog.Builder(getContext());
         searchFilter.setTitle("Cerca per: ");
-        String[] items = {"Nome","Città","Nazione"};
-        boolean[] checkedItems = {false, false, false};
+        String[] items = {"Nome","Città","Nazione","Anonimo","Autenticato"};
+        boolean[] checkedItems = {false, false, false, false, false};
         searchFilter.setMultiChoiceItems(items, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 switch (which) {
                     case 0:
                         if(isChecked) {
+                            searchInt = 0;
                             Toast.makeText(getContext(), "Clicked on Nome", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                         }
                         break;
                     case 1:
                         if(isChecked) {
+                            searchInt = 1;
                             Toast.makeText(getContext(), "Clicked on Città", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                         }
                         break;
                     case 2:
                         if(isChecked) {
-                            Toast.makeText(getContext(), "Clicked on Data Nazione", Toast.LENGTH_LONG).show();
+                            searchInt = 2;
+                            Toast.makeText(getContext(), "Clicked on Nazione", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                        break;
+                    case 3:
+                        if(isChecked) {
+                            searchInt = 3;
+                            Toast.makeText(getContext(), "Clicked on Anonimo", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                        break;
+                    case 4:
+                        if(isChecked) {
+                            searchInt = 4;
+                            Toast.makeText(getContext(), "Clicked on Autenticato", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                         }
                         break;
@@ -303,14 +328,40 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         String userInput= newText.toLowerCase();
         List<Organization> newList= new ArrayList<>();
 
+        System.out.println(organizationList);
+
         if(organizationList.size() != 0){
-            for(int i = 0; i< organizationList.size(); i++){
+
+            for(int i = 0; searchInt==0 && i< organizationList.size(); i++){
                 if(organizationList.get(i).getName().toLowerCase().contains(userInput))
                     newList.add(organizationList.get(i));
             }
+
+            for(int i = 0; searchInt==1 && i< organizationList.size(); i++){
+                if(organizationList.get(i).getCity().toLowerCase().contains(userInput))
+                    newList.add(organizationList.get(i));
+            }
+
+            for(int i = 0; searchInt==2 && i< organizationList.size(); i++){
+                if(organizationList.get(i).getCountry().toLowerCase().contains(userInput))
+                    newList.add(organizationList.get(i));
+            }
+
+            for(int i = 0; searchInt==3 && i< organizationList.size(); i++){
+                if(organizationList.get(i).getName().toLowerCase().contains(userInput) && organizationList.get(i).getTrackingMode().toString().equals("anonymous"))
+                    newList.add(organizationList.get(i));
+            }
+
+            for(int i = 0; searchInt==4 && i< organizationList.size(); i++){
+                if(organizationList.get(i).getCountry().toLowerCase().contains(userInput) && organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
+                    newList.add(organizationList.get(i));
+            }
+
+
             adapter=new OrganizationViewAdapter(newList,this.getContext(),this);
             recyclerView.setAdapter(adapter);
         }
+
         return false;
     }
 

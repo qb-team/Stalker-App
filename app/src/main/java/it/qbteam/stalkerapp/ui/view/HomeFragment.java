@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private RecyclerView.Adapter adapter;
     private String path;
     private FragmentListener fragmentListener;
-    private ArrayList filterItem;
+    private SwipeRefreshLayout refresh;
     private int searchInt = 0;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
@@ -96,17 +96,15 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
-        SwipeRefreshLayout refresh = view.findViewById(R.id.swiperefreshID);
+        refresh = view.findViewById(R.id.swiperefreshID);
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         //Refresh to upload the organization list (swipe down).
-        refresh.setOnRefreshListener(() -> {
-            downloadList();
-            refresh.setRefreshing(false);
-        });
+        refresh.setOnRefreshListener(this::downloadList);
 
+        //Controlla se la lista è vuota, in caso positivo la scarica
         checkFile();
         return view;
 
@@ -132,11 +130,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 .setMessage("La tua lista delle organizzazioni è ancora vuota, vuoi scaricarla?")
                 .setPositiveButton("Scarica", (dialog, which) -> {
                     downloadList();
-
                     dialog.dismiss();
                 })
                 .setNegativeButton("Annulla", (dialog, which) -> {
-
                 })
                 .create();
         download.show();
@@ -151,6 +147,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //It notifies the user of the correct download of the list from the Server.
     @Override
     public void onSuccessDownloadList(String message) {
+        refresh.setRefreshing(false);
         checkFile();
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
@@ -158,6 +155,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //It notifies the user of the false download of the list from the Server.
     @Override
     public void onFailureDownloadList(String message) {
+        refresh.setRefreshing(false);
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
@@ -172,7 +170,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         bundle.putString("serverURL", organizationList.get(position).getAuthenticationServerURL());
         bundle.putString("creationDate",organizationList.get(position).getCreationDate().toString());
 
-        if(organizationList.get(position).getTrackingMode().toString()=="anonymous"){
+        if(organizationList.get(position).getTrackingMode().toString().equals("anonymous")){
             StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
             stdOrgFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
@@ -186,7 +184,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.HomeFragmentID, LDAPFragment).commit();
-
             fragmentListener.disableScroll(false);
         }
     }
@@ -205,7 +202,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         Button moreInfo=myDialog.findViewById(R.id.Button_moreInfo);
         Button aggPref=myDialog.findViewById(R.id.Button_aggiungiPreferiti);
 
-        if(organizationList.get(position).getTrackingMode().toString() != "anonymous") {
+        if(!organizationList.get(position).getTrackingMode().toString().equals("anonymous")) {
             aggPref.setVisibility(View.INVISIBLE);
         }
 
@@ -216,14 +213,11 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
         //Try to add the organization locally and on the server.
         aggPref.setOnClickListener(v -> {
-
             try {
-
                 fragmentListener.sendOrganization(organizationList.get(position));
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-
             myDialog.dismiss();
         });
     }
@@ -313,7 +307,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             }
         });
         AlertDialog alert = searchFilter.create();
-        //alert.setCanceledOnTouchOutside(true);
         alert.show();
     }
 

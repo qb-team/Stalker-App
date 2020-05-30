@@ -71,6 +71,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                     String description=jsonObj.getString("description");
                     String image=jsonObj.getString("image");
                     String city=jsonObj.getString("city");
+                    String country=jsonObj.getString("country");
                     String trackingMode=jsonObj.getString("trackingMode");
                     Long orgId=jsonObj.getLong("id");
                     String creationDate=jsonObj.getString("creationDate");
@@ -81,6 +82,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                     organization.setImage(image);
                     organization.setDescription(description);
                     organization.setCity(city);
+                    organization.setCountry(country);
                     organization.setId(orgId);
                     organization.setTrackingArea(trackingArea);
                     organization.setTrackingMode(trackingMode);

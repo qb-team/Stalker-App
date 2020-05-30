@@ -328,8 +328,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         String userInput= newText.toLowerCase();
         List<Organization> newList= new ArrayList<>();
 
-        System.out.println(organizationList);
-
         if(organizationList.size() != 0){
 
             for(int i = 0; searchInt==0 && i< organizationList.size(); i++){

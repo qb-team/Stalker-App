@@ -333,17 +333,17 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         if(organizationList.size() != 0){
 
             for(int i = 0; searchInt==0 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getName().toLowerCase().contains(userInput))
+                if(organizationList.get(i).getName() != null && organizationList.get(i).getName().toLowerCase().contains(userInput))
                     newList.add(organizationList.get(i));
             }
 
             for(int i = 0; searchInt==1 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getCity().toLowerCase().contains(userInput))
+                if(organizationList.get(i).getCity() != null && organizationList.get(i).getCity().toLowerCase().contains(userInput))
                     newList.add(organizationList.get(i));
             }
 
             for(int i = 0; searchInt==2 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getCountry().toLowerCase().contains(userInput))
+                if(organizationList.get(i).getCountry() !=null && organizationList.get(i).getCountry().toLowerCase().contains(userInput))
                     newList.add(organizationList.get(i));
             }
 

@@ -353,7 +353,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             }
 
             for(int i = 0; searchInt==4 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getCountry().toLowerCase().contains(userInput) && organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
+                if(organizationList.get(i).getName().toLowerCase().contains(userInput) && organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
                     newList.add(organizationList.get(i));
             }
 

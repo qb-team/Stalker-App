@@ -153,12 +153,14 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         MenuItem itemNameOrg=menu.findItem(R.id.navi_org_item);
         actionView = MenuItemCompat.getActionView(itemNameOrg);
         nameOrg = (TextView) actionView.findViewById(R.id.name_orgID);
+        nameOrg.setText("Nessuna organizzazione");
 
 
         //Imposto nome luogo in cui l'utente è tracciato del drawer
         MenuItem itemNamePlace=menu.findItem(R.id.navi_place_item);
         actionView = MenuItemCompat.getActionView(itemNamePlace);
         namePlace = (TextView) actionView.findViewById(R.id.name_placeID);
+        namePlace.setText("Nessun luogo");
 
         //sets the switcherMode
         MenuItem itemSwitchMode= menu.findItem(R.id.nav_switch_ModeID);
@@ -528,7 +530,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             Location location = intent.getParcelableExtra(TrackingStalker.EXTRA_LOCATION);
             if (location != null) {
                 Fragment frag = (AccessHistoryFragment )ActionTabFragment.getAccessHistoryFragment();
-                ((AccessHistoryFragment) frag).printAccess();
+                try {
+                    ((AccessHistoryFragment) frag).printAccess();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

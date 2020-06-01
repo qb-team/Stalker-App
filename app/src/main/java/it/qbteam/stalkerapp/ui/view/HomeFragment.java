@@ -258,7 +258,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
-
         menu.setGroupVisible(R.id.filterID,true);
         item.setVisible(true);
 
@@ -293,13 +292,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 .format(searchView);
 
         searchView.setOnQueryTextListener(this);
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-               resetAdapter();
-              return false;
-            }
-        });
 
         super.onPrepareOptionsMenu(menu);
     }
@@ -373,52 +365,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         List<Organization> newList = new ArrayList<>();
 
         if (organizationList.size() != 0) {
-
-
-
-            if(searchAnonymous){
-                List<Organization> newList1 = new ArrayList<>();
-                for (int i = 0; i < auxList.size(); i++) {
-
-                    if (auxList.get(i).getName().toLowerCase().contains(userInput))
-                        newList1.add(auxList.get(i));
-                }
-                adapter = new OrganizationViewAdapter(newList1, this.getContext(), this);
-                recyclerView.setAdapter(adapter);
+            for (int i = 0; i < auxList.size(); i++) {
+                if (auxList.get(i).getName().toLowerCase().contains(userInput))
+                    newList.add(auxList.get(i));
             }
-            if(searchAuthenticate){
-                List<Organization> newList1 = new ArrayList<>();
-                for (int i = 0; i < auxList.size(); i++) {
-
-                    if (auxList.get(i).getName().toLowerCase().contains(userInput))
-                        newList1.add(auxList.get(i));
-                }
-                adapter = new OrganizationViewAdapter(newList1, this.getContext(), this);
-                recyclerView.setAdapter(adapter);
-            }
-
-            if(countrySelected!=""){
-                List<Organization> newList1 = new ArrayList<>();
-                for (int i = 0; i < listCountrySelected.size(); i++) {
-
-                    if (listCountrySelected.get(i).getName().toLowerCase().contains(userInput))
-                        newList1.add(listCountrySelected.get(i));
-                }
-                adapter = new OrganizationViewAdapter(newList1, this.getContext(), this);
-                recyclerView.setAdapter(adapter);
-            }
-            if(!searchAnonymous&&!searchAuthenticate&&countrySelected==""){
-                for (int i = 0; i < organizationList.size(); i++) {
-
-                    if (organizationList.get(i).getName().toLowerCase().contains(userInput))
-                        newList.add(organizationList.get(i));
-                    adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
-                    recyclerView.setAdapter(adapter);
-                }
-            }
-
-
+            adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
+            recyclerView.setAdapter(adapter);
         }
+
         return false;
     }
 

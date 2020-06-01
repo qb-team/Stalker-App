@@ -17,18 +17,28 @@
                 android:id="@+id/navi_org_item"
                 app:actionLayout="@layout/text_layout_name_org"
                 app:showAsAction="always"
-                android:title="Sei dentro a: " />
+                android:checkable="false"
+                android:title="Sei dentro a: "
+               />
             <item android:id="@+id/navi_place_item"
                 app:actionLayout="@layout/text_layout_name_place"
+                android:checkable="false"
                 app:showAsAction="always"
-                android:title="Nel luogo: " />
+                android:title="Nel luogo: "
+                />
+            <item android:id="@+id/navi_time_insideID"
+                app:actionLayout="@layout/chronometer_inside_organization"
+                android:checkable="false"
+                app:showAsAction="always"
+                android:title="Permanenza: "
+                />
         </menu>
     </item>
 
     <item android:title="Impostazioni tracciamento">
         <menu>
             <item android:id="@+id/nav_switchID"
-                app:actionLayout="@layout/switch_tracking"
+                app:actionLayout="@layout/switch_mode"
                 android:title="Tracciamento" />
 
             <item android:id="@+id/nav_switch_ModeID"

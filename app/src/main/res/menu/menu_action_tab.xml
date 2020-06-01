@@ -28,12 +28,12 @@
             android:title="organizzazioni anonime"
             android:checkable="true"
             android:checked="false"
-            app:actionViewClass="android.widget.CheckBox" />
+            app:actionViewClass="android.widget.RadioButton" />
         <item android:id="@+id/search_authenticateID"
             android:title="organizzazioni autenticate"
             android:checkable="true"
             android:checked="false"
-            app:actionViewClass="android.widget.CheckBox" />
+            app:actionViewClass="android.widget.RadioButton" />
     </menu>
 </item>/>
 </menu>

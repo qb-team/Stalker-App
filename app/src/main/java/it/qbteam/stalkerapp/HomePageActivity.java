@@ -17,13 +17,16 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -59,7 +62,6 @@ import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.LDAPorganizationFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
-import it.qbteam.stalkerapp.ui.view.MyViewPager;
 import it.qbteam.stalkerapp.ui.view.PlaceAccessFragment;
 import it.qbteam.stalkerapp.ui.view.StandardOrganizationFragment;
 import lombok.SneakyThrows;
@@ -83,6 +85,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private NavigationView navigationView;
     private  View actionView;
     private static String path;
+
+    private static Chronometer chronometer;
+    private static boolean chronometerIsRunning;
+    private static long pauseOffset;
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
@@ -146,7 +152,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         actionView = MenuItemCompat.getActionView(menuItem);
-        switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
+        switcher = (SwitchCompat) actionView.findViewById(R.id.switcherModeID);
         switcher.setOnClickListener(this);
 
         //Imposto nome organizzazione in cui l'utente è tracciato del drawer
@@ -173,6 +179,23 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         TextView emailTextView= headerView.findViewById(R.id.emailTextDrawerID);
         emailTextView.setText(userEmail);
 
+        //imposto cronometro
+        MenuItem chronometerItem=menu.findItem(R.id.navi_time_insideID);
+        actionView = MenuItemCompat.getActionView(chronometerItem);
+        chronometer = actionView.findViewById(R.id.chronometer);
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        //posso fare qualcosa ogni tot secondi ...utile
+        /*chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                if ((SystemClock.elapsedRealtime() - chronometer.getBase()) >= 10000) {
+                    chronometer.setBase(SystemClock.elapsedRealtime());
+                    Toast.makeText(HomePageActivity.this, "Bing!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });*/
+
+
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
             if (!checkPermissions()) {
@@ -184,6 +207,36 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         setSwitchState(Utils.requestingLocationUpdates(this));
 
     }
+
+    public static void startChronometerFromModel(){
+        startChronometer(chronometer);
+    }
+
+    public static void startChronometer(View v) {
+        if (!chronometerIsRunning) {
+            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+            chronometer.start();
+            chronometerIsRunning = true;
+        }
+    }
+
+    public static void pauseChronometer(View v) {
+        if (chronometerIsRunning) {
+            chronometer.stop();
+            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            chronometerIsRunning = false;
+        }
+    }
+
+    public static void stopChronometerFromModel(){
+        pauseChronometer(chronometer);
+        resetChronometer(chronometer);
+    }
+    public static void resetChronometer(View v) {
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        pauseOffset = 0;
+    }
+
 
     @Override
     protected void onStart() {
@@ -244,7 +297,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     //creates the action tab menu.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.action_tab, menu);
+        getMenuInflater().inflate(R.menu.menu_action_tab, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

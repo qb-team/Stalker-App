@@ -6,20 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/lightGrayColor"
     android:id="@+id/AccessHistoryID">
-    <TextView
-        android:id="@+id/AccessHistoryTextViewID"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Storico accessi"
-        android:textStyle="bold"
-        android:textSize="28dp"
-        android:textColor="@color/colorPrimary"
-        android:textAlignment="center"
-        />
     <LinearLayout
         android:id="@+id/AccessHistoryLinearLayoutID"
-        android:layout_below="@+id/AccessHistoryTextViewID"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

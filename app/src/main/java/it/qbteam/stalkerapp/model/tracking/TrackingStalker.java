@@ -500,7 +500,7 @@ public class TrackingStalker extends Service {
 
                         insidePlace = null;
 
-                        HomePageActivity.setNamePlace("");
+                        HomePageActivity.setNamePlace("Nessun luogo");
                     }
                 }
 
@@ -623,7 +623,7 @@ public class TrackingStalker extends Service {
                         //Deletes the organization movement
                         storage.deleteOrganizationMovement();
                         insideOrganization = null;
-                        HomePageActivity.setNameOrg("");
+                        HomePageActivity.setNameOrg("Nessuna organizzazione");
                     }
                 }
             }

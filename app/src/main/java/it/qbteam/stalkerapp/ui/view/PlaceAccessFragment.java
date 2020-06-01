@@ -70,7 +70,11 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         params1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f);
         params2 = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tbl=(TableLayout) view.findViewById(R.id.accessTableID);
-        placeAccessPresenter.getPlaceAccessList();
+        try {
+            placeAccessPresenter.getPlaceAccessList();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         buttonDelete= view.findViewById(R.id.deleteAccessID);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
 

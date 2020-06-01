@@ -136,6 +136,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     }
 
+
     //It takes care of loading the list of organizations and uploading them directly from FileSystem.
     public void checkFile()  {
         organizationList=OrganizationListPresenter.checkLocalFile(path);
@@ -400,6 +401,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
        return true;
 }
+
 private void countryDialog(){
     CountryCurrencyPicker pickerDialog = CountryCurrencyPicker.newInstance(PickerType.COUNTRYandCURRENCY, new CountryCurrencyPickerListener() {
         @Override

@@ -257,7 +257,10 @@ public class TrackingStalker extends Service {
             //Deletes the organization movement.
             storage.deleteOrganizationMovement();
 
-            HomePageActivity.setNameOrg("");
+            HomePageActivity.stopChronometerFromModel();
+
+            HomePageActivity.setNameOrg("Nessuna organizzazione");
+
 
         }
          if(insidePlace!=null){
@@ -279,7 +282,7 @@ public class TrackingStalker extends Service {
              //Deletes the place's list of the organization.
              storage.deletePlace();
 
-             HomePageActivity.setNamePlace("");
+             HomePageActivity.setNamePlace("Nessun luogo");
 
         }
 
@@ -533,6 +536,8 @@ public class TrackingStalker extends Service {
 
                     if (storage.deserializeMovementInLocal() == null&&authenticated==true) {
 
+                        HomePageActivity.startChronometerFromModel();
+
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
                         Toast.makeText(getApplicationContext(), "Sei dentro all'organizzazione: " + insideOrganization.getName()+" in modo autenticato", Toast.LENGTH_SHORT).show();
@@ -563,6 +568,8 @@ public class TrackingStalker extends Service {
                     }
 
                     else if(storage.deserializeMovementInLocal() == null&&authenticated==false){
+
+                        HomePageActivity.startChronometerFromModel();
 
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
@@ -602,6 +609,7 @@ public class TrackingStalker extends Service {
 
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 
+                        HomePageActivity.stopChronometerFromModel();
                         //Update the access' list when the user exits from organization.
                         organizationAccess.setEntranceTimestamp(organizationAccessTime);
                         organizationAccess.setOrganizationId(insideOrganization.getOrgID());

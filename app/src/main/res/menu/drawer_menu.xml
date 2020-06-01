@@ -38,7 +38,7 @@
     <item android:title="Impostazioni tracciamento">
         <menu>
             <item android:id="@+id/nav_switchID"
-                app:actionLayout="@layout/switch_mode"
+                app:actionLayout="@layout/switch_tracking"
                 android:title="Tracciamento" />
 
             <item android:id="@+id/nav_switch_ModeID"

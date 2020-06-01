@@ -152,7 +152,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
         actionView = MenuItemCompat.getActionView(menuItem);
-        switcher = (SwitchCompat) actionView.findViewById(R.id.switcherModeID);
+        switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
         switcher.setOnClickListener(this);
 
         //Imposto nome organizzazione in cui l'utente è tracciato del drawer

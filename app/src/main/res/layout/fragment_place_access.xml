@@ -94,54 +94,6 @@
             android:layout_height="250dp"
             android:layout_marginTop="20dp">
 
-         <!--   <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/placeNameID"
-                    android:text="nome"
-                    android:textColor="@color/blackColor"
-                    android:textStyle="bold"
-                    android:textAlignment="center"
-                    android:textSize="15sp"
-                    android:layout_gravity="center"/>
-
-                <TextView
-                    android:id="@+id/placeDateID"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:text="data"
-                    android:textColor="@color/blackColor"
-                    android:textSize="15sp"
-                    android:layout_gravity="center"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/placeAccessID"
-                    android:textAlignment="center"
-                    android:text="accesso"
-                    android:textColor="@color/blackColor"
-                    android:textSize="15sp"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:id="@+id/placeExitID"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="uscita"
-                    android:textAlignment="center"
-                    android:textColor="@color/blackColor"
-                    android:textSize="15sp"
-                    android:layout_gravity="center"/>
-            </LinearLayout> -->
             <TableLayout
                 android:id="@+id/accessTableID"
                 android:layout_width="fill_parent"

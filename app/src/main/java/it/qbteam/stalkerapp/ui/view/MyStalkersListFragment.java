@@ -20,8 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 import com.scrounger.countrycurrencypicker.library.Country;
 import com.scrounger.countrycurrencypicker.library.CountryCurrencyPicker;
 import com.scrounger.countrycurrencypicker.library.Currency;
@@ -30,7 +29,6 @@ import com.scrounger.countrycurrencypicker.library.PickerType;
 
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
-import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
@@ -176,7 +174,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
-        MenuItem filter= menu.findItem(R.id.filetrID);
+        MenuItem filter= menu.findItem(R.id.filterID);
         item.setVisible(true);
         filter.setVisible(true);
         if(countrySelected!="")

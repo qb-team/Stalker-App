@@ -2,19 +2,15 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +34,6 @@ import com.scrounger.countrycurrencypicker.library.CountryCurrencyPicker;
 import com.scrounger.countrycurrencypicker.library.Currency;
 import com.scrounger.countrycurrencypicker.library.Listener.CountryCurrencyPickerListener;
 import com.scrounger.countrycurrencypicker.library.PickerType;
-import com.unboundid.ldap.sdk.unboundidds.controls.ReturnConflictEntriesRequestControl;
 
 import org.json.JSONException;
 import it.qbteam.stalkerapp.HomePageActivity;
@@ -267,7 +262,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
-        MenuItem filter= menu.findItem(R.id.filetrID);
+        MenuItem filter= menu.findItem(R.id.filterID);
         item.setVisible(true);
         filter.setVisible(true);
 
@@ -280,6 +275,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 recyclerView.setAdapter(adapter);
             }
         }
+
+
 
         SearchView searchView= (SearchView) item.getActionView();
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -304,7 +301,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             @Override
             public boolean onClose() {
                resetAdapter();
-              return true;
+              return false;
             }
         });
 

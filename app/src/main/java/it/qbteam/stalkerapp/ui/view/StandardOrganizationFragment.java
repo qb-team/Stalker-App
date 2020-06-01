@@ -23,17 +23,13 @@ import android.widget.TextView;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.contract.StandardOrganizationContract;
-import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.presenter.StandardOrganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-import lombok.SneakyThrows;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -89,7 +85,7 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.searchID).setVisible(false);
-        menu.findItem(R.id.filetrID).setVisible(false);
+        menu.findItem(R.id.filterID).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 

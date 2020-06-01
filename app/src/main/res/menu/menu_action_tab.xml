@@ -4,26 +4,33 @@
     <item android:id="@+id/searchID"
         android:title="Cerca"
         android:icon="@drawable/ic_search_black_24dp"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView"
        />
-    <item android:id="@+id/filetrID"
-
+    <item android:id="@+id/filterID"
         android:icon="@drawable/ic_expand_more_black_24dp"
         app:showAsAction="always"
         android:title="filter"
-    android:enabled="true">
+        android:enabled="true">
     <menu>
         <item android:id="@+id/alphabeticalOrderID"
             android:title="ordine alfabetico"
+            android:checkable="true"
+            android:checked="false"
+            app:actionViewClass="android.widget.RadioButton"
            />
 
         <item android:id="@+id/search_cityID"
             android:title="cerca per città"
+            android:checkable="true"
+            android:checked="false"
+            app:actionViewClass="android.widget.RadioButton"
             />
         <item android:id="@+id/search_countryID"
             android:title="scegli una nazione"
-            app:actionViewClass="android.widget.TextView" />
+            android:checkable="true"
+            android:checked="false"
+            app:actionViewClass="android.widget.RadioButton" />
         <item android:id="@+id/search_anonymousID"
             android:title="organizzazioni anonime"
             android:checkable="true"
@@ -35,5 +42,5 @@
             android:checked="false"
             app:actionViewClass="android.widget.RadioButton" />
     </menu>
-</item>/>
+</item>
 </menu>

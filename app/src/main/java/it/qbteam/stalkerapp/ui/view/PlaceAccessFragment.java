@@ -31,6 +31,7 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     private TableRow.LayoutParams  params1;
     private TableRow.LayoutParams  params2;
     private TableLayout tbl;
+    private TextView timeStay;
     private FloatingActionButton buttonDelete;
     PlaceAccessFragmentListener placeAccessFragmentListener;
 
@@ -66,7 +67,9 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         placeAccessPresenter = new PlaceAccessPresenter(this);
         bundle = this.getArguments();
         getActivity().setTitle("Luoghi di: "+bundle.getString("name"));
-
+        timeStay= view.findViewById(R.id.timeStayID);
+        Long time=bundle.getLong("timeID");
+        timeStay.setText(Integer.toString(time.intValue()/1000/60/60)+":"+Integer.toString(time.intValue()/1000/60)+":"+Integer.toString(time.intValue()/1000));
         params1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f);
         params2 = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tbl=(TableLayout) view.findViewById(R.id.accessTableID);

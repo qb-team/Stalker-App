@@ -58,6 +58,16 @@ public class OrganizationAccess implements Serializable {
   @SerializedName(SERIALIZED_NAME_ORG)
   private String orgName;
 
+  public static final String SERIALIZED_ORG_TIME_STAY= "timeStay";
+  @SerializedName(SERIALIZED_ORG_TIME_STAY)
+  private Long timeStay;
+
+  public void setTimeStay(Long timeStay){
+    this.timeStay=timeStay;
+  }
+  public Long getTimeStay(){
+    return timeStay;
+  }
   public void setOrgName(String orgName) {
     this.orgName = orgName;
   }

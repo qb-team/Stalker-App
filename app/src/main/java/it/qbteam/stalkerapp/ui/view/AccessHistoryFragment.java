@@ -192,6 +192,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         Bundle bundle = new Bundle();
         bundle.putString("name", accessList.get(position).getOrgName());
         bundle.putLong("orgID", accessList.get(position).getOrganizationId());
+        bundle.putLong("timeID", accessList.get(position).getTimeStay());
         PlaceAccessFragment placeAccessFragment= new PlaceAccessFragment();
         placeAccessFragment.setArguments(bundle);
         FragmentTransaction transaction= getChildFragmentManager().beginTransaction();

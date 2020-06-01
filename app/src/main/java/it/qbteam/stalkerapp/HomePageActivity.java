@@ -208,11 +208,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    public static void startChronometerFromModel(){
-        startChronometer(chronometer);
+    public static Long getDurationAccess(){
+        return SystemClock.elapsedRealtime()-chronometer.getBase();
     }
 
-    public static void startChronometer(View v) {
+
+    public static void startChronometer() {
         if (!chronometerIsRunning) {
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
@@ -220,7 +221,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public static void pauseChronometer(View v) {
+    public static void pauseChronometer() {
         if (chronometerIsRunning) {
             chronometer.stop();
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
@@ -228,11 +229,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public static void stopChronometerFromModel(){
-        pauseChronometer(chronometer);
-        resetChronometer(chronometer);
-    }
-    public static void resetChronometer(View v) {
+    public static void resetChronometer() {
         chronometer.setBase(SystemClock.elapsedRealtime());
         pauseOffset = 0;
     }

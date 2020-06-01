@@ -257,7 +257,8 @@ public class TrackingStalker extends Service {
             //Deletes the organization movement.
             storage.deleteOrganizationMovement();
 
-            HomePageActivity.stopChronometerFromModel();
+            HomePageActivity.resetChronometer();
+            HomePageActivity.pauseChronometer();
 
             HomePageActivity.setNameOrg("Nessuna organizzazione");
 
@@ -396,7 +397,7 @@ public class TrackingStalker extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .addAction(R.drawable.ic_launch, "Apri l'app", activityPendingIntent)
                 .addAction(R.drawable.ic_cancel, "Interrompi tracciamento", servicePendingIntent)
-                .setContentText(text) // Stampa a schermo IN BACKGROUND
+                .setContentText("Sei dentro a: "+insideOrganization.getName()) // Stampa a schermo IN BACKGROUND
                 .setContentTitle(Utils.getLocationTitle(this))
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_HIGH)
@@ -536,7 +537,7 @@ public class TrackingStalker extends Service {
 
                     if (storage.deserializeMovementInLocal() == null&&authenticated==true) {
 
-                        HomePageActivity.startChronometerFromModel();
+                        HomePageActivity.startChronometer();
 
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
@@ -569,7 +570,7 @@ public class TrackingStalker extends Service {
 
                     else if(storage.deserializeMovementInLocal() == null&&authenticated==false){
 
-                        HomePageActivity.startChronometerFromModel();
+                        HomePageActivity.startChronometer();
 
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
@@ -609,13 +610,16 @@ public class TrackingStalker extends Service {
 
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 
-                        HomePageActivity.stopChronometerFromModel();
+
                         //Update the access' list when the user exits from organization.
                         organizationAccess.setEntranceTimestamp(organizationAccessTime);
                         organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
+                        organizationAccess.setTimeStay(HomePageActivity.getDurationAccess());
 
+                        HomePageActivity.resetChronometer();
+                        HomePageActivity.pauseChronometer();
                         //Comunicates the server that user is outside the organization
                         server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 

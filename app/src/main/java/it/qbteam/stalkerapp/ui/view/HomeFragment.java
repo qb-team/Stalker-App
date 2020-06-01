@@ -262,9 +262,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
-        MenuItem filter= menu.findItem(R.id.filterID);
+
+        menu.setGroupVisible(R.id.filterID,true);
         item.setVisible(true);
-        filter.setVisible(true);
 
         if(countrySelected!="") {
             countryItem.setTitle("Nazione scelta: " + countrySelected);
@@ -308,7 +308,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         super.onPrepareOptionsMenu(menu);
     }
     public void resetAdapter(){
-        adapter = new OrganizationViewAdapter(organizationList, this.getContext(), this);
+        auxList.clear();
+        adapter = new OrganizationViewAdapter(organizationList, this.getContext(),this);
         recyclerView.setAdapter(adapter);
     }
     @Override
@@ -316,105 +317,54 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
        switch (item.getItemId()){
 
            case R.id.alphabeticalOrderID:
+               resetAdapter();
                alphabeticalOrder();
+               item.setChecked(true);
+               break;
+
+           case R.id.search_nameID:
+               resetAdapter();
+               item.setChecked(true);
+
                break;
 
             case R.id.search_cityID:
 
+                item.setChecked(true);
                 //da finire.
-
             break;
 
            case R.id.search_countryID:
-               countryDialog();
-
+               resetAdapter();
+               countryDialog(item);
                break;
+               
            case R.id.search_anonymousID:
-               if(item.isChecked()){
-                   item.setChecked(false);
-                   searchAnonymous=false;
-                   for (Iterator<Organization> iterator = auxList.iterator(); iterator.hasNext();) {
-                       Organization o = iterator.next();
-                       if (o.getTrackingMode().toString().equals("anonymous")) {
-                           iterator.remove();
-                       }
-                   }
-                   if (auxList.size() != 0) {
-                       adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
-
-                   }
-                   else {
-                       adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-
-                   }
-                   recyclerView.setAdapter(adapter);
-
+               resetAdapter();
+               item.setChecked(true);
+               for(int i = 0; i< organizationList.size(); i++){
+                   if(organizationList.get(i).getTrackingMode().toString().equals("anonymous"))
+                       auxList.add(organizationList.get(i));
                }
-               else{
-                   item.setChecked(true);
-                   searchAnonymous=true;
-                   for(int i = 0;i< organizationList.size(); i++){
-                       if(organizationList.get(i).getTrackingMode().toString().equals("anonymous"))
-                           auxList.add(organizationList.get(i));
-                       adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
-                       recyclerView.setAdapter(adapter);
-                   }
-               }
+               adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+               recyclerView.setAdapter(adapter);
                break;
 
            case R.id.search_authenticateID:
-               if(item.isChecked()){
-                   item.setChecked(false);
-                   searchAuthenticate=false;
-                   for (Iterator<Organization> iterator = auxList.iterator(); iterator.hasNext();) {
-                       Organization o = iterator.next();
-                       if (o.getTrackingMode().toString().equals("authenticated")) {
-                           iterator.remove();
-                       }
-                   }
-                   if (auxList.size() != 0) {
-                       adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
-
-                   }
-                   else {
-                       adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-
-                   }
-                   recyclerView.setAdapter(adapter);
-
+               resetAdapter();
+               item.setChecked(true);
+               for(int i = 0; i< organizationList.size(); i++){
+                   if(organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
+                       auxList.add(organizationList.get(i));
                }
-               else{
-                   item.setChecked(true);
-                   searchAuthenticate=true;
-                   for(int i = 0;i< organizationList.size(); i++){
-                       if(organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
-                           auxList.add(organizationList.get(i));
-                       adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
-                       recyclerView.setAdapter(adapter);
-               }
-               }
+               adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+               recyclerView.setAdapter(adapter);
                break;
 
-    }
+        }
        return true;
-}
+    }
 
-private void countryDialog(){
-    CountryCurrencyPicker pickerDialog = CountryCurrencyPicker.newInstance(PickerType.COUNTRYandCURRENCY, new CountryCurrencyPickerListener() {
-        @Override
-        public void onSelectCountry(Country country) {
-            countrySelected=country.getName();
-            getActivity().invalidateOptionsMenu();
-        }
-
-        @Override
-        public void onSelectCurrency(Currency currency) {
-
-        }
-    });
-
-    pickerDialog.show(getActivity().getSupportFragmentManager(),CountryCurrencyPicker.DIALOG_NAME);
-}
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -427,6 +377,8 @@ private void countryDialog(){
         List<Organization> newList = new ArrayList<>();
 
         if (organizationList.size() != 0) {
+
+            
 
             if(searchAnonymous){
                 List<Organization> newList1 = new ArrayList<>();
@@ -472,6 +424,24 @@ private void countryDialog(){
 
         }
         return false;
+    }
+
+    private void countryDialog(MenuItem item){
+        CountryCurrencyPicker pickerDialog = CountryCurrencyPicker.newInstance(PickerType.COUNTRYandCURRENCY, new CountryCurrencyPickerListener() {
+            @Override
+            public void onSelectCountry(Country country) {
+                countrySelected=country.getName();
+                item.setChecked(true);
+//            getActivity().invalidateOptionsMenu();  A che serve?
+            }
+
+            @Override
+            public void onSelectCurrency(Currency currency) {
+
+            }
+        });
+
+        pickerDialog.show(getActivity().getSupportFragmentManager(),CountryCurrencyPicker.DIALOG_NAME);
     }
 
     //Management of the back button.

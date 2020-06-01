@@ -7,40 +7,34 @@
         app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView"
        />
-    <item android:id="@+id/filterID"
-        android:icon="@drawable/ic_expand_more_black_24dp"
-        app:showAsAction="always"
-        android:title="filter"
-        android:enabled="true">
-    <menu>
+
+<!--    android:icon="@drawable/ic_expand_more_black_24dp"-->
+
+    <group android:id="@+id/filterID"
+        android:checkableBehavior="single">
+
+<!--        <item android:id="@+id/menu_sort_by_name"-->
+<!--            android:title="dsort_by_name"/>-->
+<!--        <item android:id="@+id/menu_sort_by_last_edit"-->
+<!--            android:title="dlast_edit"/>-->
+
         <item android:id="@+id/alphabeticalOrderID"
-            android:title="ordine alfabetico"
-            android:checkable="true"
-            android:checked="false"
-            app:actionViewClass="android.widget.RadioButton"
-           />
+            android:title="ordine alfabetico"/>
+
+        <item android:id="@+id/search_nameID"
+            android:title="cerca per nome"/>
 
         <item android:id="@+id/search_cityID"
-            android:title="cerca per città"
-            android:checkable="true"
-            android:checked="false"
-            app:actionViewClass="android.widget.RadioButton"
-            />
+            android:title="cerca per città"/>
+
         <item android:id="@+id/search_countryID"
-            android:title="scegli una nazione"
-            android:checkable="true"
-            android:checked="false"
-            app:actionViewClass="android.widget.RadioButton" />
+            android:title="scegli una nazione"/>
+
         <item android:id="@+id/search_anonymousID"
-            android:title="organizzazioni anonime"
-            android:checkable="true"
-            android:checked="false"
-            app:actionViewClass="android.widget.RadioButton" />
+            android:title="organizzazioni anonime"/>
+
         <item android:id="@+id/search_authenticateID"
-            android:title="organizzazioni autenticate"
-            android:checkable="true"
-            android:checked="false"
-            app:actionViewClass="android.widget.RadioButton" />
-    </menu>
-</item>
+            android:title="organizzazioni autenticate"/>
+
+    </group>
 </menu>

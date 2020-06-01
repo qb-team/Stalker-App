@@ -174,9 +174,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
-        MenuItem filter= menu.findItem(R.id.filterID);
+        menu.setGroupVisible(R.id.filterID,true);
         item.setVisible(true);
-        filter.setVisible(true);
         if(countrySelected!="")
             countryItem.setTitle("Nazione scelta : "+ countrySelected);
 

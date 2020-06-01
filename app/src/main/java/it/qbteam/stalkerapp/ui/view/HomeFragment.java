@@ -62,10 +62,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private String path;
     private FragmentListener fragmentListener;
     private SwipeRefreshLayout refresh;
-    private int searchInt = 0;
-    private boolean searchName=false;
-    private boolean searchCity=false;
-    private boolean searchCountry=false;
     private boolean searchAnonymous=false;
     private boolean searchAuthenticate=false;
     private List<Organization> auxList;
@@ -378,7 +374,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
         if (organizationList.size() != 0) {
 
-            
+
 
             if(searchAnonymous){
                 List<Organization> newList1 = new ArrayList<>();

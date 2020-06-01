@@ -3,12 +3,16 @@ package it.qbteam.stalkerapp.ui.view;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -18,6 +22,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.scrounger.countrycurrencypicker.library.Country;
+import com.scrounger.countrycurrencypicker.library.CountryCurrencyPicker;
+import com.scrounger.countrycurrencypicker.library.Currency;
+import com.scrounger.countrycurrencypicker.library.Listener.CountryCurrencyPickerListener;
+import com.scrounger.countrycurrencypicker.library.PickerType;
 
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
@@ -28,9 +37,12 @@ import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.presenter.MyStalkersListPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
+import it.qbteam.stalkerapp.tools.SearchViewCustom;
+
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MyStalkersListFragment extends Fragment implements MyStalkersListContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
@@ -41,6 +53,13 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView.Adapter adapter;
     private static String path;
     private MyStalkersListFragmentListener myStalkersListFragmentListener;
+    private boolean searchName=false;
+    private boolean searchCity=false;
+    private boolean searchCountry=false;
+    private boolean searchAnonymous=false;
+    private boolean searchAuthenticate=false;
+    private List<Organization> auxList;
+    private String countrySelected="";
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface MyStalkersListFragmentListener {
@@ -67,6 +86,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         setHasOptionsMenu(true);
         myStalkersListPresenter = new MyStalkersListPresenter(this);
         organizationList = new ArrayList<>();
+
         path = getContext().getFilesDir() + "/Preferiti.txt";
 
     }
@@ -145,16 +165,145 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     public boolean organizationListEmpty(){
-        return organizationList.size()==0;
+        if(organizationList==null||organizationList.size()==0)
+        return true;
+        else
+            return false;
     }
     //Hide the 'add to favorites' option from the application's action tab menu and make the search command visible.
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
+        MenuItem countryItem = menu.findItem(R.id.search_countryID);
+        MenuItem filter= menu.findItem(R.id.filetrID);
         item.setVisible(true);
+        filter.setVisible(true);
+        if(countrySelected!="")
+            countryItem.setTitle("Nazione scelta : "+ countrySelected);
+
         SearchView searchView= (SearchView) item.getActionView();
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        searchView.setMaxWidth(width*2/3);
+
+        new SearchViewCustom()
+                .setSearchBackGroundResource(R.drawable.custom_border)
+                .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
+                .setSearchHintText("cerca qui..")
+                .setSearchTextColorResource(R.color.colorPrimary)
+                .setSearchHintColorResource(R.color.colorPrimary)
+                .setSearchCloseIconResource(R.drawable.ic_close_black_24dp)
+                .setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+                .format(searchView);
+
         searchView.setOnQueryTextListener(this);
+
         super.onPrepareOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+        switch (item.getItemId()){
+
+            case R.id.search_cityID:
+                if(item.isChecked()){
+                    item.setChecked(false);
+                    searchCity = false;
+                }
+                else{
+                    item.setChecked(true);
+                    searchCity = true;
+
+                }
+
+                break;
+
+            case R.id.search_countryID:
+                countryDialog();
+
+                break;
+            case R.id.search_anonymousID:
+                if(item.isChecked()){
+                    item.setChecked(false);
+                    for (Iterator<Organization> iterator = auxList.iterator(); iterator.hasNext();) {
+                        Organization o = iterator.next();
+                        if (o.getTrackingMode().toString().equals("anonymous")) {
+                            iterator.remove();
+                        }
+                    }
+                    if (auxList.size() != 0) {
+                        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+
+                    }
+                    else {
+                        adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+
+                    }
+                    recyclerView.setAdapter(adapter);
+
+                }
+                else{
+                    item.setChecked(true);
+                    for(int i = 0;i< organizationList.size(); i++){
+                        if(organizationList.get(i).getTrackingMode().toString().equals("anonymous"))
+                            auxList.add(organizationList.get(i));
+                        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+                        recyclerView.setAdapter(adapter);
+                    }
+                }
+                break;
+
+            case R.id.search_authenticateID:
+                if(item.isChecked()){
+                    item.setChecked(false);
+                    for (Iterator<Organization> iterator = auxList.iterator(); iterator.hasNext();) {
+                        Organization o = iterator.next();
+                        if (o.getTrackingMode().toString().equals("authenticated")) {
+                            iterator.remove();
+                        }
+                    }
+                    if (auxList.size() != 0) {
+                        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+
+                    }
+                    else {
+                        adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+
+                    }
+                    recyclerView.setAdapter(adapter);
+
+                }
+                else{
+                    item.setChecked(true);
+                    for(int i = 0;i< organizationList.size(); i++){
+                        if(organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
+                            auxList.add(organizationList.get(i));
+                        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+                        recyclerView.setAdapter(adapter);
+                    }
+                }
+                break;
+
+        }
+        return true;
+    }
+    private void countryDialog(){
+        CountryCurrencyPicker pickerDialog = CountryCurrencyPicker.newInstance(PickerType.COUNTRYandCURRENCY, new CountryCurrencyPickerListener() {
+            @Override
+            public void onSelectCountry(Country country) {
+                countrySelected=country.getName();
+                getActivity().invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onSelectCurrency(Currency currency) {
+
+            }
+        });
+
+        pickerDialog.show(getActivity().getSupportFragmentManager(),CountryCurrencyPicker.DIALOG_NAME);
     }
     //End click listener.
     @Override

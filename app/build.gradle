@@ -16,9 +16,13 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    configurations {
+        cleanedAnnotations
+        compile.exclude group: 'org.jetbrains' , module:'annotations'
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -102,4 +106,10 @@ dependencies {
     testImplementation "org.robolectric:robolectric:4.0.2"
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     annotationProcessor files("libs/lombok.jar")
+    implementation 'com.github.scrounger:countrycurrencypicker:1.1.1'
+    implementation ('com.github.Inconnu08:android-ratingreviews:1.2.0')
+            {
+                exclude group: 'org.jetbrains', module: 'annotations'
+            }
+
 }

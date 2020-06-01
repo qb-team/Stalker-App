@@ -2,16 +2,23 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,8 +32,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.tabs.TabLayout;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.scrounger.countrycurrencypicker.library.Country;
+import com.scrounger.countrycurrencypicker.library.CountryCurrencyPicker;
+import com.scrounger.countrycurrencypicker.library.Currency;
+import com.scrounger.countrycurrencypicker.library.Listener.CountryCurrencyPickerListener;
+import com.scrounger.countrycurrencypicker.library.PickerType;
+import com.unboundid.ldap.sdk.unboundidds.controls.ReturnConflictEntriesRequestControl;
+
 import org.json.JSONException;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
@@ -36,11 +49,13 @@ import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.presenter.HomePresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
+import it.qbteam.stalkerapp.tools.SearchViewCustom;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements HomeContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
@@ -53,8 +68,18 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private FragmentListener fragmentListener;
     private SwipeRefreshLayout refresh;
     private int searchInt = 0;
+    private boolean searchName=false;
+    private boolean searchCity=false;
+    private boolean searchCountry=false;
+    private boolean searchAnonymous=false;
+    private boolean searchAuthenticate=false;
+    private List<Organization> auxList;
+    private String countrySelected="";
+    List<Organization> listCountrySelected;
 
-    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+
+
+//Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface FragmentListener {
         void sendOrganization(Organization organization) throws IOException, JSONException;
         void disableScroll(boolean enable);
@@ -81,6 +106,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         super.onCreate(savedInstanceState);
 
         OrganizationListPresenter = new HomePresenter(this);
+        listCountrySelected = new ArrayList<>();
         try {
             OrganizationListPresenter.createAllFile();
         } catch (IOException e) {
@@ -103,7 +129,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
         //Refresh to upload the organization list (swipe down).
         refresh.setOnRefreshListener(this::downloadList);
-
+        auxList= new ArrayList<>();
         //Controlla se la lista è vuota, in caso positivo la scarica
         checkFile();
         return view;
@@ -239,77 +265,157 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
+        MenuItem countryItem = menu.findItem(R.id.search_countryID);
+        MenuItem filter= menu.findItem(R.id.filetrID);
         item.setVisible(true);
+        filter.setVisible(true);
+
+        if(countrySelected!="") {
+            countryItem.setTitle("Nazione scelta: " + countrySelected);
+            for (int i = 0; i < organizationList.size(); i++) {
+                if (organizationList.get(i).getCountry().equals(countrySelected))
+                    listCountrySelected.add(organizationList.get(i));
+                adapter = new OrganizationViewAdapter(listCountrySelected, this.getContext(), this);
+                recyclerView.setAdapter(adapter);
+            }
+        }
+
         SearchView searchView= (SearchView) item.getActionView();
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        searchView.setMaxWidth(width*2/3);
+
+        new SearchViewCustom()
+                .setSearchBackGroundResource(R.drawable.custom_border)
+                .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
+                .setSearchHintText("cerca qui..")
+                .setSearchTextColorResource(R.color.colorPrimary)
+                .setSearchHintColorResource(R.color.colorPrimary)
+                .setSearchCloseIconResource(R.drawable.ic_close_black_24dp)
+                .setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+                .format(searchView);
+
         searchView.setOnQueryTextListener(this);
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                System.out.println("Testing. 1, 2, 3...");
-                return false;
-            }
-        });
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchFilter();
+               resetAdapter();
+              return true;
             }
         });
 
         super.onPrepareOptionsMenu(menu);
     }
-
-    private void searchFilter() {
-        AlertDialog.Builder searchFilter = new AlertDialog.Builder(getContext());
-        searchFilter.setTitle("Cerca per: ");
-        String[] items = {"Nome","Città","Nazione","Anonimo","Autenticato"};
-        boolean[] checkedItems = {false, false, false, false, false};
-        searchFilter.setMultiChoiceItems(items, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                switch (which) {
-                    case 0:
-                        if(isChecked) {
-                            searchInt = 0;
-                            Toast.makeText(getContext(), "Clicked on Nome", Toast.LENGTH_LONG).show();
-                            dialog.dismiss();
-                        }
-                        break;
-                    case 1:
-                        if(isChecked) {
-                            searchInt = 1;
-                            Toast.makeText(getContext(), "Clicked on Città", Toast.LENGTH_LONG).show();
-                            dialog.dismiss();
-                        }
-                        break;
-                    case 2:
-                        if(isChecked) {
-                            searchInt = 2;
-                            Toast.makeText(getContext(), "Clicked on Nazione", Toast.LENGTH_LONG).show();
-                            dialog.dismiss();
-                        }
-                        break;
-                    case 3:
-                        if(isChecked) {
-                            searchInt = 3;
-                            Toast.makeText(getContext(), "Clicked on Anonimo", Toast.LENGTH_LONG).show();
-                            dialog.dismiss();
-                        }
-                        break;
-                    case 4:
-                        if(isChecked) {
-                            searchInt = 4;
-                            Toast.makeText(getContext(), "Clicked on Autenticato", Toast.LENGTH_LONG).show();
-                            dialog.dismiss();
-                        }
-                        break;
-                }
-            }
-        });
-        AlertDialog alert = searchFilter.create();
-        alert.show();
+    public void resetAdapter(){
+        adapter = new OrganizationViewAdapter(organizationList, this.getContext(), this);
+        recyclerView.setAdapter(adapter);
     }
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+       switch (item.getItemId()){
 
+           case R.id.alphabeticalOrderID:
+               alphabeticalOrder();
+               break;
+
+            case R.id.search_cityID:
+
+                //da finire.
+
+            break;
+
+           case R.id.search_countryID:
+               countryDialog();
+
+               break;
+           case R.id.search_anonymousID:
+               if(item.isChecked()){
+                   item.setChecked(false);
+                   searchAnonymous=false;
+                   for (Iterator<Organization> iterator = auxList.iterator(); iterator.hasNext();) {
+                       Organization o = iterator.next();
+                       if (o.getTrackingMode().toString().equals("anonymous")) {
+                           iterator.remove();
+                       }
+                   }
+                   if (auxList.size() != 0) {
+                       adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+
+                   }
+                   else {
+                       adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+
+                   }
+                   recyclerView.setAdapter(adapter);
+
+               }
+               else{
+                   item.setChecked(true);
+                   searchAnonymous=true;
+                   for(int i = 0;i< organizationList.size(); i++){
+                       if(organizationList.get(i).getTrackingMode().toString().equals("anonymous"))
+                           auxList.add(organizationList.get(i));
+                       adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+                       recyclerView.setAdapter(adapter);
+                   }
+               }
+               break;
+
+           case R.id.search_authenticateID:
+               if(item.isChecked()){
+                   item.setChecked(false);
+                   searchAuthenticate=false;
+                   for (Iterator<Organization> iterator = auxList.iterator(); iterator.hasNext();) {
+                       Organization o = iterator.next();
+                       if (o.getTrackingMode().toString().equals("authenticated")) {
+                           iterator.remove();
+                       }
+                   }
+                   if (auxList.size() != 0) {
+                       adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+
+                   }
+                   else {
+                       adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
+
+                   }
+                   recyclerView.setAdapter(adapter);
+
+               }
+               else{
+                   item.setChecked(true);
+                   searchAuthenticate=true;
+                   for(int i = 0;i< organizationList.size(); i++){
+                       if(organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
+                           auxList.add(organizationList.get(i));
+                       adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+                       recyclerView.setAdapter(adapter);
+               }
+               }
+               break;
+
+    }
+       return true;
+}
+private void countryDialog(){
+    CountryCurrencyPicker pickerDialog = CountryCurrencyPicker.newInstance(PickerType.COUNTRYandCURRENCY, new CountryCurrencyPickerListener() {
+        @Override
+        public void onSelectCountry(Country country) {
+            countrySelected=country.getName();
+            getActivity().invalidateOptionsMenu();
+        }
+
+        @Override
+        public void onSelectCurrency(Currency currency) {
+
+        }
+    });
+
+    pickerDialog.show(getActivity().getSupportFragmentManager(),CountryCurrencyPicker.DIALOG_NAME);
+}
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -318,41 +424,54 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //Display the list of organizations on the screen following user inputs in the search menu.
     @Override
     public boolean onQueryTextChange(String newText) {
-        String userInput= newText.toLowerCase();
-        List<Organization> newList= new ArrayList<>();
+        String userInput = newText.toLowerCase();
+        List<Organization> newList = new ArrayList<>();
 
-        if(organizationList.size() != 0){
+        if (organizationList.size() != 0) {
 
-            for(int i = 0; searchInt==0 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getName() != null && organizationList.get(i).getName().toLowerCase().contains(userInput))
-                    newList.add(organizationList.get(i));
+            if(searchAnonymous){
+                List<Organization> newList1 = new ArrayList<>();
+                for (int i = 0; i < auxList.size(); i++) {
+
+                    if (auxList.get(i).getName().toLowerCase().contains(userInput))
+                        newList1.add(auxList.get(i));
+                }
+                adapter = new OrganizationViewAdapter(newList1, this.getContext(), this);
+                recyclerView.setAdapter(adapter);
+            }
+            if(searchAuthenticate){
+                List<Organization> newList1 = new ArrayList<>();
+                for (int i = 0; i < auxList.size(); i++) {
+
+                    if (auxList.get(i).getName().toLowerCase().contains(userInput))
+                        newList1.add(auxList.get(i));
+                }
+                adapter = new OrganizationViewAdapter(newList1, this.getContext(), this);
+                recyclerView.setAdapter(adapter);
             }
 
-            for(int i = 0; searchInt==1 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getCity() != null && organizationList.get(i).getCity().toLowerCase().contains(userInput))
-                    newList.add(organizationList.get(i));
+            if(countrySelected!=""){
+                List<Organization> newList1 = new ArrayList<>();
+                for (int i = 0; i < listCountrySelected.size(); i++) {
+
+                    if (listCountrySelected.get(i).getName().toLowerCase().contains(userInput))
+                        newList1.add(listCountrySelected.get(i));
+                }
+                adapter = new OrganizationViewAdapter(newList1, this.getContext(), this);
+                recyclerView.setAdapter(adapter);
+            }
+            if(!searchAnonymous&&!searchAuthenticate&&countrySelected==""){
+                for (int i = 0; i < organizationList.size(); i++) {
+
+                    if (organizationList.get(i).getName().toLowerCase().contains(userInput))
+                        newList.add(organizationList.get(i));
+                    adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
+                    recyclerView.setAdapter(adapter);
+                }
             }
 
-            for(int i = 0; searchInt==2 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getCountry() !=null && organizationList.get(i).getCountry().toLowerCase().contains(userInput))
-                    newList.add(organizationList.get(i));
-            }
 
-            for(int i = 0; searchInt==3 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getName().toLowerCase().contains(userInput) && organizationList.get(i).getTrackingMode().toString().equals("anonymous"))
-                    newList.add(organizationList.get(i));
-            }
-
-            for(int i = 0; searchInt==4 && i< organizationList.size(); i++){
-                if(organizationList.get(i).getName().toLowerCase().contains(userInput) && organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
-                    newList.add(organizationList.get(i));
-            }
-
-
-            adapter=new OrganizationViewAdapter(newList,this.getContext(),this);
-            recyclerView.setAdapter(adapter);
         }
-
         return false;
     }
 

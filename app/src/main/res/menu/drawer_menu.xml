@@ -39,18 +39,4 @@
 
     </item>
 
-
-
-
-    <item android:title="Altro">
-        <menu>
-            <item
-                android:id="@+id/alphabeticalOrderID"
-                android:title="Ordinamento alfabetico" />
-
-        </menu>
-    </item>
-
-
-
 </menu>

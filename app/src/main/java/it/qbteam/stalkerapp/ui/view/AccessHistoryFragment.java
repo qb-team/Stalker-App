@@ -2,6 +2,7 @@ package it.qbteam.stalkerapp.ui.view;
 
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,11 +10,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.InputType;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,6 +34,7 @@ import it.qbteam.stalkerapp.presenter.AccessHistoryPresenter;
 import it.qbteam.stalkerapp.tools.AccessHistoryViewAdapter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
+import it.qbteam.stalkerapp.tools.SearchViewCustom;
 //import lombok.SneakyThrows;
 
 /**
@@ -104,7 +110,6 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
@@ -137,7 +142,26 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
         item.setVisible(true);
+        MenuItem filter= menu.findItem(R.id.filetrID);
+        filter.setVisible(false);
         SearchView searchView= (SearchView) item.getActionView();
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        searchView.setMaxWidth(width*2/3);
+
+        new SearchViewCustom()
+                .setSearchBackGroundResource(R.drawable.custom_border)
+                .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
+                .setSearchHintText("cerca qui..")
+                .setSearchTextColorResource(R.color.colorPrimary)
+                .setSearchHintColorResource(R.color.colorPrimary)
+                .setSearchCloseIconResource(R.drawable.ic_close_black_24dp)
+                .setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+                .format(searchView);
+
         searchView.setOnQueryTextListener(this);
         super.onPrepareOptionsMenu(menu);
     }

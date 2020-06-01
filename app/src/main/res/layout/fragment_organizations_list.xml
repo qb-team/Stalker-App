@@ -15,9 +15,8 @@
             android:id="@+id/recyclerViewID"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/organization_row"
             tools:layout_editor_absoluteX="16dp"
-            />
+            tools:listitem="@layout/organization_row" />
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

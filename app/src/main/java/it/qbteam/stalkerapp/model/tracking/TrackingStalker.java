@@ -397,13 +397,18 @@ public class TrackingStalker extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .addAction(R.drawable.ic_launch, "Apri l'app", activityPendingIntent)
                 .addAction(R.drawable.ic_cancel, "Interrompi tracciamento", servicePendingIntent)
-                .setContentText("Sei dentro a: "+insideOrganization.getName()) // Stampa a schermo IN BACKGROUND
                 .setContentTitle(Utils.getLocationTitle(this))
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setSmallIcon(R.drawable.ic_stalkericon_)
                 .setTicker(text)
                 .setWhen(System.currentTimeMillis());
+        if(insideOrganization!=null){
+            builder.setContentText("Sei dentro a: "+insideOrganization.getName());
+        }
+        else{
+            builder.setContentText("Non sei dentro a nessuna organizzazione");
+        }
 
         // Set the Channel ID for Android O.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -21,7 +21,6 @@ import org.xmlpull.v1.XmlPullParser;
 public class ActionTabFragment extends Fragment{
 
     protected static TabLayout tabLayout;
-    protected ViewPager viewPager;
     private TabViewPagerAdapter adapter;
     private static MyStalkersListFragment myStalkersListFragment;
     private static HomeFragment homeFragment;
@@ -57,15 +56,14 @@ public class ActionTabFragment extends Fragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Note that we are passing childFragmentManager, not FragmentManager.
-        adapter = new TabViewPagerAdapter(getResources(),getChildFragmentManager());
+        adapter = new TabViewPagerAdapter(getResources(), getChildFragmentManager());
         //add fragment
-        myStalkersListFragment= new MyStalkersListFragment();
-        homeFragment= new HomeFragment();
-        accessHistoryFragment= new AccessHistoryFragment();
-        adapter.addFragment(homeFragment,"");
-        adapter.addFragment(myStalkersListFragment,"");
-        adapter.addFragment(accessHistoryFragment,"");
-
+        myStalkersListFragment = new MyStalkersListFragment();
+        homeFragment = new HomeFragment();
+        accessHistoryFragment = new AccessHistoryFragment();
+        adapter.addFragment(homeFragment, "");
+        adapter.addFragment(myStalkersListFragment, "");
+        adapter.addFragment(accessHistoryFragment, "");
 
 
         myViewPager.setAdapter(adapter);
@@ -76,12 +74,47 @@ public class ActionTabFragment extends Fragment{
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_stalkericon_);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_update_black_24dp);
 
+
         // Fixed tabs display all tabs concurrently
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                switch (tab.getPosition()) {
+
+                    case 0:
+                        getActivity().setTitle("Home page");
+                        break;
+
+                    case 1:
+                        getActivity().setTitle("My stalker list");
+                        break;
+
+                    case 2:
+                        getActivity().setTitle("Storico accessi");
+                        break;
+
+
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         myViewPager.setOffscreenPageLimit(2);
 
     }
+
 
     //Management of the back button.
     public boolean onBackPressed() {

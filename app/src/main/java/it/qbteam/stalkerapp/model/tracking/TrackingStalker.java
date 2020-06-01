@@ -225,6 +225,7 @@ public class TrackingStalker extends Service {
         Log.i(TAG, "Requesting location updates");
         Utils.setRequestingLocationUpdates(this, true);
         startService(new Intent(getApplicationContext(), TrackingStalker.class));
+
         try {
             updateTrackingList();
             System.out.println("RequestLocationUpdates è partito ");

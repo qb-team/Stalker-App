@@ -127,6 +127,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         } else {
 
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
+
         }
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
@@ -153,6 +154,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         actionView = MenuItemCompat.getActionView(itemNameOrg);
         nameOrg = (TextView) actionView.findViewById(R.id.name_orgID);
         nameOrg.setText("Nessuna organizzazione");
+
 
         //Imposto nome luogo in cui l'utente è tracciato del drawer
         MenuItem itemNamePlace=menu.findItem(R.id.navi_place_item);

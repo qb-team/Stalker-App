@@ -65,8 +65,8 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         View view = inflater.inflate(R.layout.fragment_place_access, container, false);
         placeAccessPresenter = new PlaceAccessPresenter(this);
         bundle = this.getArguments();
-        TextView nameOrg = view.findViewById(R.id.nomeOrgID);
-        nameOrg.setText(bundle.getString("name"));
+        getActivity().setTitle("Luoghi di: "+bundle.getString("name"));
+
         params1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f);
         params2 = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tbl=(TableLayout) view.findViewById(R.id.accessTableID);
@@ -99,6 +99,7 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     public boolean onBackPressed() {
         HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
         placeAccessFragmentListener.disableScroll(true);
+        getActivity().setTitle("Storico accessi");
         return new BackPressImplementation(this).onBackPressed();
 
     }

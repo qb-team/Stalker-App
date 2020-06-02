@@ -95,7 +95,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.searchID).setVisible(false);
-        menu.findItem(R.id.filterID).setVisible(false);
+        menu.setGroupVisible(R.id.filterID,false);
         super.onPrepareOptionsMenu(menu);
     }
 

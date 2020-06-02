@@ -116,24 +116,23 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+//        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+//
+//        }
+
         //user==null
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
             updateFirebaseToken();
         }
-
         else{
             goToMainActivity();
         }
 
-        if (savedInstanceState == null) {
-
+        if (savedInstanceState == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             initScreen();
-
-        } else {
-
+        } else if (savedInstanceState == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
-
         }
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
@@ -184,16 +183,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         actionView = MenuItemCompat.getActionView(chronometerItem);
         chronometer = actionView.findViewById(R.id.chronometer);
         chronometer.setBase(SystemClock.elapsedRealtime());
-        //posso fare qualcosa ogni tot secondi ...utile
-        /*chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                if ((SystemClock.elapsedRealtime() - chronometer.getBase()) >= 10000) {
-                    chronometer.setBase(SystemClock.elapsedRealtime());
-                    Toast.makeText(HomePageActivity.this, "Bing!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
 
 
         // Check that the user hasn't revoked permissions by going to Settings.

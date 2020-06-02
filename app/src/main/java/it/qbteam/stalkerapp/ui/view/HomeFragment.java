@@ -372,7 +372,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
             recyclerView.setAdapter(adapter);
         }
-
         return false;
     }
 

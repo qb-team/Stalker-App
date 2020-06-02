@@ -259,7 +259,7 @@ public class TrackingStalker extends Service {
 
 
             HomePageActivity.setNameOrg("Nessuna organizzazione");
-            
+
 
 
         }

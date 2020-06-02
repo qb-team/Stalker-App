@@ -260,6 +260,16 @@ public class TrackingStalker extends Service {
 
             HomePageActivity.setNameOrg("Nessuna organizzazione");
 
+            // Notify anyone listening for broadcasts about the new location.
+            timer.schedule( new TimerTask(){
+                @SneakyThrows
+                public void run() {
+                    Intent intent = new Intent(ACTION_BROADCAST);
+                    intent.putExtra(EXTRA_LOCATION, mLocation);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                }
+            }, delay);
+
 
         }
          if(insidePlace!=null){

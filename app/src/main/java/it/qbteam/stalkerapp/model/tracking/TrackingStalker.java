@@ -242,6 +242,8 @@ public class TrackingStalker extends Service {
         if(insideOrganization!=null){
 
             if(HomePageActivity.getSwitcherModeStatus()) {
+                if(organizationAccess==null)
+                    organizationAccess= new OrganizationAccess();
                 organizationAccess.setEntranceTimestamp(organizationAccessTime);
                 organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                 organizationAccess.setOrgName(insideOrganization.getName());
@@ -253,6 +255,8 @@ public class TrackingStalker extends Service {
             }
 
             else{
+                if(organizationAccess==null)
+                    organizationAccess= new OrganizationAccess();
                 organizationAccess.setEntranceTimestamp(organizationAccessTime);
                 organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                 organizationAccess.setOrgName(insideOrganization.getName());

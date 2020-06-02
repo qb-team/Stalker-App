@@ -261,17 +261,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         menu.setGroupVisible(R.id.filterID,true);
         item.setVisible(true);
 
-        if(countrySelected!="") {
+        if(!countrySelected.equals("")) {
             countryItem.setTitle("Nazione scelta: " + countrySelected);
-            for (int i = 0; i < organizationList.size(); i++) {
-                if (organizationList.get(i).getCountry().equals(countrySelected))
-                    listCountrySelected.add(organizationList.get(i));
-                adapter = new OrganizationViewAdapter(listCountrySelected, this.getContext(), this);
-                recyclerView.setAdapter(adapter);
-            }
         }
-
-
 
         SearchView searchView= (SearchView) item.getActionView();
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -317,13 +309,11 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                break;
 
             case R.id.search_cityID:
-
                 item.setChecked(true);
                 //da finire.
             break;
 
            case R.id.search_countryID:
-               resetAdapter();
                countryDialog(item);
                break;
                
@@ -364,6 +354,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         String userInput = newText.toLowerCase();
         List<Organization> newList = new ArrayList<>();
 
+
         if (organizationList.size() != 0) {
             for (int i = 0; i < auxList.size(); i++) {
                 if (auxList.get(i).getName().toLowerCase().contains(userInput))
@@ -379,9 +370,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         CountryCurrencyPicker pickerDialog = CountryCurrencyPicker.newInstance(PickerType.COUNTRYandCURRENCY, new CountryCurrencyPickerListener() {
             @Override
             public void onSelectCountry(Country country) {
+                resetAdapter();
                 countrySelected=country.getName();
                 item.setChecked(true);
-//            getActivity().invalidateOptionsMenu();  A che serve?
+                printCountrySelected();
             }
 
             @Override
@@ -391,6 +383,16 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         });
 
         pickerDialog.show(getActivity().getSupportFragmentManager(),CountryCurrencyPicker.DIALOG_NAME);
+    }
+
+    public void printCountrySelected(){
+
+        for(int i = 0; i< organizationList.size(); i++){
+            if(organizationList.get(i).getCountry().equals(countrySelected))
+                auxList.add(organizationList.get(i));
+        }
+        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
+        recyclerView.setAdapter(adapter);
     }
 
     //Management of the back button.

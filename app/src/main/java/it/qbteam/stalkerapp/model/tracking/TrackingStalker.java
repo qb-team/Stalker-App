@@ -242,21 +242,28 @@ public class TrackingStalker extends Service {
         if(insideOrganization!=null){
 
             if(HomePageActivity.getSwitcherModeStatus()) {
-
+                organizationAccess.setEntranceTimestamp(organizationAccessTime);
+                organizationAccess.setOrganizationId(insideOrganization.getOrgID());
+                organizationAccess.setOrgName(insideOrganization.getName());
+                organizationAccess.setExitTimestamp(OffsetDateTime.now());
+                organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
                 //Comunicates the server that user is outside the organization(authenticated).
                 server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 
             }
 
             else{
-
+                organizationAccess.setEntranceTimestamp(organizationAccessTime);
+                organizationAccess.setOrganizationId(insideOrganization.getOrgID());
+                organizationAccess.setOrgName(insideOrganization.getName());
+                organizationAccess.setExitTimestamp(OffsetDateTime.now());
+                organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
                 //Comunicates the server that user is outside the organization(anonymous).
                 server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
             }
 
             //Deletes the organization movement.
             storage.deleteOrganizationMovement();
-
 
             HomePageActivity.setNameOrg("Nessuna organizzazione");
 
@@ -286,8 +293,20 @@ public class TrackingStalker extends Service {
 
         }
 
+        // Notify anyone listening for broadcasts about the new location.
+        timer.schedule( new TimerTask(){
+            @SneakyThrows
+            public void run() {
+                Intent intent = new Intent(ACTION_BROADCAST);
+                intent.putExtra(EXTRA_LOCATION, mLocation);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+            }
+        }, delay);
+
+
         insideOrganization = null;
         insidePlace = null;
+        organizationAccess = null;
 
         Log.i(TAG, "Removing location updates");
 
@@ -613,6 +632,9 @@ public class TrackingStalker extends Service {
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 
 
+                        if (organizationAccess==null) {
+                            organizationAccess = new OrganizationAccess();
+                        }
                         //Update the access' list when the user exits from organization.
                         organizationAccess.setEntranceTimestamp(organizationAccessTime);
                         organizationAccess.setOrganizationId(insideOrganization.getOrgID());

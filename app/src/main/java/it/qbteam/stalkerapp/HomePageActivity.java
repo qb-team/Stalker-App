@@ -622,8 +622,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         @SneakyThrows
         @Override
         public void onReceive(Context context, Intent intent) {
-            Location location = intent.getParcelableExtra(TrackingStalker.EXTRA_LOCATION);
-            if (location != null) {
+                //Location location = intent.getParcelableExtra(TrackingStalker.EXTRA_LOCATION);
                 Fragment frag = (AccessHistoryFragment )ActionTabFragment.getAccessHistoryFragment();
                 try {
                     ((AccessHistoryFragment) frag).printAccess();
@@ -631,7 +630,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                }
+
             }
         }
     }

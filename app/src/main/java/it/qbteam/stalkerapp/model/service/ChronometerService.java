@@ -30,7 +30,6 @@ public class ChronometerService extends Service {
             timeMsg = new Message();
             timeMsg.obj = updatedTime;
             HomePageActivity.sHandler.sendMessage(timeMsg);
-
             HomePageActivity.sHandler.postDelayed(this, 0);
         }
     };
@@ -53,6 +52,7 @@ public class ChronometerService extends Service {
             timeSwapBuff += timeInMilliseconds;
             HomePageActivity.sHandler.removeCallbacks(updateTimer);
             isRunning = false;
+            stopSelf();
         } else {
             startTime = SystemClock.uptimeMillis();
             HomePageActivity.sHandler.postDelayed(updateTimer, 0);
@@ -64,7 +64,7 @@ public class ChronometerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // Tells the system to not try to recreate the service after it has been killed.
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     public void reset(){

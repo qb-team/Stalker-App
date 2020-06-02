@@ -284,8 +284,7 @@ public class TrackingStalker extends Service {
              HomePageActivity.setNamePlace("Nessun luogo");
 
         }
-        HomePageActivity.playPauseTimeService();
-        HomePageActivity.resetTime();
+
         insideOrganization = null;
         insidePlace = null;
 

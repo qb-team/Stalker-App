@@ -261,6 +261,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         // Restore the state of the buttons when the activity (re)launches.
         setSwitchState(Utils.requestingLocationUpdates(this));
+        this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
+
 
     }
 
@@ -271,7 +273,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .registerOnSharedPreferenceChangeListener(this);
 
         this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
-        this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         setSwitchState(Utils.requestingLocationUpdates(this));
         super.onStart();
     }
@@ -481,6 +482,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void stopTracking() throws IOException, ClassNotFoundException {
+        playPauseTimeService();
+        resetTime();
         mService.removeLocationUpdates();
 
     }

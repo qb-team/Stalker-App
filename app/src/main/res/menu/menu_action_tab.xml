@@ -22,7 +22,8 @@
             android:title="ordine alfabetico"/>
 
         <item android:id="@+id/search_nameID"
-            android:title="cerca per nome"/>
+            android:title="cerca per nome"
+            android:checked="true"/>
 
         <item android:id="@+id/search_cityID"
             android:title="cerca per città"/>

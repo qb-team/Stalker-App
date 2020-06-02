@@ -62,15 +62,13 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private String path;
     private FragmentListener fragmentListener;
     private SwipeRefreshLayout refresh;
-    private boolean searchAnonymous=false;
-    private boolean searchAuthenticate=false;
     private List<Organization> auxList;
     private String countrySelected="";
-    List<Organization> listCountrySelected;
+    private MenuItem searchForName;
 
 
 
-//Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
+    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface FragmentListener {
         void sendOrganization(Organization organization) throws IOException, JSONException;
         void disableScroll(boolean enable);
@@ -97,7 +95,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         super.onCreate(savedInstanceState);
 
         OrganizationListPresenter = new HomePresenter(this);
-        listCountrySelected = new ArrayList<>();
+
         try {
             OrganizationListPresenter.createAllFile();
         } catch (IOException e) {
@@ -242,6 +240,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //It sorts the list in the HomeFragment view in alphabetical order.
     public void alphabeticalOrder(){
+        auxList= new ArrayList<>(organizationList);
         Collections.sort(organizationList);
         try {
             adapter = new OrganizationViewAdapter(organizationList,this.getContext(),this);
@@ -258,12 +257,18 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
+        searchForName = menu.findItem(R.id.search_nameID);
         menu.setGroupVisible(R.id.filterID,true);
         item.setVisible(true);
 
+
         if(!countrySelected.equals("")) {
             countryItem.setTitle("Nazione scelta: " + countrySelected);
+        } else {
+            countryItem.setTitle("scegli una nazione");
         }
+
+
 
         SearchView searchView= (SearchView) item.getActionView();
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -287,11 +292,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
         super.onPrepareOptionsMenu(menu);
     }
+
     public void resetAdapter(){
+        countrySelected = "";
         auxList.clear();
         adapter = new OrganizationViewAdapter(organizationList, this.getContext(),this);
         recyclerView.setAdapter(adapter);
     }
+
     @Override
     public boolean onOptionsItemSelected (MenuItem item){
        switch (item.getItemId()){
@@ -303,7 +311,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                break;
 
            case R.id.search_nameID:
+               System.out.println("CIAO ");
                resetAdapter();
+
                item.setChecked(true);
 
                break;
@@ -354,6 +364,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         String userInput = newText.toLowerCase();
         List<Organization> newList = new ArrayList<>();
 
+        if (searchForName.isChecked()){
+            auxList= new ArrayList<>(organizationList);
+        }
 
         if (organizationList.size() != 0) {
             for (int i = 0; i < auxList.size(); i++) {

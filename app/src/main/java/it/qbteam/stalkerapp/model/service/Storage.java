@@ -447,7 +447,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             fos.close();
         }
         else {
-            if(!organizationAccess.getOrgName().equals("") && organizationAccess.getEntranceTimestamp()!=null && organizationAccess.getExitTimestamp()!=null){
+            if(organizationAccess!=null){
             FileInputStream fis= new FileInputStream(placeAccessFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //Method for deserialization of object

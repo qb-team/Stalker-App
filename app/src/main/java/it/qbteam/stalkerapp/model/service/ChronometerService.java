@@ -6,7 +6,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.SystemClock;
-import android.util.Log;
 import it.qbteam.stalkerapp.HomePageActivity;
 
 public class ChronometerService extends Service {
@@ -25,8 +24,6 @@ public class ChronometerService extends Service {
         public void run() {
             timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
             updatedTime = timeSwapBuff + timeInMilliseconds;
-            Log.d("run:", String.valueOf(updatedTime));
-
             timeMsg = new Message();
             timeMsg.obj = updatedTime;
             HomePageActivity.sHandler.sendMessage(timeMsg);

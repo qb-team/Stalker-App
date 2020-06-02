@@ -26,12 +26,11 @@
                 app:showAsAction="always"
                 android:title="Nel luogo: "
                 />
-            <item android:id="@+id/navi_time_insideID"
-                app:actionLayout="@layout/chronometer_inside_organization"
-                android:checkable="false"
-                app:showAsAction="always"
-                android:title="Permanenza: "
-                />
+            <item xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/navi_time_insideID"
+                android:title="tempo di permanenza:   "
+                app:actionLayout="@layout/time_text"
+                app:showAsAction="always" />
         </menu>
     </item>
 

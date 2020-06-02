@@ -257,8 +257,6 @@ public class TrackingStalker extends Service {
             //Deletes the organization movement.
             storage.deleteOrganizationMovement();
 
-            HomePageActivity.resetChronometer();
-            HomePageActivity.pauseChronometer();
 
             HomePageActivity.setNameOrg("Nessuna organizzazione");
 
@@ -286,7 +284,8 @@ public class TrackingStalker extends Service {
              HomePageActivity.setNamePlace("Nessun luogo");
 
         }
-
+        HomePageActivity.playPauseTimeService();
+        HomePageActivity.resetTime();
         insideOrganization = null;
         insidePlace = null;
 
@@ -316,12 +315,10 @@ public class TrackingStalker extends Service {
         if (startedFromNotification) {
             try {
                 removeLocationUpdates();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-           stopSelf();
+            stopSelf();
         }
         // Tells the system to not try to recreate the service after it has been killed.
         return START_NOT_STICKY;
@@ -392,7 +389,7 @@ public class TrackingStalker extends Service {
 
         // The PendingIntent to launch activity.
         PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, HomePageActivity.class), 0);
+                new Intent(this, HomePageActivity.class), PendingIntent.FLAG_NO_CREATE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .addAction(R.drawable.ic_launch, "Apri l'app", activityPendingIntent)
@@ -542,7 +539,7 @@ public class TrackingStalker extends Service {
 
                     if (storage.deserializeMovementInLocal() == null&&authenticated==true) {
 
-                        HomePageActivity.startChronometer();
+                        HomePageActivity.playPauseTimeService();
 
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
@@ -575,7 +572,7 @@ public class TrackingStalker extends Service {
 
                     else if(storage.deserializeMovementInLocal() == null&&authenticated==false){
 
-                        HomePageActivity.startChronometer();
+                        HomePageActivity.playPauseTimeService();
 
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
@@ -621,10 +618,9 @@ public class TrackingStalker extends Service {
                         organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
-                        organizationAccess.setTimeStay(HomePageActivity.getDurationAccess());
-
-                        HomePageActivity.resetChronometer();
-                        HomePageActivity.pauseChronometer();
+                        organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
+                        HomePageActivity.playPauseTimeService();
+                        HomePageActivity.resetTime();
                         //Comunicates the server that user is outside the organization
                         server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 

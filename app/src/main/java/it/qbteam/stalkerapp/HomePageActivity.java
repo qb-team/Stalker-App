@@ -16,7 +16,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -55,6 +57,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
+import it.qbteam.stalkerapp.model.service.ChronometerService;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.AccessHistoryFragment;
@@ -86,9 +89,19 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private  View actionView;
     private static String path;
 
-    private static Chronometer chronometer;
-    private static boolean chronometerIsRunning;
-    private static long pauseOffset;
+    //Time spent fields
+    public static Handler sHandler;
+    private final int playPause = 0;
+    private final int reset = 1;
+    private static int secs = 0;
+    private static int mins = 0;
+    private static int millis = 0;
+    private static Long currentTime = 0L;
+    private boolean isBound = false;
+    private static ChronometerService myService;
+    private static TextView time;
+
+
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
@@ -108,6 +121,49 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
+    //Connects the chronometerService to the HomePageActivity.
+    private final ServiceConnection chronometerServiceConnection = new ServiceConnection() {
+        //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ChronometerService.LocalBinder binder = (ChronometerService.LocalBinder) service;
+            myService = binder.getService();
+            isBound = true;
+        }
+
+        //Method of the internal class `ServiceConnection` which allows you to disconnect the connection with the` Bind Service`.
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            myService = null;
+            isBound = false;
+
+        }
+    };
+
+    //S
+    public static void setTime() {
+        time.setText("" + mins + ":" + String.format("%02d", secs) + ":"
+                + String.format("%03d", millis));
+    }
+
+    public static Long getCurrentTime(){
+        return currentTime;
+    }
+    public static void playPauseTimeService() {
+
+        myService.startStop();
+
+    }
+    public static void resetTime() {
+
+        myService.reset();
+        mins = 0;
+        secs = 0;
+        millis = 0;
+        setTime();
+
+    }
+
     //Creates Activity and manages the fragments connected to it. In this method there is the user authentication check,
     // in case the user is no longer logged in the goToMainActivity () method is invoked.
     @SuppressLint("WrongViewCast")
@@ -115,10 +171,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-
-//        if(FirebaseAuth.getInstance().getCurrentUser() == null){
-//
-//        }
 
         //user==null
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
@@ -131,9 +183,25 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         if (savedInstanceState == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             initScreen();
-        } else if (savedInstanceState == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
+        }
+        else if(savedInstanceState != null){
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
+        HomePageActivity.sHandler = new Handler() {
+
+            @Override
+            public void handleMessage(Message timeMsg) {
+                super.handleMessage(timeMsg);
+
+                currentTime = Long.valueOf(timeMsg.obj.toString());
+
+                secs = (int) (currentTime / 1000);
+                mins = secs / 60;
+                secs = secs % 60;
+                millis = (int) (currentTime % 1000);
+                setTime();
+            }
+        };
 
         Toolbar toolbar=findViewById(R.id.toolbarID);
         setSupportActionBar(toolbar);
@@ -181,8 +249,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         //imposto cronometro
         MenuItem chronometerItem=menu.findItem(R.id.navi_time_insideID);
         actionView = MenuItemCompat.getActionView(chronometerItem);
-        chronometer = actionView.findViewById(R.id.chronometer);
-        chronometer.setBase(SystemClock.elapsedRealtime());
+        time = actionView.findViewById(R.id.timeID);
 
 
         // Check that the user hasn't revoked permissions by going to Settings.
@@ -197,33 +264,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    public static Long getDurationAccess(){
-        return SystemClock.elapsedRealtime()-chronometer.getBase();
-    }
-
-
-    public static void startChronometer() {
-        if (!chronometerIsRunning) {
-            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
-            chronometer.start();
-            chronometerIsRunning = true;
-        }
-    }
-
-    public static void pauseChronometer() {
-        if (chronometerIsRunning) {
-            chronometer.stop();
-            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
-            chronometerIsRunning = false;
-        }
-    }
-
-    public static void resetChronometer() {
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        pauseOffset = 0;
-    }
-
-
     @Override
     protected void onStart() {
 
@@ -231,7 +271,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .registerOnSharedPreferenceChangeListener(this);
 
         this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
-
+        this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         setSwitchState(Utils.requestingLocationUpdates(this));
         super.onStart();
     }
@@ -243,7 +283,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             this.unbindService(mServiceConnection);
             mBound = false;
         }
+        if (isBound) {
+            /*playPauseTimeService();
+            resetTime();*/
+            this.unbindService(chronometerServiceConnection);
 
+            isBound = false;
+        }
 
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
@@ -255,6 +301,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(TrackingStalker.ACTION_BROADCAST));
 
+
     }
 
     @Override
@@ -264,6 +311,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+   /* @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }*/
     public void updateFirebaseToken(){
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
@@ -295,7 +347,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         fragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragmentID, actionTabFragment)
                 .commit();
-
 
     }
 
@@ -424,12 +475,14 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void startTracking() {
         mService.requestLocationUpdates();
+
     }
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void stopTracking() throws IOException, ClassNotFoundException {
         mService.removeLocationUpdates();
+
     }
 
 

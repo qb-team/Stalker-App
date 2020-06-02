@@ -40,7 +40,7 @@ import it.qbteam.stalkerapp.tools.OnBackPressListener;
 //Schermata iniziale per gli utenti non autenticati
 public class AuthenticationFragment extends Fragment implements LoginContract.View, View.OnClickListener{
     private LoginPresenter loginPresenter;
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
     private EditText emailEditText, passwordEditText, insertEmailEditText;
 
     //Creation of the fragment as a component.
@@ -116,7 +116,7 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
     }
 
     //Check if the user has written their credentials and send them to the `initLogin (email: String, password: String)` method, otherwise it signals the absence of them.
-    public void checkLoginDetails() {
+    private void checkLoginDetails() {
 
         if(!TextUtils.isEmpty(emailEditText.getText().toString().trim()) && !TextUtils.isEmpty(passwordEditText.getText().toString())) {
             checkLogin(emailEditText.getText().toString().trim(), passwordEditText.getText().toString());

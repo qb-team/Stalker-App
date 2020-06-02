@@ -94,10 +94,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     //Wait for a user click on the "Sign Up" button to invoke the `checkSignUpDetails ()` method, or a click on "Read the conditions of use" to invoke the `showTermsofUse ()` method.
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.signUpButtonID:
-                checkSignUpDetails();
-                break;
+        if (view.getId() == R.id.signUpButtonID) {
+            checkSignUpDetails();
         }
     }
 
@@ -141,10 +139,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Condizioni d'uso")
                 .setMessage("I Contenuti dei Servizi sono destinati esclusivamente ad un utilizzo personale. Ogni diverso utilizzo è vietato in ogni forma. L’Istituto detiene tutti i diritti di sfruttamento dei marchi utilizzati in collegamento ai Servizi. I Servizi e i suoi Contenuti sono protetti dalle norme sul diritto d’autore vigente in Italia e dalle norme internazionali sul diritto d’autore. L’Utente non è autorizzato a modificare, pubblicare, trasmettere, condividere, cedere in uso a qualsiasi titolo, riprodurre (oltre i limiti di seguito precisati), tradurre, rielaborare, distribuire, eseguire, dare accesso o sfruttare commercialmente in qualsiasi modo i Servizi e i loro Contenuti (incluso il software) anche solo parzialmente. L’Istituto non assume alcuna responsabilità in relazione a danni o limitazioni d’uso di siti internet, computer o altri strumenti che abbiano utilizzato i Servizi e i loro Contenuti.")
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                .setPositiveButton("ok", (dialogInterface, i) -> {
                 });
         builder.show();
     }

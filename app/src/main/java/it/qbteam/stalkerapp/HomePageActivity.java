@@ -326,12 +326,14 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
+                            System.out.println("Ha funzionato");
                             user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            Fragment frag = (MyStalkersListFragment )ActionTabFragment.getMyStalkerFragment();
-                            if( ((MyStalkersListFragment) frag).organizationListEmpty()==true){
-                                ((MyStalkersListFragment) frag).loadMyStalkerList(user.getUid(),user.getToken());
+                            MyStalkersListFragment frag = (MyStalkersListFragment )ActionTabFragment.getMyStalkerFragment();
+                            if(frag.organizationListEmpty()){
+                                frag.loadMyStalkerList(user.getUid(),user.getToken());
                             }
                         } else {
+                            System.out.println("Ha fallito");
                             // Handle error -> task.getException();
                         }
                     }
@@ -536,7 +538,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Returns user's token.
     public static String getUserToken(){
-        return user.getToken();
+        if (user!=null)
+            return user.getToken();
+        else
+        {
+            System.out.println("Ehyyy");
+            return null;
+        }
     }
     //Returns user's token.
     public static String getUserID(){

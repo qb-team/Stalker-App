@@ -68,12 +68,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private List<Organization> auxList;
     private String countrySelected="";
     private MenuItem searchForName;
+    private MenuItem searchForCity;
     private Dialog dialogNation;
-    private ScrollChoice scrollChoiceNation;
     private List<String> nationList;
     private Button selectCountry;
-    private Button annulCountry;
-
 
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
@@ -274,6 +272,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         MenuItem item= menu.findItem(R.id.searchID);
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
         searchForName = menu.findItem(R.id.search_nameID);
+        searchForCity = menu.findItem(R.id.search_cityID);
         menu.setGroupVisible(R.id.filterID,true);
         item.setVisible(true);
 
@@ -297,7 +296,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         new SearchViewCustom()
                 .setSearchBackGroundResource(R.drawable.custom_border)
                 .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
-                .setSearchHintText("cerca qui..")
+                .setSearchHintText("cerca qui...")
                 .setSearchTextColorResource(R.color.colorPrimary)
                 .setSearchHintColorResource(R.color.colorPrimary)
                 .setSearchCloseIconResource(R.drawable.ic_close_black_24dp)
@@ -321,21 +320,19 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
        switch (item.getItemId()){
 
            case R.id.alphabeticalOrderID:
-               resetAdapter();
                alphabeticalOrder();
                item.setChecked(true);
                break;
 
            case R.id.search_nameID:
-               System.out.println("CIAO ");
                resetAdapter();
-
                item.setChecked(true);
 
                break;
 
             case R.id.search_cityID:
                 item.setChecked(true);
+
                 //da finire.
             break;
 
@@ -380,18 +377,25 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         String userInput = newText.toLowerCase();
         List<Organization> newList = new ArrayList<>();
 
-        if (searchForName.isChecked()){
+        if (searchForName.isChecked() || searchForCity.isChecked()){
             auxList= new ArrayList<>(organizationList);
         }
 
-        if (organizationList.size() != 0) {
+        if (searchForCity.isChecked()){
+            for (int i = 0; i < auxList.size(); i++) {
+                if (auxList.get(i).getCity().toLowerCase().contains(userInput))
+                    newList.add(auxList.get(i));
+            }
+        }
+        else if (organizationList.size() != 0) {
             for (int i = 0; i < auxList.size(); i++) {
                 if (auxList.get(i).getName().toLowerCase().contains(userInput))
                     newList.add(auxList.get(i));
             }
-            adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
-            recyclerView.setAdapter(adapter);
         }
+
+        adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
+        recyclerView.setAdapter(adapter);
         return false;
     }
 
@@ -400,10 +404,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         dialogNation.setContentView(R.layout.dialog_scroll_choice_nation);
         dialogNation.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogNation.show();
-        scrollChoiceNation = dialogNation.findViewById(R.id.scroll_choiceID);
+        ScrollChoice scrollChoiceNation = dialogNation.findViewById(R.id.scroll_choiceID);
         scrollChoiceNation.addItems(nationList,nationList.size()/2);
         selectCountry=dialogNation.findViewById(R.id.selectID);
-        annulCountry=dialogNation.findViewById(R.id.annulID);
+        Button annulCountry = dialogNation.findViewById(R.id.annulID);
         scrollChoiceNation.setOnItemSelectedListener(new ScrollChoice.OnItemSelectedListener() {
             @Override
             public void onItemSelected(ScrollChoice scrollChoice, int position, String name) {
@@ -433,7 +437,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
 
     public void printCountrySelected(){
-
         for(int i = 0; i< organizationList.size(); i++){
             if(organizationList.get(i).getCountry().equals(countrySelected))
                 auxList.add(organizationList.get(i));

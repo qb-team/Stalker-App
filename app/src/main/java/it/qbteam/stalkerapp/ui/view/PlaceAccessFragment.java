@@ -126,13 +126,13 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                         //Creating new tablerows and textviews
                         TableRow row = new TableRow(getContext());
                         TextView txt1 = new TextView(getContext());
-                        txt1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        txt1.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                         TextView txt2 = new TextView(getContext());
-                        txt2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        txt2.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                         TextView txt3 = new TextView(getContext());
-                        txt3.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        txt3.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                         TextView txt4 = new TextView(getContext());
-                        txt4.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        txt4.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
                         //setting the textViews
                         txt1.setText(PlaceAccessList.get(i).getPlaceName());
                         txt2.setText(PlaceAccessList.get(i).getEntranceTimestamp().getYear() + "/" + PlaceAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + PlaceAccessList.get(i).getEntranceTimestamp().getDayOfMonth());

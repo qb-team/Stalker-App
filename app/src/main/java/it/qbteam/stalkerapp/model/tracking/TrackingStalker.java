@@ -242,9 +242,12 @@ public class TrackingStalker extends Service {
         if(insideOrganization!=null){
 
             if(HomePageActivity.getSwitcherModeStatus()) {
-                if(organizationAccess==null)
+                if(organizationAccess==null){
                     organizationAccess= new OrganizationAccess();
+                }
+                //sets the organizationAccess' properties
                 organizationAccess.setEntranceTimestamp(organizationAccessTime);
+                organizationAccess.setAccessType(accessType);
                 organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                 organizationAccess.setOrgName(insideOrganization.getName());
                 organizationAccess.setExitTimestamp(OffsetDateTime.now());
@@ -255,9 +258,12 @@ public class TrackingStalker extends Service {
             }
 
             else{
-                if(organizationAccess==null)
+                if(organizationAccess==null){
                     organizationAccess= new OrganizationAccess();
+                }
+                //sets the organizationAccess' properties
                 organizationAccess.setEntranceTimestamp(organizationAccessTime);
+                organizationAccess.setAccessType(accessType);
                 organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                 organizationAccess.setOrgName(insideOrganization.getName());
                 organizationAccess.setExitTimestamp(OffsetDateTime.now());
@@ -643,6 +649,7 @@ public class TrackingStalker extends Service {
                         if (organizationAccess==null) {
                             organizationAccess = new OrganizationAccess();
                         }
+                        //sets the organizationAccess' properties and
                         //Update the access' list when the user exits from organization.
                         organizationAccess.setEntranceTimestamp(organizationAccessTime);
                         organizationAccess.setAccessType(accessType);

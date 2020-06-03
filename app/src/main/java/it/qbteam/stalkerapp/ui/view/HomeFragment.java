@@ -419,17 +419,13 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                         dialogNation.dismiss();
                     }
                 });
-
-                annulCountry.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        resetAdapter();
-                        item.setChecked(true);
-                        printCountrySelected();
-                        dialogNation.dismiss();
-
-                    }
-                });
+            }
+        });
+        annulCountry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              
+                dialogNation.dismiss();
 
             }
         });

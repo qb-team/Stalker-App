@@ -8,41 +8,53 @@
         app:actionViewClass="android.widget.SearchView"
        />
 
-
-
-    <group android:id="@+id/filterID"
-        android:checkableBehavior="single">
-
-
-        <item android:id="@+id/search_nameID"
-            android:title="cerca per nome"
-            android:checked="true"/>
-
-        <item android:id="@+id/search_cityID"
-            android:title="cerca per città"/>
-
-        <item android:id="@+id/search_countryID"
-            android:title="scegli una nazione"/>
-
-        <item android:id="@+id/search_anonymousID"
-            android:title="organizzazioni anonime"/>
-
-        <item android:id="@+id/search_authenticateID"
-            android:title="organizzazioni autenticate"/>
-
-    </group>
-
-
-    <group android:id="@+id/filterAccessID"
+    <item android:title="Cerca per"
+        android:id="@+id/search_forID"
+        android:menuCategory="container"
+        >
+        <menu>
+        <group android:id="@+id/filterID"
             android:checkableBehavior="single">
 
-        <item android:id="@+id/DateDecreasingOrderID"
-            android:title="data crescente"/>
 
-        <item android:id="@+id/DateIncreasingOrderID"
-            android:title="data decrescente"/>
+            <item android:id="@+id/search_nameID"
+                android:title="Nome"
+                android:checked="true"/>
 
-        <item android:id="@+id/speacificDateID"
-            android:title="specifica una data"/>
-    </group>
+            <item android:id="@+id/search_cityID"
+                android:title="Città"/>
+
+            <item android:id="@+id/search_countryID"
+                android:title="Nazione"/>
+
+            <item android:id="@+id/search_anonymousID"
+                android:title="Organizzazioni anonime"/>
+
+            <item android:id="@+id/search_authenticateID"
+                android:title="Organizzazioni autenticate"/>
+        </group>
+        </menu>
+    </item>
+
+
+<item android:title="Ordina per"
+    android:id="@+id/order_forID"
+    android:menuCategory="container"
+    >
+    <menu>
+        <group android:id="@+id/filterAccessID"
+            android:checkableBehavior="single">
+
+            <item android:id="@+id/DateDecreasingOrderID"
+                android:title="Più recenti"/>
+
+            <item android:id="@+id/DateIncreasingOrderID"
+                android:title="Meno recenti"/>
+
+            <item android:id="@+id/speacificDateID"
+                android:title="Specifica una data"/>
+        </group>
+    </menu>
+    </item>
+
 </menu>

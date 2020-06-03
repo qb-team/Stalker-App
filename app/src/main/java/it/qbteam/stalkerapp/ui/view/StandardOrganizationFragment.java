@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -85,7 +86,8 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.searchID).setVisible(false);
-        menu.setGroupVisible(R.id.filterID,false);
+        menu.findItem(R.id.search_forID).setVisible(false);
+        menu.findItem(R.id.order_forID).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 

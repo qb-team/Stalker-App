@@ -150,7 +150,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item = menu.findItem(R.id.searchID);
         item.setVisible(true);
-        menu.setGroupVisible(R.id.filterID, false);
+        menu.findItem(R.id.search_forID).setVisible(false);
         SearchView searchView = (SearchView) item.getActionView();
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();

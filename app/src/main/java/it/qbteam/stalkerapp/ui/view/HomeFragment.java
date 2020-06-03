@@ -284,14 +284,12 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         searchForName = menu.findItem(R.id.search_nameID);
         searchForCity = menu.findItem(R.id.search_cityID);
         menu.setGroupVisible(R.id.filterID,true);
-        menu.setGroupVisible(R.id.filterAccessID,false);
-        item.setVisible(true);
-
+        menu.findItem(R.id.order_forID).setVisible(false);
 
         if(!countrySelected.equals("")) {
             countryItem.setTitle("Nazione scelta: " + countrySelected);
         } else {
-            countryItem.setTitle("scegli una nazione");
+            countryItem.setTitle("Scegli una nazione");
         }
 
 
@@ -308,7 +306,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         new SearchViewCustom()
                 .setSearchBackGroundResource(R.drawable.custom_border)
                 .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
-                .setSearchHintText("cerca qui...")
+                .setSearchHintText("Cerca qui..")
                 .setSearchTextColorResource(R.color.colorPrimary)
                 .setSearchHintColorResource(R.color.colorPrimary)
                 .setSearchCloseIconResource(R.drawable.ic_close_black_24dp)
@@ -323,7 +321,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void resetAdapter(){
         new SearchViewCustom()
                 .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
-                .setSearchHintText("cerca qui...")
+                .setSearchHintText("Cerca qui..")
                 .format(searchView);
         countrySelected = "";
         auxList.clear();
@@ -350,7 +348,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 item.setChecked(true);
                 new SearchViewCustom()
                         .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
-                        .setSearchHintText("cerca per città...")
+                        .setSearchHintText("Cerca per città..")
                         .format(searchView);
                 //da finire.
             break;

@@ -28,7 +28,7 @@
                 />
             <item xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/navi_time_insideID"
-                android:title="tempo di permanenza: "
+                android:title="Tempo di permanenza: "
                 app:actionLayout="@layout/time_text"
                 app:showAsAction="always" />
         </menu>

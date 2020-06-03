@@ -424,7 +424,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         annulCountry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              
+
                 dialogNation.dismiss();
 
             }

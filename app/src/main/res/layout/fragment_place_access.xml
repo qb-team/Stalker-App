@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="@drawable/custom_border"
         android:orientation="horizontal">
         <TextView
             android:layout_marginStart="20dp"
@@ -30,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@color/blackColor"
+            android:textSize="24sp"
 
             />
     </LinearLayout>
@@ -40,6 +42,7 @@
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:background="@drawable/custom_border"
             android:layout_gravity="center">
             <TextView
                 android:layout_marginStart="20dp"
@@ -116,6 +119,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:background="@drawable/custom_border"
             android:layout_marginTop="20dp">
 
             <TableLayout

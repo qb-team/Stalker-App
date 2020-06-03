@@ -118,7 +118,7 @@ public class TrackingStalker extends Service {
     private static int delay = 3000;
     private  Timer timer;
     private Long orgID;
-
+    private String accessType;
     public TrackingStalker()  {
 
     }
@@ -564,7 +564,7 @@ public class TrackingStalker extends Service {
 
                         HomePageActivity.playPauseTimeService();
 
-                        organizationAccess.setAccessType("Autenticato");
+                        accessType="Autenticato";
 
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
@@ -599,7 +599,7 @@ public class TrackingStalker extends Service {
 
                         HomePageActivity.playPauseTimeService();
 
-                        organizationAccess.setAccessType("Anonimo");
+                        accessType="Anonimo";
 
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
@@ -645,6 +645,7 @@ public class TrackingStalker extends Service {
                         }
                         //Update the access' list when the user exits from organization.
                         organizationAccess.setEntranceTimestamp(organizationAccessTime);
+                        organizationAccess.setAccessType(accessType);
                         organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());

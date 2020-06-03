@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Display;
@@ -34,6 +35,7 @@ import com.scrounger.countrycurrencypicker.library.CountryCurrencyPicker;
 import com.scrounger.countrycurrencypicker.library.Currency;
 import com.scrounger.countrycurrencypicker.library.Listener.CountryCurrencyPickerListener;
 import com.scrounger.countrycurrencypicker.library.PickerType;
+import com.webianks.library.scroll_choice.ScrollChoice;
 
 import org.json.JSONException;
 import it.qbteam.stalkerapp.HomePageActivity;
@@ -52,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment implements HomeContract.View, OrganizationViewAdapter.OrganizationListener, SearchView.OnQueryTextListener, OnBackPressListener {
 
@@ -65,6 +68,11 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private List<Organization> auxList;
     private String countrySelected="";
     private MenuItem searchForName;
+    private Dialog dialogNation;
+    private ScrollChoice scrollChoiceNation;
+    private List<String> nationList;
+    private Button selectCountry;
+    private Button annulCountry;
 
 
 
@@ -121,6 +129,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         auxList= new ArrayList<>();
         //Controlla se la lista è vuota, in caso positivo la scarica
         checkFile();
+         nationList= new ArrayList<>();
+         String[] locales = Locale.getISOCountries();
+         for(String countryCode : locales) {
+
+            Locale obj = new Locale("", countryCode);
+            nationList.add(obj.getDisplayCountry());
+         }
+
         return view;
 
     }
@@ -380,22 +396,44 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
 
     private void countryDialog(MenuItem item){
-        CountryCurrencyPicker pickerDialog = CountryCurrencyPicker.newInstance(PickerType.COUNTRYandCURRENCY, new CountryCurrencyPickerListener() {
+        dialogNation = new Dialog(getContext());
+        dialogNation.setContentView(R.layout.dialog_scroll_choice_nation);
+        dialogNation.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogNation.show();
+        scrollChoiceNation = dialogNation.findViewById(R.id.scroll_choiceID);
+        scrollChoiceNation.addItems(nationList,nationList.size()/2);
+        selectCountry=dialogNation.findViewById(R.id.selectID);
+        annulCountry=dialogNation.findViewById(R.id.annulID);
+        scrollChoiceNation.setOnItemSelectedListener(new ScrollChoice.OnItemSelectedListener() {
             @Override
-            public void onSelectCountry(Country country) {
-                resetAdapter();
-                countrySelected=country.getName();
-                item.setChecked(true);
-                printCountrySelected();
-            }
+            public void onItemSelected(ScrollChoice scrollChoice, int position, String name) {
 
-            @Override
-            public void onSelectCurrency(Currency currency) {
+                selectCountry.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        resetAdapter();
+                        countrySelected=name;
+                        item.setChecked(true);
+                        printCountrySelected();
+                        dialogNation.dismiss();
+                    }
+                });
+
+                annulCountry.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        resetAdapter();
+                        item.setChecked(true);
+                        printCountrySelected();
+                        dialogNation.dismiss();
+
+                    }
+                });
 
             }
         });
 
-        pickerDialog.show(getActivity().getSupportFragmentManager(),CountryCurrencyPicker.DIALOG_NAME);
     }
 
     public void printCountrySelected(){

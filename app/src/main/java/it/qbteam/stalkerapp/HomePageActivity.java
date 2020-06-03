@@ -55,6 +55,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.json.JSONException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
+
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.ChronometerService;

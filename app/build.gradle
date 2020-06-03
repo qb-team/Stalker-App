@@ -111,5 +111,5 @@ dependencies {
             {
                 exclude group: 'org.jetbrains', module: 'annotations'
             }
-
+    implementation 'com.webianks.library:scroll-choice:1.0.1'
 }

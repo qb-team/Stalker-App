@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/custom_border"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="20dp"
+
+    >
+
+    <LinearLayout
+        android:layout_width="272dp"
+        android:layout_height="194dp"
+        android:layout_alignParentTop="true">
+
+        <com.webianks.library.scroll_choice.ScrollChoice
+            android:id="@+id/scroll_choiceID"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scroll_atmospheric="true"
+            app:scroll_background_color="#FFF"
+            app:scroll_indicator="true"
+            app:scroll_indicator_color="#FFF"
+            app:scroll_item_align="center"
+            app:scroll_item_text_color="@color/colorPrimary"
+            app:scroll_selected_item_background="#FFF"
+            app:scroll_selected_item_text_color="@color/colorAccent">
+
+        </com.webianks.library.scroll_choice.ScrollChoice>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/annulID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_border"
+            android:text="Annulla"
+            android:textAlignment="center"
+            android:gravity="center" />
+        <Button
+            android:id="@+id/selectID"
+            android:layout_width="wrap_content"
+            android:background="@drawable/custom_border"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:text="Scegli"
+            android:textAlignment="center"
+            android:gravity="center" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

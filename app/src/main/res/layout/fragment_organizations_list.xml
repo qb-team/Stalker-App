@@ -6,6 +6,15 @@
     android:background="@color/lightGrayColor"
     android:id="@+id/HomeFragmentID">
 
+    <TextView
+        android:id="@+id/errorTextID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="20dp"
+        android:visibility="invisible"
+        android:text="Slide verso il basso per scaricare la lista"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshID"
         android:layout_width="match_parent"

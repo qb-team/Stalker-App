@@ -73,6 +73,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private List<String> nationList;
     private Button selectCountry;
     private SearchView searchView;
+    private TextView errorTextView;
 
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
@@ -122,6 +123,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        errorTextView = view.findViewById(R.id.errorTextID);
 
         //Refresh to upload the organization list (swipe down).
         refresh.setOnRefreshListener(this::downloadList);
@@ -167,12 +169,17 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                 })
                 .create();
         download.show();
+        errorTextView.setVisibility(View.VISIBLE);
     }
 
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
-    public void downloadList() {
+    private void downloadList() {
         if(HomePageActivity.getUserToken()!=null)
-        OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getUserToken());
+            OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getUserToken());
+        else {
+            refresh.setRefreshing(false);
+            Toast.makeText(getActivity(), "Errore durante lo scaricamento della lista", Toast.LENGTH_SHORT).show();
+        }
     }
 
     //It notifies the user of the correct download of the list from the Server.
@@ -181,6 +188,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         refresh.setRefreshing(false);
         checkFile();
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+        errorTextView.setVisibility(View.INVISIBLE);
     }
 
     //It notifies the user of the false download of the list from the Server.

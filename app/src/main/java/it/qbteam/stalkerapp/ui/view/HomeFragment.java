@@ -72,6 +72,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private Dialog dialogNation;
     private List<String> nationList;
     private Button selectCountry;
+    private SearchView searchView;
 
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
@@ -270,6 +271,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item= menu.findItem(R.id.searchID);
+        searchView= (SearchView) item.getActionView();
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
         searchForName = menu.findItem(R.id.search_nameID);
         searchForCity = menu.findItem(R.id.search_cityID);
@@ -285,7 +287,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
 
 
-        SearchView searchView= (SearchView) item.getActionView();
+
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -293,6 +295,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         int width = size.x;
         searchView.setMaxWidth(width*2/3);
 
+        if (!searchForCity.isChecked())
         new SearchViewCustom()
                 .setSearchBackGroundResource(R.drawable.custom_border)
                 .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
@@ -309,6 +312,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     }
 
     public void resetAdapter(){
+        new SearchViewCustom()
+                .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
+                .setSearchHintText("cerca qui...")
+                .format(searchView);
         countrySelected = "";
         auxList.clear();
         adapter = new OrganizationViewAdapter(organizationList, this.getContext(),this);
@@ -332,7 +339,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
             case R.id.search_cityID:
                 item.setChecked(true);
-
+                new SearchViewCustom()
+                        .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
+                        .setSearchHintText("cerca per città...")
+                        .format(searchView);
                 //da finire.
             break;
 

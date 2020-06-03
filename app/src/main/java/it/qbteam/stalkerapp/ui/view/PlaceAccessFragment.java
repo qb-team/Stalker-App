@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
@@ -97,8 +98,9 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     //Makes the 'add to favorites' option visible to the application's action tab menu and hides the search command.
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-
-        menu.findItem(R.id.searchID).setVisible(false);
+        MenuItem item= menu.findItem(R.id.searchID);
+        item.setVisible(false);
+        menu.setGroupVisible(R.id.filterID,false);
         super.onPrepareOptionsMenu(menu);
     }
 

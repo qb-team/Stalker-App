@@ -564,6 +564,8 @@ public class TrackingStalker extends Service {
 
                         HomePageActivity.playPauseTimeService();
 
+                        organizationAccess.setAccessType("Autenticato");
+
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 
                         Toast.makeText(getApplicationContext(), "Sei dentro all'organizzazione: " + insideOrganization.getName()+" in modo autenticato", Toast.LENGTH_SHORT).show();
@@ -596,6 +598,8 @@ public class TrackingStalker extends Service {
                     else if(storage.deserializeMovementInLocal() == null&&authenticated==false){
 
                         HomePageActivity.playPauseTimeService();
+
+                        organizationAccess.setAccessType("Anonimo");
 
                         insideOrganization = latLngOrganizationList.get(i);// Viene creato un oggetto che identifica l'organizzazione
 

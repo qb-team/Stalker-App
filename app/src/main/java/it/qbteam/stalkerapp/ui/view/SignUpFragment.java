@@ -104,7 +104,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
 
         if(!TextUtils.isEmpty(emailEditText.getText()) && !TextUtils.isEmpty(passwordEditText.getText())
                 && (passwordEditText.getText().length() >= 6) && termsofUseCheckBox.isChecked() && confPasswordEditText.getText().toString().equals(passwordEditText.getText().toString())){
-            checkSignUp(emailEditText.getText().toString().trim(), passwordEditText.getText().toString());
+                checkSignUp(emailEditText.getText().toString().trim(), passwordEditText.getText().toString());
         }
         else {
 

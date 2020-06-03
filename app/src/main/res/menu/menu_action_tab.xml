@@ -37,12 +37,12 @@
             android:checkableBehavior="single">
 
         <item android:id="@+id/DateDecreasingOrderID"
-            android:title="ordine data crescente"/>
+            android:title="data crescente"/>
 
         <item android:id="@+id/DateIncreasingOrderID"
-            android:title="ordine data decrescente"/>
+            android:title="data decrescente"/>
 
         <item android:id="@+id/speacificDateID"
-            android:title="specifica data"/>
+            android:title="specifica una data"/>
     </group>
 </menu>

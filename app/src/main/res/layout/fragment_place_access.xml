@@ -15,25 +15,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
-       <TextView
-           android:layout_marginLeft="10dp"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Tempo totale di permanenza: "
-           android:textColor="@color/colorPrimary"
-           android:textSize="24sp"
-          />
         <TextView
-            android:id="@+id/timeStayID"
-            android:layout_width="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Tempo di permanenza: "
             android:textColor="@color/colorPrimary"
             android:textSize="24sp"
             />
+        <TextView
+            android:id="@+id/timeStayID"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/blackColor"
+
+            />
     </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo di accesso: "
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp"
+                />
+            <TextView
+                android:id="@+id/accessTypeID"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/blackColor"
+                android:textSize="24sp"
 
+                />
+        </LinearLayout>
 
 
         <LinearLayout
@@ -50,7 +74,7 @@
                 android:text="Nome"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/colorPrimary"
                 />
             <TextView
                 android:layout_width="0dp"
@@ -61,7 +85,7 @@
                 android:text="Data"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/colorPrimary"
                 />
             <TextView
                 android:layout_width="0dp"
@@ -72,7 +96,7 @@
                 android:text="Accesso"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/colorPrimary"
                 />
             <TextView
                 android:layout_width="0dp"
@@ -83,7 +107,7 @@
                 android:text="Uscita"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/colorPrimary"
                 />
         </LinearLayout>
 

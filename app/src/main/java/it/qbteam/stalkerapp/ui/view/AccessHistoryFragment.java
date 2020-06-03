@@ -223,11 +223,14 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         bundle.putString("name", accessList.get(position).getOrgName());
         bundle.putLong("orgID", accessList.get(position).getOrganizationId());
         bundle.putLong("timeID", accessList.get(position).getTimeStay());
+        bundle.putString("accessType", accessList.get(position).getAccessType());
+
         PlaceAccessFragment placeAccessFragment = new PlaceAccessFragment();
         placeAccessFragment.setArguments(bundle);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
         transaction.replace(R.id.AccessHistoryID, placeAccessFragment).commit();
+
         HomePageActivity.getTabLayout().setVisibility(View.GONE);
         accessHistoryFragmentListener.disableScroll(false);
     }

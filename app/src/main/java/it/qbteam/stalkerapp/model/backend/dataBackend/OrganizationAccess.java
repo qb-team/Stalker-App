@@ -62,6 +62,12 @@ public class OrganizationAccess implements Serializable {
   @SerializedName(SERIALIZED_ORG_TIME_STAY)
   private Long timeStay;
 
+  public static final String SERIALIZED_ACCESS_TYPE= "accessType";
+  @SerializedName(SERIALIZED_ACCESS_TYPE)
+  private String accessType;
+
+  public void setAccessType(String accessType){this.accessType=accessType;}
+  public String getAccessType(){return accessType;}
   public void setTimeStay(Long timeStay){
     this.timeStay=timeStay;
   }

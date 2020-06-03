@@ -101,6 +101,7 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         MenuItem item= menu.findItem(R.id.searchID);
         item.setVisible(false);
         menu.setGroupVisible(R.id.filterID,false);
+        menu.setGroupVisible(R.id.filterAccessID,false);
         super.onPrepareOptionsMenu(menu);
     }
 

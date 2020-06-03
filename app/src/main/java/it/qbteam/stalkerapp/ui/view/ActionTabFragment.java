@@ -94,8 +94,6 @@ public class ActionTabFragment extends Fragment{
                     case 2:
                         getActivity().setTitle("Storico accessi");
                         break;
-
-
                 }
 
             }

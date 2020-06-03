@@ -275,6 +275,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         MenuItem countryItem = menu.findItem(R.id.search_countryID);
         searchForName = menu.findItem(R.id.search_nameID);
         menu.setGroupVisible(R.id.filterID,true);
+        menu.setGroupVisible(R.id.filterAccessID,false);
         item.setVisible(true);
 
 

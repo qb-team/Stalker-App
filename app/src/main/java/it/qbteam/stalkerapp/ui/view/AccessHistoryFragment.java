@@ -23,7 +23,14 @@ import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import it.qbteam.stalkerapp.HomePageActivity;
@@ -34,6 +41,7 @@ import it.qbteam.stalkerapp.presenter.AccessHistoryPresenter;
 import it.qbteam.stalkerapp.tools.AccessHistoryViewAdapter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
+import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import it.qbteam.stalkerapp.tools.SearchViewCustom;
 //import lombok.SneakyThrows;
 
@@ -91,7 +99,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         recyclerView.setLayoutManager(llm);
         recyclerView.setHasFixedSize(true);
 
-        accessHistoryPresenter= new AccessHistoryPresenter(this);
+        accessHistoryPresenter = new AccessHistoryPresenter(this);
         try {
             printAccess();
 
@@ -99,7 +107,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             e.printStackTrace();
         }
 
-        buttonDelete= view.findViewById(R.id.accessID);
+        buttonDelete = view.findViewById(R.id.accessID);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -122,8 +130,8 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
 
     @Override
     public void onSuccessGetOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList) {
-        if(organizationAccessList!=null){
-            accessList=organizationAccessList;
+        if (organizationAccessList != null) {
+            accessList = organizationAccessList;
             adapter = new AccessHistoryViewAdapter(organizationAccessList, getActivity(), this);
             recyclerView.setAdapter(adapter);
         }
@@ -134,22 +142,22 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public void onSuccessDeleteOrganizationAccess() {
         adapter = new AccessHistoryViewAdapter(null, getActivity(), this);
         recyclerView.setAdapter(adapter);
-        accessList=null;
+        accessList = null;
     }
 
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        MenuItem item= menu.findItem(R.id.searchID);
+        MenuItem item = menu.findItem(R.id.searchID);
         item.setVisible(true);
-        menu.setGroupVisible(R.id.filterID,false);
-        SearchView searchView= (SearchView) item.getActionView();
+        menu.setGroupVisible(R.id.filterID, false);
+        SearchView searchView = (SearchView) item.getActionView();
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        searchView.setMaxWidth(width*2/3);
+        searchView.setMaxWidth(width * 2 / 3);
 
         new SearchViewCustom()
                 .setSearchBackGroundResource(R.drawable.custom_border)
@@ -166,20 +174,43 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.DateDecreasingOrderID:
+                DateDecreasingOrder(accessList);
+                item.setChecked(true);
+                break;
+
+            case R.id.DateIncreasingOrderID:
+                DateCreasingOrder(accessList);
+                item.setChecked(true);
+                break;
+
+            case R.id.speacificDateID:
+
+                break;
+
+
+        }
+        return true;
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        String userInput= newText.toLowerCase();
-        List<OrganizationAccess> newList= new ArrayList<>();
-        if(accessList!=null){
-            for(int i = 0; i< accessList.size(); i++){
-                if(accessList.get(i).getOrgName().toLowerCase().contains(userInput))
+        String userInput = newText.toLowerCase();
+        List<OrganizationAccess> newList = new ArrayList<>();
+        if (accessList != null) {
+            for (int i = 0; i < accessList.size(); i++) {
+                if (accessList.get(i).getOrgName().toLowerCase().contains(userInput))
                     newList.add(accessList.get(i));
             }
-            adapter=new AccessHistoryViewAdapter(newList,getActivity(),this);
+            adapter = new AccessHistoryViewAdapter(newList, getActivity(), this);
             recyclerView.setAdapter(adapter);
         }
         return false;
@@ -192,9 +223,9 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         bundle.putString("name", accessList.get(position).getOrgName());
         bundle.putLong("orgID", accessList.get(position).getOrganizationId());
         bundle.putLong("timeID", accessList.get(position).getTimeStay());
-        PlaceAccessFragment placeAccessFragment= new PlaceAccessFragment();
+        PlaceAccessFragment placeAccessFragment = new PlaceAccessFragment();
         placeAccessFragment.setArguments(bundle);
-        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack(null);
         transaction.replace(R.id.AccessHistoryID, placeAccessFragment).commit();
         HomePageActivity.getTabLayout().setVisibility(View.GONE);
@@ -211,4 +242,32 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public boolean onBackPressed() {
         return new BackPressImplementation(this).onBackPressed();
     }
+
+    public void DateDecreasingOrder(List<OrganizationAccess> list){
+        if(list!=null&&list.size()>0){
+            Collections.sort(list, byDateCreasing);
+            List<OrganizationAccess>aux= new ArrayList<>();
+            int flag=list.size();
+            for (int i=0; i<flag; i++){
+                aux.add(list.get(flag-1-i));
+            }
+            adapter = new AccessHistoryViewAdapter(aux, getActivity(), this);
+            recyclerView.setAdapter(adapter);
+        }
+
+
+    }
+
+    public void DateCreasingOrder(List<OrganizationAccess>list){
+
+        if(list!=null&&list.size()>0) {
+            Collections.sort(list, byDateCreasing);
+            adapter = new AccessHistoryViewAdapter(list, getActivity(), this);
+            recyclerView.setAdapter(adapter);
+        }
+    }
+
+
+    static final Comparator<OrganizationAccess> byDateCreasing = (o1, o2) -> o1.getExitTimestamp().compareTo(o2.getExitTimestamp());
+
 }

@@ -8,15 +8,11 @@
         app:actionViewClass="android.widget.SearchView"
        />
 
-<!--    android:icon="@drawable/ic_expand_more_black_24dp"-->
+
 
     <group android:id="@+id/filterID"
         android:checkableBehavior="single">
 
-<!--        <item android:id="@+id/menu_sort_by_name"-->
-<!--            android:title="dsort_by_name"/>-->
-<!--        <item android:id="@+id/menu_sort_by_last_edit"-->
-<!--            android:title="dlast_edit"/>-->
 
         <item android:id="@+id/alphabeticalOrderID"
             android:title="ordine alfabetico"/>
@@ -37,5 +33,19 @@
         <item android:id="@+id/search_authenticateID"
             android:title="organizzazioni autenticate"/>
 
+    </group>
+
+
+    <group android:id="@+id/filterAccessID"
+            android:checkableBehavior="single">
+
+        <item android:id="@+id/DateDecreasingOrderID"
+            android:title="ordine data crescente"/>
+
+        <item android:id="@+id/DateIncreasingOrderID"
+            android:title="ordine data decrescente"/>
+
+        <item android:id="@+id/speacificDateID"
+            android:title="specifica data"/>
     </group>
 </menu>

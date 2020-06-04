@@ -169,7 +169,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Creates Activity and manages the fragments connected to it. In this method there is the user authentication check,
     // in case the user is no longer logged in the goToMainActivity () method is invoked.
-    @SuppressLint("WrongViewCast")
+    @SuppressLint({"WrongViewCast", "HandlerLeak"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -274,7 +274,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
-
         this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
         setSwitchState(Utils.requestingLocationUpdates(this));
         super.onStart();
@@ -283,7 +282,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
     @Override
     public void onStop() {
+        System.out.println("onStop");
         if (mBound) {
+
             this.unbindService(mServiceConnection);
             mBound = false;
         }
@@ -301,6 +302,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onResume() {
+        System.out.println("onResume");
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(TrackingStalker.ACTION_BROADCAST));
@@ -310,6 +312,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onPause() {
+        System.out.println("onPause");
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
 
@@ -480,6 +483,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void startTracking() {
+        System.out.println("HA INIZIATO");
         mService.requestLocationUpdates();
 
     }
@@ -512,6 +516,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         if (!checkPermissions()) {
                             requestPermissions();
                         } else {
+                            System.out.println("E");
                             startTracking();
 
                         }
@@ -538,11 +543,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Returns user's token.
     public static String getUserToken(){
-        if (user!=null)
+        if (user!=null) {
+            System.out.println("user token pieno");
             return user.getToken();
+        }
         else
         {
-            System.out.println("Ehyyy");
+            System.out.println("user token vuoto");
             return null;
         }
     }
@@ -591,14 +598,17 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             case R.id.switcherID:
                 if(switcher.isChecked()){
                     if (!checkPermissions()) {
+
                         requestPermissions();
                     }
                     else {
+                        System.out.println("startTraking");
                         startTracking();
                     }
                 }
                 else{
                     try {
+                        System.out.println("stopTraking");
                         stopTracking();
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();

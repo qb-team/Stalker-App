@@ -90,7 +90,7 @@ public class ActionTabFragment extends Fragment{
                         break;
 
                     case 1:
-                        getActivity().setTitle("My stalker list");
+                        getActivity().setTitle("MyStalkerList");
                         break;
 
                     case 2:

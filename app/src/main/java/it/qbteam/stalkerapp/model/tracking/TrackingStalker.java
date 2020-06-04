@@ -58,6 +58,7 @@ import java.util.TimerTask;
 
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
+import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
@@ -119,7 +120,8 @@ public class TrackingStalker extends Service {
     private  Timer timer;
     private Long orgID;
     private String accessType;
-    private Boolean isInsideOrganization = false;
+    private Boolean isInsideOrganization;
+    private Boolean isInsidePlace;
     public TrackingStalker()  {
 
     }
@@ -132,7 +134,6 @@ public class TrackingStalker extends Service {
         latLngOrganizationList=new ArrayList<>();
         latLngPlaceList=new ArrayList<>();
         organizationAccess=new OrganizationAccess();
-        placeAccess= new PlaceAccess();
         storage = new Storage(null,null, null, null);
         server = new Server(null,null, null);
         timer = new Timer();
@@ -231,6 +232,8 @@ public class TrackingStalker extends Service {
         startService(new Intent(getApplicationContext(), TrackingStalker.class));
 
         try {
+            isInsideOrganization = false;
+            isInsidePlace = false;
             updateTrackingList();
             System.out.println("RequestLocationUpdates è partito ");
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
@@ -245,58 +248,56 @@ public class TrackingStalker extends Service {
 
         if(insideOrganization!=null){
 
-            if(HomePageActivity.getSwitcherModeStatus()) {
-                if(organizationAccess==null){
-                    organizationAccess= new OrganizationAccess();
-                }
-                //sets the organizationAccess' properties
+                organizationAccess = new OrganizationAccess();
+            //Update the access' list when the user exits from organization.
                 organizationAccess.setEntranceTimestamp(organizationAccessTime);
                 organizationAccess.setAccessType(accessType);
                 organizationAccess.setOrganizationId(insideOrganization.getOrgID());
                 organizationAccess.setOrgName(insideOrganization.getName());
                 organizationAccess.setExitTimestamp(OffsetDateTime.now());
                 organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
-                //Comunicates the server that user is outside the organization(authenticated).
-                System.out.println("QUI");
-                server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
 
+            if(HomePageActivity.getSwitcherModeStatus()) {
+
+                //Comunicates the server that user is outside the organization(authenticated).
+                server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
             }
 
             else{
-                if(organizationAccess==null){
-                    organizationAccess= new OrganizationAccess();
-                }
-                //sets the organizationAccess' properties
-                organizationAccess.setEntranceTimestamp(organizationAccessTime);
-                organizationAccess.setAccessType(accessType);
-                organizationAccess.setOrganizationId(insideOrganization.getOrgID());
-                organizationAccess.setOrgName(insideOrganization.getName());
-                organizationAccess.setExitTimestamp(OffsetDateTime.now());
-                organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
+
                 //Comunicates the server that user is outside the organization(anonymous).
-                System.out.println("QUO");
                 server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, storage.deserializeMovementInLocal().getExitToken(), organizationAccess);
             }
 
             //Deletes the organization movement.
             storage.deleteOrganizationMovement();
 
+            Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
+
             HomePageActivity.setNameOrg("Nessuna organizzazione");
 
+            isInsideOrganization=false;
 
 
         }
          if(insidePlace!=null){
 
-            if(HomePageActivity.getSwitcherModeStatus()){
+                 placeAccess= new PlaceAccess();
+                 //Update the access' list when the user exits from organization and place.
+                 placeAccess.setEntranceTimestamp(placeAccessTime);
+                 placeAccess.setPlaceName(insidePlace.getName());
+                 System.out.print("ORGANIZATION ID   "+ orgID);
+                 placeAccess.setOrgId(orgID);
+                 placeAccess.setExitTimestamp(OffsetDateTime.now());
+
+             if(HomePageActivity.getSwitcherModeStatus()){
                 //Comunicates the server that user is outside the place(authenticated).
                 server.performPlaceMovementServer(storage.deserializePlaceMovement().getExitToken(), -1, insidePlace.getId(), insideOrganization.getOrgAuthServerID(), HomePageActivity.getUserToken(), placeAccess);
             }
 
-            else{
+             else{
                 //Comunicates the server that user is outside the place(anonymous).
                 server.performPlaceMovementServer(storage.deserializePlaceMovement().getExitToken(), -1, insidePlace.getId(), null, HomePageActivity.getUserToken(), placeAccess);
-
             }
 
             //Deletes the place movement.
@@ -305,8 +306,11 @@ public class TrackingStalker extends Service {
              //Deletes the place's list of the organization.
              storage.deletePlace();
 
+             Toast.makeText(getApplicationContext(), "Sei uscito dal luogo " + insidePlace.getName(), Toast.LENGTH_SHORT).show();
+
              HomePageActivity.setNamePlace("Nessun luogo");
 
+             isInsidePlace=false;
         }
 
         // Notify anyone listening for broadcasts about the new location.
@@ -319,18 +323,19 @@ public class TrackingStalker extends Service {
             }
         }, delay);
 
+         //Reset of all parameters.
+         insideOrganization = null;
+         insidePlace = null;
 
-        insideOrganization = null;
-        insidePlace = null;
-        organizationAccess = null;
 
-        Log.i(TAG, "Removing location updates");
 
-        try {
+         Log.i(TAG, "Removing location updates");
+
+         try {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             Utils.setRequestingLocationUpdates(this, false);
             stopSelf();
-        } catch (SecurityException unlikely) {
+         } catch (SecurityException unlikely) {
             Utils.setRequestingLocationUpdates(this, true);
             Log.e(TAG, "Lost location permission. Could not remove updates. " + unlikely);
         }
@@ -424,7 +429,7 @@ public class TrackingStalker extends Service {
 
         // The PendingIntent to launch activity.
         PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, HomePageActivity.class), PendingIntent.FLAG_NO_CREATE);
+                new Intent(this, HomePageActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .addAction(R.drawable.ic_launch, "Apri l'app", activityPendingIntent)
@@ -494,8 +499,9 @@ public class TrackingStalker extends Service {
                 boolean isInsideBoundary = builder.build().contains(actualPosition);
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngPlaceList.get(i).getLatLng(), true);
                 if (isInsideBoundary && isInside) {
+                    HomePageActivity.setNamePlace(latLngPlaceList.get(i).getName());
 
-                    if (storage.deserializePlaceMovement() == null&&authenticated) {
+                    if (storage.deserializePlaceMovement() == null&&authenticated && !isInsidePlace) {
 
                         insidePlace = latLngPlaceList.get(i);
 
@@ -506,10 +512,10 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the place
                         server.performPlaceMovementServer(null, 1, latLngPlaceList.get(i).getId(), insideOrganization.getOrgAuthServerID(), HomePageActivity.getUserToken(),placeAccess);
 
-                        HomePageActivity.setNamePlace(insidePlace.getName());
+
                     }
 
-                    else if(storage.deserializePlaceMovement() == null&&!authenticated){
+                    else if(storage.deserializePlaceMovement() == null&&!authenticated && !isInsidePlace){
 
                         insidePlace = latLngPlaceList.get(i);
 
@@ -520,7 +526,6 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the place
                         server.performPlaceMovementServer(null, 1, latLngPlaceList.get(i).getId(), null, HomePageActivity.getUserToken(),placeAccess);
 
-                        HomePageActivity.setNamePlace(insidePlace.getName());
                     }
 
                 }
@@ -532,6 +537,9 @@ public class TrackingStalker extends Service {
 
                         Toast.makeText(getApplicationContext(), "Sei uscito dal luogo: " + insidePlace.getName(), Toast.LENGTH_SHORT).show();
 
+                        isInsidePlace= false;
+
+                        PlaceAccess placeAccess = new PlaceAccess();
                         //Update the access' list when the user exits from organization.
                         placeAccess.setEntranceTimestamp(placeAccessTime);
                         placeAccess.setPlaceName(insidePlace.getName());
@@ -577,7 +585,9 @@ public class TrackingStalker extends Service {
 
                 if (isInsideBoundary && isInside) {
 
-                    if (storage.deserializeMovementInLocal() == null&& authenticated) {
+                    HomePageActivity.setNameOrg(latLngOrganizationList.get(i).getName());
+
+                    if (storage.deserializeMovementInLocal() == null && authenticated && !isInsideOrganization ) {
 
                         HomePageActivity.playPauseTimeService();
 
@@ -598,7 +608,7 @@ public class TrackingStalker extends Service {
                         //Download the places' list.
                         server.performDownloadPlaceServer(insideOrganization.getOrgID(),HomePageActivity.getUserToken());
 
-                        HomePageActivity.setNameOrg(insideOrganization.getName());
+
 
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
@@ -639,7 +649,6 @@ public class TrackingStalker extends Service {
                         //Download the places' list.
                         server.performDownloadPlaceServer(insideOrganization.getOrgID(),HomePageActivity.getUserToken());
 
-                        HomePageActivity.setNameOrg(insideOrganization.getName());
 
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
@@ -669,10 +678,8 @@ public class TrackingStalker extends Service {
 
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: " + insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 
+                        OrganizationAccess organizationAccess = new OrganizationAccess();
 
-                        if (organizationAccess==null) {
-                            organizationAccess = new OrganizationAccess();
-                        }
                         //sets the organizationAccess' properties and
                         //Update the access' list when the user exits from organization.
                         organizationAccess.setEntranceTimestamp(organizationAccessTime);

@@ -66,10 +66,9 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_place_access, container, false);
+        bundle = this.getArguments();
         getActivity().setTitle("Luoghi di: "+bundle.getString("name"));
         placeAccessPresenter = new PlaceAccessPresenter(this);
-        bundle = this.getArguments();
-
         timeStay= view.findViewById(R.id.timeStayID);
         Long time=bundle.getLong("timeID");
         accessType=view.findViewById(R.id.accessTypeID);
@@ -118,11 +117,11 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     }
 
     @Override
-    public void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> PlaceAccessList) {
+    public void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> placeAccessList) {
 
-        if(PlaceAccessList!=null){
-            for(int i=0;i<PlaceAccessList.size();i++){
-                    if((PlaceAccessList.get(i).getOrgId()).equals(bundle.getLong("orgID"))){
+        if(placeAccessList!=null&&placeAccessList.size()!=0){
+            for(int i=0;i<placeAccessList.size();i++){
+                    if((placeAccessList.get(i).getOrgId()).equals(bundle.getLong("orgID"))){
                         //Creating new tablerows and textviews
                         TableRow row = new TableRow(getContext());
                         TextView txt1 = new TextView(getContext());
@@ -134,10 +133,10 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                         TextView txt4 = new TextView(getContext());
                         txt4.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
                         //setting the textViews
-                        txt1.setText(PlaceAccessList.get(i).getPlaceName());
-                        txt2.setText(PlaceAccessList.get(i).getEntranceTimestamp().getYear() + "/" + PlaceAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + PlaceAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
-                        txt3.setText(PlaceAccessList.get(i).getEntranceTimestamp().getHour()+":"+PlaceAccessList.get(i).getEntranceTimestamp().getMinute()+":"+PlaceAccessList.get(i).getEntranceTimestamp().getSecond());
-                        txt4.setText(PlaceAccessList.get(i).getExitTimestamp().getHour()+":"+PlaceAccessList.get(i).getExitTimestamp().getMinute()+":"+PlaceAccessList.get(i).getExitTimestamp().getSecond());
+                        txt1.setText(placeAccessList.get(i).getPlaceName());
+                        txt2.setText(placeAccessList.get(i).getEntranceTimestamp().getYear() + "/" + placeAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + placeAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
+                        txt3.setText(placeAccessList.get(i).getEntranceTimestamp().getHour()+":"+placeAccessList.get(i).getEntranceTimestamp().getMinute()+":"+placeAccessList.get(i).getEntranceTimestamp().getSecond());
+                        txt4.setText(placeAccessList.get(i).getExitTimestamp().getHour()+":"+placeAccessList.get(i).getExitTimestamp().getMinute()+":"+placeAccessList.get(i).getExitTimestamp().getSecond());
                         txt1.setLayoutParams(params1);
                         txt2.setLayoutParams(params1);
                         txt3.setLayoutParams(params1);

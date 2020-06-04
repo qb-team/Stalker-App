@@ -127,7 +127,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         bundle.putString("serverURL", organizationList.get(position).getAuthenticationServerURL());
         bundle.putString("creationDate", organizationList.get(position).getCreationDate().toString());
 
-        if (organizationList.get(position).getTrackingMode().getValue() == "anonymous") {
+        if (organizationList.get(position).getTrackingMode().getValue().equals("anonymous")) {
             StandardOrganizationFragment stdOrgFragment = new StandardOrganizationFragment();
             stdOrgFragment.setArguments(bundle);
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -180,173 +180,13 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     public boolean organizationListEmpty(){
-        if(organizationList==null||organizationList.size()==0)
-        return true;
+        if (organizationList==null || organizationList.size()==0)
+            return true;
         else
             return false;
     }
 
-    /*
-    //Hide the 'add to favorites' option from the application's action tab menu and make the search command visible.
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item= menu.findItem(R.id.searchID);
-        MenuItem countryItem = menu.findItem(R.id.search_countryID);
-        menu.setGroupVisible(R.id.filterID,true);
-        MenuItem accessFilter= menu.findItem(R.id.order_forID);
-        accessFilter.setVisible(false);
-        item.setVisible(true);
-        if(countrySelected!="")
-            countryItem.setTitle("Nazione scelta : "+ countrySelected);
 
-        SearchView searchView= (SearchView) item.getActionView();
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        searchView.setMaxWidth(width*2/3);
-
-        new SearchViewCustom()
-                .setSearchBackGroundResource(R.drawable.custom_border)
-                .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
-                .setSearchHintText("cerca qui..")
-                .setSearchTextColorResource(R.color.colorPrimary)
-                .setSearchHintColorResource(R.color.colorPrimary)
-                .setSearchCloseIconResource(R.drawable.ic_close_black_24dp)
-                .setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
-                .format(searchView);
-
-        searchView.setOnQueryTextListener(this);
-
-        super.onPrepareOptionsMenu(menu);
-    }
-    @Override
-    public boolean onOptionsItemSelected (MenuItem item){
-        switch (item.getItemId()){
-
-            case R.id.search_cityID:
-                if(item.isChecked()){
-                    item.setChecked(false);
-                    searchCity = false;
-                }
-                else{
-                    item.setChecked(true);
-                    searchCity = true;
-
-                }
-
-                break;
-
-            case R.id.search_countryID:
-                countryDialog();
-
-                break;
-            case R.id.search_anonymousID:
-                if(item.isChecked()){
-                    item.setChecked(false);
-                    for (Iterator<Organization> iterator = auxList.iterator(); iterator.hasNext();) {
-                        Organization o = iterator.next();
-                        if (o.getTrackingMode().toString().equals("anonymous")) {
-                            iterator.remove();
-                        }
-                    }
-                    if (auxList.size() != 0) {
-                        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
-
-                    }
-                    else {
-                        adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-
-                    }
-                    recyclerView.setAdapter(adapter);
-
-                }
-                else{
-                    item.setChecked(true);
-                    for(int i = 0;i< organizationList.size(); i++){
-                        if(organizationList.get(i).getTrackingMode().toString().equals("anonymous"))
-                            auxList.add(organizationList.get(i));
-                        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
-                        recyclerView.setAdapter(adapter);
-                    }
-                }
-                break;
-
-            case R.id.search_authenticateID:
-                if(item.isChecked()){
-                    item.setChecked(false);
-                    for (Iterator<Organization> iterator = auxList.iterator(); iterator.hasNext();) {
-                        Organization o = iterator.next();
-                        if (o.getTrackingMode().toString().equals("authenticated")) {
-                            iterator.remove();
-                        }
-                    }
-                    if (auxList.size() != 0) {
-                        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
-
-                    }
-                    else {
-                        adapter=new OrganizationViewAdapter(organizationList,this.getContext(),this);
-
-                    }
-                    recyclerView.setAdapter(adapter);
-
-                }
-                else{
-                    item.setChecked(true);
-                    for(int i = 0;i< organizationList.size(); i++){
-                        if(organizationList.get(i).getTrackingMode().toString().equals("authenticated"))
-                            auxList.add(organizationList.get(i));
-                        adapter=new OrganizationViewAdapter(auxList,this.getContext(),this);
-                        recyclerView.setAdapter(adapter);
-                    }
-                }
-                break;
-
-        }
-        return true;
-    }
-    private void countryDialog(){
-        CountryCurrencyPicker pickerDialog = CountryCurrencyPicker.newInstance(PickerType.COUNTRYandCURRENCY, new CountryCurrencyPickerListener() {
-            @Override
-            public void onSelectCountry(Country country) {
-                countrySelected=country.getName();
-                getActivity().invalidateOptionsMenu();
-            }
-
-            @Override
-            public void onSelectCurrency(Currency currency) {
-
-            }
-        });
-
-        pickerDialog.show(getActivity().getSupportFragmentManager(),CountryCurrencyPicker.DIALOG_NAME);
-    }
-    //End click listener.
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    //Display the list of organizations on the screen following the inputs entered by the user in the search menu.
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        String userInput = newText.toLowerCase();
-        List<Organization> newList = new ArrayList<>();
-
-        if (organizationList.size() != 0) {
-            for (int i = 0; i < organizationList.size(); i++) {
-
-                if (organizationList.get(i).getName().toLowerCase().contains(userInput))
-                    newList.add(organizationList.get(i));
-            }
-            adapter = new OrganizationViewAdapter(newList, this.getContext(), this);
-            recyclerView.setAdapter(adapter);
-        }
-        return false;
-    }
-*/
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
@@ -387,7 +227,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         super.onPrepareOptionsMenu(menu);
     }
 
-    public void resetAdapter(){
+    private void resetAdapter(){
         new SearchViewCustom()
                 .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
                 .setSearchHintText("Cerca qui..")
@@ -414,7 +254,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                         .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
                         .setSearchHintText("Cerca per città..")
                         .format(searchView);
-                //da finire.
                 break;
 
             case R.id.search_countryID:
@@ -517,7 +356,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     }
 
-    public void printCountrySelected(){
+    private void printCountrySelected(){
         for(int i = 0; i< organizationList.size(); i++){
             if(organizationList.get(i).getCountry().equals(countrySelected))
                 auxList.add(organizationList.get(i));
@@ -555,7 +394,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //Removes an organization from both the FileSystem and the Server.
-    public void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
+    private void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
         myStalkersListPresenter.removeOrganizationServer(organizationList.get(position),HomePageActivity.getUserID(), HomePageActivity.getUserToken());
         myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
     }

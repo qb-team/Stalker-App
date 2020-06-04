@@ -12,23 +12,19 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -55,8 +51,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.json.JSONException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Locale;
 
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
@@ -88,13 +82,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private static String userEmail;
     private static TrackingStalker mService;
     private boolean mBound = false;
-    private NavigationView navigationView;
     private static String path;
 
     //Time spent fields
     public static Handler sHandler;
-    private final int playPause = 0;
-    private final int reset = 1;
     private static int hours = 0;
     private static int secs = 0;
     private static int mins = 0;
@@ -209,7 +200,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         ActionBarDrawerToggle actionBarDrawerToggle= new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        navigationView = findViewById(R.id.nav_viewID);
+        NavigationView navigationView = findViewById(R.id.nav_viewID);
         navigationView.setNavigationItemSelectedListener( this);
         myReceiver = new MyReceiver();
         statusCheck();
@@ -254,7 +245,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
-            if (!checkPermissions()) {
+            if (checkPermissions()) {
                 requestPermissions();
             }
         }
@@ -379,8 +370,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 goToMainActivity();
                 break;
             case R.id.alphabeticalOrderID:
-                Fragment frag = (HomeFragment)ActionTabFragment.getHomeFragment();
-                ((HomeFragment) frag).alphabeticalOrder();
+                HomeFragment frag = (HomeFragment)ActionTabFragment.getHomeFragment();
+                frag.alphabeticalOrder();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -397,7 +388,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Check the user's permissions about tracking.
     private boolean checkPermissions() {
-        return  PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
+        return PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
@@ -510,7 +501,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        if (!checkPermissions()) {
+                        if (checkPermissions()) {
                             requestPermissions();
                         } else {
                             System.out.println("E");
@@ -594,7 +585,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         switch (view.getId()){
             case R.id.switcherID:
                 if(switcher.isChecked()){
-                    if (!checkPermissions()) {
+                    if (checkPermissions()) {
 
                         requestPermissions();
                     }

@@ -9,7 +9,7 @@
     android:clickable="true"
     android:id="@+id/standardOrganizationID">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -18,44 +18,50 @@
         android:id="@+id/titleID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
         android:text="TITOLO"
+        android:layout_alignParentTop="true"
         android:textColor="@color/colorPrimary"
         android:textAlignment="center"
         android:textSize="28sp"
         android:textStyle="bold" />
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
         android:layout_marginTop="20dp"
         android:padding="15dp"
+        android:layout_below="@id/titleID"
         android:id="@+id/imageID"
-        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/image"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp">
-
-        <TextView
-            android:id="@+id/descriptionID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:padding="15dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:scrollbarStyle="outsideOverlay"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp" />
+        android:layout_height="250dp"
+        android:layout_below="@id/imageID"
+        android:padding="20dp">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/descriptionID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbarStyle="outsideOverlay"
+        android:textColor="@color/blackColor"
+        android:textSize="18sp" />
+</LinearLayout>
 
     </ScrollView>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/accessID"

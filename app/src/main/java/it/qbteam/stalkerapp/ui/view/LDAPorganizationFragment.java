@@ -75,8 +75,8 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ldap_organization, container, false);
-        HomePageActivity.getTabLayout().setVisibility(View.GONE);
         Bundle bundle = this.getArguments();
+        HomePageActivity.getTabLayout().setVisibility(View.GONE);
         title = view.findViewById(R.id.titleID);
         title.setText(bundle.getString("name"));
         TextView description = view.findViewById(R.id.descriptionID);
@@ -105,6 +105,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     @Override
     public boolean onBackPressed() {
         HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
+
         iLDAPorganizationFragmentListener.disableScroll(true);
         return new BackPressImplementation(this).onBackPressed();
     }

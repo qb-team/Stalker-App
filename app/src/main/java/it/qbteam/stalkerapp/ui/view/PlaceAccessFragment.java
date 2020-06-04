@@ -66,9 +66,10 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_place_access, container, false);
+        getActivity().setTitle("Luoghi di: "+bundle.getString("name"));
         placeAccessPresenter = new PlaceAccessPresenter(this);
         bundle = this.getArguments();
-        getActivity().setTitle("Luoghi di: "+bundle.getString("name"));
+
         timeStay= view.findViewById(R.id.timeStayID);
         Long time=bundle.getLong("timeID");
         accessType=view.findViewById(R.id.accessTypeID);

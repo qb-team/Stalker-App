@@ -89,16 +89,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private static TrackingStalker mService;
     private boolean mBound = false;
     private NavigationView navigationView;
-    private  View actionView;
     private static String path;
 
     //Time spent fields
     public static Handler sHandler;
     private final int playPause = 0;
     private final int reset = 1;
+    private static int hours = 0;
     private static int secs = 0;
     private static int mins = 0;
-    private static int millis = 0;
     private static Long currentTime = 0L;
     private boolean isBound = false;
     private static ChronometerService myService;
@@ -143,10 +142,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-    //S
     public static void setTime() {
-        time.setText("" + mins + ":" + String.format("%02d", secs) + ":"
-                + String.format("%03d", millis));
+        time.setText(String.format("%02d", hours) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs));
     }
 
     public static Long getCurrentTime(){
@@ -160,9 +157,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public static void resetTime() {
 
         myService.reset();
+        hours = 0;
         mins = 0;
         secs = 0;
-        millis = 0;
         setTime();
 
     }
@@ -198,10 +195,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
                 currentTime = Long.valueOf(timeMsg.obj.toString());
 
+                hours = secs / 3600;
                 secs = (int) (currentTime / 1000);
                 mins = secs / 60;
                 secs = secs % 60;
-                millis = (int) (currentTime % 1000);
                 setTime();
             }
         };
@@ -221,7 +218,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         //setting switch button tracking in drawer menu
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_switchID);
-        actionView = MenuItemCompat.getActionView(menuItem);
+        View actionView = MenuItemCompat.getActionView(menuItem);
         switcher = (SwitchCompat) actionView.findViewById(R.id.switcherID);
         switcher.setOnClickListener(this);
 

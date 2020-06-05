@@ -471,9 +471,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void startTracking() {
-        System.out.println("HA INIZIATO");
         mService.requestLocationUpdates();
-
     }
 
 

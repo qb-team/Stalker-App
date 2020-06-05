@@ -18,14 +18,12 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     private MyStalkersListContract.View myStalkersView;
     private Storage storage;
     private Server server;
-    private TrackingStalker trackingStalker;
 
     //MyStalkersListPresenter's constructor.
     public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView = myStalkersView;
     storage= new Storage(null,this, null, null);
     server = new Server(this, null, null);
-    trackingStalker = new TrackingStalker();
     }
 
     //Calls the the method performUpdateFile(list,path) of the class Storage(persistent layer that comunicates with FileSystem).
@@ -36,7 +34,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     @Override
     public OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException {
-        return storage.deserializeMovementInLocal();
+        return storage.deserializeOrganizationMovementInLocal();
     }
 
 

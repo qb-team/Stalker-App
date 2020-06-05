@@ -282,7 +282,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
 
     //Deserializes the object OrganizationMovement from a local file.
-    public OrganizationMovement deserializeMovementInLocal() throws IOException, ClassNotFoundException {
+    public OrganizationMovement deserializeOrganizationMovementInLocal() throws IOException, ClassNotFoundException {
 
         OrganizationMovement organizationMovement;
         //Reading the OrganizationMovement from a file

@@ -404,7 +404,12 @@ public class TrackingStalker extends Service {
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
         String json1 = mPrefs.getString("Map", "");
+        System.out.println("JSON11111111111111111111111111 "+ json1 + "FineJSON1");
 
+        Gson gson = new Gson();
+        organizationMovement = gson.fromJson(json1, OrganizationMovement.class);
+
+        /*
         Gson gson = new Gson();
 
         LinkedTreeMap<String, Object> m = gson.fromJson(json1, LinkedTreeMap.class);
@@ -413,7 +418,7 @@ public class TrackingStalker extends Service {
         placeMovement = (PlaceMovement) m.get("PlaceMovement");
         insideOrganization = (LatLngOrganization) m.get("InsideOrganization");
         insidePlace = (LatLngPlace) m.get("InsidePlace");
-
+*/
         System.out.print("OM"+organizationMovement+"PM"+placeMovement+"IO"+insideOrganization+"IP"+insidePlace);
         Log.i(TAG, "in onRebind()");
         stopForeground(true);

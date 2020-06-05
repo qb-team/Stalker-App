@@ -49,13 +49,17 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import com.google.maps.android.PolyUtil;
 import org.json.JSONException;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -72,6 +76,7 @@ import it.qbteam.stalkerapp.model.service.Storage;
 import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 import it.qbteam.stalkerapp.tools.Utils;
 import lombok.SneakyThrows;
+
 
 /**
  * A bound and started service that is promoted to a foreground service when location updates have
@@ -132,7 +137,7 @@ public class TrackingStalker extends Service {
     private static final String SHARED_PREFS = "sharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
-    private HashMap<String, Object> map;
+    private LinkedTreeMap<String, Object> map;
 
     public TrackingStalker()  {
 
@@ -153,7 +158,7 @@ public class TrackingStalker extends Service {
         timer = new Timer();
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         prefsEditor = mPrefs.edit();
-        map = new HashMap<String, Object>();
+        map = new LinkedTreeMap<String, Object>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
             @SneakyThrows
@@ -397,15 +402,17 @@ public class TrackingStalker extends Service {
         // and binds once again with this service. The service should cease to be a foreground
         // service when that happens.
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        Gson gson = new Gson();
 
         String json1 = mPrefs.getString("Map", "");
-        HashMap<String, Object> map;
-        map = (HashMap<String, Object>) gson.fromJson(json1, HashMap.class);
-        organizationMovement = (OrganizationMovement) map.get("OrganizationMovement");
-        placeMovement = (PlaceMovement) map.get("PlaceMovement");
-        insideOrganization = (LatLngOrganization) map.get("InsideOrganization");
-        insidePlace = (LatLngPlace) map.get("InsidePlace");
+
+        Gson gson = new Gson();
+
+        LinkedTreeMap<String, Object> m = gson.fromJson(json1, LinkedTreeMap.class);
+
+        organizationMovement = (OrganizationMovement) m.get("OrganizationMovement");
+        placeMovement = (PlaceMovement) m.get("PlaceMovement");
+        insideOrganization = (LatLngOrganization) m.get("InsideOrganization");
+        insidePlace = (LatLngPlace) m.get("InsidePlace");
 
         System.out.print("OM"+organizationMovement+"PM"+placeMovement+"IO"+insideOrganization+"IP"+insidePlace);
         Log.i(TAG, "in onRebind()");

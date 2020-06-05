@@ -54,6 +54,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -129,6 +130,9 @@ public class TrackingStalker extends Service {
     private OrganizationMovement organizationMovement;
     private PlaceMovement placeMovement;
     private static final String SHARED_PREFS = "sharedPrefs";
+    private SharedPreferences  mPrefs;
+    private SharedPreferences.Editor prefsEditor;
+    private HashMap<String, Object> map;
 
     public TrackingStalker()  {
 
@@ -140,13 +144,16 @@ public class TrackingStalker extends Service {
 
 
         System.out.println("onCreate TRACKING STOLKER");
+
         latLngOrganizationList=new ArrayList<>();
         latLngPlaceList=new ArrayList<>();
         organizationAccess=new OrganizationAccess();
         storage = new Storage(null,null, null, null);
         server = new Server(null,null, null);
         timer = new Timer();
-
+        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        prefsEditor = mPrefs.edit();
+        map = new HashMap<String, Object>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
             @SneakyThrows
@@ -389,24 +396,18 @@ public class TrackingStalker extends Service {
         // Called when a client (MainActivity in case of this sample) returns to the foreground
         // and binds once again with this service. The service should cease to be a foreground
         // service when that happens.
-        SharedPreferences  mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        Gson gson1 = new Gson();
-        String json1 = mPrefs.getString("PlaceMovement", "");
-        placeMovement = gson1.fromJson(json1, PlaceMovement.class);
+        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        Gson gson = new Gson();
 
+        String json1 = mPrefs.getString("Map", "");
+        HashMap<String, Object> map;
+        map = (HashMap<String, Object>) gson.fromJson(json1, HashMap.class);
+        organizationMovement = (OrganizationMovement) map.get("OrganizationMovement");
+        placeMovement = (PlaceMovement) map.get("PlaceMovement");
+        insideOrganization = (LatLngOrganization) map.get("InsideOrganization");
+        insidePlace = (LatLngPlace) map.get("InsidePlace");
 
-        Gson gson2 = new Gson();
-        String json2 = mPrefs.getString("OrganizationMovement", "");
-        organizationMovement = gson2.fromJson(json2, OrganizationMovement.class);
-
-        Gson gson3 = new Gson();
-        String json3 = mPrefs.getString("InsideOrganization", "");
-        insideOrganization = gson3.fromJson(json3, LatLngOrganization.class);
-
-        Gson gson4 = new Gson();
-        String json4 = mPrefs.getString("InsidePlace", "");
-        insidePlace = gson4.fromJson(json4, LatLngPlace.class);
-
+        System.out.print("OM"+organizationMovement+"PM"+placeMovement+"IO"+insideOrganization+"IP"+insidePlace);
         Log.i(TAG, "in onRebind()");
         stopForeground(true);
         mChangingConfiguration = false;
@@ -531,25 +532,12 @@ public class TrackingStalker extends Service {
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
-                                try {
-                                    SharedPreferences  mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-                                    PlaceMovement pm = storage.deserializePlaceMovement();
-                                    placeMovement = pm;
-                                    SharedPreferences.Editor prefsEditor = mPrefs.edit();
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(pm);
-                                    prefsEditor.putString("PlaceMovement", json);
-                                    prefsEditor.commit();
-
-                                    Gson gson1 = new Gson();
-                                    String json1 = gson1.toJson(insidePlace);
-                                    prefsEditor.putString("InsidePlace", json1);
-                                    prefsEditor.commit();
 
 
-                                } catch (IOException | ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
+                                map.put("PlaceMovement",placeMovement);
+                                map.put("InsidePlace", insidePlace);
+
+
                             }
                         }, delay);
 
@@ -569,24 +557,10 @@ public class TrackingStalker extends Service {
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
-                                try {
-                                    SharedPreferences  mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-                                    PlaceMovement pm = storage.deserializePlaceMovement();
-                                    placeMovement=pm;
-                                    SharedPreferences.Editor prefsEditor = mPrefs.edit();
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(pm);
-                                    prefsEditor.putString("PlaceMovement", json);
-                                    prefsEditor.commit();
 
-                                    Gson gson1 = new Gson();
-                                    String json1 = gson1.toJson(insidePlace);
-                                    prefsEditor.putString("InsidePlace", json1);
-                                    prefsEditor.commit();
+                                map.put("PlaceMovement",placeMovement);
+                                map.put("InsidePlace", insidePlace);
 
-                                } catch (IOException | ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         }, delay);
                     }
@@ -616,6 +590,9 @@ public class TrackingStalker extends Service {
                         placeMovement = null;
 
                         insidePlace = null;
+
+                        map.remove("InsidePlace");
+                        map.remove("PlaceMovement");
 
                         HomePageActivity.setNamePlace("Nessun luogo");
                     }
@@ -677,15 +654,13 @@ public class TrackingStalker extends Service {
                                     organizationMovement=om;
                                     SharedPreferences.Editor prefsEditor = mPrefs.edit();
                                     Gson gson = new Gson();
-                                    String json = gson.toJson(om);
-                                    prefsEditor.putString("OrganizationMovement", json);
-                                    prefsEditor.commit();
 
-                                    Gson gson1 = new Gson();
-                                    String json1 = gson1.toJson(insideOrganization);
-                                    prefsEditor.putString("InsideOrganization", json1);
+                                    map.put("OrganizationMovement",organizationMovement);
+                                    map.put("InsideOrganization", insideOrganization);
+                                    String json = gson.toJson(map);
+                                    prefsEditor.putString("Map", json);
+                                    prefsEditor.apply();
                                     prefsEditor.commit();
-
                                     latLngPlaceList = LatLngPlace.updatePlace(storage);
 
                                 } catch (JSONException | IOException | ClassNotFoundException e) {
@@ -729,16 +704,16 @@ public class TrackingStalker extends Service {
                                     organizationMovement=om;
                                     SharedPreferences.Editor prefsEditor = mPrefs.edit();
                                     Gson gson = new Gson();
-                                    String json = gson.toJson(om);
-                                    prefsEditor.putString("OrganizationMovement", json);
-                                    prefsEditor.commit();
 
-                                    Gson gson1 = new Gson();
-                                    String json1 = gson1.toJson(insideOrganization);
-                                    prefsEditor.putString("InsideOrganization", json1);
+                                    map.put("OrganizationMovement",organizationMovement);
+                                    map.put("InsideOrganization", insideOrganization);
+                                    String json = gson.toJson(map);
+                                    prefsEditor.putString("Map", json);
+                                    prefsEditor.apply();
                                     prefsEditor.commit();
-
                                     latLngPlaceList = LatLngPlace.updatePlace(storage);
+                                    latLngPlaceList = LatLngPlace.updatePlace(storage);
+
                                 } catch (JSONException | ClassNotFoundException | IOException e) {
                                     e.printStackTrace();
                                 }
@@ -787,6 +762,7 @@ public class TrackingStalker extends Service {
                         storage.deleteOrganizationMovement();
                         insideOrganization = null;
                         organizationMovement = null;
+                        map.clear();
                         HomePageActivity.setNameOrg("Nessuna organizzazione");
                     }
                 }

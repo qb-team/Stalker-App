@@ -272,15 +272,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public void onStop() {
         System.out.println("onStop");
         if (mBound) {
-
             this.unbindService(mServiceConnection);
             mBound = false;
         }
         if (isBound) {
-            /*playPauseTimeService();
-            resetTime();*/
             this.unbindService(chronometerServiceConnection);
-
             isBound = false;
         }
 

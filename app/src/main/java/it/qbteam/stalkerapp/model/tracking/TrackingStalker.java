@@ -305,7 +305,11 @@ public class TrackingStalker extends Service {
                     }
 
                     //Deletes the place's list of the organization.
-                    storage.deletePlace();
+                    try {
+                        storage.deletePlace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     placeMovement = null;
                 }
                 Intent intent = new Intent(ACTION_BROADCAST);

@@ -623,12 +623,11 @@ public class TrackingStalker extends Service {
 
                     HomePageActivity.setNameOrg(latLngOrganizationList.get(i).getName());
 
-
                     if (organizationMovement == null && authenticated) {
 
                         HomePageActivity.playPauseTimeService();
 
-                        organizationMovement = storage.deserializeOrganizationMovementInLocal();
+
 
                         accessType="Autenticato";
 
@@ -655,7 +654,7 @@ public class TrackingStalker extends Service {
                             @SneakyThrows
                             public void run() {
                                 try {
-
+                                    organizationMovement = storage.deserializeOrganizationMovementInLocal();
                                     latLngPlaceList = LatLngPlace.updatePlace(storage);
 
                                 } catch (JSONException | IOException | ClassNotFoundException e) {
@@ -668,7 +667,7 @@ public class TrackingStalker extends Service {
 
                     else if( organizationMovement == null && !authenticated ){
 
-                        organizationMovement = storage.deserializeOrganizationMovementInLocal();
+
 
                         isInsideOrganization= true;
 
@@ -700,9 +699,8 @@ public class TrackingStalker extends Service {
                             @SneakyThrows
                             public void run() {
                                 try {
-
+                                    organizationMovement = storage.deserializeOrganizationMovementInLocal();
                                     latLngPlaceList = LatLngPlace.updatePlace(storage);
-
 
                                 } catch (JSONException | ClassNotFoundException | IOException e) {
                                     e.printStackTrace();
@@ -718,6 +716,7 @@ public class TrackingStalker extends Service {
 
                     if (organizationMovement!= null && latLngOrganizationList.get(i).getOrgID().equals(organizationMovement.getOrganizationId())) {
 
+                        System.out.println("SONO USCITO");
                         isInsideOrganization=false;
 
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: "+ insideOrganization.getName(), Toast.LENGTH_SHORT).show();
@@ -732,6 +731,7 @@ public class TrackingStalker extends Service {
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
                         organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
+
                         HomePageActivity.playPauseTimeService();
                         HomePageActivity.resetTime();
 

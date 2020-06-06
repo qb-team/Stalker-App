@@ -21,6 +21,7 @@ public class ChronometerService extends Service {
     public ChronometerService() { }
 
     public Runnable updateTimer = new Runnable() {
+
         public void run() {
             timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
             updatedTime = timeSwapBuff + timeInMilliseconds;
@@ -61,7 +62,7 @@ public class ChronometerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // Tells the system to not try to recreate the service after it has been killed.
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     public void reset(){

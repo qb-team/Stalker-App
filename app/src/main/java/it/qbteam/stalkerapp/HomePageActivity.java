@@ -94,8 +94,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private static ChronometerService myService;
     private static TextView time;
 
-
-
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
         @Override
@@ -134,11 +132,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     };
 
     public static void setTime() {
+
         time.setText(String.format("%02d", hours) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs));
+
     }
 
     public static Long getCurrentTime(){
+
         return currentTime;
+
     }
     public static void playPauseTimeService() {
 
@@ -161,6 +163,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home_page);
 
         //user==null
@@ -178,6 +181,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         else if(savedInstanceState != null){
             actionTabFragment = (ActionTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
+
         HomePageActivity.sHandler = new Handler() {
 
             @Override
@@ -185,7 +189,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 super.handleMessage(timeMsg);
 
                 currentTime = Long.valueOf(timeMsg.obj.toString());
-
                 hours = secs / 3600;
                 secs = (int) (currentTime / 1000);
                 mins = secs / 60;
@@ -251,9 +254,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
 
         // Restore the state of the buttons when the activity (re)launches.
-        setSwitchState(Utils.requestingLocationUpdates(this));
-        this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
-
+        //setSwitchState(Utils.requestingLocationUpdates(this));
 
     }
 
@@ -263,6 +264,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
         this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+        if(myService==null)
+        this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         setSwitchState(Utils.requestingLocationUpdates(this));
         super.onStart();
     }
@@ -270,7 +273,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     //This method is invoked when the main Activity is no longer visible to the user, that is, when the latter has decided to close the application.
     @Override
     public void onStop() {
-        System.out.println("onStop");
         if (mBound) {
             this.unbindService(mServiceConnection);
             mBound = false;
@@ -286,17 +288,14 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onResume() {
-        System.out.println("onResume");
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(TrackingStalker.ACTION_BROADCAST));
-
 
     }
 
     @Override
     protected void onPause() {
-        System.out.println("onPause");
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
 

@@ -233,6 +233,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         MenuItem itemSwitchMode= menu.findItem(R.id.nav_switch_ModeID);
         actionView = MenuItemCompat.getActionView(itemSwitchMode);
         switcherMode=(SwitchCompat) actionView.findViewById(R.id.switcherModeID);
+
         switcherMode.setOnClickListener(this);
 
         //setting user email in drawer menu
@@ -304,14 +305,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
-                            System.out.println("Ha funzionato");
                             user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
                             MyStalkersListFragment frag = (MyStalkersListFragment )ActionTabFragment.getMyStalkerFragment();
                             if(frag.organizationListEmpty()){
                                 frag.loadMyStalkerList(user.getUid(),user.getToken());
                             }
                         } else {
-                            System.out.println("Ha fallito");
                             // Handle error -> task.getException();
                         }
                     }
@@ -494,7 +493,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         if (checkPermissions()) {
                             requestPermissions();
                         } else {
-                            System.out.println("E");
                             startTracking();
 
                         }
@@ -522,12 +520,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     //Returns user's token.
     public static String getUserToken(){
         if (user!=null) {
-            System.out.println("user token pieno");
             return user.getToken();
         }
         else
         {
-            System.out.println("user token vuoto");
             return null;
         }
     }
@@ -580,13 +576,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         requestPermissions();
                     }
                     else {
-                        System.out.println("startTraking");
                         startTracking();
                     }
                 }
                 else{
                     try {
-                        System.out.println("stopTraking");
                         stopTracking();
                     } catch (IOException e) {
                         e.printStackTrace();

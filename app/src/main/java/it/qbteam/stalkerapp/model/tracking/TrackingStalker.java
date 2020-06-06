@@ -121,11 +121,10 @@ public class TrackingStalker extends Service {
     private OffsetDateTime organizationAccessTime;
     private OffsetDateTime placeAccessTime;
     private static int delay = 3000;
-    private  Timer timer;
+    private Timer timer;
     private Long orgID;
     private String accessType;
-    private Boolean isInsideOrganization;
-    private Boolean isInsidePlace;
+
 
     //usati una volta che l'app è killata.
     private OrganizationMovement organizationMovement;
@@ -191,7 +190,6 @@ public class TrackingStalker extends Service {
         switch (i) {
             case 0:
                 mLocationRequest = new LocationRequest();
-                System.out.println("Massima accuretazza");
                 mLocationRequest.setInterval(5000);
                 mLocationRequest.setFastestInterval(5000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -199,14 +197,12 @@ public class TrackingStalker extends Service {
                 break;
             case 1:
                 mLocationRequest = new LocationRequest();
-                System.out.println("Acurattezza bilanciata");
                 mLocationRequest.setInterval(20000);
                 mLocationRequest.setFastestInterval(10000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                 break;
             case 2:
                 mLocationRequest = new LocationRequest();
-                System.out.println("Bassa accuratezza");
                 mLocationRequest.setInterval(10000);
                 mLocationRequest.setFastestInterval(10000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
@@ -243,10 +239,9 @@ public class TrackingStalker extends Service {
         startService(new Intent(getApplicationContext(), TrackingStalker.class));
 
         try {
-            isInsideOrganization = false;
-            isInsidePlace = false;
+
             updateTrackingList();
-            System.out.println("RequestLocationUpdates è partito ");
+            Log.i(TAG,"RequestLocationUpdates è partito ");
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
         } catch (SecurityException | JSONException unlikely) {
             Utils.setRequestingLocationUpdates(this, false);
@@ -489,7 +484,7 @@ public class TrackingStalker extends Service {
     }
 
 
-    private void isInsidePlace(Location location) throws IOException, ClassNotFoundException {
+    private void isInsidePlace(Location location) {
 
         if (latLngPlaceList != null) {
 
@@ -661,8 +656,6 @@ public class TrackingStalker extends Service {
 
                     else if( organizationMovement == null && !authenticated ){
 
-                        isInsideOrganization= true;
-
                         HomePageActivity.playPauseTimeService();
 
                         accessType="Anonimo";
@@ -704,8 +697,6 @@ public class TrackingStalker extends Service {
                 else {
 
                     if (organizationMovement!= null && latLngOrganizationList.get(i).getOrgID().equals(organizationMovement.getOrganizationId())) {
-
-                        isInsideOrganization=false;
 
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: "+ insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 

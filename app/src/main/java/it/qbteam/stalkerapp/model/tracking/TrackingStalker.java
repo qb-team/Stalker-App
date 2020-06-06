@@ -142,9 +142,6 @@ public class TrackingStalker extends Service {
     @Override
     public void onCreate() {
 
-
-        System.out.println("onCreate TRACKING STOLKER");
-
         latLngOrganizationList=new ArrayList<>();
         latLngPlaceList=new ArrayList<>();
         organizationAccess=new OrganizationAccess();

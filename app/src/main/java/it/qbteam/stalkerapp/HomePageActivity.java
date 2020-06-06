@@ -253,9 +253,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             }
         }
 
-        // Restore the state of the buttons when the activity (re)launches.
-        //setSwitchState(Utils.requestingLocationUpdates(this));
-
     }
 
     @Override

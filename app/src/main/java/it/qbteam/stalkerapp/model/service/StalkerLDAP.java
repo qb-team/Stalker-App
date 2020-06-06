@@ -4,6 +4,10 @@ import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.SearchResultEntry;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -51,7 +55,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
 
         //Uses to retrieve partial or complete copies of entries matching a given set of criteria.
         @Override
-        public void performSearch() throws ExecutionException, InterruptedException {
+        public void performSearch() throws ExecutionException, InterruptedException, IOException, JSONException {
             FutureTask<SearchResultEntry> searchFutureTask = new FutureTask<>(new Callable<SearchResultEntry>() {
                 @Override
                 public SearchResultEntry call() throws Exception {

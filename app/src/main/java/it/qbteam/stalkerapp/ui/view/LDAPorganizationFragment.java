@@ -49,6 +49,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     public interface LDAPorganizationFragmentListener {
 
         void disableScroll(boolean enable);
+        void sendOrganization(Organization o) throws IOException, JSONException;
     }
 
     // This method insures that the Activity has actually implemented our
@@ -105,7 +106,6 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     @Override
     public boolean onBackPressed() {
         HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
-
         iLDAPorganizationFragmentListener.disableScroll(true);
         return new BackPressImplementation(this).onBackPressed();
     }
@@ -148,7 +148,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
             catch(InterruptedException e) {
                 Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
-            catch(LDAPException e) {
+            catch(LDAPException | JSONException | IOException e) {
                 e.printStackTrace();
             }
             myDialog.dismiss();
@@ -157,24 +157,19 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
 
     //Success of LDAP authentication
     @Override
-    public void onSuccessLdap(String message) {
+    public void onSuccessLdap(String message) throws IOException, JSONException {
 
         authentication.setVisibility(View.INVISIBLE);
         Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
 
         //Try to add of the organization on MyStalkersList
-        try {
-            Organization o = new Organization();
-            o.setName(title.getText().toString());
-            o.setId(orgID);
-            o.setAuthenticationServerURL(serverURL);
-            o.setCreationDate(creationDate);
-            MyStalkersListFragment mMyStalkersListFragment = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();
-            mMyStalkersListFragment.addOrganization(o);
-        }
-        catch (JSONException | IOException e) {
-            e.printStackTrace();
-        }
+        Organization o = new Organization();
+        o.setName(title.getText().toString());
+        o.setId(orgID);
+        o.setAuthenticationServerURL(serverURL);
+        o.setCreationDate(creationDate);
+
+        iLDAPorganizationFragmentListener.sendOrganization(o);
     }
 
     //Failure of LDAP authentication

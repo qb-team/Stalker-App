@@ -23,17 +23,19 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
     //Interface to manage the type of click.
     public interface OrganizationListener{
+
         void organizationClick(int position);
         void organizationLongClick(int position);
     }
 
     //OrganizationViewAdapter's constructor.
     public OrganizationViewAdapter(List<Organization> organizationList, Context context, OrganizationListener organizationListener){
+
         this.organizationList = organizationList;
         this.context=context;
         this.organizationListener=organizationListener;
-    }
 
+    }
 
     //Returns the layout of the organizations' list.
     @NonNull
@@ -41,7 +43,6 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.organization_row,parent,false);
-
 
         return new ViewHolder(v,organizationListener);
     }
@@ -52,8 +53,10 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
         Organization organization = organizationList.get(position);
         holder.textNome.setText(organization.getName());
+
         if(organization.getTrackingMode().getValue().equals("anonymous"))
             holder.lock.setVisibility(View.INVISIBLE);
+        
 
     }
 

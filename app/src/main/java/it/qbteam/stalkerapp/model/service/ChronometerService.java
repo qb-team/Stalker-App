@@ -61,7 +61,7 @@ public class ChronometerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // Tells the system to not try to recreate the service after it has been killed.
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     public void reset(){

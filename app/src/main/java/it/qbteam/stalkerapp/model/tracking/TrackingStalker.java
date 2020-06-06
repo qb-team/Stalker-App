@@ -405,10 +405,15 @@ public class TrackingStalker extends Service {
         String organizationMovementJson = mPrefs.getString("organizationMovement", null);
 
         Gson gson = new Gson();
-        insidePlace = gson.fromJson(insidePlaceJson,LatLngPlace.class);
-        placeMovement = gson.fromJson(placeMovementJson, PlaceMovement.class);
-        insideOrganization = gson.fromJson(insideOrganizationJson, LatLngOrganization.class);
-        organizationMovement = gson.fromJson(organizationMovementJson, OrganizationMovement.class);
+
+        if(insidePlace==null)
+            insidePlace = gson.fromJson(insidePlaceJson,LatLngPlace.class);
+        if(placeMovement==null)
+            placeMovement = gson.fromJson(placeMovementJson, PlaceMovement.class);
+        if(insideOrganization==null)
+            insideOrganization = gson.fromJson(insideOrganizationJson, LatLngOrganization.class);
+        if(organizationMovement==null)
+            organizationMovement = gson.fromJson(organizationMovementJson, OrganizationMovement.class);
 
         System.out.print("OM"+organizationMovement+"PM"+placeMovement+"IO"+insideOrganization+"IP"+insidePlace);
         Log.i(TAG, "in onRebind()");

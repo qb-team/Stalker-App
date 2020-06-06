@@ -479,7 +479,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-
     //Check if the GPS is active.
     public void statusCheck() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

@@ -531,7 +531,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             OrganizationMovement organizationMovement;
             //Reading the OrganizationMovement from a file
             File organizationAccessFile = new File(HomePageActivity.getPath()+"/LastOrganizationAccess.txt");
-            FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/LastOrganizationAccess.txt");
+            FileInputStream fis= new FileInputStream(organizationAccessFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //Method for deserialization of object
             organizationMovement= (OrganizationMovement) ois.readObject();

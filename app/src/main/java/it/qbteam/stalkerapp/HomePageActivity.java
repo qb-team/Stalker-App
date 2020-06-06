@@ -51,6 +51,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.json.JSONException;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
@@ -93,6 +95,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private boolean isBound = false;
     private static ChronometerService myService;
     private static TextView time;
+    private Timer timer;
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
@@ -230,6 +233,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         namePlace.setText("Nessun luogo");
 
         //sets the switcherMode
+        timer = new Timer();
         MenuItem itemSwitchMode= menu.findItem(R.id.nav_switch_ModeID);
         actionView = MenuItemCompat.getActionView(itemSwitchMode);
         switcherMode=(SwitchCompat) actionView.findViewById(R.id.switcherModeID);
@@ -574,25 +578,40 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.switcherID:
+
                 if(switcher.isChecked()){
                     if (checkPermissions()) {
-
                         requestPermissions();
                     }
                     else {
-                        System.out.println("startTraking");
+                        switcher.setEnabled(false);
                         startTracking();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // This method will be executed once the timer is over
+                                switcher.setEnabled(true);
+                            }
+                        },3000);
                     }
                 }
                 else{
+                    switcher.setEnabled(false);
                     try {
-                        System.out.println("stopTraking");
                         stopTracking();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // This method will be executed once the timer is over
+                            switcher.setEnabled(true);
+                        }
+                    },3000);
                 }
                 break;
+
             case R.id.switcherModeID:
                 if(switcher.isChecked()&&switcherMode.isChecked()){
                     try {

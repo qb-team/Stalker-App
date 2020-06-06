@@ -257,9 +257,6 @@ public class TrackingStalker extends Service {
 
     public void removeLocationUpdates() {
         //Waits 3 sec before do the remove of the location
-        timer.schedule( new TimerTask(){
-            @SneakyThrows
-            public void run() {
 
                 if(insideOrganization!=null){
 
@@ -281,7 +278,6 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the organization(anonymous).
                         server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, organizationMovement.getExitToken(), organizationAccess);
                     }
-                    organizationMovement = null;
                 }
                 if(insidePlace!=null){
                     placeAccess= new PlaceAccess();
@@ -307,13 +303,11 @@ public class TrackingStalker extends Service {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    placeMovement = null;
                 }
                 Intent intent = new Intent(ACTION_BROADCAST);
                 intent.putExtra(EXTRA_LOCATION, mLocation);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-            }
-        }, delay);
+
 
         if(insideOrganization!=null){
             Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: "+ insideOrganization.getName(), Toast.LENGTH_SHORT).show();
@@ -324,6 +318,8 @@ public class TrackingStalker extends Service {
 
         HomePageActivity.setNameOrg("Nessuna organizzazione");
         HomePageActivity.setNamePlace("Nessun luogo");
+        organizationMovement = null;
+        placeMovement = null;
          //Reset of all parameters.
 
          Log.i(TAG, "Removing location updates");
@@ -659,7 +655,7 @@ public class TrackingStalker extends Service {
                                     e.printStackTrace();
                                 }
                             }
-                        }, delay);
+                        }, 2000);
 
                     }
 
@@ -702,7 +698,7 @@ public class TrackingStalker extends Service {
                                     e.printStackTrace();
                                 }
                             }
-                        }, delay);
+                        }, 2000);
                     }
                 }
                 else {

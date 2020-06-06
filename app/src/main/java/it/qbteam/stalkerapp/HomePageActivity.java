@@ -302,11 +302,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-   /* @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }*/
     public void updateFirebaseToken(){
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
@@ -472,11 +467,17 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    private void stopTracking() throws IOException, ClassNotFoundException {
+    private void stopTracking() throws IOException {
         playPauseTimeService();
         resetTime();
         mService.removeLocationUpdates();
 
+    }
+
+    public static void stopChronometerService(){
+        myService.stopSelf();
+        playPauseTimeService();
+        resetTime();
     }
 
     //Check if the GPS is active.
@@ -591,7 +592,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     try {
                         System.out.println("stopTraking");
                         stopTracking();
-                    } catch (IOException | ClassNotFoundException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -600,7 +601,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 if(switcher.isChecked()&&switcherMode.isChecked()){
                     try {
                         stopTracking();
-                    } catch (IOException | ClassNotFoundException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     startTracking();
@@ -610,7 +611,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 {
                     try {
                         stopTracking();
-                    } catch (IOException | ClassNotFoundException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     startTracking();

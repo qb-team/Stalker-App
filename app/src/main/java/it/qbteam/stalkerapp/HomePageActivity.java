@@ -589,7 +589,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                                 // This method will be executed once the timer is over
                                 switcher.setEnabled(true);
                             }
-                        },3000);
+                        },2000);
                     }
                 }
                 else{
@@ -605,23 +605,23 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                             // This method will be executed once the timer is over
                             switcher.setEnabled(true);
                         }
-                    },3000);
+                    },2000);
                 }
                 break;
 
             case R.id.switcherModeID:
                 if(switcher.isChecked()&&switcherMode.isChecked()){
                     try {
-                        switcher.setEnabled(false);
+                        switcherMode.setEnabled(false);
                         stopTracking();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 // This method will be executed once the timer is over
-                                switcher.setEnabled(true);
+                                switcherMode.setEnabled(true);
                                 startTracking();
                             }
-                        },3000);
+                        },2000);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -629,16 +629,20 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 }
                 else if(switcher.isChecked()&&!switcherMode.isChecked())
                 {
-                    switcher.setEnabled(false);
-                    stopTracking();
+                    switcherMode.setEnabled(false);
+                    try {
+                        stopTracking();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             // This method will be executed once the timer is over
-                            switcher.setEnabled(true);
+                            switcherMode.setEnabled(true);
                             startTracking();
                         }
-                    },3000);
+                    },2000);
                 }
 
                 break;

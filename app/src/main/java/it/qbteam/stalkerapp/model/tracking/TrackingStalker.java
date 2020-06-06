@@ -252,9 +252,10 @@ public class TrackingStalker extends Service {
 
     public void removeLocationUpdates() {
         //Waits 3 sec before do the remove of the location
-
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
                 if(insideOrganization!=null){
-
                     organizationAccess = new OrganizationAccess();
                     //Update the access' list when the user exits from organization.
                     organizationAccess.setEntranceTimestamp(organizationAccessTime);
@@ -273,6 +274,7 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the organization(anonymous).
                         server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, organizationMovement.getExitToken(), organizationAccess);
                     }
+                    organizationMovement = null;
                 }
                 if(insidePlace!=null){
                     placeAccess= new PlaceAccess();
@@ -291,7 +293,7 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the place(anonymous).
                         server.performPlaceMovementServer(placeMovement.getExitToken(), -1, insidePlace.getId(), null, HomePageActivity.getUserToken(), placeAccess);
                     }
-
+                    placeMovement = null;
                     //Deletes the place's list of the organization.
                     try {
                         storage.deletePlace();
@@ -302,7 +304,8 @@ public class TrackingStalker extends Service {
                 Intent intent = new Intent(ACTION_BROADCAST);
                 intent.putExtra(EXTRA_LOCATION, mLocation);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-
+            }
+        }, 2000);
 
         if(insideOrganization!=null){
             Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: "+ insideOrganization.getName(), Toast.LENGTH_SHORT).show();
@@ -313,8 +316,7 @@ public class TrackingStalker extends Service {
 
         HomePageActivity.setNameOrg("Nessuna organizzazione");
         HomePageActivity.setNamePlace("Nessun luogo");
-        organizationMovement = null;
-        placeMovement = null;
+
          //Reset of all parameters.
 
          Log.i(TAG, "Removing location updates");
@@ -650,7 +652,7 @@ public class TrackingStalker extends Service {
                                     e.printStackTrace();
                                 }
                             }
-                        }, 1000);
+                        }, 2000);
 
                     }
 
@@ -691,7 +693,7 @@ public class TrackingStalker extends Service {
                                     e.printStackTrace();
                                 }
                             }
-                        }, 1000);
+                        }, 2000);
                     }
                 }
                 else {

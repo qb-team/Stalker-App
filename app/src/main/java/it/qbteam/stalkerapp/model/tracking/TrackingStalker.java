@@ -650,7 +650,7 @@ public class TrackingStalker extends Service {
                                     e.printStackTrace();
                                 }
                             }
-                        }, 2000);
+                        }, 1000);
 
                     }
 
@@ -691,7 +691,7 @@ public class TrackingStalker extends Service {
                                     e.printStackTrace();
                                 }
                             }
-                        }, 2000);
+                        }, 1000);
                     }
                 }
                 else {

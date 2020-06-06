@@ -570,6 +570,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     public static TabLayout getTabLayout(){return ActionTabFragment.getTabLayout();}
 
+    @SneakyThrows
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -611,22 +612,35 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             case R.id.switcherModeID:
                 if(switcher.isChecked()&&switcherMode.isChecked()){
                     try {
+                        switcher.setEnabled(false);
                         stopTracking();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // This method will be executed once the timer is over
+                                switcher.setEnabled(true);
+                                startTracking();
+                            }
+                        },3000);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    startTracking();
 
                 }
                 else if(switcher.isChecked()&&!switcherMode.isChecked())
                 {
-                    try {
-                        stopTracking();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    startTracking();
+                    switcher.setEnabled(false);
+                    stopTracking();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // This method will be executed once the timer is over
+                            switcher.setEnabled(true);
+                            startTracking();
+                        }
+                    },3000);
                 }
+
                 break;
         }
 

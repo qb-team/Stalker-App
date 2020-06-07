@@ -56,7 +56,6 @@ public class OrganizationViewAdapter extends RecyclerView.Adapter<OrganizationVi
 
         if(organization.getTrackingMode().getValue().equals("anonymous"))
             holder.lock.setVisibility(View.INVISIBLE);
-        
 
     }
 

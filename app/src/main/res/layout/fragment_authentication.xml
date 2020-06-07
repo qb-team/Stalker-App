@@ -59,8 +59,8 @@
 
                 <TextView
                     android:labelFor="@id/Emailtext"
-                    android:text="email"
-                    android:fontFamily="sans-serif-light"
+                    android:text="Email"
+                    android:fontFamily="sans-serif"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -71,14 +71,15 @@
                     android:drawableLeft="@drawable/ic_email"
                     android:drawablePadding="10dp"
                     android:singleLine="true"
+                    android:fontFamily="sans-serif-light"
                     android:layout_marginBottom="10dp"
                     android:hint="esempio@gmail.com"
                     android:inputType="textEmailAddress"/>
 
                 <TextView
                     android:labelFor="@id/passwordtextID"
-                    android:text="password"
-                    android:fontFamily="sans-serif-light"
+                    android:text="Password"
+                    android:fontFamily="sans-serif"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -89,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_lock"
                     android:singleLine="true"
+                    android:fontFamily="sans-serif-light"
                     android:hint="Password"
                     android:inputType="textPassword"/>
 
@@ -121,6 +123,7 @@
                     android:textAlignment="center"
                     android:text="Non hai un account?\n Clicca qui"
                     android:textSize="22sp"
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>

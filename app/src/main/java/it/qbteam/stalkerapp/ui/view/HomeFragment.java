@@ -218,6 +218,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             fragmentListener.disableScroll(false);
         }
         else {
+            bundle.putString("trackingMode",organizationList.get(position).getTrackingMode().getValue());
             LDAPorganizationFragment LDAPFragment= new LDAPorganizationFragment();
             LDAPFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
@@ -263,6 +264,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //It sorts the list in the HomeFragment view in alphabetical order.
     public void alphabeticalOrder(){
+
         auxList= new ArrayList<>(organizationList);
         Collections.sort(organizationList);
         try {
@@ -291,9 +293,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         } else {
             countryItem.setTitle("Scegli una nazione");
         }
-
-
-
 
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();

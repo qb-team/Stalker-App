@@ -42,6 +42,8 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     private String serverURL;
     private LDAPorganizationPresenter ldapOrganizationPresenter;
     private Dialog myDialog;
+    private String trackingMode;
+
 
     LDAPorganizationFragmentListener iLDAPorganizationFragmentListener;
 
@@ -88,6 +90,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         creationDate = OffsetDateTime.parse(bundle.getString("creationDate"), dateTimeFormatter);
         serverURL = bundle.getString("serverURL");
+        trackingMode = bundle.getString("trackingMode");
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
         return view;
@@ -168,6 +171,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         o.setId(orgID);
         o.setAuthenticationServerURL(serverURL);
         o.setCreationDate(creationDate);
+        o.setTrackingMode(trackingMode);
 
         iLDAPorganizationFragmentListener.sendOrganization(o);
     }

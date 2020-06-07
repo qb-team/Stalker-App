@@ -29,8 +29,7 @@
             android:layout_centerHorizontal="true"
             android:hint="User name"
             android:layout_marginTop="10dp"
-
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-light"
             android:inputType="textEmailAddress"
             android:lines="1"
             android:maxLines="1"
@@ -40,7 +39,7 @@
             android:id="@+id/passwordID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-light"
             android:inputType="textPassword"
             android:layout_centerHorizontal = "true"
             android:maxLines="1"

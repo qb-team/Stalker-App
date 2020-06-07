@@ -133,6 +133,7 @@ public class TrackingStalker extends Service {
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
     private Gson gson;
+    private TrackingDistance trackingDistance;
     public TrackingStalker()  {
 
     }
@@ -143,13 +144,15 @@ public class TrackingStalker extends Service {
 
         latLngOrganizationList=new ArrayList<>();
         latLngPlaceList=new ArrayList<>();
+
         organizationAccess=new OrganizationAccess();
         storage = new Storage(null,null, null, null);
         server = new Server(null,null, null);
         timer = new Timer();
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        trackingDistance = new TrackingDistance();
         prefsEditor = mPrefs.edit();
-
+        switchPriority(0);
         gson = new Gson();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
@@ -165,7 +168,6 @@ public class TrackingStalker extends Service {
             }
         };
 
-        switchPriority(0);    // Istanziazione LocationRequest
         getLastLocation();       // Istanziazione FusedLocationListener
 
         HandlerThread handlerThread = new HandlerThread("il tag:  " + TAG);
@@ -186,6 +188,7 @@ public class TrackingStalker extends Service {
     }
 
     public void switchPriority(int i) {
+        System.out.print("SIAMO IN SWITCH PRIORITY");
         switch (i) {
             case 0:
                 mLocationRequest = new LocationRequest();
@@ -193,18 +196,21 @@ public class TrackingStalker extends Service {
                 mLocationRequest.setFastestInterval(5000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                 // mLocationRequest.setSmallestDisplacement(2);
+                System.out.print("CASE 0");
                 break;
             case 1:
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setInterval(20000);
                 mLocationRequest.setFastestInterval(10000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                System.out.print("CASE 1");
                 break;
             case 2:
                 mLocationRequest = new LocationRequest();
-                mLocationRequest.setInterval(10000);
-                mLocationRequest.setFastestInterval(10000);
+                mLocationRequest.setInterval(20000);
+                mLocationRequest.setFastestInterval(20000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+                System.out.print("CASE 1");
                 break;
         }
     }
@@ -217,6 +223,8 @@ public class TrackingStalker extends Service {
                         public void onComplete(@NonNull Task<Location> task) {
                             if (task.isSuccessful() && task.getResult() != null) {
                                 mLocation = task.getResult();
+
+
                             } else {
                                 Log.w(TAG, "Fallito il rintracciamento della posizione.");
                             }
@@ -387,9 +395,13 @@ public class TrackingStalker extends Service {
         String insideOrganizationJson = mPrefs.getString("insideOrganization", null);
         String organizationMovementJson = mPrefs.getString("organizationMovement", null);
 
+        if(insidePlace == null)
         insidePlace = gson.fromJson(insidePlaceJson,LatLngPlace.class);
+        if(placeMovement == null)
         placeMovement = gson.fromJson(placeMovementJson, PlaceMovement.class);
+        if(insideOrganization == null)
         insideOrganization = gson.fromJson(insideOrganizationJson, LatLngOrganization.class);
+        if(organizationMovement == null)
         organizationMovement = gson.fromJson(organizationMovementJson, OrganizationMovement.class);
 
         System.out.print("OM   "+organizationMovement+"PM   "+placeMovement+"IO   "+insideOrganization+"IP   "+insidePlace);
@@ -465,8 +477,10 @@ public class TrackingStalker extends Service {
 
         mLocation=location;
 
+
         if (location != null) {
 
+            switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
             authenticated = HomePageActivity.getSwitcherModeStatus();
             handleOrganizations(location);
 
@@ -746,7 +760,7 @@ public class TrackingStalker extends Service {
                         prefsEditor.putString("organizationMovement",organizationMovementJson);
                         prefsEditor.putString("insideOrganization",insideOrganizationJson);
                         prefsEditor.commit();
-                        
+
                         HomePageActivity.setNameOrg("Nessuna organizzazione");
                     }
                 }

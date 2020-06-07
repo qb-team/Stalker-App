@@ -13,26 +13,29 @@ import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 
 public class TrackingDistance {
 
-    public static int checkDistance(Location location, ArrayList<LatLngOrganization> latLngOrganizations){
+    public int checkDistance(Location location, List<LatLngOrganization> latLngOrganizations){
 
         int prioritySet=0;
         LatLng nearestPoint=null;
+        String name="";
         double distance = 0;
         LatLng test = new LatLng(location.getLatitude(), location.getLongitude());
 
         for(int i=0;i<latLngOrganizations.size();i++) {
             final List<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
             if (distance==0){
+                name=latLngOrganizations.get(i).getName();
                 nearestPoint = findNearestPoint(test, poligono);
                 distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
             }
             if (distance>SphericalUtil.computeDistanceBetween(test, nearestPoint)){
+                name=latLngOrganizations.get(i).getName();
                 nearestPoint = findNearestPoint(test, poligono);
                 distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
             }
         }
 
-        Log.e("NEAREST POINT: ", "" + nearestPoint); // lat/lng: (3.0,2.0)
+        Log.e("NEAREST POINT: ", "" + nearestPoint +"NOME "+name); // lat/lng: (3.0,2.0)
         Log.e("DISTANCE: ", "" + SphericalUtil.computeDistanceBetween(test, nearestPoint)); // 222085.35856591124
 
         if (distance<=150){
@@ -41,7 +44,7 @@ public class TrackingDistance {
         else if (distance<=500){
             prioritySet = 1;
         }
-        else if (distance>500){
+        else if (distance>1000){
             prioritySet = 2;
         }
 

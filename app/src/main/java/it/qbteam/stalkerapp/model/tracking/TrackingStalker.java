@@ -210,7 +210,7 @@ public class TrackingStalker extends Service {
                 mLocationRequest.setInterval(20000);
                 mLocationRequest.setFastestInterval(20000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-                System.out.print("CASE 1");
+                System.out.print("CASE 2");
                 break;
         }
     }

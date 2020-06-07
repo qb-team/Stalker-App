@@ -18,33 +18,35 @@ public class TrackingDistance {
         int prioritySet=0;
         LatLng nearestPoint=null;
         String name="";
-        double distance = 0;
+        double finalDistance = 0;
         LatLng test = new LatLng(location.getLatitude(), location.getLongitude());
 
-        for(int i=0;i<latLngOrganizations.size();i++) {
-            final List<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
-            if (distance==0){
-                name=latLngOrganizations.get(i).getName();
-                nearestPoint = findNearestPoint(test, poligono);
-                distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
-            }
-            if (distance>SphericalUtil.computeDistanceBetween(test, nearestPoint)){
-                name=latLngOrganizations.get(i).getName();
-                nearestPoint = findNearestPoint(test, poligono);
-                distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
-            }
+
+        for(int i=0;i<latLngOrganizations.size()-1;i++) {
+
+            List<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
+            nearestPoint = findNearestPoint(test, poligono);
+            List<LatLng> poligono2 = latLngOrganizations.get(i+1).getLatLng();
+            LatLng nearestPoint2= findNearestPoint(test, poligono2);
+            double distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
+            double distance2 = SphericalUtil.computeDistanceBetween(test, nearestPoint2);
+            if (distance>distance2)
+                finalDistance=distance2;
+            else
+                finalDistance=distance;
+
         }
 
         Log.e("NEAREST POINT: ", "" + nearestPoint +"NOME "+name); // lat/lng: (3.0,2.0)
         Log.e("DISTANCE: ", "" + SphericalUtil.computeDistanceBetween(test, nearestPoint)); // 222085.35856591124
 
-        if (distance<=150){
+        if (finalDistance<=150){
             prioritySet = 0;
         }
-        else if (distance<=500){
+        else if (finalDistance<=500){
             prioritySet = 1;
         }
-        else if (distance>1000){
+        else if (finalDistance>1000){
             prioritySet = 2;
         }
 
@@ -73,6 +75,8 @@ public class TrackingDistance {
                 minimumDistancePoint = findNearestPoint(test, point, target.get(segmentPoint));
             }
         }
+
+        System.out.println("minimumDistancePoint" + minimumDistancePoint);
 
         return minimumDistancePoint;
     }
@@ -110,22 +114,6 @@ public class TrackingDistance {
 
     }
 
-    ArrayList<LatLng> polygon = new ArrayList<>();
-    LatLngBounds.Builder areaBuilder = new LatLngBounds.Builder();
-
-    public LatLngBounds.Builder buildPolygonArea(ArrayList<LatLng> sides){
-
-        for(int i=0; i<sides.size(); i++){
-            polygon.add(sides.get(i));
-        }
-
-        //costruttore area organizzazione
-        for (LatLng point : polygon) {
-            areaBuilder.include(point);
-        }
-
-        return areaBuilder;
-    }
 
 
 }

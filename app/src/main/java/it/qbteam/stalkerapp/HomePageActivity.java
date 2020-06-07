@@ -467,8 +467,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void stopTracking() throws IOException {
-        playPauseTimeService();
-        resetTime();
+        //playPauseTimeService();
+        //resetTime();
         mService.removeLocationUpdates();
 
     }

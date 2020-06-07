@@ -273,7 +273,7 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the organization(anonymous).
                         server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, organizationMovement.getExitToken(), organizationAccess);
                     }
-
+                    organizationMovement = null;
                 }
                 if(insidePlace!=null){
                     placeAccess= new PlaceAccess();
@@ -327,7 +327,9 @@ public class TrackingStalker extends Service {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             Utils.setRequestingLocationUpdates(this, false);
             stopSelf();
-            HomePageActivity.stopChronometerService();
+            //HomePageActivity.stopChronometerService();
+             HomePageActivity.playPauseTimeService();
+             HomePageActivity.resetTime();
          } catch (SecurityException unlikely) {
             Utils.setRequestingLocationUpdates(this, true);
             Log.e(TAG, "Lost location permission. Could not remove updates. " + unlikely);
@@ -717,7 +719,7 @@ public class TrackingStalker extends Service {
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
                         organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
 
-                        HomePageActivity.playPauseTimeService();
+                        //HomePageActivity.playPauseTimeService();
                         HomePageActivity.resetTime();
 
                         //Comunicates the server that user is outside the organization

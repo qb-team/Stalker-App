@@ -18,35 +18,30 @@ public class TrackingDistance {
         int prioritySet=0;
         LatLng nearestPoint=null;
         String name="";
-        double finalDistance = 0;
+        double distance = 0;
         LatLng test = new LatLng(location.getLatitude(), location.getLongitude());
 
 
-        for(int i=0;i<latLngOrganizations.size()-1;i++) {
-
-            List<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
+        for(int i=0;i<latLngOrganizations.size();i++) {
+            final List<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
             nearestPoint = findNearestPoint(test, poligono);
-            List<LatLng> poligono2 = latLngOrganizations.get(i+1).getLatLng();
-            LatLng nearestPoint2= findNearestPoint(test, poligono2);
-            double distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
-            double distance2 = SphericalUtil.computeDistanceBetween(test, nearestPoint2);
-            if (distance>distance2)
-                finalDistance=distance2;
-            else
-                finalDistance=distance;
-
+            if (distance==0 || distance>SphericalUtil.computeDistanceBetween(test, nearestPoint)){
+                System.out.println("ehyla amico");
+                name=latLngOrganizations.get(i).getName();
+                distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
+            }
         }
 
         Log.e("NEAREST POINT: ", "" + nearestPoint +"NOME "+name); // lat/lng: (3.0,2.0)
-        Log.e("DISTANCE: ", "" + SphericalUtil.computeDistanceBetween(test, nearestPoint)); // 222085.35856591124
+        Log.e("DISTANCE: ", "" + distance); // 222085.35856591124
 
-        if (finalDistance<=150){
+        if (distance<=150){
             prioritySet = 0;
         }
-        else if (finalDistance<=500){
+        else if (distance<=500){
             prioritySet = 1;
         }
-        else if (finalDistance>1000){
+        else if (distance>1000){
             prioritySet = 2;
         }
 

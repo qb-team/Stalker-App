@@ -548,6 +548,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         actionTabFragment.disableScroll(enable);
     }
 
+    @Override
+    public boolean deleteAuthButton(String orgName) {
+        Fragment frag = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();
+        if(((MyStalkersListFragment) frag).organizationIsPresentInList(orgName))
+            return true;
+        else
+            return false;
+    }
+
     //Metodi per segnalare la tua posizione all'interno di un organizzazione o luogo
     public static void setNameOrg(String name){
         nameOrg.setText(name);

@@ -166,7 +166,7 @@ public class TrackingStalker extends Service {
         };
 
         switchPriority(0);    // Istanziazione LocationRequest
-        getLastLocation();          // Istanziazione FusedLocationListener
+        getLastLocation();       // Istanziazione FusedLocationListener
 
         HandlerThread handlerThread = new HandlerThread("il tag:  " + TAG);
         handlerThread.start();
@@ -183,7 +183,6 @@ public class TrackingStalker extends Service {
             // Set the Notification Channel for the Notification Manager.
             mNotificationManager.createNotificationChannel(mChannel);
         }
-
     }
 
     public void switchPriority(int i) {

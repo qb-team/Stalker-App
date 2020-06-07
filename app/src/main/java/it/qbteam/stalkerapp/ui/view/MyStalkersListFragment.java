@@ -291,6 +291,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return false;
     }
 
+
+
     //Display the list of organizations on the screen following user inputs in the search menu.
     @Override
     public boolean onQueryTextChange(String newText) {
@@ -436,6 +438,15 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             Toast.makeText(getContext(), "Lista MyStalker ancora vuota", Toast.LENGTH_SHORT).show();
     }
 
+    public boolean organizationIsPresentInList(String orgName){
+        boolean found = false;
+        for(int i=0; i<organizationList.size();i++){
+            if(organizationList.get(i).getName()==orgName)
+                found = true;
+        }
+        return found;
+
+    }
 
     //Returns the user to the previous Activity or Fragment.
     @Override

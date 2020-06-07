@@ -51,6 +51,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     public interface LDAPorganizationFragmentListener {
 
         void disableScroll(boolean enable);
+        boolean deleteAuthButton(String orgName);
         void sendOrganization(Organization o) throws IOException, JSONException;
     }
 
@@ -93,6 +94,8 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         trackingMode = bundle.getString("trackingMode");
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
+        if(iLDAPorganizationFragmentListener.deleteAuthButton(bundle.getString("name")))
+            authentication.setVisibility(View.INVISIBLE);
         return view;
     }
 

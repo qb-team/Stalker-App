@@ -746,7 +746,7 @@ public class TrackingStalker extends Service {
                         prefsEditor.putString("organizationMovement",organizationMovementJson);
                         prefsEditor.putString("insideOrganization",insideOrganizationJson);
                         prefsEditor.commit();
-
+                        
                         HomePageActivity.setNameOrg("Nessuna organizzazione");
                     }
                 }

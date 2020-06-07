@@ -94,8 +94,10 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         trackingMode = bundle.getString("trackingMode");
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
-        if(iLDAPorganizationFragmentListener.deleteAuthButton(bundle.getString("name")))
+        if(iLDAPorganizationFragmentListener.deleteAuthButton(bundle.getString("name"))){
             authentication.setVisibility(View.INVISIBLE);
+            System.out.print("INVISIBLE");
+        }
         return view;
     }
 

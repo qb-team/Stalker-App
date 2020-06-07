@@ -129,7 +129,7 @@ public class TrackingStalker extends Service {
     //usati una volta che l'app è killata.
     private OrganizationMovement organizationMovement;
     private PlaceMovement placeMovement;
-    private static final String SHARED_PREFS = "sharedPrefs";
+    private static final String SHARED_PREFS = "trackingSharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
     private Gson gson;
@@ -274,7 +274,7 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the organization(anonymous).
                         server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), HomePageActivity.getUserToken(), -1, organizationMovement.getExitToken(), organizationAccess);
                     }
-                    organizationMovement = null;
+
                 }
                 if(insidePlace!=null){
                     placeAccess= new PlaceAccess();
@@ -293,7 +293,7 @@ public class TrackingStalker extends Service {
                         //Comunicates the server that user is outside the place(anonymous).
                         server.performPlaceMovementServer(placeMovement.getExitToken(), -1, insidePlace.getId(), null, HomePageActivity.getUserToken(), placeAccess);
                     }
-                    placeMovement = null;
+
                     //Deletes the place's list of the organization.
                     try {
                         storage.deletePlace();
@@ -309,12 +309,15 @@ public class TrackingStalker extends Service {
 
         if(insideOrganization!=null){
             Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: "+ insideOrganization.getName(), Toast.LENGTH_SHORT).show();
+
         }
         if(insidePlace!=null){
             Toast.makeText(getApplicationContext(), "Sei uscito dal luogo: "+ insidePlace.getName(), Toast.LENGTH_SHORT).show();
+
         }
 
         HomePageActivity.setNameOrg("Nessuna organizzazione");
+
         HomePageActivity.setNamePlace("Nessun luogo");
 
          //Reset of all parameters.
@@ -373,25 +376,22 @@ public class TrackingStalker extends Service {
         // Called when a client (MainActivity in case of this sample) returns to the foreground
         // and binds once again with this service. The service should cease to be a foreground
         // service when that happens.
+
+        //Restores Data after app kill
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        Gson gson = new Gson();
 
         String insidePlaceJson = mPrefs.getString("insidePlace", null);
         String placeMovementJson = mPrefs.getString("placeMovement", null);
         String insideOrganizationJson = mPrefs.getString("insideOrganization", null);
         String organizationMovementJson = mPrefs.getString("organizationMovement", null);
 
-        Gson gson = new Gson();
+        insidePlace = gson.fromJson(insidePlaceJson,LatLngPlace.class);
+        placeMovement = gson.fromJson(placeMovementJson, PlaceMovement.class);
+        insideOrganization = gson.fromJson(insideOrganizationJson, LatLngOrganization.class);
+        organizationMovement = gson.fromJson(organizationMovementJson, OrganizationMovement.class);
 
-       if(insidePlace==null)
-            insidePlace = gson.fromJson(insidePlaceJson,LatLngPlace.class);
-       if(placeMovement==null)
-            placeMovement = gson.fromJson(placeMovementJson, PlaceMovement.class);
-       if(insideOrganization==null)
-            insideOrganization = gson.fromJson(insideOrganizationJson, LatLngOrganization.class);
-       if(organizationMovement==null)
-            organizationMovement = gson.fromJson(organizationMovementJson, OrganizationMovement.class);
-
-        System.out.print("OM"+organizationMovement+"PM"+placeMovement+"IO"+insideOrganization+"IP"+insidePlace);
+        System.out.print("OM   "+organizationMovement+"PM   "+placeMovement+"IO   "+insideOrganization+"IP   "+insidePlace);
         Log.i(TAG, "in onRebind()");
         stopForeground(true);
         mChangingConfiguration = false;
@@ -499,7 +499,7 @@ public class TrackingStalker extends Service {
                 boolean isInsideBoundary = builder.build().contains(actualPosition);
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngPlaceList.get(i).getLatLng(), true);
                 if (isInsideBoundary && isInside) {
-
+                    System.out.print("SONO DENTRO AL LUOGO :  "+ latLngPlaceList.get(i).getName());
                     HomePageActivity.setNamePlace(latLngPlaceList.get(i).getName());
 
                     if (placeMovement == null && authenticated) {
@@ -584,6 +584,12 @@ public class TrackingStalker extends Service {
                         placeMovement = null;
 
                         insidePlace = null;
+
+                        String placeMovementJson = gson.toJson(null);
+                        String insidePlacejson = gson.toJson(null);
+                        prefsEditor.putString("placeMovement",placeMovementJson);
+                        prefsEditor.putString("insidePlace",insidePlacejson);
+                        prefsEditor.commit();
 
                         HomePageActivity.setNamePlace("Nessun luogo");
                     }
@@ -730,8 +736,16 @@ public class TrackingStalker extends Service {
 
                         //Deletes the organization movement
                         storage.deleteOrganizationMovement();
+
                         insideOrganization = null;
                         organizationMovement = null;
+
+                        String organizationMovementJson = gson.toJson(null);
+                        String insideOrganizationJson = gson.toJson(null);
+                        prefsEditor.putString("organizationMovement",organizationMovementJson);
+                        prefsEditor.putString("insideOrganization",insideOrganizationJson);
+                        prefsEditor.commit();
+
                         HomePageActivity.setNameOrg("Nessuna organizzazione");
                     }
                 }

@@ -283,7 +283,7 @@ public class Server {
 
             @Override
             public void onFailure(Call<List<Organization>> call, Throwable t) {
-                homeListener.onFailureDownload("Errore durante lo scaricamento della lista");
+                homeListener.onFailureDownload("Errore durante lo scaricamento della lista " + t.getMessage());
             }});
     }
 

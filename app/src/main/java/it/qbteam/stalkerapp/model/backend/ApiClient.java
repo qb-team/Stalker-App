@@ -18,10 +18,19 @@ import it.qbteam.stalkerapp.model.backend.auth.ApiKeyAuth;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.security.cert.CertificateException;
 import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.validation.constraints.NotNull;
 
 public class ApiClient {
 
@@ -80,11 +89,47 @@ public class ApiClient {
     this.setCredentials(username,  password);
   }
 
+  // Method to allow to connect to a server with self-signed SSL certificate
+  public OkHttpClient.Builder getOkHttpClientForSelfSignedSSL(){
+    try {
+      final TrustManager[] trustAllCerts = new TrustManager[] {
+              new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                @Override
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                  return new java.security.cert.X509Certificate[]{};
+                }
+              }
+      };
+
+      // Installs the all-trusting trust manager
+      final SSLContext sslContext = SSLContext.getInstance("SSL");
+      sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+      // Creates an SSL socket factory with our all-trusting manager
+      final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+      OkHttpClient.Builder builder = new OkHttpClient.Builder();
+      builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+      builder.hostnameVerifier((hostname, session) -> true);
+
+      return builder;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public void createDefaultAdapter() {
     json = new JSON();
-    okBuilder = new OkHttpClient.Builder();
+    okBuilder = this.getOkHttpClientForSelfSignedSSL();
 
-    String baseUrl = "http://2.234.128.81:8080";
+    String baseUrl = "https://2.234.128.81:8080";
     if (!baseUrl.endsWith("/"))
       baseUrl = baseUrl + "/";
 

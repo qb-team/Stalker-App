@@ -227,7 +227,7 @@ public class TrackingStalker extends Service {
                              requestLocationUpdates();
                          }
 
-                     }, 7000);
+                     }, 5000);
 
                 System.out.print("CASE 1");
 
@@ -268,6 +268,40 @@ public class TrackingStalker extends Service {
                 }, 22000);
 
                 System.out.print("CASE 3");
+
+                break;
+            case 4:
+                new Handler().postDelayed(() -> {
+                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                        flag = false;
+                        removeLocationUpdates();
+                    }
+                }, 2000);
+
+                new Handler().postDelayed(() -> {
+                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                        flag = true;
+                        requestLocationUpdates();
+                    }
+                }, 900000);// 15 min
+
+                System.out.print("CASE 4");
+            case 5:
+                new Handler().postDelayed(() -> {
+                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                        flag = false;
+                        removeLocationUpdates();
+                    }
+                }, 2000);
+
+                new Handler().postDelayed(() -> {
+                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                        flag = true;
+                        requestLocationUpdates();
+                    }
+                }, 1800000);// 30 min
+
+                System.out.print("CASE 5");
 
                 break;
         }

@@ -215,7 +215,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             new SearchViewCustom()
                     .setSearchBackGroundResource(R.drawable.custom_border)
                     .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
-                    .setSearchHintText("Cerca qui..")
+                    .setSearchHintText("Cerca per nome..")
                     .setSearchTextColorResource(R.color.colorPrimary)
                     .setSearchHintColorResource(R.color.colorPrimary)
                     .setSearchCloseIconResource(R.drawable.ic_close_black_24dp)
@@ -230,7 +230,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private void resetAdapter(){
         new SearchViewCustom()
                 .setSearchIconResource(R.drawable.ic_search_black_24dp, true, false) //true to icon inside edittext, false to outside
-                .setSearchHintText("Cerca qui..")
+                .setSearchHintText("Cerca per nome..")
                 .format(searchView);
         countrySelected = "";
         auxList.clear();

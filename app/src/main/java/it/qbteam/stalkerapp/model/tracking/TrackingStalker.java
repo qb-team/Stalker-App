@@ -125,8 +125,6 @@ public class TrackingStalker extends Service {
     private Long orgID;
     private String accessType;
     private boolean flag=false;
-    private static final String SWITCH_MODE_SHARED_PREFS = "switchSharedPrefs";
-    private SharedPreferences mPrefTracking;
 
 
     //usati una volta che l'app è killata.
@@ -135,7 +133,9 @@ public class TrackingStalker extends Service {
     private static final String SHARED_PREFS = "trackingSharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
-    private SharedPreferences.Editor prefTracking;
+    private static final String SWITCH_MODE_SHARED_PREFS = "switchSharedPrefs";
+    private SharedPreferences  mPrefs2;
+    private SharedPreferences.Editor prefsEditor2;
     private Gson gson;
     private TrackingDistance trackingDistance;
 
@@ -155,10 +155,9 @@ public class TrackingStalker extends Service {
         server = new Server(null,null, null);
         timer = new Timer();
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        mPrefTracking = getApplicationContext().getSharedPreferences(SWITCH_MODE_SHARED_PREFS, MODE_PRIVATE);
+        mPrefs2 = getApplicationContext().getSharedPreferences(SWITCH_MODE_SHARED_PREFS, MODE_PRIVATE);
         trackingDistance = new TrackingDistance();
         prefsEditor = mPrefs.edit();
-        prefTracking = mPrefTracking.edit();
 
         switchPriority(0);
 
@@ -200,7 +199,7 @@ public class TrackingStalker extends Service {
         System.out.print("SIAMO IN SWITCH PRIORITY");
         switch (i) {
             case 0:
-                flag=false;
+                flag=true;
                 mLocationRequest = new LocationRequest();
                 //mLocationRequest.setInterval(5000);
                 //smLocationRequest.setFastestInterval(5000);
@@ -209,67 +208,79 @@ public class TrackingStalker extends Service {
                 System.out.print("CASE 0");
                 break;
             case 1:
-                flag=true;
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeLocationUpdates();
-                    }
-                },2000);
+                 if(mPrefs2.getBoolean("switchTrack", false)) {
 
-                if(mPrefTracking.getBoolean("switchTrack", false) == true) {
-                    new Handler().postDelayed(new Runnable() {
+                     new Handler().postDelayed(new Runnable() {
+                         @Override
+                         public void run() {
+                             flag = false;
+                             removeLocationUpdates();
+
+                         }
+                     }, 3000);
+                 }
+                if(mPrefs2.getBoolean("switchTrack", false)) {
+
+                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            flag = true;
                             requestLocationUpdates();
-                            flag = false;
+
                         }
-                    }, 3000);
-                }
+                        }, 7000);
+                 }
                 System.out.print("CASE 1");
 
                 break;
             case 2:
-                flag=true;
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeLocationUpdates();
-                    }
-                },10000);
+                if(mPrefs2.getBoolean("switchTrack", false)) {
 
-                if(mPrefTracking.getBoolean("switchTrack", false) == true) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            flag = false;
+                            removeLocationUpdates();
+                        }
+                    }, 2000);
+
+                }
+
+                if(mPrefs2.getBoolean("switchTrack", false)) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             requestLocationUpdates();
-                            flag = false;
+                            flag = true;
                         }
-                    }, 51000);
+                    }, 12000);
                 }
                 System.out.print("CASE 2");
 
                 break;
             case 3:
-                flag=true;
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeLocationUpdates();
-                    }
-                },20000);
+                if(mPrefs2.getBoolean("switchTrack", false) ) {
 
-                if(mPrefTracking.getBoolean("switchTrack", false) == true) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            requestLocationUpdates();
                             flag = false;
+                            removeLocationUpdates();
                         }
-                    }, 21000);
+                    }, 2000);
+                }
+
+                if(mPrefs2.getBoolean("switchTrack", false)) {
+                new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            flag = true;
+                            requestLocationUpdates();
+                        }
+                    }, 22000);
                 }
                 System.out.print("CASE 3");
 
@@ -285,7 +296,6 @@ public class TrackingStalker extends Service {
                         public void onComplete(@NonNull Task<Location> task) {
                             if (task.isSuccessful() && task.getResult() != null) {
                                 mLocation = task.getResult();
-
 
                             } else {
                                 Log.w(TAG, "Fallito il rintracciamento della posizione.");
@@ -445,7 +455,7 @@ public class TrackingStalker extends Service {
         // Called when a client (MainActivity in case of this sample) returns to the foreground
         // and binds once again with this service. The service should cease to be a foreground
         // service when that happens.
-
+         System.out.print("ON REBIND");
         //Restores Data after app kill
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         Gson gson = new Gson();

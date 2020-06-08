@@ -610,6 +610,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         switcher.setEnabled(false);
                         switcherMode.setEnabled(true);
                         prefsEditor.putBoolean("switchTrack",true);
+                        prefsEditor.commit();
                         startTracking();
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -625,6 +626,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     switcherMode.setChecked(false);
                     switcherMode.setEnabled(false);
                     prefsEditor.putBoolean("switchTrack",false);
+                    prefsEditor.commit();
                     try {
                         stopTracking();
                     } catch (IOException e) {

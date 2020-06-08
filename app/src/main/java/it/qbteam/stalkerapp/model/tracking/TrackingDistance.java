@@ -41,9 +41,14 @@ public class TrackingDistance {
         else if (distance<=500){
             prioritySet = 2;
         }
-        else if (distance>1000){
+        else if (distance<=1000){
             prioritySet = 3;
         }
+        else if(distance>=1000)
+        {
+            prioritySet = 3;
+        }
+
 
         return prioritySet;
     }

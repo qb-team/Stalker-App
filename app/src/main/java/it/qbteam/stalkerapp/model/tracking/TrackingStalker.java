@@ -138,6 +138,7 @@ public class TrackingStalker extends Service {
     private SharedPreferences.Editor prefsEditor2;
     private Gson gson;
     private TrackingDistance trackingDistance;
+    private boolean saveBattery = false;
 
     public TrackingStalker()  {
 
@@ -198,7 +199,7 @@ public class TrackingStalker extends Service {
     public void switchPriority(int i) {
         System.out.print("SIAMO IN SWITCH PRIORITY");
         switch (i) {
-            case 0:
+            case 0:  //default settings
                 flag=true;
                 mLocationRequest = new LocationRequest();
                 //mLocationRequest.setInterval(5000);
@@ -207,15 +208,14 @@ public class TrackingStalker extends Service {
                 // mLocationRequest.setSmallestDisplacement(2);
                 System.out.print("CASE 0");
                 break;
-            case 1:
 
+            case 1:  //distance<=150
                 new Handler().postDelayed(() -> {
                          if(mPrefs2.getBoolean("switchTrack", false)) {
                              flag = false;
                              removeLocationUpdates();
                          }
-                         if(!mPrefs2.getBoolean("switchTrack", false)&&insideOrganization!=null)
-                         {
+                         if(!mPrefs2.getBoolean("switchTrack", false)&&insideOrganization!=null) {
                              flag =true;
                              removeLocationUpdates();
                          }
@@ -232,51 +232,52 @@ public class TrackingStalker extends Service {
                 System.out.print("CASE 1");
 
                 break;
-            case 2:
 
+            case 2:  //distance<=500 or saveBattery
                 new Handler().postDelayed(() -> {
                         if(mPrefs2.getBoolean("switchTrack", false)) {
                             flag = false;
                             removeLocationUpdates();
                         }
-                    }, 2000);
+                    }, 10000);
 
                 new Handler().postDelayed(() -> {
                         if(mPrefs2.getBoolean("switchTrack", false)) {
-
                             requestLocationUpdates();
-                        flag = true;
+                            flag = true;
                         }
-                    }, 12000);
+                    }, 60000);
 
                 System.out.print("CASE 2");
 
                 break;
-            case 3:
+
+            case 3: //distance<=1000
                 new Handler().postDelayed(() -> {
                     if(mPrefs2.getBoolean("switchTrack", false)) {
                         flag = false;
                         removeLocationUpdates();
                     }
-                }, 2000);
+                }, 10000);
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs2.getBoolean("switchTrack", false)) {
                         flag = true;
                         requestLocationUpdates();
                     }
-                }, 22000);
+                }, 180000);
 
                 System.out.print("CASE 3");
 
                 break;
-            case 4:
+
+            case 4: //distance<=15000
                 new Handler().postDelayed(() -> {
                     if(mPrefs2.getBoolean("switchTrack", false)) {
                         flag = false;
                         removeLocationUpdates();
                     }
-                }, 2000);
+                }, 10000);
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs2.getBoolean("switchTrack", false)) {
@@ -286,13 +287,14 @@ public class TrackingStalker extends Service {
                 }, 900000);// 15 min
 
                 System.out.print("CASE 4");
-            case 5:
+
+            case 5:  //distance>15000
                 new Handler().postDelayed(() -> {
                     if(mPrefs2.getBoolean("switchTrack", false)) {
                         flag = false;
                         removeLocationUpdates();
                     }
-                }, 2000);
+                }, 10000);
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs2.getBoolean("switchTrack", false)) {
@@ -313,8 +315,8 @@ public class TrackingStalker extends Service {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful() && task.getResult() != null) {
                             mLocation = task.getResult();
-
-                        } else {
+                        }
+                        else {
                             Log.w(TAG, "Fallito il rintracciamento della posizione.");
                         }
                     });
@@ -566,8 +568,8 @@ public class TrackingStalker extends Service {
         mLocation=location;
 
         if (location != null) {
-
-            switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
+            if(!saveBattery)
+                switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
 
             authenticated = HomePageActivity.getSwitcherModeStatus();
             handleOrganizations(location);
@@ -719,9 +721,12 @@ public class TrackingStalker extends Service {
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngOrganizationList.get(i).getLatLng(), true);
 
                 if (isInsideBoundary && isInside) {
-
                     HomePageActivity.setNameOrg(latLngOrganizationList.get(i).getName());
-
+                    Long min =  HomePageActivity.getCurrentTime()/1000/60;
+                    if(min >= 10L){// active saveBattery after 10 min
+                        saveBattery = true;
+                        switchPriority(2);
+                    }
                     if (organizationMovement == null && authenticated) {
 
                         HomePageActivity.playPauseTimeService();
@@ -848,6 +853,7 @@ public class TrackingStalker extends Service {
                         prefsEditor.commit();
 
                         HomePageActivity.setNameOrg("Nessuna organizzazione");
+                        saveBattery = false;
                     }
                 }
             }

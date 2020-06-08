@@ -209,79 +209,92 @@ public class TrackingStalker extends Service {
                 break;
             case 1:
 
-                 if(mPrefs2.getBoolean("switchTrack", false)) {
+
 
                      new Handler().postDelayed(new Runnable() {
                          @Override
                          public void run() {
-                             flag = false;
-                             removeLocationUpdates();
+                             if(mPrefs2.getBoolean("switchTrack", false)) {
+                                 flag = false;
+                                 removeLocationUpdates();
 
+                             }
                          }
                      }, 3000);
-                 }
-                if(mPrefs2.getBoolean("switchTrack", false)) {
+
+
 
                      new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            flag = true;
-                            requestLocationUpdates();
+                            if(mPrefs2.getBoolean("switchTrack", false)) {
+                                flag = true;
+                                requestLocationUpdates();
+
+                            }
 
                         }
                         }, 7000);
-                 }
+
                 System.out.print("CASE 1");
 
                 break;
             case 2:
 
-                if(mPrefs2.getBoolean("switchTrack", false)) {
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            flag = false;
-                            removeLocationUpdates();
+                            if(mPrefs2.getBoolean("switchTrack", false)) {
+                                flag = false;
+                                removeLocationUpdates();
+
+                            }
                         }
                     }, 2000);
 
-                }
 
-                if(mPrefs2.getBoolean("switchTrack", false)) {
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            requestLocationUpdates();
+                            if(mPrefs2.getBoolean("switchTrack", false)) {
+
+                                requestLocationUpdates();
                             flag = true;
+                            }
                         }
                     }, 12000);
-                }
+
                 System.out.print("CASE 2");
 
                 break;
             case 3:
 
-                if(mPrefs2.getBoolean("switchTrack", false) ) {
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            flag = false;
-                            removeLocationUpdates();
+                            if(mPrefs2.getBoolean("switchTrack", false)) {
+                                flag = false;
+                                removeLocationUpdates();
+
+                            }
                         }
                     }, 2000);
-                }
 
-                if(mPrefs2.getBoolean("switchTrack", false)) {
+
+
                 new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            flag = true;
-                            requestLocationUpdates();
+                            if(mPrefs2.getBoolean("switchTrack", false)) {
+                                flag = true;
+                                requestLocationUpdates();
+                            }
                         }
                     }, 22000);
-                }
+
                 System.out.print("CASE 3");
 
                 break;

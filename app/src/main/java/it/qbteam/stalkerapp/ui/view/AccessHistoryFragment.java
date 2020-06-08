@@ -1,8 +1,11 @@
 package it.qbteam.stalkerapp.ui.view;
 
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.SearchView;
+import android.widget.TextView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
@@ -222,8 +227,6 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         Bundle bundle = new Bundle();
         bundle.putString("name", accessList.get(position).getOrgName());
         bundle.putLong("orgID", accessList.get(position).getOrganizationId());
-        bundle.putLong("timeID", accessList.get(position).getTimeStay());
-        bundle.putString("accessType", accessList.get(position).getAccessType());
 
         PlaceAccessFragment placeAccessFragment = new PlaceAccessFragment();
         placeAccessFragment.setArguments(bundle);
@@ -238,6 +241,15 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
 
     @Override
     public void organizationLongClick(int position) {
+        Dialog myDialog = new Dialog(getContext());
+        myDialog.setContentView(R.layout.dialog_more_info_access);
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView timeStay = myDialog.findViewById(R.id.timeStayID);
+        TextView accessType = myDialog.findViewById(R.id.accessTypeID);
+        timeStay.setText(Integer.toString( accessList.get(position).getTimeStay().intValue()/1000/60/60)+":"+Integer.toString( accessList.get(position).getTimeStay().intValue()/1000/60)+":"+Integer.toString( accessList.get(position).getTimeStay().intValue()/1000));
+        accessType.setText(accessList.get(position).getAccessType());
+        myDialog.show();
+
 
     }
 

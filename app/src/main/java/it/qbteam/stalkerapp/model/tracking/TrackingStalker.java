@@ -134,10 +134,10 @@ public class TrackingStalker extends Service {
     private SharedPreferences.Editor prefsEditor;
     private Gson gson;
     private TrackingDistance trackingDistance;
+
     public TrackingStalker()  {
 
     }
-
 
     @Override
     public void onCreate() {
@@ -206,6 +206,7 @@ public class TrackingStalker extends Service {
                 System.out.print("CASE 1");
                 break;
             case 2:
+
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setInterval(20000);
                 mLocationRequest.setFastestInterval(20000);
@@ -480,7 +481,7 @@ public class TrackingStalker extends Service {
 
         if (location != null) {
 
-            switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
+            //switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
             authenticated = HomePageActivity.getSwitcherModeStatus();
             handleOrganizations(location);
 

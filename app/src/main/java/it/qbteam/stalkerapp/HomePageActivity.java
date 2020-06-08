@@ -96,6 +96,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private static ChronometerService myService;
     private static TextView time;
     private Timer timer;
+    private static final String SHARED_PREFS = "switchSharedPrefs";
+    private SharedPreferences  mPrefs;
+    private SharedPreferences.Editor prefsEditor;
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
@@ -257,7 +260,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 requestPermissions();
             }
         }
-
+        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        prefsEditor = mPrefs.edit();
     }
 
     @Override
@@ -266,9 +270,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
         this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
-        if(myService==null)
-        this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
+        if(myService==null){
+            this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
+        }
         setSwitchState(Utils.requestingLocationUpdates(this));
+        setSwitcheMode();
         super.onStart();
     }
 
@@ -457,6 +463,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
                     false));
         }
+
     }
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
@@ -519,6 +526,16 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         } else {
             switcher.setChecked(false);
         }
+
+    }
+
+    public void setSwitcheMode(){
+        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        Boolean switchModeIsActive = mPrefs.getBoolean("switchMode",false);
+        if(switchModeIsActive)
+            switcherMode.setChecked(true);
+        else
+            switcherMode.setChecked(false);
     }
 
     //Returns user's token.
@@ -531,7 +548,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             return null;
         }
     }
-    //Returns user's token.
+
+    //Returns user's ID.
     public static String getUserID(){
         return user.getUid();
     }
@@ -623,6 +641,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     try {
                         switcherMode.setEnabled(false);
                         stopTracking();
+                        prefsEditor.putBoolean("switchMode",false);
+                        prefsEditor.commit();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -639,6 +659,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 else if(switcher.isChecked()&&!switcherMode.isChecked())
                 {
                     switcherMode.setEnabled(false);
+                    prefsEditor.putBoolean("switchMode",true);
+                    prefsEditor.commit();
                     try {
                         stopTracking();
                     } catch (IOException e) {

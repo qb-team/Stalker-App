@@ -494,7 +494,7 @@ public class TrackingStalker extends Service {
     }
 
 
-    private void handleOrganizations(Location location) throws IOException, JSONException, ClassNotFoundException {
+    private void handleOrganizations(Location location) throws IOException {
 
         isInsideOrganizations(location);
         isInsidePlace(location);

@@ -96,7 +96,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private static ChronometerService myService;
     private static TextView time;
     private Timer timer;
-    private static final String SHARED_PREFS = "switchSharedPrefs";
+    private static final String SWITCH_MODE_SHARED_PREFS = "switchSharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
 
@@ -260,8 +260,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 requestPermissions();
             }
         }
-        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        mPrefs = getApplicationContext().getSharedPreferences(SWITCH_MODE_SHARED_PREFS, MODE_PRIVATE);
         prefsEditor = mPrefs.edit();
+        setSwitchMode();
     }
 
     @Override
@@ -274,7 +275,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         }
         setSwitchState(Utils.requestingLocationUpdates(this));
-        setSwitcheMode();
+
         super.onStart();
     }
 
@@ -529,8 +530,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    public void setSwitcheMode(){
-        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+    public void setSwitchMode(){
         Boolean switchModeIsActive = mPrefs.getBoolean("switchMode",false);
         if(switchModeIsActive)
             switcherMode.setChecked(true);

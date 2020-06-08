@@ -124,6 +124,9 @@ public class TrackingStalker extends Service {
     private Timer timer;
     private Long orgID;
     private String accessType;
+    private boolean flag=false;
+    private static final String SWITCH_MODE_SHARED_PREFS = "switchSharedPrefs";
+    private SharedPreferences mPrefTracking;
 
 
     //usati una volta che l'app è killata.
@@ -132,9 +135,10 @@ public class TrackingStalker extends Service {
     private static final String SHARED_PREFS = "trackingSharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
+    private SharedPreferences.Editor prefTracking;
     private Gson gson;
     private TrackingDistance trackingDistance;
-    private boolean flag=false;
+
     public TrackingStalker()  {
 
     }
@@ -151,8 +155,10 @@ public class TrackingStalker extends Service {
         server = new Server(null,null, null);
         timer = new Timer();
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        mPrefTracking = getApplicationContext().getSharedPreferences(SWITCH_MODE_SHARED_PREFS, MODE_PRIVATE);
         trackingDistance = new TrackingDistance();
         prefsEditor = mPrefs.edit();
+        prefTracking = mPrefTracking.edit();
 
         switchPriority(0);
 
@@ -196,8 +202,8 @@ public class TrackingStalker extends Service {
             case 0:
                 flag=false;
                 mLocationRequest = new LocationRequest();
-                mLocationRequest.setInterval(5000);
-                mLocationRequest.setFastestInterval(5000);
+                //mLocationRequest.setInterval(5000);
+                //smLocationRequest.setFastestInterval(5000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                 // mLocationRequest.setSmallestDisplacement(2);
                 System.out.print("CASE 0");
@@ -211,14 +217,16 @@ public class TrackingStalker extends Service {
                         removeLocationUpdates();
                     }
                 },2000);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        requestLocationUpdates();
-                        flag=false;
-                    }
-                },3000);
 
+                if(mPrefTracking.getBoolean("switchTrack", false) == true) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            requestLocationUpdates();
+                            flag = false;
+                        }
+                    }, 3000);
+                }
                 System.out.print("CASE 1");
 
                 break;
@@ -231,14 +239,16 @@ public class TrackingStalker extends Service {
                         removeLocationUpdates();
                     }
                 },10000);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        requestLocationUpdates();
-                        flag=false;
-                    }
-                },11000);
 
+                if(mPrefTracking.getBoolean("switchTrack", false) == true) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            requestLocationUpdates();
+                            flag = false;
+                        }
+                    }, 51000);
+                }
                 System.out.print("CASE 2");
 
                 break;
@@ -251,13 +261,16 @@ public class TrackingStalker extends Service {
                         removeLocationUpdates();
                     }
                 },20000);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        requestLocationUpdates();
-                        flag=false;
-                    }
-                },21000);
+
+                if(mPrefTracking.getBoolean("switchTrack", false) == true) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            requestLocationUpdates();
+                            flag = false;
+                        }
+                    }, 21000);
+                }
                 System.out.print("CASE 3");
 
                 break;
@@ -307,7 +320,7 @@ public class TrackingStalker extends Service {
     }
 
     public void removeLocationUpdates() {
-        if(flag==false) {
+        if(flag==true) {
             //Waits 3 sec before do the remove of the location
             timer.schedule(new TimerTask() {
                 @Override

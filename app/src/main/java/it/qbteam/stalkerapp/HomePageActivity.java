@@ -68,7 +68,7 @@ import it.qbteam.stalkerapp.ui.view.PlaceAccessFragment;
 import it.qbteam.stalkerapp.ui.view.StandardOrganizationFragment;
 import lombok.SneakyThrows;
 
-public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener, HomeFragment.FragmentListener, StandardOrganizationFragment.StandardOrganizationFragmentListener, LDAPorganizationFragment.LDAPorganizationFragmentListener, MyStalkersListFragment.MyStalkersListFragmentListener, AccessHistoryFragment.AccessHistoryFragmentListener, PlaceAccessFragment.PlaceAccessFragmentListener {
+public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, HomeFragment.FragmentListener, StandardOrganizationFragment.StandardOrganizationFragmentListener, LDAPorganizationFragment.LDAPorganizationFragmentListener, MyStalkersListFragment.MyStalkersListFragmentListener, AccessHistoryFragment.AccessHistoryFragmentListener, PlaceAccessFragment.PlaceAccessFragmentListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -263,18 +263,17 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         mPrefs = getApplicationContext().getSharedPreferences(SWITCH_MODE_SHARED_PREFS, MODE_PRIVATE);
         prefsEditor = mPrefs.edit();
         setSwitchMode();
+        setSwitchState();
     }
 
     @Override
     protected void onStart() {
 
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this);
         this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
         if(myService==null){
             this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         }
-        setSwitchState(Utils.requestingLocationUpdates(this));
+
 
         super.onStart();
     }
@@ -291,7 +290,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             isBound = false;
         }
 
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
     }
 
@@ -362,7 +360,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case  R.id.logoutID:
-                setSwitchState(false);
+                setSwitchState();
                 FirebaseAuth.getInstance().signOut();   //logout
                 goToMainActivity();
                 break;
@@ -433,7 +431,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 startTracking();
             } else {
                 // Permission denied.
-                setSwitchState(false);
+                setSwitchState();
                 Snackbar.make(
                         findViewById(R.id.drawer_layoutID),
                         R.string.permission_denied_explanation,
@@ -457,7 +455,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    //Method that is called when a shared resource between two views is modified, added or removed.
+    /*//Method that is called when a shared resource between two views is modified, added or removed.
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
@@ -465,7 +463,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     false));
         }
 
-    }
+    }*/
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void startTracking() {
@@ -521,12 +519,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     //Manages the tracking switch in the drawer.
-    public void setSwitchState(boolean requestingLocationUpdates) {
-        if (requestingLocationUpdates) {
+    public void setSwitchState() {
+        Boolean switchTrackIsActive = mPrefs.getBoolean("switchTrack",false);
+        if(switchTrackIsActive)
             switcher.setChecked(true);
-        } else {
+        else
             switcher.setChecked(false);
-        }
 
     }
 
@@ -604,11 +602,14 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             case R.id.switcherID:
 
                 if(switcher.isChecked()){
+
                     if (checkPermissions()) {
                         requestPermissions();
                     }
                     else {
                         switcher.setEnabled(false);
+                        switcherMode.setEnabled(true);
+                        prefsEditor.putBoolean("switchTrack",true);
                         startTracking();
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -621,6 +622,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 }
                 else{
                     switcher.setEnabled(false);
+                    switcherMode.setChecked(false);
+                    switcherMode.setEnabled(false);
+                    prefsEditor.putBoolean("switchTrack",false);
                     try {
                         stopTracking();
                     } catch (IOException e) {

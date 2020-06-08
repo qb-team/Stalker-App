@@ -36,13 +36,13 @@ public class TrackingDistance {
         Log.e("DISTANCE: ", "" + distance); // 222085.35856591124
 
         if (distance<=150){
-            prioritySet = 0;
-        }
-        else if (distance<=500){
             prioritySet = 1;
         }
-        else if (distance>1000){
+        else if (distance<=500){
             prioritySet = 2;
+        }
+        else if (distance>1000){
+            prioritySet = 3;
         }
 
         return prioritySet;

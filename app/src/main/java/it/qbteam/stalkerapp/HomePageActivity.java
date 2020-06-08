@@ -637,11 +637,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.switcherModeID:
-                if(switcher.isChecked()&&switcherMode.isChecked()){
+                if(switcher.isChecked() && switcherMode.isChecked()){
                     try {
                         switcherMode.setEnabled(false);
                         stopTracking();
-                        prefsEditor.putBoolean("switchMode",false);
+                        prefsEditor.putBoolean("switchMode",true);
                         prefsEditor.commit();
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -656,10 +656,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     }
 
                 }
-                else if(switcher.isChecked()&&!switcherMode.isChecked())
+                else if(switcher.isChecked() && !switcherMode.isChecked())
                 {
                     switcherMode.setEnabled(false);
-                    prefsEditor.putBoolean("switchMode",true);
+                    prefsEditor.putBoolean("switchMode",false);
                     prefsEditor.commit();
                     try {
                         stopTracking();

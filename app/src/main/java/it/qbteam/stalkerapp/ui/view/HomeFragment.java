@@ -136,7 +136,12 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         refresh.setOnRefreshListener(this::downloadList);
         auxList= new ArrayList<>();
         //Controlla se la lista è vuota, in caso positivo la scarica
-        checkFile();
+        new Handler().postDelayed(() -> {
+            mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+            userToken = mPrefs2.getString("userToken", "");
+            userID = mPrefs2.getString("userID","");
+                    checkFile();
+        }, 3000);
          nationList= new ArrayList<>();
          String[] locales = Locale.getISOCountries();
          for(String countryCode : locales) {
@@ -165,10 +170,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //It takes care of managing a possible error while reading from FileSystem and it makes the user see the error during loading.
     @Override
     public void onFailureCheckFile(String message) {
-        new Handler().postDelayed(() -> {
-            mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
-            userToken = mPrefs2.getString("userToken", "");
-            userID = mPrefs2.getString("userID","");
+
+
             AlertDialog download = new AlertDialog.Builder(getContext())
                     .setTitle("Scarica lista delle organizzazioni")
                     .setMessage("La tua lista delle organizzazioni è ancora vuota, vuoi scaricarla?")
@@ -181,9 +184,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                     .create();
             download.show();
             errorTextView.setVisibility(View.VISIBLE);
-
-
-        }, 2000);
 
     }
 

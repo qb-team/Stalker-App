@@ -89,6 +89,7 @@ public class ApiClient {
     this.setCredentials(username,  password);
   }
 
+  /*
   // Method to allow to connect to a server with self-signed SSL certificate
   public OkHttpClient.Builder getOkHttpClientForSelfSignedSSL(){
     try {
@@ -124,12 +125,13 @@ public class ApiClient {
       throw new RuntimeException(e);
     }
   }
-
+*/
   public void createDefaultAdapter() {
     json = new JSON();
-    okBuilder = this.getOkHttpClientForSelfSignedSSL();
+    //okBuilder = this.getOkHttpClientForSelfSignedSSL();
+      okBuilder = new OkHttpClient.Builder();
 
-    String baseUrl = "https://2.234.128.81:8080";
+    String baseUrl = "http://2.234.128.81:8080";
     if (!baseUrl.endsWith("/"))
       baseUrl = baseUrl + "/";
 

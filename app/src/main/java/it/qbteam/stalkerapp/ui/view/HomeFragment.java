@@ -108,9 +108,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         super.onCreate(savedInstanceState);
 
         OrganizationListPresenter = new HomePresenter(this);
-        mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
-        userToken = mPrefs2.getString("userToken", "");
-        userID = mPrefs2.getString("userID","");
+
 
         try {
             OrganizationListPresenter.createAllFile();
@@ -182,6 +180,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
     private void downloadList() {
+        mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        userToken = mPrefs2.getString("userToken", "");
+        userID = mPrefs2.getString("userID","");
         if(userToken!=null)
             OrganizationListPresenter.downloadHomeListServer(path,userToken);
         else {

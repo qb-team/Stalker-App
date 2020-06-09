@@ -84,7 +84,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private static String userEmail;
     private static TrackingStalker mService;
     private boolean mBound = false;
-    private static String path;
+    private static String path = "/data/user/0/it.qbteam.stalkerapp/files";
 
     //Time spent fields
     public static Handler sHandler;

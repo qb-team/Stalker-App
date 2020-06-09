@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -164,25 +165,31 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     //It takes care of managing a possible error while reading from FileSystem and it makes the user see the error during loading.
     @Override
     public void onFailureCheckFile(String message) {
-        AlertDialog download = new AlertDialog.Builder(getContext())
-                .setTitle("Scarica lista delle organizzazioni")
-                .setMessage("La tua lista delle organizzazioni è ancora vuota, vuoi scaricarla?")
-                .setPositiveButton("Scarica", (dialog, which) -> {
-                    downloadList();
-                    dialog.dismiss();
-                })
-                .setNegativeButton("Annulla", (dialog, which) -> {
-                })
-                .create();
-        download.show();
-        errorTextView.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(() -> {
+            mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+            userToken = mPrefs2.getString("userToken", "");
+            userID = mPrefs2.getString("userID","");
+            AlertDialog download = new AlertDialog.Builder(getContext())
+                    .setTitle("Scarica lista delle organizzazioni")
+                    .setMessage("La tua lista delle organizzazioni è ancora vuota, vuoi scaricarla?")
+                    .setPositiveButton("Scarica", (dialog, which) -> {
+                        downloadList();
+                        dialog.dismiss();
+                    })
+                    .setNegativeButton("Annulla", (dialog, which) -> {
+                    })
+                    .create();
+            download.show();
+            errorTextView.setVisibility(View.VISIBLE);
+
+
+        }, 2000);
+
     }
 
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
     private void downloadList() {
-        mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
-        userToken = mPrefs2.getString("userToken", "");
-        userID = mPrefs2.getString("userID","");
+
         if(userToken!=null)
             OrganizationListPresenter.downloadHomeListServer(path,userToken);
         else {

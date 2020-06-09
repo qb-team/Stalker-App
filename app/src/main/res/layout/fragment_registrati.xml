@@ -18,12 +18,12 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/signUpTitleID"
+            android:id="@+id/loginTitleID"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:gravity="center_horizontal"
-            android:text = "Registrazione Account"
+            android:text="Benvenuto in Stalker!"
             android:textColor="#fff"
             android:textSize="26sp"
             android:textStyle="bold"/>
@@ -33,16 +33,28 @@
             android:id="@+id/stalkerIconID"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_below="@+id/signUpTitleID"
+            android:layout_below="@id/loginTitleID"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:background="@drawable/ic_stalkericon_"
             android:elevation="4dp"/>
 
+        <TextView
+            android:id="@+id/registratiID"
+            android:layout_marginTop="16dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stalkerIconID"
+            android:gravity="center"
+            android:text="Registrazione"
+            android:textColor="#fff"
+            android:textSize="26sp"
+            android:textStyle="bold"/>
+
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/stalkerIconID"
+            android:layout_below="@+id/registratiID"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="30dp"

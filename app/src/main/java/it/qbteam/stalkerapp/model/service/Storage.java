@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.model.service;
 
+import android.content.SharedPreferences;
+
 import io.grpc.internal.Stream;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.contract.AccessHistoryContract;
@@ -32,10 +34,11 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
 
 public class Storage implements HomeContract.Interactor, MyStalkersListContract.Interactor {
 
-    HomeContract.HomeListener homeListener;
-    MyStalkersListContract.MyStalkerListener myStalkerListener;
-    AccessHistoryContract.AccessHistoryListener accessHistoryListener;
-    PlaceAccessContract.PlaceAccessListener placeAccessListener;
+    private HomeContract.HomeListener homeListener;
+    private MyStalkersListContract.MyStalkerListener myStalkerListener;
+    private AccessHistoryContract.AccessHistoryListener accessHistoryListener;
+    private PlaceAccessContract.PlaceAccessListener placeAccessListener;
+
 
     //Storage's constructor.
     public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener,  AccessHistoryContract.AccessHistoryListener accessHistoryListener, PlaceAccessContract.PlaceAccessListener placeAccessListener){
@@ -43,6 +46,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
          this.myStalkerListener = myStalkerListener;
          this.accessHistoryListener = accessHistoryListener;
          this.placeAccessListener = placeAccessListener;
+
     }
 
     //Checks if the list of organizations already exists in local file.

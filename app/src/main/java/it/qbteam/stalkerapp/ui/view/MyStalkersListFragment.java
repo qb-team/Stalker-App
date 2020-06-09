@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -67,6 +69,11 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private Button selectCountry;
     private SearchView searchView;
     private List<Organization> auxList;
+    private static final String SHARED_PREF = "sharedPref";
+    private SharedPreferences mPrefs2;
+    private String userToken;
+    private String userID;
+
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface MyStalkersListFragmentListener {
@@ -106,6 +113,15 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         nationList= new ArrayList<>();
+        new Handler().postDelayed(() -> {
+
+            mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+            userToken = mPrefs2.getString("userToken", "");
+            userID = mPrefs2.getString("userID","");
+            loadMyStalkerList();
+
+        }, 3000);
+
         String[] locales = Locale.getISOCountries();
         for(String countryCode : locales) {
 
@@ -179,13 +195,13 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         myQuittingDialogBox.show();
     }
 
-    public boolean organizationListEmpty(){
+  /*  public boolean organizationListEmpty(){
         if (organizationList==null || organizationList.size()==0)
             return true;
         else
             return false;
     }
-
+*/
 
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".
     @Override
@@ -370,7 +386,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //Add the organization received as input to both the FileSystem and the Server.
     public void addOrganization(Organization organization) throws IOException, JSONException {
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
-        myStalkersListPresenter.addOrganizationServer(organization, HomePageActivity.getUserID(), HomePageActivity.getUserToken());
+        myStalkersListPresenter.addOrganizationServer(organization, userID, userToken);
     }
 
 
@@ -397,7 +413,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Removes an organization from both the FileSystem and the Server.
     private void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
-        myStalkersListPresenter.removeOrganizationServer(organizationList.get(position),HomePageActivity.getUserID(), HomePageActivity.getUserToken());
+        myStalkersListPresenter.removeOrganizationServer(organizationList.get(position), userID, userToken);
         myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
     }
 
@@ -411,8 +427,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //Downloads from the Server the list of organizations previously added by the user.
-    public void loadMyStalkerList(String UID, String userToken) {
-        myStalkersListPresenter.downloadListServer(UID, userToken);
+    public void loadMyStalkerList() {
+        myStalkersListPresenter.downloadListServer(userID, userToken);
     }
 
     //Keeps track of any changes made by the user of his list of organizations in the `MyStalkerListFragment` view.

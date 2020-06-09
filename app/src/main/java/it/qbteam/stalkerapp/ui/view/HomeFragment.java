@@ -3,6 +3,7 @@ package it.qbteam.stalkerapp.ui.view;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -74,6 +75,10 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private Button selectCountry;
     private SearchView searchView;
     private TextView errorTextView;
+    private static final String SHARED_PREF = "sharedPref";
+    private SharedPreferences mPrefs2;
+    private String userToken;
+    private String userID;
 
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
@@ -103,6 +108,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         super.onCreate(savedInstanceState);
 
         OrganizationListPresenter = new HomePresenter(this);
+        mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        userToken = mPrefs2.getString("userToken", "");
+        userID = mPrefs2.getString("userID","");
 
         try {
             OrganizationListPresenter.createAllFile();
@@ -174,8 +182,8 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
     private void downloadList() {
-        if(HomePageActivity.getUserToken()!=null)
-            OrganizationListPresenter.downloadHomeListServer(path,HomePageActivity.getUserToken());
+        if(userToken!=null)
+            OrganizationListPresenter.downloadHomeListServer(path,userToken);
         else {
             refresh.setRefreshing(false);
             Toast.makeText(getActivity(), "Errore durante lo scaricamento della lista", Toast.LENGTH_SHORT).show();

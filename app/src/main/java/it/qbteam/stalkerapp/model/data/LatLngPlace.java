@@ -27,7 +27,7 @@ public class LatLngPlace {
             double longitude = jsonObj.getDouble("long");
             polygon.add(new LatLng(latitude, longitude));
         }
-        System.out.print("Poligono"+polygon.toArray().toString());
+        ;
     }
 
 

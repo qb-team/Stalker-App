@@ -96,7 +96,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private static ChronometerService myService;
     private static TextView time;
     private Timer timer;
-    private static final String SWITCH_MODE_SHARED_PREFS = "switchSharedPrefs";
+    private static final String SHARED_PREF = "sharedPref";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
 
@@ -172,6 +172,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         setContentView(R.layout.activity_home_page);
 
+        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+        prefsEditor = mPrefs.edit();
         //user==null
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             userEmail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -213,7 +215,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         navigationView.setNavigationItemSelectedListener( this);
         myReceiver = new MyReceiver();
         statusCheck();
-        path = this.getFilesDir().getPath();
 
         //setting switch button tracking in drawer menu
         Menu menu = navigationView.getMenu();
@@ -260,8 +261,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 requestPermissions();
             }
         }
-        mPrefs = getApplicationContext().getSharedPreferences(SWITCH_MODE_SHARED_PREFS, MODE_PRIVATE);
-        prefsEditor = mPrefs.edit();
+
         setSwitchMode();
         setSwitchState();
     }
@@ -273,7 +273,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         if(myService==null){
             this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         }
-
 
         super.onStart();
     }
@@ -311,17 +310,19 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public void updateFirebaseToken(){
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUser.getIdToken(true)
-                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        if (task.isSuccessful()) {
-                            user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            MyStalkersListFragment frag = (MyStalkersListFragment )ActionTabFragment.getMyStalkerFragment();
-                            if(frag.organizationListEmpty()){
-                                frag.loadMyStalkerList(user.getUid(),user.getToken());
-                            }
-                        } else {
-                            // Handle error -> task.getException();
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        System.out.print("TOKENNNN   "+user.getToken());
+                        prefsEditor.putString("userToken",user.getToken());
+                        prefsEditor.putString("userID",user.getUid());
+                        prefsEditor.commit();
+                       /* MyStalkersListFragment frag = (MyStalkersListFragment )ActionTabFragment.getMyStalkerFragment();
+                        if(frag.organizationListEmpty()){
+                            frag.loadMyStalkerList(user.getUid(),user.getToken());
+                        }*/
+                    } else {
+                        // Handle error -> task.getException();
                     }
                 });}
     //creates the action tab menu.
@@ -436,34 +437,21 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         findViewById(R.id.drawer_layoutID),
                         R.string.permission_denied_explanation,
                         Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.settings, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Build intent that displays the App settings screen.
-                                Intent intent = new Intent();
-                                intent.setAction(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package",
-                                        BuildConfig.APPLICATION_ID, null);
-                                intent.setData(uri);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
+                        .setAction(R.string.settings, view -> {
+                            // Build intent that displays the App settings screen.
+                            Intent intent = new Intent();
+                            intent.setAction(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package",
+                                    BuildConfig.APPLICATION_ID, null);
+                            intent.setData(uri);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         })
                         .show();
             }
         }
     }
-
-    /*//Method that is called when a shared resource between two views is modified, added or removed.
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {
-            setSwitchState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES,
-                    false));
-        }
-
-    }*/
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void startTracking() {
@@ -472,11 +460,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    private void stopTracking() throws IOException {
-        //playPauseTimeService();
-        //resetTime();
+    private void stopTracking() {
         mService.removeLocationUpdates();
-
     }
 
     public static void stopChronometerService(){
@@ -537,7 +522,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     //Returns user's token.
-    public static String getUserToken(){
+  /*  public static String getUserToken(){
         if (user!=null) {
             return user.getToken();
         }
@@ -550,7 +535,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     //Returns user's ID.
     public static String getUserID(){
         return user.getUid();
-    }
+    }*/
 
     //Comunicates with MyStalkerListFragment to add the organization.
     @Override
@@ -589,9 +574,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             return false;
     }
 
-     public static String getPath(){
+    public static String getPath(){
         return path;
-}
+    }
 
     public static TabLayout getTabLayout(){return ActionTabFragment.getTabLayout();}
 
@@ -627,39 +612,25 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     switcherMode.setEnabled(false);
                     prefsEditor.putBoolean("switchTrack",false);
                     prefsEditor.commit();
-                    try {
-                        stopTracking();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // This method will be executed once the timer is over
-                            switcher.setEnabled(true);
-                        }
+                    stopTracking();
+                    new Handler().postDelayed(() -> {
+                        // This method will be executed once the timer is over
+                        switcher.setEnabled(true);
                     },2000);
                 }
                 break;
 
             case R.id.switcherModeID:
                 if(switcher.isChecked() && switcherMode.isChecked()){
-                    try {
-                        switcherMode.setEnabled(false);
-                        stopTracking();
-                        prefsEditor.putBoolean("switchMode",true);
-                        prefsEditor.commit();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // This method will be executed once the timer is over
-                                switcherMode.setEnabled(true);
-                                startTracking();
-                            }
-                        },2000);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    switcherMode.setEnabled(false);
+                    stopTracking();
+                    prefsEditor.putBoolean("switchMode",true);
+                    prefsEditor.commit();
+                    new Handler().postDelayed(() -> {
+                        // This method will be executed once the timer is over
+                        switcherMode.setEnabled(true);
+                        startTracking();
+                    },2000);
 
                 }
                 else if(switcher.isChecked() && !switcherMode.isChecked())
@@ -667,18 +638,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     switcherMode.setEnabled(false);
                     prefsEditor.putBoolean("switchMode",false);
                     prefsEditor.commit();
-                    try {
-                        stopTracking();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // This method will be executed once the timer is over
-                            switcherMode.setEnabled(true);
-                            startTracking();
-                        }
+                    stopTracking();
+                    new Handler().postDelayed(() -> {
+                        // This method will be executed once the timer is over
+                        switcherMode.setEnabled(true);
+                        startTracking();
                     },2000);
                 }
 

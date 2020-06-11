@@ -18,27 +18,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.BuildConfig;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
@@ -52,8 +45,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.Timer;
-import java.util.TimerTask;
-
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.ChronometerService;
@@ -75,6 +66,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private static User user;
     private static TextView nameOrg;
     private static TextView namePlace;
+
     // The BroadcastReceiver used to listen from broadcasts from the service.
     private MyReceiver myReceiver;
     private SwitchCompat switcher;
@@ -269,11 +261,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onStart() {
 
-        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
         if(myService==null){
             this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         }
-
         super.onStart();
     }
 
@@ -317,10 +307,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         prefsEditor.putString("userToken",user.getToken());
                         prefsEditor.putString("userID",user.getUid());
                         prefsEditor.commit();
-                       /* MyStalkersListFragment frag = (MyStalkersListFragment )ActionTabFragment.getMyStalkerFragment();
-                        if(frag.organizationListEmpty()){
-                            frag.loadMyStalkerList(user.getUid(),user.getToken());
-                        }*/
+                        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+
                     } else {
                         // Handle error -> task.getException();
                     }
@@ -521,22 +509,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             switcherMode.setChecked(false);
     }
 
-    //Returns user's token.
-  /*  public static String getUserToken(){
-        if (user!=null) {
-            return user.getToken();
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    //Returns user's ID.
-    public static String getUserID(){
-        return user.getUid();
-    }*/
-
     //Comunicates with MyStalkerListFragment to add the organization.
     @Override
     public void sendOrganization(Organization organization) throws IOException, JSONException {
@@ -648,7 +620,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
                 break;
         }
-
     }
 
     private class MyReceiver extends BroadcastReceiver {
@@ -667,7 +638,5 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     }
-
-
 
 }

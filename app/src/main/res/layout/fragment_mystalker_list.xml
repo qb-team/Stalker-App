@@ -7,13 +7,25 @@
     android:background="@color/lightGrayColor"
     android:id="@+id/ListaPreferitiID"
     tools:ignore="MissingDefaultResource">
+    <TextView
+        android:id="@+id/errorTextID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="20dp"
+        android:visibility="invisible"
+        android:text="Slide verso il basso per caricare la lista MyStalker"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefreshID"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewID"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/organization_row"
-        tools:layout_editor_absoluteX="16dp"
-
-        />
+        tools:layout_editor_absoluteX="16dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

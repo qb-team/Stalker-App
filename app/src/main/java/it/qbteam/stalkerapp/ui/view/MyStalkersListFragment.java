@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.scrounger.countrycurrencypicker.library.Country;
 import com.scrounger.countrycurrencypicker.library.CountryCurrencyPicker;
@@ -61,6 +62,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView.Adapter adapter;
     private static String path;
     private MyStalkersListFragmentListener myStalkersListFragmentListener;
+    private SwipeRefreshLayout refresh;
     private String countrySelected="";
     private MenuItem searchForName;
     private MenuItem searchForCity;
@@ -73,7 +75,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private SharedPreferences mPrefs2;
     private String userToken;
     private String userID;
-
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface MyStalkersListFragmentListener {
@@ -108,10 +109,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mystalker_list, container, false);
+        refresh = view.findViewById(R.id.swiperefreshID);
+        refresh.setColorSchemeResources(R.color.colorAccent);
         auxList= new ArrayList<>();
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        //Refresh to load MyStalkerList's organizations (swipe down).
+        refresh.setOnRefreshListener(this::loadMyStalkerList);
         nationList= new ArrayList<>();
         new Handler().postDelayed(() -> {
 
@@ -119,8 +124,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             userToken = mPrefs2.getString("userToken", "");
             userID = mPrefs2.getString("userID","");
             loadMyStalkerList();
-
-        }, 3000);
+            }, 3000);
 
         String[] locales = Locale.getISOCountries();
         for(String countryCode : locales) {
@@ -307,8 +311,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         return false;
     }
 
-
-
     //Display the list of organizations on the screen following user inputs in the search menu.
     @Override
     public boolean onQueryTextChange(String newText) {
@@ -428,28 +430,26 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Downloads from the Server the list of organizations previously added by the user.
     public void loadMyStalkerList() {
-        myStalkersListPresenter.downloadListServer(userID, userToken);
+        if(userToken!=null && userID!=null)
+            myStalkersListPresenter.downloadListServer(userID, userToken);
+        else {
+            refresh.setRefreshing(false);
+            Toast.makeText(getContext(),"Errore durante il caricamento della lista MyStalkeList",Toast.LENGTH_SHORT).show();
+        }
     }
-
-    //Keeps track of any changes made by the user of his list of organizations in the `MyStalkerListFragment` view.
-   /*  public List<Organization> checkForUpdate(){
-        return myStalkersListPresenter.checkLocalFile(path);
-     }*/
 
     //It notifies the user of the successful download of his list of organizations included in `MyStalkersList` and shows them on the screen.
     @Override
     public void onSuccessLoadMyStalkerList(List<Organization> list) throws IOException, JSONException {
 
         if (list != null) {
-            List<Organization> aux = new ArrayList<>(list);
-            //Assegno la lista appena scaricata dal server
-            organizationList.addAll(aux);
+            //Assegno la lista appena scaricata dal server a organizationList.
+            organizationList = list;
             adapter = new OrganizationViewAdapter(organizationList, this.getContext(), this);
             recyclerView.setAdapter(adapter);
+            refresh.setRefreshing(false);
             myStalkersListPresenter.updateFile(organizationList, path);
-
         }
-
         else
             Toast.makeText(getContext(), "Lista MyStalker ancora vuota", Toast.LENGTH_SHORT).show();
     }

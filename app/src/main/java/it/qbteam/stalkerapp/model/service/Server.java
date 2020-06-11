@@ -86,17 +86,18 @@ public class Server {
                     @Override
                     public void onResponse(Call<List<Organization>> call, Response<List<Organization>> response) {
                         try {
-                            myStalkerListener.onSuccessLoad(response.body());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
+                            if(response.code()==200)
+                                myStalkerListener.onSuccessLoad(response.body());
+                            else
+                                myStalkerListener.onSuccessLoad(null);
+                        } catch (IOException | JSONException e) {
                             e.printStackTrace();
                         }
-                        System.out.println("RISPOSTA LOAD: " + response.code());
+
                     }
                     @Override
                     public void onFailure(Call<List<Organization>> call, Throwable t) {
-                        System.out.println("ERRORE LOAD");
+
                     }
                 });
     }
@@ -135,7 +136,10 @@ public class Server {
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
 
                 try {
-                    storage.serializePlaceInLocal(response.body());
+                    if(response.code()==200){
+                        storage.serializePlaceInLocal(response.body());
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     System.out.print("Errore durante lo scaricamento dei luoghi dell'organizzazione ");
@@ -171,16 +175,15 @@ public class Server {
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
                 try {
-
-                    if(type==1){
+                    System.out.print("response.code() organization  "+ response.code());
+                    if(type==1 && response.code() == 201){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializeMovementInLocal(movementUpload);
                         storage.saveLastAccess(movementUpload);
                     }
-                    else if(type==-1){
+                    else if(type==-1 && response.code() == 202){
                         //serialize in local the object List<OrganizationAccess>.
                         storage.serializeOrganizationAccessInLocal(organizationAccess);
-
                     }
 
                 } catch (IOException | ClassNotFoundException e) {
@@ -212,11 +215,12 @@ public class Server {
             public void onResponse(Call<PlaceMovement> call, Response<PlaceMovement> response) {
 
                 try {
-                    if(type==1){
+                    System.out.print("response.code() place  "+ response.code());
+                    if(type==1 && response.code() == 201 ){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializePlaceMovement(movementUpload);
                     }
-                    else if(type==-1){
+                    else if(type==-1 && response.code() == 202){
                         //serialize in local the object List<PlaceAccess>.
                         storage.serializePlaceAccessInLocal(placeAccess);
 
@@ -247,8 +251,10 @@ public class Server {
             @Override
             public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
 
-                if(response.body()!=null){
+                if(response.body()!=null && response.code() == 200){
+
                     for(int i=0; i<response.body().size(); i++){
+
                         Organization o =new Organization();
                         o.setName(response.body().get(i).getName());
                         o.setCity(response.body().get(i).getCity());
@@ -263,17 +269,17 @@ public class Server {
                         o.setStreet(response.body().get(i).getStreet());
                         o.setTrackingArea(response.body().get(i).getTrackingArea());
                         o.setTrackingMode(response.body().get(i).getTrackingMode().toString());
-                        if(response.body().get(i).getTrackingMode().getValue()=="authenticated")
+
+                        if(response.body().get(i).getTrackingMode().getValue()=="authenticated"){
                             o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
+                        }
                         returnList.add(o);
                     }
 
                     try {
                         Storage save = new Storage(null,null, null, null);
                         save.performUpdateFile(returnList,path);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (JSONException | IOException e) {
                         e.printStackTrace();
                     }
                     homeListener.onSuccessDownload("Lista scaricata con successo");

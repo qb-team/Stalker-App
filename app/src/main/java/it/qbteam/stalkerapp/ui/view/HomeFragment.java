@@ -2,6 +2,7 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView;
@@ -80,7 +82,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private SharedPreferences mPrefs2;
     private String userToken;
     private String userID;
-
+    private ProgressDialog progressBar;
+    private int progressStatus = 0;
+    private Handler handler = new Handler();
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface FragmentListener {
@@ -107,7 +111,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-
+        mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         OrganizationListPresenter = new HomePresenter(this);
 
 
@@ -127,6 +131,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_organizations_list, container, false);
         refresh = view.findViewById(R.id.swiperefreshID);
+        refresh.setColorSchemeResources(R.color.colorAccent);
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -136,12 +141,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         refresh.setOnRefreshListener(this::downloadList);
         auxList= new ArrayList<>();
         //Controlla se la lista è vuota, in caso positivo la scarica
-        new Handler().postDelayed(() -> {
-            mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
-            userToken = mPrefs2.getString("userToken", "");
-            userID = mPrefs2.getString("userID","");
-                    checkFile();
-        }, 3000);
+        checkFile();
          nationList= new ArrayList<>();
          String[] locales = Locale.getISOCountries();
          for(String countryCode : locales) {
@@ -172,21 +172,61 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onFailureCheckFile(String message) {
 
 
-            AlertDialog download = new AlertDialog.Builder(getContext())
+        AlertDialog download = new AlertDialog.Builder(getContext())
                     .setTitle("Scarica lista delle organizzazioni")
                     .setMessage("La tua lista delle organizzazioni è ancora vuota, vuoi scaricarla?")
                     .setPositiveButton("Scarica", (dialog, which) -> {
-                        downloadList();
+                        progressBarDownload();
                         dialog.dismiss();
+
                     })
                     .setNegativeButton("Annulla", (dialog, which) -> {
+
                     })
                     .create();
             download.show();
             errorTextView.setVisibility(View.VISIBLE);
 
     }
-
+   private void progressBarDownload(){
+       // creating progress bar dialog
+       progressBar = new ProgressDialog(getContext());
+       progressBar.setCancelable(true);
+       progressBar.setMessage("Scaricamento della lista dal server..");
+       progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+       progressBar.setProgress(0);
+       progressBar.setMax(100);
+       progressBar.show();
+       //reset progress bar and filesize status
+       progressStatus = 0;
+       new Thread(() -> {
+           while (progressStatus < 100) {
+               // performing operation
+               progressStatus += 1;
+               userToken = mPrefs2.getString("userToken", "");
+               userID = mPrefs2.getString("userID","");
+               if(userToken != null && userID != null){
+                   progressStatus = 100;
+               }
+               try {
+                   Thread.sleep(200);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               // Updating the progress bar
+               handler.post(new Runnable() {
+                   public void run() {
+                       progressBar.setProgress(progressStatus);
+                   }
+               });
+           }
+           // performing operation if file is downloaded,
+           if (progressStatus >= 100) {
+               downloadList();
+               progressBar.dismiss();
+           }
+       }).start();
+   }
     //It takes care of downloading the list from the Server and it saves it on FileSystem.
     private void downloadList() {
 

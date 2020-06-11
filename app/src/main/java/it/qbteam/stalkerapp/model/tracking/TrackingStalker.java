@@ -162,8 +162,6 @@ public class TrackingStalker extends Service {
         prefsEditor = mPrefs.edit();
         gson = new Gson();
         switchPriority(0);
-
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
             @SneakyThrows
@@ -207,7 +205,7 @@ public class TrackingStalker extends Service {
                 //smLocationRequest.setFastestInterval(5000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                 // mLocationRequest.setSmallestDisplacement(2);
-                System.out.print("CASE 0");
+
                 break;
 
             case 1:  //distance<=150
@@ -345,7 +343,6 @@ public class TrackingStalker extends Service {
             Utils.setRequestingLocationUpdates(this, false);
             Log.e(TAG, "Lost location permission. Could not request updates. " + unlikely);
         }
-
     }
 
     public void removeLocationUpdates() {
@@ -418,7 +415,6 @@ public class TrackingStalker extends Service {
             HomePageActivity.resetTime();
         }
          //Reset of all parameters.
-
          Log.i(TAG, "Removing location updates");
 
          try {
@@ -427,7 +423,6 @@ public class TrackingStalker extends Service {
              if(!mPrefs2.getBoolean("switchTrack", false)) {
                  stopSelf();
              }
-
 
          } catch (SecurityException unlikely) {
             Utils.setRequestingLocationUpdates(this, true);
@@ -564,7 +559,7 @@ public class TrackingStalker extends Service {
         return builder.build();
     }
 
-    private void onNewLocation(Location location) throws IOException {
+    private void onNewLocation(Location location)  {
 
         mLocation=location;
 

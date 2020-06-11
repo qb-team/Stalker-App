@@ -199,13 +199,16 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
        progressBar.show();
        //reset progress bar and filesize status
        progressStatus = 0;
+
        new Thread(() -> {
+
            while (progressStatus < 100) {
                // performing operation
-               progressStatus += 1;
+               progressStatus += 10;
                userToken = mPrefs2.getString("userToken", "");
                userID = mPrefs2.getString("userID","");
-               if(userToken != null && userID != null){
+
+               if(progressStatus>=60 && userToken != null && userID != null){
                    progressStatus = 100;
                }
                try {
@@ -214,11 +217,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                    e.printStackTrace();
                }
                // Updating the progress bar
-               handler.post(new Runnable() {
-                   public void run() {
-                       progressBar.setProgress(progressStatus);
-                   }
-               });
+               handler.post(() -> progressBar.setProgress(progressStatus));
            }
            // performing operation if file is downloaded,
            if (progressStatus >= 100) {

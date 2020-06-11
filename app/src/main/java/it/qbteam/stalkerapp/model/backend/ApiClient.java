@@ -130,7 +130,8 @@ public class ApiClient {
     json = new JSON();
     okBuilder = this.getOkHttpClientForSelfSignedSSL();
 
-    String baseUrl = "https://2.234.128.81:8080";
+    String baseUrl = "https://backend.stalker-qb.team:8080/";
+
     if (!baseUrl.endsWith("/"))
       baseUrl = baseUrl + "/";
 

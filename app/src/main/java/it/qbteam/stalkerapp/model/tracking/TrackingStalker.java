@@ -162,17 +162,14 @@ public class TrackingStalker extends Service {
         prefsEditor = mPrefs.edit();
         gson = new Gson();
         switchPriority(0);
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {    // Istanziazione LocationCallback
             @SneakyThrows
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                try {
-                    onNewLocation(locationResult.getLastLocation());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                onNewLocation(locationResult.getLastLocation());
             }
         };
 
@@ -182,7 +179,6 @@ public class TrackingStalker extends Service {
         handlerThread.start();
         mServiceHandler = new Handler(handlerThread.getLooper());
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
         // Android O requires a Notification Channel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // Per un determinato tipo di Android
             CharSequence name = getString(R.string.app_name);
@@ -201,10 +197,8 @@ public class TrackingStalker extends Service {
             case 0:  //default settings
                 flag=true;
                 mLocationRequest = new LocationRequest();
-                //mLocationRequest.setInterval(5000);
-                //smLocationRequest.setFastestInterval(5000);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                // mLocationRequest.setSmallestDisplacement(2);
+                System.out.print("CASE 0");
 
                 break;
 
@@ -309,6 +303,7 @@ public class TrackingStalker extends Service {
     }
 
     private void getLastLocation() {
+
         try {
             mFusedLocationClient.getLastLocation()
                     .addOnCompleteListener(task -> {
@@ -559,7 +554,7 @@ public class TrackingStalker extends Service {
         return builder.build();
     }
 
-    private void onNewLocation(Location location)  {
+    private void onNewLocation(Location location) {
 
         mLocation=location;
 

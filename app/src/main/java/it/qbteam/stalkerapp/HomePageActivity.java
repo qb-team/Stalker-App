@@ -630,12 +630,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 Fragment frag = (AccessHistoryFragment )ActionTabFragment.getAccessHistoryFragment();
                 try {
                     ((AccessHistoryFragment) frag).printAccess();
-                } catch (IOException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-
-            }
+                }
         }
     }
 

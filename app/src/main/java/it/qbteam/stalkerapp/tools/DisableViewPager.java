@@ -1,4 +1,4 @@
-package it.qbteam.stalkerapp.ui.view;
+package it.qbteam.stalkerapp.tools;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,11 +7,11 @@ import android.view.MotionEvent;
 import androidx.viewpager.widget.ViewPager;
 
 
-public  class MyViewPager extends ViewPager {
+public  class DisableViewPager extends ViewPager {
 
     private boolean enabled;
 
-    public MyViewPager(Context context, AttributeSet attrs) {
+    public DisableViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.enabled = true;
     }

@@ -1,22 +1,18 @@
 package it.qbteam.stalkerapp.ui.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import it.qbteam.stalkerapp.tools.DisableViewPager;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.TabViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
-
-import org.xmlpull.v1.XmlPullParser;
 
 public class ActionTabFragment extends Fragment{
 
@@ -25,7 +21,7 @@ public class ActionTabFragment extends Fragment{
     private static MyStalkersListFragment myStalkersListFragment;
     private static HomeFragment homeFragment;
     private static AccessHistoryFragment accessHistoryFragment;
-    private MyViewPager myViewPager;
+    private DisableViewPager disableViewPager;
     public ActionTabFragment() {
         // Required empty public constructor.
     }
@@ -47,7 +43,7 @@ public class ActionTabFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_action_tab, container, false);
         tabLayout = (TabLayout) view.findViewById(R.id.tabID);
-        myViewPager = (MyViewPager) view.findViewById(R.id.viewpagerID);
+        disableViewPager = (DisableViewPager) view.findViewById(R.id.viewpagerID);
         return view;
     }
 
@@ -66,9 +62,9 @@ public class ActionTabFragment extends Fragment{
         adapter.addFragment(accessHistoryFragment, "");
 
 
-        myViewPager.setAdapter(adapter);
+        disableViewPager.setAdapter(adapter);
         // The one-stop shop for setting up this TabLayout with a ViewPager.
-        tabLayout.setupWithViewPager(myViewPager);
+        tabLayout.setupWithViewPager(disableViewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_stalkericon_);
@@ -111,7 +107,7 @@ public class ActionTabFragment extends Fragment{
             }
         });
 
-        myViewPager.setOffscreenPageLimit(2);
+        disableViewPager.setOffscreenPageLimit(2);
 
     }
 
@@ -119,7 +115,7 @@ public class ActionTabFragment extends Fragment{
     //Management of the back button.
     public boolean onBackPressed() {
         // currently visible tab Fragment
-        OnBackPressListener currentFragment = (OnBackPressListener) adapter.getItem(myViewPager.getCurrentItem());
+        OnBackPressListener currentFragment = (OnBackPressListener) adapter.getItem(disableViewPager.getCurrentItem());
         if (currentFragment != null) {
             // lets see if the currentFragment or any of its childFragment can handle onBackPressed
             return currentFragment.onBackPressed();
@@ -139,7 +135,7 @@ public class ActionTabFragment extends Fragment{
     public static TabLayout getTabLayout(){return tabLayout; }
 
     public void disableScroll(boolean enable){
-        myViewPager.setPagingEnabled(enable);
+        disableViewPager.setPagingEnabled(enable);
 
     }
 

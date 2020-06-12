@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.InputType;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -24,20 +23,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.TextView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.contract.AccessHistoryContract;
@@ -46,9 +37,7 @@ import it.qbteam.stalkerapp.presenter.AccessHistoryPresenter;
 import it.qbteam.stalkerapp.tools.AccessHistoryViewAdapter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import it.qbteam.stalkerapp.tools.SearchViewCustom;
-//import lombok.SneakyThrows;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -281,7 +270,6 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             recyclerView.setAdapter(adapter);
         }
     }
-
 
     static final Comparator<OrganizationAccess> byDateCreasing = (o1, o2) -> o1.getExitTimestamp().compareTo(o2.getExitTimestamp());
 

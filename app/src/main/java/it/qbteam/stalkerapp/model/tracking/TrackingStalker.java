@@ -46,8 +46,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import org.json.JSONException;
@@ -57,13 +55,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
-import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
-import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
 import it.qbteam.stalkerapp.model.data.LatLngPlace;
@@ -95,7 +90,6 @@ public class TrackingStalker extends Service {
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
     private static final String TAG = TrackingStalker.class.getSimpleName();
     private static final int START_TASK_REMOVED_COMPLETE = 1000;
-
     private LatLngOrganization insideOrganization;
     private LatLngPlace insidePlace;
     private static final String CHANNEL_ID = "channel_01";
@@ -130,19 +124,13 @@ public class TrackingStalker extends Service {
     private String userToken;
     private OrganizationMovement organizationMovement;
     private PlaceMovement placeMovement;
-    //usati una volta che l'app è killata.
 
-    private static final String SHARED_PREFS = "trackingSharedPrefs";
+    //usati una volta che l'app è killata.
+    private static final String SHARED_PREFS = "sharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
-    private static final String SHARED_PREF = "sharedPref";
-    private SharedPreferences  mPrefs2;
+
     private Gson gson;
-
-
-    public TrackingStalker()  {
-
-    }
 
     @Override
     public void onCreate() {
@@ -150,14 +138,12 @@ public class TrackingStalker extends Service {
         System.out.print("CREATE SERVICE");
         latLngOrganizationList=new ArrayList<>();
         latLngPlaceList=new ArrayList<>();
-
         organizationAccess=new OrganizationAccess();
         storage = new Storage(null,null, null, null);
-        server = new Server(null,null, null);
+        server = new Server(null,null);
         timer = new Timer();
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        mPrefs2 = getApplicationContext().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        userToken = mPrefs2.getString("userToken", "");
+        userToken = mPrefs.getString("userToken", "");
         trackingDistance = new TrackingDistance();
         prefsEditor = mPrefs.edit();
         gson = new Gson();
@@ -173,7 +159,7 @@ public class TrackingStalker extends Service {
             }
         };
 
-        getLastLocation();       // Istanziazione FusedLocationListener
+        getLastLocation();// Istanziazione FusedLocationListener
 
         HandlerThread handlerThread = new HandlerThread("il tag:  " + TAG);
         handlerThread.start();
@@ -198,26 +184,26 @@ public class TrackingStalker extends Service {
                 flag=true;
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                mLocationRequest.setInterval(5000);
-
+                mLocationRequest.setInterval(10000);
+                mLocationRequest.setFastestInterval(5000);
                 System.out.print("CASE 0");
 
                 break;
 
             case 1:  //distance<=150
                 new Handler().postDelayed(() -> {
-                         if(mPrefs2.getBoolean("switchTrack", false)) {
+                         if(mPrefs.getBoolean("switchTrack", false)) {
                              flag = false;
                              removeLocationUpdates();
                          }
-                         if(!mPrefs2.getBoolean("switchTrack", false)&&insideOrganization!=null) {
+                         if(!mPrefs.getBoolean("switchTrack", false)&&insideOrganization!=null) {
                              flag =true;
                              removeLocationUpdates();
                          }
                      }, 3000);
 
                 new Handler().postDelayed(() -> {
-                         if(mPrefs2.getBoolean("switchTrack", false)) {
+                         if(mPrefs.getBoolean("switchTrack", false)) {
                              flag = true;
                              requestLocationUpdates();
                          }
@@ -230,14 +216,14 @@ public class TrackingStalker extends Service {
 
             case 2:  //distance<=500 or saveBattery
                 new Handler().postDelayed(() -> {
-                        if(mPrefs2.getBoolean("switchTrack", false)) {
+                        if(mPrefs.getBoolean("switchTrack", false)) {
                             flag = false;
                             removeLocationUpdates();
                         }
                     }, 10000);
 
                 new Handler().postDelayed(() -> {
-                        if(mPrefs2.getBoolean("switchTrack", false)) {
+                        if(mPrefs.getBoolean("switchTrack", false)) {
                             requestLocationUpdates();
                             flag = true;
                         }
@@ -249,14 +235,14 @@ public class TrackingStalker extends Service {
 
             case 3: //distance<=1000
                 new Handler().postDelayed(() -> {
-                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                    if(mPrefs.getBoolean("switchTrack", false)) {
                         flag = false;
                         removeLocationUpdates();
                     }
                 }, 10000);
 
                 new Handler().postDelayed(() -> {
-                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                    if(mPrefs.getBoolean("switchTrack", false)) {
                         flag = true;
                         requestLocationUpdates();
                     }
@@ -268,14 +254,14 @@ public class TrackingStalker extends Service {
 
             case 4: //distance<=15000
                 new Handler().postDelayed(() -> {
-                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                    if(mPrefs.getBoolean("switchTrack", false)) {
                         flag = false;
                         removeLocationUpdates();
                     }
                 }, 10000);
 
                 new Handler().postDelayed(() -> {
-                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                    if(mPrefs.getBoolean("switchTrack", false)) {
                         flag = true;
                         requestLocationUpdates();
                     }
@@ -285,14 +271,14 @@ public class TrackingStalker extends Service {
 
             case 5:  //distance>15000
                 new Handler().postDelayed(() -> {
-                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                    if(mPrefs.getBoolean("switchTrack", false)) {
                         flag = false;
                         removeLocationUpdates();
                     }
                 }, 10000);
 
                 new Handler().postDelayed(() -> {
-                    if(mPrefs2.getBoolean("switchTrack", false)) {
+                    if(mPrefs.getBoolean("switchTrack", false)) {
                         flag = true;
                         requestLocationUpdates();
                     }
@@ -416,7 +402,7 @@ public class TrackingStalker extends Service {
          try {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             Utils.setRequestingLocationUpdates(this, false);
-             if(!mPrefs2.getBoolean("switchTrack", false)) {
+             if(!mPrefs.getBoolean("switchTrack", false)) {
                  stopSelf();
              }
 
@@ -440,8 +426,10 @@ public class TrackingStalker extends Service {
             stopSelf();
             HomePageActivity.stopChronometerService();
         }
+
         // Tells the system to not try to recreate the service after it has been killed.
         return START_NOT_STICKY;
+
     }
 
     @Override
@@ -499,7 +487,7 @@ public class TrackingStalker extends Service {
         // Called when the last client (MainActivity in case of this sample) unbinds from this
         // service. If this method is called due to a configuration change in MainActivity, we
         // do nothing. Otherwise, we make this service a foreground service.
-        if (!mChangingConfiguration &&  mPrefs2.getBoolean("switchTrack", false)) {
+        if (!mChangingConfiguration &&  mPrefs.getBoolean("switchTrack", false)) {
             Log.i(TAG, "Starting foreground service");
 
             startForeground(NOTIFICATION_ID, getNotification());
@@ -511,6 +499,7 @@ public class TrackingStalker extends Service {
     public void onDestroy() {
 
         mServiceHandler.removeCallbacksAndMessages(null);
+        super.onDestroy();
 
     }
 
@@ -558,8 +547,10 @@ public class TrackingStalker extends Service {
     private void onNewLocation(Location location) {
 
         mLocation=location;
-        System.out.print("Loaction   "+location);
+        System.out.print("ON NEW LOCATION   "+location);
+
         if (location != null) {
+
             if(!saveBattery)
                 switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
 

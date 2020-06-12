@@ -44,7 +44,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.json.JSONException;
 import java.io.IOException;
-import java.util.Timer;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.ChronometerService;
@@ -87,8 +86,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private boolean isBound = false;
     private static ChronometerService myService;
     private static TextView time;
-    private Timer timer;
-    private static final String SHARED_PREF = "sharedPref";
+    private static final String SHARED_PREFS = "sharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
 
@@ -129,32 +127,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-    public static void setTime() {
-
-        time.setText(String.format("%02d", hours) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs));
-
-    }
-
-    public static Long getCurrentTime(){
-
-        return currentTime;
-
-    }
-    public static void playPauseTimeService() {
-
-        myService.startStop();
-
-    }
-    public static void resetTime() {
-
-        myService.reset();
-        hours = 0;
-        mins = 0;
-        secs = 0;
-        setTime();
-
-    }
-
     //Creates Activity and manages the fragments connected to it. In this method there is the user authentication check,
     // in case the user is no longer logged in the goToMainActivity () method is invoked.
     @SuppressLint({"WrongViewCast", "HandlerLeak"})
@@ -164,7 +136,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         setContentView(R.layout.activity_home_page);
 
-        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+        mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         prefsEditor = mPrefs.edit();
         //user==null
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
@@ -229,7 +201,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         namePlace.setText("Nessun luogo");
 
         //sets the switcherMode
-        timer = new Timer();
         MenuItem itemSwitchMode= menu.findItem(R.id.nav_switch_ModeID);
         actionView = MenuItemCompat.getActionView(itemSwitchMode);
         switcherMode=(SwitchCompat) actionView.findViewById(R.id.switcherModeID);
@@ -551,6 +522,32 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public static TabLayout getTabLayout(){return ActionTabFragment.getTabLayout();}
+
+    public static void setTime() {
+
+        time.setText(String.format("%02d", hours) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs));
+
+    }
+
+    public static Long getCurrentTime(){
+
+        return currentTime;
+
+    }
+    public static void playPauseTimeService() {
+
+        myService.startStop();
+
+    }
+    public static void resetTime() {
+
+        myService.reset();
+        hours = 0;
+        mins = 0;
+        secs = 0;
+        setTime();
+
+    }
 
     @SneakyThrows
     @Override

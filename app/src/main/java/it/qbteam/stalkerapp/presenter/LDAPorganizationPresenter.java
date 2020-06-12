@@ -1,12 +1,9 @@
 package it.qbteam.stalkerapp.presenter;
 
 import com.unboundid.ldap.sdk.LDAPException;
-
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-
 import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
 import it.qbteam.stalkerapp.model.service.StalkerLDAP;
 

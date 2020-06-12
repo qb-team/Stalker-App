@@ -5,16 +5,8 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Handler;
-
 import javax.validation.constraints.NotNull;
-
-import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.contract.AccessHistoryContract;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
-import it.qbteam.stalkerapp.model.backend.api.AccessApi;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
 import it.qbteam.stalkerapp.model.backend.api.MovementApi;
 import it.qbteam.stalkerapp.model.backend.api.OrganizationApi;
@@ -37,15 +29,13 @@ public class Server {
 
     private  MyStalkersListContract.MyStalkerListener myStalkerListener;
     private  HomeContract.HomeListener homeListener;
-    private AccessHistoryContract.AccessHistoryListener accessHistoryListener;
     private Storage storage;
 
 
     //Server's constructor.
-    public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener, AccessHistoryContract.AccessHistoryListener accessHistoryListener) {
+    public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
         this.myStalkerListener = myStalkerListener;
         this.homeListener = homeListener;
-        this.accessHistoryListener= accessHistoryListener;
         storage= new Storage(null, null, null, null);
     }
 
@@ -97,7 +87,7 @@ public class Server {
                     }
                     @Override
                     public void onFailure(Call<List<Organization>> call, Throwable t) {
-
+                        System.out.println("Errore durante lo scaricamento della lista dei preferiti");
                     }
                 });
     }
@@ -120,7 +110,7 @@ public class Server {
             }
             @Override
             public void onFailure(Call<Favorite> call, Throwable t) {
-                System.out.println("Errore durante l'aggiunta dell'organizzazione");
+                System.out.println("Errore durante l'aggiunta di una organizzazione");
             }
         });
     }
@@ -178,7 +168,7 @@ public class Server {
                     System.out.print("response.code() organization  "+ response.code());
                     if(type==1 && response.code() == 201){
                         movementUpload.setExitToken(response.body().getExitToken());
-                        storage.serializeMovementInLocal(movementUpload);
+                        storage.serializeOrganizationMovementInLocal(movementUpload);
                         storage.saveLastAccess(movementUpload);
                     }
                     else if(type==-1 && response.code() == 202){

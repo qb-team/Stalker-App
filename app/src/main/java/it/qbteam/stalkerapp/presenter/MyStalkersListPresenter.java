@@ -7,10 +7,7 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
-import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyStalkersListPresenter implements MyStalkersListContract.Presenter, MyStalkersListContract.MyStalkerListener{
@@ -23,7 +20,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     public MyStalkersListPresenter(MyStalkersListContract.View myStalkersView){
     this.myStalkersView = myStalkersView;
     storage= new Storage(null,this, null, null);
-    server = new Server(this, null, null);
+    server = new Server(this, null);
     }
 
     //Calls the the method performUpdateFile(list,path) of the class Storage(persistent layer that comunicates with FileSystem).
@@ -71,7 +68,7 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     //Calls the the method performRemoveOrganizationServer(organization, UID,userToken) of the class Server(persistent layer that comunicates with Server).
     @Override
-    public void removeOrganizationServer(Organization organization, String UID, String userToken) throws IOException, ClassNotFoundException {
+    public void removeOrganizationServer(Organization organization, String UID, String userToken) {
         server.performRemoveOrganizationServer(organization, UID,userToken);
     }
 
@@ -85,11 +82,6 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
     @Override
     public void downloadListServer(String UID, String userToken) {
         server.performLoadListServer(UID, userToken);
-    }
-
-    @Override
-    public void updateTrackingList() throws JSONException {
-         // trackingStalker.updateTrackingList();
     }
 
     //Comunicates the success result of download organization list to the view.

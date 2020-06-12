@@ -1,8 +1,5 @@
 package it.qbteam.stalkerapp.model.service;
 
-import android.content.SharedPreferences;
-
-import io.grpc.internal.Stream;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.contract.AccessHistoryContract;
 import it.qbteam.stalkerapp.contract.PlaceAccessContract;
@@ -16,7 +13,6 @@ import org.json.JSONObject;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,14 +35,12 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     private AccessHistoryContract.AccessHistoryListener accessHistoryListener;
     private PlaceAccessContract.PlaceAccessListener placeAccessListener;
 
-
     //Storage's constructor.
     public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener,  AccessHistoryContract.AccessHistoryListener accessHistoryListener, PlaceAccessContract.PlaceAccessListener placeAccessListener){
          this.homeListener = homeListener;
          this.myStalkerListener = myStalkerListener;
          this.accessHistoryListener = accessHistoryListener;
          this.placeAccessListener = placeAccessListener;
-
     }
 
     //Checks if the list of organizations already exists in local file.
@@ -126,7 +120,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             performUpdateFile(list,path);
 
         }
-
     }
 
     //Adds an organization to the list of organizations and update the local file.
@@ -197,7 +190,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     public void serializePlaceInLocal(List<Place> place) throws IOException {
         //Saving places' list in a file
-        FileOutputStream fos=new FileOutputStream(HomePageActivity.getPath()+"/PlaceList.txt");
+        File toWrite = new File(HomePageActivity.getPath()+"/PlaceList.txt");
+        FileOutputStream fos=new FileOutputStream(toWrite,false);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         // Method for serialization of OrganizationMovement
         oos.writeObject(place);
@@ -221,7 +215,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     //Deletes the current object Place serialized in a local file.
     public void deletePlace() throws IOException {
 
-
         //Reading the OrganizationMovement from a file
         File toDelete=new File(HomePageActivity.getPath()+"/PlaceList.txt");
         FileOutputStream fos=new FileOutputStream(toDelete);
@@ -236,7 +229,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     public void serializePlaceMovement(PlaceMovement placeMovement) throws IOException {
         //Saving of OrganizationMovement in a file
         File toWrite = new File(HomePageActivity.getPath()+"/PlaceMovement.txt");
-        FileOutputStream fos=new FileOutputStream(toWrite);
+        FileOutputStream fos=new FileOutputStream(toWrite,false);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         // Method for serialization of OrganizationMovement
         oos.writeObject(placeMovement);
@@ -257,24 +250,12 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         return placeMovement;
     }
 
-    public void deletePlaceMovement() throws IOException {
-
-        //Reading the OrganizationMovement from a file
-        File toDelete=new File(HomePageActivity.getPath()+"/PlaceMovement.txt");
-        FileOutputStream fos=new FileOutputStream(toDelete);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        //Write the object OrganizationMovement null==delete
-        oos.writeObject(null);
-        oos.flush();
-        oos.close();
-        fos.close();
-    }
     //Serializes the object OrganizationMovement in a local file.
-    public void serializeMovementInLocal(OrganizationMovement organizationMovement) throws IOException {
+    public void serializeOrganizationMovementInLocal(OrganizationMovement organizationMovement) throws IOException {
 
         //Saving of OrganizationMovement in a file
         File toWrite = new File(HomePageActivity.getPath()+"/OrganizationMovement.txt");
-        FileOutputStream fos=new FileOutputStream(toWrite);
+        FileOutputStream fos=new FileOutputStream(toWrite,false);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         // Method for serialization of OrganizationMovement
         oos.writeObject(organizationMovement);
@@ -300,19 +281,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     }
 
-    //Deletes the current object OrganizationMovement serialized in a local file.
-    public void deleteOrganizationMovement() throws IOException {
-
-        //Reading the OrganizationMovement from a file
-        File toDelete=new File(HomePageActivity.getPath()+"/OrganizationMovement.txt");
-        FileOutputStream fos=new FileOutputStream(toDelete);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        //Write the object OrganizationMovement null==delete
-        oos.writeObject(null);
-        oos.flush();
-        oos.close();
-        fos.close();
-    }
     public void performCreateAllFile() throws IOException {
 
         String[] paths={HomePageActivity.getPath()+"/OrganizationMovement.txt",HomePageActivity.getPath()+"/PlaceMovement.txt",
@@ -441,7 +409,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         List<OrganizationAccess> oldList;
         File placeAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
         if(placeAccessFile.length()==0 || !placeAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(placeAccessFile);
+            FileOutputStream fos=new FileOutputStream(placeAccessFile,false);
             ObjectOutputStream oos=new ObjectOutputStream(fos);
             oldList= new ArrayList<>();
             oldList.add(organizationAccess);
@@ -465,7 +433,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                 oldList.add(organizationAccess);
             }
             File toWrite = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-            FileOutputStream fos=new FileOutputStream(toWrite);
+            FileOutputStream fos=new FileOutputStream(toWrite,false);
             ObjectOutputStream oos=new ObjectOutputStream(fos);
             // Method for serialization of OrganizationMovement
             oos.writeObject(oldList);
@@ -518,8 +486,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     public void saveLastAccess(OrganizationMovement organizationMovement) throws IOException {
         System.out.print("salvo LAST ACCESS:"+organizationMovement);
         //Saving of OrganizationMovement in a file
-        File toWrite = new File(HomePageActivity.getPath()+"/LastOrganizationAccess.txt");
-        FileOutputStream fos=new FileOutputStream(toWrite);
+        File toWrite = new File(HomePageActivity.getPath()+"/LastOrganizationAccess"+"/"+organizationMovement.getOrganizationId()+".txt");
+        FileOutputStream fos=new FileOutputStream(toWrite,false);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
 
         // Method for serialization of OrganizationMovement
@@ -530,11 +498,11 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     }
 
-    public OrganizationMovement performGetLastAccess() throws IOException, ClassNotFoundException {
+    public OrganizationMovement performGetLastAccess(Long orgID) throws IOException, ClassNotFoundException {
 
             OrganizationMovement organizationMovement;
             //Reading the OrganizationMovement from a file
-            File organizationAccessFile = new File(HomePageActivity.getPath()+"/LastOrganizationAccess.txt");
+            File organizationAccessFile = new File(HomePageActivity.getPath()+"/LastOrganizationAccess"+"/"+orgID+".txt");
             FileInputStream fis= new FileInputStream(organizationAccessFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //Method for deserialization of object

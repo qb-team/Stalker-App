@@ -2,7 +2,6 @@ package it.qbteam.stalkerapp.contract;
 
 import org.json.JSONException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
@@ -11,7 +10,6 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 public interface MyStalkersListContract {
 
     interface View {
-        void onTrackingError(String message);
         void onSuccessAddOrganization(List<Organization> list,String message) throws IOException, JSONException;
         void onFailureAddOrganization(String message);
         void onSuccessRemoveOrganization(List<Organization> list) throws IOException, JSONException;
@@ -26,7 +24,7 @@ public interface MyStalkersListContract {
         void removeOrganizationLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException;
         void removeOrganizationServer(Organization organization,String UID, String userToken) throws IOException, ClassNotFoundException;
         void downloadListServer(String UID, String userToken);
-        void updateTrackingList() throws JSONException;
+
     }
 
     interface Interactor {

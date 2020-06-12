@@ -1,13 +1,11 @@
 package it.qbteam.stalkerapp.presenter;
 
 import org.json.JSONException;
-
 import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.service.Server;
 import it.qbteam.stalkerapp.model.service.Storage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeListener {
@@ -20,7 +18,7 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
     public HomePresenter(HomeContract.View homeView){
         this.homeView=homeView;
         storage = new Storage(this,null, null, null);
-        server = new Server(null, this, null);
+        server = new Server(null, this);
     }
 
     //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer of the file system).

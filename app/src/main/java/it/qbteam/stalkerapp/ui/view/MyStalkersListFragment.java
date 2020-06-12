@@ -21,7 +21,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,16 +28,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.scrounger.countrycurrencypicker.library.Country;
-import com.scrounger.countrycurrencypicker.library.CountryCurrencyPicker;
-import com.scrounger.countrycurrencypicker.library.Currency;
-import com.scrounger.countrycurrencypicker.library.Listener.CountryCurrencyPickerListener;
-import com.scrounger.countrycurrencypicker.library.PickerType;
 import com.webianks.library.scroll_choice.ScrollChoice;
-
-import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
@@ -46,11 +38,9 @@ import it.qbteam.stalkerapp.presenter.MyStalkersListPresenter;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import it.qbteam.stalkerapp.tools.SearchViewCustom;
-
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,7 +61,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private Button selectCountry;
     private SearchView searchView;
     private List<Organization> auxList;
-    private static final String SHARED_PREF = "sharedPref";
+    private static final String SHARED_PREFS = "sharedPrefs";
     private SharedPreferences mPrefs2;
     private String userToken;
     private String userID;
@@ -120,7 +110,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         nationList= new ArrayList<>();
         new Handler().postDelayed(() -> {
 
-            mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+            mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
             userToken = mPrefs2.getString("userToken", "");
             userID = mPrefs2.getString("userID","");
             loadMyStalkerList();
@@ -172,9 +162,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                 .setMessage("Sei sicuro di voler eliminare l'organizzazione?")
                 .setPositiveButton("Elimina", (dialog, whichButton) -> {
                     try {
-
-
-                        if (myStalkersListPresenter.getOrganizationMovement()!=null&&organizationList.get(position).getId().equals(myStalkersListPresenter.getOrganizationMovement().getOrganizationId())){
+                        OrganizationMovement organizationMovement = myStalkersListPresenter.getOrganizationMovement();
+                        if (organizationMovement !=null && organizationList.get(position).getId().equals(organizationMovement.getOrganizationId())){
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setTitle("Condizioni di eliminazione organizzazione")
                                     .setMessage("Attualmente sei tracciato in questa organizzazione, prima di eliminarla devi uscire dall'organizzazione")
@@ -198,14 +187,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                 .create();
         myQuittingDialogBox.show();
     }
-
-  /*  public boolean organizationListEmpty(){
-        if (organizationList==null || organizationList.size()==0)
-            return true;
-        else
-            return false;
-    }
-*/
 
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".
     @Override
@@ -392,11 +373,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
 
-    @Override
-    public void onTrackingError(String message) {
-        Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-    }
-
     //Notifies the user of the success of the organization's add operation.
     @Override
     public void onSuccessAddOrganization(List<Organization> list, String message) throws IOException, JSONException {
@@ -404,7 +380,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
         myStalkersListPresenter.updateFile(list, path);
-        myStalkersListPresenter.updateTrackingList();
     }
 
     //Notifies the user that the organization's addition operation has failed.
@@ -414,7 +389,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     }
 
     //Removes an organization from both the FileSystem and the Server.
-    private void removeOrganization(int position) throws IOException, JSONException, ClassNotFoundException {
+    private void removeOrganization(int position) throws IOException, JSONException {
         myStalkersListPresenter.removeOrganizationServer(organizationList.get(position), userID, userToken);
         myStalkersListPresenter.removeOrganizationLocal(organizationList.get(position), organizationList, path);
     }
@@ -425,7 +400,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         adapter = new OrganizationViewAdapter(list, this.getContext(), this);
         recyclerView.setAdapter(adapter);
         myStalkersListPresenter.updateFile(list, path);
-        myStalkersListPresenter.updateTrackingList();
     }
 
     //Downloads from the Server the list of organizations previously added by the user.
@@ -452,6 +426,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         }
         else
             Toast.makeText(getContext(), "Lista MyStalker ancora vuota", Toast.LENGTH_SHORT).show();
+            refresh.setRefreshing(false);
     }
 
     public boolean organizationIsPresentInList(String orgName){

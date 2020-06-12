@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.contract.StandardOrganizationContract;
@@ -28,10 +26,8 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.presenter.StandardOrganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-
 import java.io.IOException;
 
 public class StandardOrganizationFragment extends Fragment implements View.OnClickListener, OnBackPressListener, StandardOrganizationContract.View {
@@ -120,7 +116,7 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
 
                 OrganizationMovement om= null;
                 try {
-                    om = standardOrganizationPresenter.getLastAccess();
+                    om = standardOrganizationPresenter.getLastAccess(bundle.getLong("orgID"));
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }

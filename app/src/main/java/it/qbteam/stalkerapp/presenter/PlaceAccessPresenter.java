@@ -2,7 +2,6 @@ package it.qbteam.stalkerapp.presenter;
 
 import java.io.IOException;
 import java.util.List;
-
 import it.qbteam.stalkerapp.contract.PlaceAccessContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.model.service.Storage;

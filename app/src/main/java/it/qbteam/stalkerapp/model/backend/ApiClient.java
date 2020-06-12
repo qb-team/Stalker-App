@@ -122,7 +122,8 @@ public class ApiClient {
 
   public void createDefaultAdapter() {
     json = new JSON();
-    okBuilder = this.getOkHttpClientForSelfSignedSSL();
+    // okBuilder = this.getOkHttpClientForSelfSignedSSL();
+    okBuilder = new OkHttpClient.Builder();
 
     String baseUrl = "https://backend.stalker-qb.team:8080/";
 

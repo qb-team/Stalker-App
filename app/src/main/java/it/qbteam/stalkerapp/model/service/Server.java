@@ -240,8 +240,10 @@ public class Server {
         orgList.enqueue(new Callback<List<Organization>>() {
             @Override
             public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
+                System.out.println("ON RESPONSE");
                 System.out.print("performDownloadFileServer  "+response.code());
                 if(response.body()!=null && response.code() == 200){
+                    System.out.println("ON RESPONSE : STATUS CODE 200");
 
                     for(int i=0; i<response.body().size(); i++){
 
@@ -270,15 +272,23 @@ public class Server {
                         Storage save = new Storage(null,null, null, null);
                         save.performUpdateFile(returnList,path);
                     } catch (JSONException | IOException e) {
+                        System.out.println("ON RESPONSE : SCRITTURA ANDATA MALE");
                         e.printStackTrace();
                     }
                     homeListener.onSuccessDownload("Lista scaricata con successo");
                 }
 
+                System.out.println("\n\nON RESPONSE : STATUS CODE != 200");
+                System.out.println("STATUS CODE: " + response.code());
+                System.out.println(response.body());
+
+
             }
 
             @Override
             public void onFailure(Call<List<Organization>> call, Throwable t) {
+                System.out.println("ON FAILURE");
+                System.out.println("Errore durante lo scaricamento della lista " + t.getMessage());
                 homeListener.onFailureDownload("Errore durante lo scaricamento della lista " + t.getMessage());
             }});
     }

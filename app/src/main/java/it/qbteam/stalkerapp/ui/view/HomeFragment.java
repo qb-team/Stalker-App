@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private Button selectCountry;
     private SearchView searchView;
     private TextView errorTextView;
-    private static final String SHARED_PREF = "sharedPref";
+    private static final String SHARED_PREF = "sharedPrefs";
     private SharedPreferences mPrefs2;
     private String userToken;
     private String userID;
@@ -195,6 +195,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                progressStatus += 10;
                userToken = mPrefs2.getString("userToken", "");
                userID = mPrefs2.getString("userID","");
+
+               System.out.println("USER TOKEN: " + userToken);
+               System.out.println("USER ID: " + userID);
 
                if(progressStatus>=60 && userToken != null && userID != null){
                    progressStatus = 100;

@@ -274,7 +274,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
-                        System.out.print("TOKENNNN   "+user.getToken());
+                        System.out.println("TOKEN:\n"+user.getToken().substring(0, 100) +"\n"); // stampo i primi 100 solo per dire "okay c'è"
                         prefsEditor.putString("userToken",user.getToken());
                         prefsEditor.putString("userID",user.getUid());
                         prefsEditor.commit();

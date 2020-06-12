@@ -1,6 +1,5 @@
 package it.qbteam.stalkerapp.ui.view;
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -78,7 +77,6 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         setHasOptionsMenu(true);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,16 +98,12 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         }
 
         buttonDelete = view.findViewById(R.id.accessID);
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
+        buttonDelete.setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View v) {
-
-                try {
-                    accessHistoryPresenter.deleteOrganizationAccess();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                accessHistoryPresenter.deleteOrganizationAccess();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 
@@ -135,9 +129,10 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     public void onSuccessDeleteOrganizationAccess() {
         adapter = new AccessHistoryViewAdapter(null, getActivity(), this);
         recyclerView.setAdapter(adapter);
-        accessList = null;
+
         if(accessList.size() != 0) {
-           errorText.setVisibility(View.VISIBLE);
+            accessList = null;
+            errorText.setVisibility(View.VISIBLE);
        }
     }
 

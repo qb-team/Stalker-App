@@ -7,6 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/lightGrayColor"
     android:id="@+id/ListaPreferitiID">
+
     <TextView
         android:id="@+id/errorTextID"
         android:layout_width="wrap_content"

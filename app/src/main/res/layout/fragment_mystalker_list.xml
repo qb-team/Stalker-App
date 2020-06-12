@@ -30,7 +30,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/organization_row"
-                tools:layout_editor_absoluteX="16dp" />
+                tools:layout_editor_absoluteX="16dp"/>
         </RelativeLayout>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

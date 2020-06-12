@@ -6,9 +6,7 @@
     android:background="@drawable/custom_border"
     android:layout_gravity="center"
     android:gravity="center"
-    android:padding="20dp"
-
-    >
+    android:padding="20dp">
 
     <LinearLayout
         android:layout_width="272dp"
@@ -29,8 +27,8 @@
             app:scroll_selected_item_text_color="@color/colorAccent">
 
         </com.webianks.library.scroll_choice.ScrollChoice>
-    </LinearLayout>
 
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +44,8 @@
             android:background="@drawable/custom_border"
             android:text="Annulla"
             android:textAlignment="center"
-            android:gravity="center" />
+            android:gravity="center"/>
+
         <Button
             android:id="@+id/selectID"
             android:layout_width="wrap_content"
@@ -55,8 +54,7 @@
             android:layout_marginLeft="100dp"
             android:text="Scegli"
             android:textAlignment="center"
-            android:gravity="center" />
-
+            android:gravity="center"/>
 
     </LinearLayout>
 

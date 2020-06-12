@@ -13,8 +13,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/linearID"
-
             android:layout_marginTop="20dp">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -24,8 +24,8 @@
                 android:text="Nome"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:textColor="@color/colorPrimary"
-                />
+                android:textColor="@color/colorPrimary"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -35,8 +35,8 @@
                 android:text="Data"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:textColor="@color/colorPrimary"
-                />
+                android:textColor="@color/colorPrimary"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -46,8 +46,8 @@
                 android:text="Accesso"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:textColor="@color/colorPrimary"
-                />
+                android:textColor="@color/colorPrimary"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -57,25 +57,22 @@
                 android:text="Uscita"
                 android:textStyle="bold"
                 android:textSize="15dp"
-                android:textColor="@color/colorPrimary"
-                />
-        </LinearLayout>
+                android:textColor="@color/colorPrimary"/>
 
+        </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:padding="20dp"
-        android:layout_below="@id/linearID"
-        >
+        android:layout_below="@id/linearID">
 
         <TableLayout
             android:id="@+id/accessTableID"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
-
-    </ScrollView>
+     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/deleteAccessID"
@@ -86,7 +83,6 @@
         app:maxImageSize="30dp"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        />
+        android:layout_marginRight="10dp"/>
 
 </RelativeLayout>

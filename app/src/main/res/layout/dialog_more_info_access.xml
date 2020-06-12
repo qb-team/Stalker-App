@@ -5,9 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/custom_border"
-
-    >
+    android:background="@drawable/custom_border">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,8 +13,6 @@
         android:background="@drawable/info_dialog"
         android:orientation="vertical"
         android:gravity="center_horizontal">
-
-
 
         <TextView
             android:id="@+id/dialog_nomeOrganizzazione"
@@ -28,6 +24,7 @@
             android:textColor="@color/whiteColor"
             android:textSize="24sp"
             android:textStyle="bold"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,17 +39,15 @@
                 android:layout_height="wrap_content"
                 android:text="Tempo di permanenza: "
                 android:textColor="@color/blackColor"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp"/>
             <TextView
                 android:id="@+id/timeStayID"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/blackColor"
-                android:textSize="18sp"
-
-                />
+                android:textSize="18sp"/>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,28 +59,24 @@
             android:background="@drawable/custom_border"
             android:layout_gravity="center"
             android:layout_marginBottom="20dp">
+
             <TextView
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tipo di accesso: "
                 android:textColor="@color/blackColor"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp"/>
             <TextView
                 android:id="@+id/accessTypeID"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/blackColor"
-                android:textSize="18sp"
+                android:textSize="18sp"/>
 
-                />
         </LinearLayout>
 
 
     </LinearLayout>
-
-
-
 
 </RelativeLayout>

@@ -262,7 +262,7 @@ public class Server {
                         o.setTrackingArea(response.body().get(i).getTrackingArea());
                         o.setTrackingMode(response.body().get(i).getTrackingMode().toString());
 
-                        if(response.body().get(i).getTrackingMode().getValue()=="authenticated"){
+                        if(response.body().get(i).getTrackingMode().getValue() == "authenticated"){
                             o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());
                         }
                         returnList.add(o);
@@ -277,18 +277,11 @@ public class Server {
                     }
                     homeListener.onSuccessDownload("Lista scaricata con successo");
                 }
-
-                System.out.println("\n\nON RESPONSE : STATUS CODE != 200");
-                System.out.println("STATUS CODE: " + response.code());
-                System.out.println(response.body());
-
-
             }
 
             @Override
             public void onFailure(Call<List<Organization>> call, Throwable t) {
                 System.out.println("ON FAILURE");
-                System.out.println("Errore durante lo scaricamento della lista " + t.getMessage());
                 homeListener.onFailureDownload("Errore durante lo scaricamento della lista " + t.getMessage());
             }});
     }

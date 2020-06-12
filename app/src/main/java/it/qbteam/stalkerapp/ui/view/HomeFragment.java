@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private Button selectCountry;
     private SearchView searchView;
     private TextView errorTextView;
-    private static final String SHARED_PREF = "sharedPrefs";
+    private static final String SHARED_PREFS = "sharedPrefs";
     private SharedPreferences mPrefs2;
     private String userToken;
     private String userID;
@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-        mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         OrganizationListPresenter = new HomePresenter(this);
 
         try {
@@ -125,17 +125,17 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         errorTextView = view.findViewById(R.id.errorTextID);
 
         //Refresh to upload the organization list (swipe down).
-        refresh.setOnRefreshListener(this::downloadList);
+        refresh.setOnRefreshListener(this::downloadListWithSwipe);
         auxList= new ArrayList<>();
         //Controlla se la lista è vuota, in caso positivo la scarica
         checkFile();
-         nationList= new ArrayList<>();
-         String[] locales = Locale.getISOCountries();
-         for(String countryCode : locales) {
+        nationList= new ArrayList<>();
+        String[] locales = Locale.getISOCountries();
+        for(String countryCode : locales) {
 
             Locale obj = new Locale("", countryCode);
             nationList.add(obj.getDisplayCountry());
-         }
+        }
 
         return view;
 
@@ -223,7 +223,16 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         if(userToken!=null)
             OrganizationListPresenter.downloadHomeListServer(path,userToken);
         else {
-            Toast.makeText(getActivity(), "Errore durante lo scaricamento della lista", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Errore durante lo scaricamento della lista ciaoooo", Toast.LENGTH_SHORT).show();
+        }
+        refresh.setRefreshing(false);
+    }
+    private void downloadListWithSwipe() {
+
+        if(mPrefs2.getString("userToken", "")!=null)
+            OrganizationListPresenter.downloadHomeListServer(path,userToken = mPrefs2.getString("userToken", ""));
+        else {
+            Toast.makeText(getActivity(),"Errore durante lo scaricamento della lista ciaoooo", Toast.LENGTH_SHORT).show();
         }
         refresh.setRefreshing(false);
     }

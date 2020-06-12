@@ -75,7 +75,7 @@ public class Server {
                 favorite.enqueue(new Callback<List<Organization>>() {
                     @Override
                     public void onResponse(Call<List<Organization>> call, Response<List<Organization>> response) {
-                        try {
+                        try {System.out.print("LOAD MYSTALKER LIST  "+response.code());
                             if(response.code()==200)
                                 myStalkerListener.onSuccessLoad(response.body());
                             else
@@ -240,7 +240,7 @@ public class Server {
         orgList.enqueue(new Callback<List<Organization>>() {
             @Override
             public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
-
+                System.out.print("performDownloadFileServer  "+response.code());
                 if(response.body()!=null && response.code() == 200){
 
                     for(int i=0; i<response.body().size(); i++){

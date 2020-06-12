@@ -2,7 +2,6 @@ package it.qbteam.stalkerapp.model.backend;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -14,7 +13,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import it.qbteam.stalkerapp.model.backend.auth.HttpBasicAuth;
 import it.qbteam.stalkerapp.model.backend.auth.HttpBearerAuth;
 import it.qbteam.stalkerapp.model.backend.auth.ApiKeyAuth;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -23,14 +21,10 @@ import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.validation.constraints.NotNull;
 
 public class ApiClient {
 

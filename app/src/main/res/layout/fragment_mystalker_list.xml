@@ -13,8 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
         android:textSize="20dp"
-        android:text="Lista MyStalker ancora vuota"/>
+        android:text="Lista MyStalker ancora vuota,\nslide verso il basso per aggiornarla"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshID"

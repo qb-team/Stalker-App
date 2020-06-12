@@ -13,7 +13,6 @@
 
 package it.qbteam.stalkerapp.model.backend.dataBackend;
 
-
 import java.io.Serializable;
 import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
@@ -22,7 +21,6 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-
 
 /**
  * Access to an organization.

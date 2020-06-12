@@ -36,7 +36,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/ic_stalkericon_"
-            android:elevation="4dp"/>
+            android:elevation="4dp"
+            />
 
         <TextView
             android:id="@+id/registratiID"

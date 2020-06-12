@@ -10,7 +10,6 @@
  * Do not edit the class manually.
  */
 
-
 package it.qbteam.stalkerapp.model.backend.dataBackend;
 
 import java.util.Objects;
@@ -20,7 +19,6 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-
 
 /**
  * Link between the user and the organization: only the organization which users set to be their favorite can track their movements.

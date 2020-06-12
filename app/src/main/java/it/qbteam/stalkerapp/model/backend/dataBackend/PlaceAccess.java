@@ -201,6 +201,7 @@ public class PlaceAccess implements Serializable {
    * User unique identifier from the authentication server of the organization.
    * @return orgAuthServerId
    **/
+
   @javax.annotation.Nullable
   @Size(max=256)  @ApiModelProperty(value = "User unique identifier from the authentication server of the organization.")
 

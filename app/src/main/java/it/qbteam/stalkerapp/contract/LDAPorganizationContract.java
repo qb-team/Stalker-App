@@ -1,9 +1,7 @@
 package it.qbteam.stalkerapp.contract;
 
 import com.unboundid.ldap.sdk.LDAPException;
-
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 

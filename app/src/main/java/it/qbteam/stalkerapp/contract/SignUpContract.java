@@ -1,6 +1,5 @@
 package it.qbteam.stalkerapp.contract;
 
-import androidx.fragment.app.Fragment;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseUser;
 

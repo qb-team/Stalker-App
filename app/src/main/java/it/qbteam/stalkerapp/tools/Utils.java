@@ -1,12 +1,7 @@
 package it.qbteam.stalkerapp.tools;
 
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
-
 import androidx.preference.PreferenceManager;
 import java.text.DateFormat;
 import java.util.Date;

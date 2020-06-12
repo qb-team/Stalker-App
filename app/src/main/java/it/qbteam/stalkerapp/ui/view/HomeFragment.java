@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -21,7 +20,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView;
@@ -32,17 +30,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-import com.scrounger.countrycurrencypicker.library.Country;
-import com.scrounger.countrycurrencypicker.library.CountryCurrencyPicker;
-import com.scrounger.countrycurrencypicker.library.Currency;
-import com.scrounger.countrycurrencypicker.library.Listener.CountryCurrencyPickerListener;
-import com.scrounger.countrycurrencypicker.library.PickerType;
 import com.webianks.library.scroll_choice.ScrollChoice;
-
 import org.json.JSONException;
-import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
@@ -52,11 +42,9 @@ import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.tools.OrganizationViewAdapter;
 import it.qbteam.stalkerapp.tools.SearchViewCustom;
 import lombok.SneakyThrows;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 

@@ -2,7 +2,6 @@ package it.qbteam.stalkerapp.contract;
 
 import java.io.IOException;
 import java.util.List;
-
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 
 public interface PlaceAccessContract {

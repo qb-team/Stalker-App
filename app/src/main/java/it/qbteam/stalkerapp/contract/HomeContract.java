@@ -3,7 +3,6 @@ package it.qbteam.stalkerapp.contract;
 import org.json.JSONException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 //The contract interface describes the communication between view and presenter. It helps us to design in a cleaner way the interaction.

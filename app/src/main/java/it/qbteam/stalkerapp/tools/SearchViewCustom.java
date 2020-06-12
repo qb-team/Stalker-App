@@ -1,4 +1,5 @@
 package it.qbteam.stalkerapp.tools;
+
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -9,9 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class SearchViewCustom {
 

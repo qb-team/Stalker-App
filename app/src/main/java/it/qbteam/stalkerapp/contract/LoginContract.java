@@ -1,6 +1,5 @@
 package it.qbteam.stalkerapp.contract;
 
-import androidx.fragment.app.Fragment;
 import com.google.firebase.FirebaseException;
 
 //The contract interface describes the communication between view and presenter. It helps us to design in a cleaner way the interaction.

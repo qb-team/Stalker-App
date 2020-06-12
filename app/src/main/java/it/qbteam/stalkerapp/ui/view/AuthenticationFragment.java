@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -23,19 +21,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.MainActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.contract.LoginContract;
 import it.qbteam.stalkerapp.presenter.LoginPresenter;
-import it.qbteam.stalkerapp.tools.BackPressImplementation;
-import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
 //Schermata iniziale per gli utenti non autenticati
 public class AuthenticationFragment extends Fragment implements LoginContract.View, View.OnClickListener{

@@ -408,6 +408,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
         if(userToken!=null && userID!=null){
             myStalkersListPresenter.downloadListServer(userID, userToken);
+            Toast.makeText(getActivity(), "Lista MyStalker aggiornata", Toast.LENGTH_SHORT).show();
+
         }
         else {
             Toast.makeText(getContext(),"Errore durante il caricamento della lista MyStalkeList",Toast.LENGTH_SHORT).show();

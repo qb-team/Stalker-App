@@ -184,8 +184,8 @@ public class TrackingStalker extends Service {
                 flag=true;
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                mLocationRequest.setInterval(10000);
-                mLocationRequest.setFastestInterval(5000);
+                //mLocationRequest.setInterval(10000);
+                //mLocationRequest.setFastestInterval(5000);
                 System.out.print("CASE 0");
 
                 break;
@@ -547,7 +547,6 @@ public class TrackingStalker extends Service {
     private void onNewLocation(Location location) {
 
         mLocation=location;
-        System.out.print("ON NEW LOCATION   "+location);
 
         if (location != null) {
 

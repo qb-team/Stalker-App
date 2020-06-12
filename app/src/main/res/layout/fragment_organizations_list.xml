@@ -14,7 +14,7 @@
         android:textAlignment="center"
         android:layout_gravity="center_horizontal"
         android:textSize="20dp"
-        android:text="Lista MyStalker ancora vuota,\nslide verso il basso per scaricarla"/>
+        android:text="Lista ancora vuota,\nslide verso il basso per scaricarla"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshID"

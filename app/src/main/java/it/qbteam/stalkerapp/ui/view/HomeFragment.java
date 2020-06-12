@@ -102,7 +102,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         OrganizationListPresenter = new HomePresenter(this);
 
-
         try {
             OrganizationListPresenter.createAllFile();
         } catch (IOException e) {
@@ -150,6 +149,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         if(organizationList != null){
             adapter = new OrganizationViewAdapter(organizationList, this.getContext(),this);
             recyclerView.setAdapter(adapter);
+            errorTextView.setVisibility(View.INVISIBLE);
         }
         else
             Toast.makeText(getActivity(),"Devi ancora scaricare la lista", Toast.LENGTH_SHORT).show();

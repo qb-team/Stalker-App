@@ -485,16 +485,17 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     public void saveLastAccess(OrganizationMovement organizationMovement) throws IOException {
         System.out.print("salvo LAST ACCESS:"+organizationMovement);
+
         //Saving of OrganizationMovement in a file
-        File toWrite = new File(HomePageActivity.getPath()+"/LastOrganizationAccess"+"/"+organizationMovement.getOrganizationId()+".txt");
-        FileOutputStream fos=new FileOutputStream(toWrite,false);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
+        File toWrite = new File(HomePageActivity.getPath()+"/LastOrganizationAccess"+organizationMovement.getOrganizationId()+".txt");
+        FileOutputStream fos1=new FileOutputStream(toWrite,false);
+        ObjectOutputStream oos1=new ObjectOutputStream(fos1);
 
         // Method for serialization of OrganizationMovement
-        oos.writeObject(organizationMovement);
-        oos.flush();
-        oos.close();
-        fos.close();
+        oos1.writeObject(organizationMovement);
+        oos1.flush();
+        oos1.close();
+        fos1.close();
 
     }
 
@@ -502,7 +503,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
             OrganizationMovement organizationMovement;
             //Reading the OrganizationMovement from a file
-            File organizationAccessFile = new File(HomePageActivity.getPath()+"/LastOrganizationAccess"+"/"+orgID+".txt");
+            File organizationAccessFile = new File(HomePageActivity.getPath()+"/LastOrganizationAccess"+orgID+".txt");
             FileInputStream fis= new FileInputStream(organizationAccessFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //Method for deserialization of object

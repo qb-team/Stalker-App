@@ -6,7 +6,7 @@
     android:background="#008577"
     android:orientation="vertical"
     android:id="@+id/relativeLayoutUserInfoID"
-    tools:context=".ui.view.AuthenticationFragment"
+    tools:context=".ui.view.LogInFragment"
     android:scrollbarAlwaysDrawVerticalTrack="true">
 
     <RelativeLayout

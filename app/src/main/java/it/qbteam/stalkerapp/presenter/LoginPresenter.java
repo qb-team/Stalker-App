@@ -1,17 +1,17 @@
 package it.qbteam.stalkerapp.presenter;
 
 import it.qbteam.stalkerapp.contract.LoginContract;
-import it.qbteam.stalkerapp.model.authentication.LoginModel;
+import it.qbteam.stalkerapp.model.authentication.LogInModel;
 import com.google.firebase.FirebaseException;
 
 public class LoginPresenter implements LoginContract.Presenter, LoginContract.onLoginListener{
     private LoginContract.View mLoginView;
-    private LoginModel mLoginInteractor;
+    private LogInModel mLoginInteractor;
 
     //LoginPresenter's constructor.
     public LoginPresenter(LoginContract.View mLoginView){
         this.mLoginView = mLoginView;
-        mLoginInteractor = new LoginModel(this);
+        mLoginInteractor = new LogInModel(this);
     }
 
     //Calls the the method performFirebaseLogin(fragment, email, password) of the class LoginModel.

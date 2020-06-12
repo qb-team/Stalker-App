@@ -32,10 +32,13 @@ import it.qbteam.stalkerapp.contract.LoginContract;
 import it.qbteam.stalkerapp.presenter.LoginPresenter;
 
 //Schermata iniziale per gli utenti non autenticati
-public class AuthenticationFragment extends Fragment implements LoginContract.View, View.OnClickListener{
+public class LogInFragment extends Fragment implements LoginContract.View, View.OnClickListener{
+
     private LoginPresenter loginPresenter;
     private ProgressDialog progressDialog;
-    private EditText emailEditText, passwordEditText, insertEmailEditText;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private EditText insertEmailEditText;
 
     //Creation of the fragment as a component.
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class AuthenticationFragment extends Fragment implements LoginContract.Vi
     //Creation of the graphic part displayed by the user.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_authentication,container,false);
+        View view=inflater.inflate(R.layout.fragment_log_in,container,false);
         emailEditText = view.findViewById(R.id.Emailtext);
         passwordEditText = view.findViewById(R.id.passwordtextID);
         insertEmailEditText = view.findViewById(R.id.insertEmailID);

@@ -8,12 +8,12 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 
 //Modello di Login
-public class LoginModel implements LoginContract.Interactor {
+public class LogInModel implements LoginContract.Interactor {
 
     private LoginContract.onLoginListener mOnLoginListener;
 
     //LoginModel costructor.
-    public LoginModel(LoginContract.onLoginListener onLoginListener){
+    public LogInModel(LoginContract.onLoginListener onLoginListener){
         this.mOnLoginListener=onLoginListener;
     }
 

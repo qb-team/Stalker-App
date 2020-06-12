@@ -39,10 +39,6 @@ import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.tools.SearchViewCustom;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-
 public class AccessHistoryFragment extends Fragment implements AccessHistoryContract.View, SearchView.OnQueryTextListener, AccessHistoryViewAdapter.OrganizationAccessListener, OnBackPressListener {
 
     private RecyclerView recyclerView;
@@ -51,6 +47,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     private AccessHistoryPresenter accessHistoryPresenter;
     private List<OrganizationAccess> accessList;
     private AccessHistoryFragmentListener accessHistoryFragmentListener;
+    private TextView errorText;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface AccessHistoryFragmentListener {
@@ -92,6 +89,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setHasFixedSize(true);
+        errorText = view.findViewById(R.id.errorTextID);
 
         accessHistoryPresenter = new AccessHistoryPresenter(this);
         try {
@@ -128,6 +126,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             accessList = organizationAccessList;
             adapter = new AccessHistoryViewAdapter(organizationAccessList, getActivity(), this);
             recyclerView.setAdapter(adapter);
+            errorText.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -137,6 +136,9 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         adapter = new AccessHistoryViewAdapter(null, getActivity(), this);
         recyclerView.setAdapter(adapter);
         accessList = null;
+        if(accessList.size() != 0) {
+           errorText.setVisibility(View.VISIBLE);
+       }
     }
 
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".

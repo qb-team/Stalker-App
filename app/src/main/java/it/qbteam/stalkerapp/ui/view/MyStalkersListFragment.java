@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,6 +53,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView.Adapter adapter;
     private static String path;
     private MyStalkersListFragmentListener myStalkersListFragmentListener;
+    private TextView errorText;
     private SwipeRefreshLayout refresh;
     private String countrySelected="";
     private MenuItem searchForName;
@@ -105,6 +107,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        errorText = view.findViewById(R.id.errorTextID);
         //Refresh to load MyStalkerList's organizations (swipe down).
         refresh.setOnRefreshListener(this::loadMyStalkerList);
         nationList= new ArrayList<>();
@@ -354,7 +357,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
             }
         });
-
     }
 
     private void printCountrySelected(){
@@ -371,7 +373,6 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         myStalkersListPresenter.addOrganizationLocal(organization, organizationList, path);
         myStalkersListPresenter.addOrganizationServer(organization, userID, userToken);
     }
-
 
     //Notifies the user of the success of the organization's add operation.
     @Override
@@ -404,12 +405,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
     //Downloads from the Server the list of organizations previously added by the user.
     public void loadMyStalkerList() {
-        if(userToken!=null && userID!=null)
+
+        if(userToken!=null && userID!=null){
             myStalkersListPresenter.downloadListServer(userID, userToken);
+        }
         else {
-            refresh.setRefreshing(false);
             Toast.makeText(getContext(),"Errore durante il caricamento della lista MyStalkeList",Toast.LENGTH_SHORT).show();
         }
+
     }
 
     //It notifies the user of the successful download of his list of organizations included in `MyStalkersList` and shows them on the screen.
@@ -421,11 +424,13 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             organizationList = list;
             adapter = new OrganizationViewAdapter(organizationList, this.getContext(), this);
             recyclerView.setAdapter(adapter);
-            refresh.setRefreshing(false);
             myStalkersListPresenter.updateFile(organizationList, path);
+            errorText.setVisibility(View.INVISIBLE);
         }
-        else
+        else{
+            errorText.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(), "Lista MyStalker ancora vuota", Toast.LENGTH_SHORT).show();
+        }
             refresh.setRefreshing(false);
     }
 

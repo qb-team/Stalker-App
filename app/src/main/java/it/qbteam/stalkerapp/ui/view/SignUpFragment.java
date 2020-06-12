@@ -2,7 +2,6 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -37,7 +36,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     private EditText emailEditText, passwordEditText, confPasswordEditText;
     private SignUpPresenter signUpPresenter;
     private ProgressDialog progressDialog;
-    private CheckBox termsofUseCheckBox;
+    private CheckBox termsOfUseCheckBox;
 
     //Creation of the fragment as a component.
     @Override
@@ -48,11 +47,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     //Creation of the graphic part displayed by the user.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_registrati,container,false);
+        View view=inflater.inflate(R.layout.fragment_sign_up,container,false);
         emailEditText = view.findViewById(R.id.emailID);
         passwordEditText = view.findViewById(R.id.passwordID);
         confPasswordEditText = view.findViewById(R.id.confPasswordID);
-        termsofUseCheckBox = view.findViewById(R.id.TermsofUseID);
+        termsOfUseCheckBox = view.findViewById(R.id.TermsofUseID);
         Button signUpButton= view.findViewById(R.id.signUpButtonID);
         signUpPresenter=new SignUpPresenter(this);
         progressDialog = new ProgressDialog(getContext());
@@ -102,7 +101,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
     private void checkSignUpDetails() {
 
         if(!TextUtils.isEmpty(emailEditText.getText()) && !TextUtils.isEmpty(passwordEditText.getText())
-                && (passwordEditText.getText().length() >= 6) && termsofUseCheckBox.isChecked() && confPasswordEditText.getText().toString().equals(passwordEditText.getText().toString())){
+                && (passwordEditText.getText().length() >= 6) && termsOfUseCheckBox.isChecked() && confPasswordEditText.getText().toString().equals(passwordEditText.getText().toString())){
                 checkSignUp(emailEditText.getText().toString().trim(), passwordEditText.getText().toString());
         }
         else {
@@ -122,7 +121,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
             if(TextUtils.isEmpty(passwordEditText.getText().toString()))
                 passwordEditText.setError("Inserisci una password valida");
 
-            if(!termsofUseCheckBox.isChecked())
+            if(!termsOfUseCheckBox.isChecked())
                 Toast.makeText(getContext(), "Per poterti registrare devi accettare le condizioni d'uso", Toast.LENGTH_SHORT).show();
         }
     }

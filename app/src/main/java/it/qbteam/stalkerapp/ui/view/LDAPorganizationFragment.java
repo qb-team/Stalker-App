@@ -41,9 +41,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     private LDAPorganizationPresenter ldapOrganizationPresenter;
     private Dialog myDialog;
     private String trackingMode;
-
-
-    LDAPorganizationFragmentListener iLDAPorganizationFragmentListener;
+    private LDAPorganizationFragmentListener iLDAPorganizationFragmentListener;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface LDAPorganizationFragmentListener {

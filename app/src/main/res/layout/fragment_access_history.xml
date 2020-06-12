@@ -62,6 +62,7 @@
                 android:textColor="@color/colorPrimary"
                 />
         </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="6dp"
             android:id="@+id/recyclerAccessViewID"
@@ -86,4 +87,11 @@
             android:layout_marginRight="10dp"
             />
     </RelativeLayout>
+    <TextView
+        android:id="@+id/errorTextID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="20dp"
+        android:text="Lista accessi vuota"/>
 </RelativeLayout>

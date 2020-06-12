@@ -6,7 +6,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.android.SphericalUtil;
 import java.util.List;
-
 import it.qbteam.stalkerapp.model.data.LatLngOrganization;
 
 public class TrackingDistance {

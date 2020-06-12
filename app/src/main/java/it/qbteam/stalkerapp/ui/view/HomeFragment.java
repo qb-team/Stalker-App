@@ -220,9 +220,9 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         if(userToken!=null)
             OrganizationListPresenter.downloadHomeListServer(path,userToken);
         else {
-            refresh.setRefreshing(false);
             Toast.makeText(getActivity(), "Errore durante lo scaricamento della lista", Toast.LENGTH_SHORT).show();
         }
+        refresh.setRefreshing(false);
     }
 
     //It notifies the user of the correct download of the list from the Server.

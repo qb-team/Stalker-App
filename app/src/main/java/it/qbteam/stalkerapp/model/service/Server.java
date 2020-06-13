@@ -53,12 +53,10 @@ public class Server {
                     favorite.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                         System.out.println(response.code());
 
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        System.out.println("Errore durante la rimozione dell'organizzazione");
                     }
             });
 
@@ -75,7 +73,7 @@ public class Server {
                 favorite.enqueue(new Callback<List<Organization>>() {
                     @Override
                     public void onResponse(Call<List<Organization>> call, Response<List<Organization>> response) {
-                        try {System.out.print("LOAD MYSTALKER LIST  "+response.code());
+                        try {
                             if(response.code()==200)
                                 myStalkerListener.onSuccessLoad(response.body());
                             else
@@ -87,7 +85,6 @@ public class Server {
                     }
                     @Override
                     public void onFailure(Call<List<Organization>> call, Throwable t) {
-                        System.out.println("Errore durante lo scaricamento della lista dei preferiti");
                     }
                 });
     }
@@ -106,11 +103,10 @@ public class Server {
         favorite.enqueue(new Callback<Favorite>() {
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
-                System.out.println(response.code());
+
             }
             @Override
             public void onFailure(Call<Favorite> call, Throwable t) {
-                System.out.println("Errore durante l'aggiunta di una organizzazione");
             }
         });
     }
@@ -132,7 +128,6 @@ public class Server {
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    System.out.print("Errore durante lo scaricamento dei luoghi dell'organizzazione ");
                 }
 
 
@@ -165,7 +160,6 @@ public class Server {
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
                 try {
-                    System.out.print("response.code() organization  "+ response.code());
                     if(type==1 && response.code() == 201){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializeOrganizationMovementInLocal(movementUpload);
@@ -205,7 +199,6 @@ public class Server {
             public void onResponse(Call<PlaceMovement> call, Response<PlaceMovement> response) {
 
                 try {
-                    System.out.print("response.code() place  "+ response.code());
                     if(type==1 && response.code() == 201 ){
                         movementUpload.setExitToken(response.body().getExitToken());
                         storage.serializePlaceMovement(movementUpload);
@@ -240,10 +233,8 @@ public class Server {
         orgList.enqueue(new Callback<List<Organization>>() {
             @Override
             public void onResponse(@NotNull Call<List<Organization>> call, @NotNull Response<List<Organization>> response) {
-                System.out.println("ON RESPONSE");
-                System.out.print("performDownloadFileServer  "+response.code());
+
                 if(response.body()!=null && response.code() == 200){
-                    System.out.println("ON RESPONSE : STATUS CODE 200");
 
                     for(int i=0; i<response.body().size(); i++){
 
@@ -272,7 +263,6 @@ public class Server {
                         Storage save = new Storage(null,null, null, null);
                         save.performUpdateFile(returnList,path);
                     } catch (JSONException | IOException e) {
-                        System.out.println("ON RESPONSE : SCRITTURA ANDATA MALE");
                         e.printStackTrace();
                     }
                     homeListener.onSuccessDownload("Lista scaricata con successo");
@@ -281,7 +271,6 @@ public class Server {
 
             @Override
             public void onFailure(Call<List<Organization>> call, Throwable t) {
-                System.out.println("ON FAILURE");
                 homeListener.onFailureDownload("Errore durante lo scaricamento della lista " + t.getMessage());
             }});
     }

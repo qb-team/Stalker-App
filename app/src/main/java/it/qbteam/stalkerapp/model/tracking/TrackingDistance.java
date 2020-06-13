@@ -23,7 +23,6 @@ public class TrackingDistance {
             final List<LatLng> poligono = latLngOrganizations.get(i).getLatLng();
             nearestPoint = findNearestPoint(test, poligono);
             if (distance==0 || distance>SphericalUtil.computeDistanceBetween(test, nearestPoint)){
-                System.out.println("ehyla amico");
                 name=latLngOrganizations.get(i).getName();
                 distance = SphericalUtil.computeDistanceBetween(test, nearestPoint);
             }
@@ -76,8 +75,6 @@ public class TrackingDistance {
                 minimumDistancePoint = findNearestPoint(test, point, target.get(segmentPoint));
             }
         }
-
-        System.out.println("minimumDistancePoint" + minimumDistancePoint);
 
         return minimumDistancePoint;
     }

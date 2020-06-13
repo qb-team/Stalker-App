@@ -107,8 +107,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         else {
 
             if (!confPasswordEditText.getText().toString().equals(passwordEditText.getText().toString())){
-                System.out.println("conf password" + confPasswordEditText.getText());
-                System.out.println("password" + passwordEditText.getText());
+
                 Toast.makeText(getContext(), "Le password non coincidono", Toast.LENGTH_LONG).show();
             }
 

@@ -85,7 +85,6 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
         if(fragmentListenerFeatures.deleteAuthButton(bundle.getString("name"))){
             authentication.setVisibility(View.INVISIBLE);
-            System.out.print("INVISIBLE");
         }
         return view;
     }

@@ -191,9 +191,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
                userToken = mPrefs2.getString("userToken", "");
                userID = mPrefs2.getString("userID","");
 
-               System.out.println("USER TOKEN: " + userToken);
-               System.out.println("USER ID: " + userID);
-
                if(progressStatus>=60 && userToken != null && userID != null){
                    progressStatus = 100;
                }

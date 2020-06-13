@@ -231,6 +231,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onStart() {
 
+        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+
         if(myService==null){
             this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         }
@@ -277,8 +279,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         prefsEditor.putString("userToken",user.getToken());
                         prefsEditor.putString("userID",user.getUid());
                         prefsEditor.commit();
-                        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
-
                     } else {
                         // Handle error -> task.getException();
                     }
@@ -348,6 +348,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Asks to the user permissions about tracking.
     private void requestPermissions() {
+        System.out.print("requestPermissions");
         boolean shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.ACCESS_FINE_LOCATION);
 
@@ -388,6 +389,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
                 startTracking();
+                stopTracking();
+                switcher.setChecked(false);
             } else {
                 // Permission denied.
                 setSwitchState();

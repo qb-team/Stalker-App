@@ -116,11 +116,11 @@ public class TrackingStalker extends Service {
     private PlaceAccess placeAccess;
     private OffsetDateTime organizationAccessTime;
     private OffsetDateTime placeAccessTime;
-    private static int delay = 3000;
+    private static int delay = 2000;
     private Timer timer;
     private Long orgID;
     private String accessType;
-    private boolean flag=false;
+    private static boolean flag = false;
     private TrackingDistance trackingDistance;
     private boolean saveBattery = false;
     private String userToken;
@@ -182,7 +182,6 @@ public class TrackingStalker extends Service {
         System.out.print("SIAMO IN SWITCH PRIORITY");
         switch (i) {
             case 0:  //default settings
-                flag=true;
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                 //mLocationRequest.setInterval(10000);
@@ -194,22 +193,21 @@ public class TrackingStalker extends Service {
             case 1:  //distance<=150
                 new Handler().postDelayed(() -> {
                          if(mPrefs.getBoolean("switchTrack", false)) {
-                             flag = false;
-                             removeLocationUpdates();
+                             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+                             stopSelf();
                          }
-                         if(!mPrefs.getBoolean("switchTrack", false)&&insideOrganization!=null) {
+                         /*if(!mPrefs.getBoolean("switchTrack", false)&&insideOrganization!=null) {
                              flag =true;
                              removeLocationUpdates();
-                         }
+                         }*/
                      }, 3000);
 
                 new Handler().postDelayed(() -> {
                          if(mPrefs.getBoolean("switchTrack", false)) {
-                             flag = true;
                              requestLocationUpdates();
                          }
 
-                     }, 5000);
+                     }, 10000);
 
                 System.out.print("CASE 1");
 
@@ -218,15 +216,15 @@ public class TrackingStalker extends Service {
             case 2:  //distance<=500 or saveBattery
                 new Handler().postDelayed(() -> {
                         if(mPrefs.getBoolean("switchTrack", false)) {
-                            flag = false;
-                            removeLocationUpdates();
+                            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+                            stopSelf();
                         }
                     }, 10000);
 
                 new Handler().postDelayed(() -> {
                         if(mPrefs.getBoolean("switchTrack", false)) {
                             requestLocationUpdates();
-                            flag = true;
+
                         }
                     }, 60000);
 
@@ -237,14 +235,13 @@ public class TrackingStalker extends Service {
             case 3: //distance<=1000
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        flag = false;
-                        removeLocationUpdates();
+                        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+                        stopSelf();
                     }
                 }, 10000);
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        flag = true;
                         requestLocationUpdates();
                     }
                 }, 180000);
@@ -256,14 +253,13 @@ public class TrackingStalker extends Service {
             case 4: //distance<=15000
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        flag = false;
-                        removeLocationUpdates();
+                        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+                        stopSelf();
                     }
                 }, 10000);
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        flag = true;
                         requestLocationUpdates();
                     }
                 }, 900000);// 15 min
@@ -273,14 +269,13 @@ public class TrackingStalker extends Service {
             case 5:  //distance>15000
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        flag = false;
-                        removeLocationUpdates();
+                        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+                        stopSelf();
                     }
                 }, 10000);
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        flag = true;
                         requestLocationUpdates();
                     }
                 }, 1800000);// 30 min
@@ -330,12 +325,13 @@ public class TrackingStalker extends Service {
 
     public void removeLocationUpdates() {
 
-        if(flag==true) {
+
             //Waits 3 sec before do the remove of the location
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     if (insideOrganization != null) {
+
                         organizationAccess = new OrganizationAccess();
                         //Update the access' list when the user exits from organization.
                         organizationAccess.setEntranceTimestamp(organizationAccessTime);
@@ -352,9 +348,13 @@ public class TrackingStalker extends Service {
                             //Comunicates the server that user is outside the organization(anonymous).
                             server.performOrganizationMovementServer(null, insideOrganization.getOrgID(),userToken, -1, organizationMovement.getExitToken(), organizationAccess);
                         }
+
+                        flag = false;
+
                         organizationMovement = null;
                     }
                     if (insidePlace != null) {
+
                         placeAccess = new PlaceAccess();
                         //Update the access' list when the user exits from organization and place.
                         placeAccess.setEntranceTimestamp(placeAccessTime);
@@ -396,7 +396,7 @@ public class TrackingStalker extends Service {
             HomePageActivity.setNamePlace("Nessun luogo");
             HomePageActivity.playPauseTimeService();
             HomePageActivity.resetTime();
-        }
+
          //Reset of all parameters.
          Log.i(TAG, "Removing location updates");
 
@@ -545,16 +545,16 @@ public class TrackingStalker extends Service {
         return builder.build();
     }
 
-    private void onNewLocation(Location location) {
+    private void onNewLocation(Location location) throws IOException, ClassNotFoundException {
 
         mLocation=location;
 
-        if (location != null && Utils.requestingLocationUpdates(this)) {
+        if (location != null) {
 
             if(!saveBattery)
                 switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
 
-            authenticated = HomePageActivity.getSwitcherModeStatus();
+           //authenticated = HomePageActivity.getSwitcherModeStatus();
             handleOrganizations(location);
         }
         // Aggiornamento notifiche quando funziona in background
@@ -564,7 +564,7 @@ public class TrackingStalker extends Service {
     }
 
 
-    private void handleOrganizations(Location location) {
+    private void handleOrganizations(Location location) throws IOException, ClassNotFoundException {
 
         isInsideOrganizations(location);
         isInsidePlace(location);
@@ -585,10 +585,10 @@ public class TrackingStalker extends Service {
                 boolean isInsideBoundary = builder.build().contains(actualPosition);
                 boolean isInside = PolyUtil.containsLocation(actualPosition, latLngPlaceList.get(i).getLatLng(), true);
                 if (isInsideBoundary && isInside) {
-                    System.out.print("SONO DENTRO AL LUOGO :  "+ latLngPlaceList.get(i).getName());
+
                     HomePageActivity.setNamePlace(latLngPlaceList.get(i).getName());
 
-                    if (placeMovement == null && authenticated) {
+                    if (placeMovement == null && mPrefs.getBoolean("switchMode", false)) {
 
                         insidePlace = latLngPlaceList.get(i);
 
@@ -604,22 +604,22 @@ public class TrackingStalker extends Service {
                             public void run() {
                                 try {
                                     placeMovement = storage.deserializePlaceMovement();
-
+                                    String placeMovementJson = gson.toJson(insidePlace);
+                                    String insidePlacejson = gson.toJson(insidePlace);
+                                    prefsEditor.putString("placeMovement",placeMovementJson);
+                                    prefsEditor.putString("insidePlace",insidePlacejson);
+                                    prefsEditor.commit();
                                 } catch (IOException | ClassNotFoundException e) {
                                     e.printStackTrace();
                                 }
                             }
                         }, delay);
 
-                        String placeMovementJson = gson.toJson(insidePlace);
-                        String insidePlacejson = gson.toJson(insidePlace);
-                        prefsEditor.putString("placeMovement",placeMovementJson);
-                        prefsEditor.putString("insidePlace",insidePlacejson);
-                        prefsEditor.commit();
+
 
                     }
 
-                    else if(placeMovement== null && !authenticated){
+                    else if(placeMovement== null && !mPrefs.getBoolean("switchMode", false)){
 
                         insidePlace = latLngPlaceList.get(i);
 
@@ -635,19 +635,17 @@ public class TrackingStalker extends Service {
                             public void run() {
                                 try {
                                     placeMovement = storage.deserializePlaceMovement();
-
+                                    String placeMovementJson = gson.toJson(insidePlace);
+                                    String insidePlacejson = gson.toJson(insidePlace);
+                                    prefsEditor.putString("placeMovement",placeMovementJson);
+                                    prefsEditor.putString("insidePlace",insidePlacejson);
+                                    prefsEditor.commit();
                                 } catch (IOException | ClassNotFoundException e) {
                                     e.printStackTrace();
                                 }
                             }
                         }, delay);
 
-
-                        String placeMovementJson = gson.toJson(insidePlace);
-                        String insidePlacejson = gson.toJson(insidePlace);
-                        prefsEditor.putString("placeMovement",placeMovementJson);
-                        prefsEditor.putString("insidePlace",insidePlacejson);
-                        prefsEditor.commit();
                     }
 
                 }
@@ -687,7 +685,7 @@ public class TrackingStalker extends Service {
 
     }
 
-    public void isInsideOrganizations(Location location) {
+    public void isInsideOrganizations(Location location) throws IOException, ClassNotFoundException {
 
         if(latLngOrganizationList!=null) {
 
@@ -710,7 +708,9 @@ public class TrackingStalker extends Service {
                         saveBattery = true;
                         switchPriority(2);
                     }
-                    if (organizationMovement == null && authenticated) {
+                    if (organizationMovement == null && mPrefs.getBoolean("switchMode", false) && !flag) {
+
+                        flag = true;
 
                         HomePageActivity.playPauseTimeService();
 
@@ -730,16 +730,17 @@ public class TrackingStalker extends Service {
                         //Download the places' list.
                         server.performDownloadPlaceServer(insideOrganization.getOrgID(), userToken);
 
-                        String organizationMovementJson = gson.toJson(organizationMovement);
-                        String insideOrganizationJson = gson.toJson(insideOrganization);
-                        prefsEditor.putString("organizationMovement",organizationMovementJson);
-                        prefsEditor.putString("insideOrganization",insideOrganizationJson);
-                        prefsEditor.commit();
+
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
                                 try {
                                     organizationMovement = storage.deserializeOrganizationMovementInLocal();
+                                    String organizationMovementJson = gson.toJson(organizationMovement);
+                                    String insideOrganizationJson = gson.toJson(insideOrganization);
+                                    prefsEditor.putString("organizationMovement",organizationMovementJson);
+                                    prefsEditor.putString("insideOrganization",insideOrganizationJson);
+                                    prefsEditor.commit();
                                     latLngPlaceList = LatLngPlace.updatePlace(storage);
 
                                 } catch (JSONException | IOException | ClassNotFoundException e) {
@@ -750,7 +751,9 @@ public class TrackingStalker extends Service {
 
                     }
 
-                    else if( organizationMovement == null && !authenticated ){
+                    else if( organizationMovement == null && !mPrefs.getBoolean("switchMode", false) && !flag ){
+
+                        flag = true;
 
                         HomePageActivity.playPauseTimeService();
 
@@ -770,17 +773,16 @@ public class TrackingStalker extends Service {
                         //Download the places' list.
                         server.performDownloadPlaceServer(insideOrganization.getOrgID(), userToken);
 
-                        String organizationMovementJson = gson.toJson(organizationMovement);
-                        String insideOrganizationJson = gson.toJson(insideOrganization);
-                        prefsEditor.putString("organizationMovement",organizationMovementJson);
-                        prefsEditor.putString("insideOrganization",insideOrganizationJson);
-                        prefsEditor.commit();
-
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
                                 try {
                                     organizationMovement = storage.deserializeOrganizationMovementInLocal();
+                                    String organizationMovementJson = gson.toJson(organizationMovement);
+                                    String insideOrganizationJson = gson.toJson(insideOrganization);
+                                    prefsEditor.putString("organizationMovement",organizationMovementJson);
+                                    prefsEditor.putString("insideOrganization",insideOrganizationJson);
+                                    prefsEditor.commit();
                                     latLngPlaceList = LatLngPlace.updatePlace(storage);
 
                                 } catch (JSONException | ClassNotFoundException | IOException e) {
@@ -793,6 +795,8 @@ public class TrackingStalker extends Service {
                 else {
 
                     if (organizationMovement!= null && latLngOrganizationList.get(i).getOrgID().equals(organizationMovement.getOrganizationId())) {
+
+                        flag = false;
 
                         Toast.makeText(getApplicationContext(), "Sei uscito dall'organizzazione: "+ insideOrganization.getName(), Toast.LENGTH_SHORT).show();
 

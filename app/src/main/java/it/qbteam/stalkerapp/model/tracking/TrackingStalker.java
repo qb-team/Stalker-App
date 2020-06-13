@@ -549,7 +549,7 @@ public class TrackingStalker extends Service {
     }
 
 
-    private void handleOrganizations(Location location) {
+    private void handleOrganizations(Location location) throws IOException {
 
         isInsideOrganizations(location);
         isInsidePlace(location);
@@ -665,7 +665,7 @@ public class TrackingStalker extends Service {
 
     }
 
-    public void isInsideOrganizations(Location location) {
+    public void isInsideOrganizations(Location location) throws IOException {
 
         if(latLngOrganizationList!=null) {
 

@@ -49,6 +49,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import org.json.JSONException;
+import org.slf4j.helpers.Util;
+
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -129,7 +131,6 @@ public class TrackingStalker extends Service {
     private static final String SHARED_PREFS = "sharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
-
     private Gson gson;
 
     @Override
@@ -548,7 +549,7 @@ public class TrackingStalker extends Service {
 
         mLocation=location;
 
-        if (location != null) {
+        if (location != null && Utils.requestingLocationUpdates(this)) {
 
             if(!saveBattery)
                 switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));

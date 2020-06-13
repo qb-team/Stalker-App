@@ -91,14 +91,11 @@ public class TrackingStalker extends Service {
     public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
     private static final String TAG = TrackingStalker.class.getSimpleName();
-    private static final int START_TASK_REMOVED_COMPLETE = 1000;
     private LatLngOrganization insideOrganization;
     private LatLngPlace insidePlace;
     private static final String CHANNEL_ID = "channel_01";
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
     private final IBinder mBinder = new LocalBinder();
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private static final int NOTIFICATION_ID = 12345678;
     private boolean mChangingConfiguration = false;
     private NotificationManager mNotificationManager;
@@ -109,7 +106,6 @@ public class TrackingStalker extends Service {
     private Location mLocation;
     private List<LatLngOrganization> latLngOrganizationList;
     private List<LatLngPlace> latLngPlaceList;
-    private boolean authenticated;
     private Storage storage;
     private Server server;
     private OrganizationAccess organizationAccess;
@@ -136,7 +132,6 @@ public class TrackingStalker extends Service {
     @Override
     public void onCreate() {
 
-        System.out.print("CREATE SERVICE");
         latLngOrganizationList=new ArrayList<>();
         latLngPlaceList=new ArrayList<>();
         organizationAccess=new OrganizationAccess();
@@ -185,14 +180,10 @@ public class TrackingStalker extends Service {
     }
 
     public void switchPriority(int i) {
-        System.out.print("SIAMO IN SWITCH PRIORITY");
         switch (i) {
             case 0:  //default settings
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                //mLocationRequest.setInterval(10000);
-                //mLocationRequest.setFastestInterval(5000);
-                System.out.print("CASE 0");
 
                 break;
 
@@ -202,10 +193,7 @@ public class TrackingStalker extends Service {
                              mFusedLocationClient.removeLocationUpdates(mLocationCallback);
                              stopSelf();
                          }
-                         /*if(!mPrefs.getBoolean("switchTrack", false)&&insideOrganization!=null) {
-                             flag =true;
-                             removeLocationUpdates();
-                         }*/
+
                      }, 3000);
 
                 new Handler().postDelayed(() -> {
@@ -214,8 +202,6 @@ public class TrackingStalker extends Service {
                          }
 
                      }, 10000);
-
-                System.out.print("CASE 1");
 
                 break;
 
@@ -234,8 +220,6 @@ public class TrackingStalker extends Service {
                         }
                     }, 60000);
 
-                System.out.print("CASE 2");
-
                 break;
 
             case 3: //distance<=1000
@@ -251,8 +235,6 @@ public class TrackingStalker extends Service {
                         requestLocationUpdates();
                     }
                 }, 180000);
-
-                System.out.print("CASE 3");
 
                 break;
 
@@ -270,8 +252,6 @@ public class TrackingStalker extends Service {
                     }
                 }, 900000);// 15 min
 
-                System.out.print("CASE 4");
-
             case 5:  //distance>15000
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
@@ -285,8 +265,6 @@ public class TrackingStalker extends Service {
                         requestLocationUpdates();
                     }
                 }, 1800000);// 30 min
-
-                System.out.print("CASE 5");
 
                 break;
         }
@@ -481,7 +459,6 @@ public class TrackingStalker extends Service {
         if(organizationMovement == null)
         organizationMovement = gson.fromJson(organizationMovementJson, OrganizationMovement.class);
 
-        System.out.print("OM   "+organizationMovement+"PM   "+placeMovement+"IO   "+insideOrganization+"IP   "+insidePlace);
         Log.i(TAG, "in onRebind()");
         stopForeground(true);
         mChangingConfiguration = false;
@@ -537,9 +514,11 @@ public class TrackingStalker extends Service {
                 .setTicker(text)
                 .setWhen(System.currentTimeMillis());
         if(insideOrganization!=null){
+
             builder.setContentText("Sei dentro all'organizzazione: "+insideOrganization.getName());
         }
         else{
+
             builder.setContentText("Non sei dentro a nessuna organizzazione");
         }
 
@@ -570,7 +549,7 @@ public class TrackingStalker extends Service {
     }
 
 
-    private void handleOrganizations(Location location) throws IOException, ClassNotFoundException {
+    private void handleOrganizations(Location location) {
 
         isInsideOrganizations(location);
         isInsidePlace(location);
@@ -620,9 +599,6 @@ public class TrackingStalker extends Service {
                                 }
                             }
                         }, delay);
-
-
-
                     }
 
                     else if(placeMovement== null && !mPrefs.getBoolean("switchMode", false)){
@@ -651,9 +627,7 @@ public class TrackingStalker extends Service {
                                 }
                             }
                         }, delay);
-
                     }
-
                 }
                 else {
 
@@ -691,7 +665,7 @@ public class TrackingStalker extends Service {
 
     }
 
-    public void isInsideOrganizations(Location location) throws IOException, ClassNotFoundException {
+    public void isInsideOrganizations(Location location) {
 
         if(latLngOrganizationList!=null) {
 
@@ -853,8 +827,6 @@ public class TrackingStalker extends Service {
         }
 
     }
-
-
 
     /**
      * Class used for the client Binder.  Since this service runs in the same process as its

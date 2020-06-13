@@ -184,19 +184,6 @@ public class TrackingStalker extends Service {
             case 0:  //default settings
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                new Handler().postDelayed(() -> {
-                    if(mPrefs.getBoolean("switchTrack", false)) {
-                        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-                        stopSelf();
-                    }
-
-                }, 3000);
-
-                new Handler().postDelayed(() -> {
-                    if(mPrefs.getBoolean("switchTrack", false)) {
-                        requestLocationUpdates();
-                    }
-                    }, 6000);
                 System.out.print("CASE 0");
 
                 break;

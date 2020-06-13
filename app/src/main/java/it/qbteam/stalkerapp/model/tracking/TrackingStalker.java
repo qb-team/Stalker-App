@@ -834,7 +834,7 @@ public class TrackingStalker extends Service {
                         }, delay);
 
                         //Deletes the organization movement
-                        // storage.deleteOrganizationMovement();
+                        storage.deleteOrganizationMovement();
 
                         insideOrganization = null;
                         organizationMovement = null;

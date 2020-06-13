@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -264,6 +265,18 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         fos.close();
 
     }
+
+    public void deleteOrganizationMovement() throws IOException {
+        File toDelete=new File(HomePageActivity.getPath()+"/OrganizationMovement.txt");
+        FileOutputStream fos = new FileOutputStream(toDelete);
+        ObjectOutputStream oos=new ObjectOutputStream(fos);
+        //Write the object OrganizationMovement null==delete
+        oos.writeObject(null);
+        oos.flush();
+        oos.close();
+        fos.close();
+    }
+
 
 
     //Deserializes the object OrganizationMovement from a local file.

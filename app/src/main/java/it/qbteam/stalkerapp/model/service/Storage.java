@@ -399,8 +399,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                 oos.close();
                 fos.close();
             }
-
-        placeAccessListener.onSuccessDelete();
+        if(placeAccessListener != null)
+            placeAccessListener.onSuccessDelete();
     }
     }
     //Serializes the object OrganizationAccess in a local file.

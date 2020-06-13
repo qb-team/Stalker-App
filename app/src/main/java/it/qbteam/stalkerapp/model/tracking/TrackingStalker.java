@@ -549,7 +549,6 @@ public class TrackingStalker extends Service {
         mLocation=location;
 
         if (location != null) {
-
             if(!saveBattery)
                 switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
 

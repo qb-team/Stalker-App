@@ -29,8 +29,8 @@ public class AccessHistoryPresenter implements AccessHistoryContract.Presenter, 
     }
 
     @Override
-    public void deleteOrganizationAccess() throws IOException {
-            storage.performDeleteOrganizationAccess();
+    public void deleteOrganizationAccess(List<OrganizationAccess> accessList) throws IOException, ClassNotFoundException {
+            storage.performDeleteOrganizationAccess(accessList);
     }
 
     @Override

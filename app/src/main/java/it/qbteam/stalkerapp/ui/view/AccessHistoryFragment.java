@@ -97,8 +97,9 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         buttonDelete.setOnClickListener(v -> {
 
             try {
-                accessHistoryPresenter.deleteOrganizationAccess();
-            } catch (IOException e) {
+                if(accessList!=null)
+                accessHistoryPresenter.deleteOrganizationAccess(accessList);
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         });
@@ -118,15 +119,14 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             recyclerView.setAdapter(adapter);
             errorText.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override
     public void onSuccessDeleteOrganizationAccess() {
+        accessList = null;
         adapter = new AccessHistoryViewAdapter(null, getActivity(), this);
         recyclerView.setAdapter(adapter);
-            errorText.setVisibility(View.VISIBLE);
-       
+        errorText.setVisibility(View.VISIBLE);
     }
 
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".

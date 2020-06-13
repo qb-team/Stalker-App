@@ -48,17 +48,16 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
 import it.qbteam.stalkerapp.model.service.ChronometerService;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
+import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.Utils;
 import it.qbteam.stalkerapp.ui.view.AccessHistoryFragment;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
-import it.qbteam.stalkerapp.ui.view.LDAPorganizationFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
-import it.qbteam.stalkerapp.ui.view.PlaceAccessFragment;
-import it.qbteam.stalkerapp.ui.view.StandardOrganizationFragment;
+
 import lombok.SneakyThrows;
 
-public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, HomeFragment.FragmentListener, StandardOrganizationFragment.StandardOrganizationFragmentListener, LDAPorganizationFragment.LDAPorganizationFragmentListener, MyStalkersListFragment.MyStalkersListFragmentListener, AccessHistoryFragment.AccessHistoryFragmentListener, PlaceAccessFragment.PlaceAccessFragmentListener {
+public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, FragmentListenerFeatures {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;

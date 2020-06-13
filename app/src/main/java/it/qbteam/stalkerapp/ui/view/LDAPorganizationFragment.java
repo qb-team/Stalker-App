@@ -30,6 +30,7 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
 import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
+import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 
 public class LDAPorganizationFragment extends Fragment implements View.OnClickListener, OnBackPressListener , LDAPorganizationContract.View {
@@ -41,23 +42,15 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     private LDAPorganizationPresenter ldapOrganizationPresenter;
     private Dialog myDialog;
     private String trackingMode;
-    private LDAPorganizationFragmentListener iLDAPorganizationFragmentListener;
-
-    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
-    public interface LDAPorganizationFragmentListener {
-
-        void disableScroll(boolean enable);
-        boolean deleteAuthButton(String orgName);
-        void sendOrganization(Organization o) throws IOException, JSONException;
-    }
+    private FragmentListenerFeatures fragmentListenerFeatures;
 
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LDAPorganizationFragmentListener) {
-            iLDAPorganizationFragmentListener = (LDAPorganizationFragmentListener) context;
+        if (context instanceof FragmentListenerFeatures) {
+            fragmentListenerFeatures = (FragmentListenerFeatures) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " LDAPorganizationFragmentListener");
@@ -90,7 +83,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         trackingMode = bundle.getString("trackingMode");
         authentication.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
-        if(iLDAPorganizationFragmentListener.deleteAuthButton(bundle.getString("name"))){
+        if(fragmentListenerFeatures.deleteAuthButton(bundle.getString("name"))){
             authentication.setVisibility(View.INVISIBLE);
             System.out.print("INVISIBLE");
         }
@@ -110,7 +103,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     @Override
     public boolean onBackPressed() {
         HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
-        iLDAPorganizationFragmentListener.disableScroll(true);
+        fragmentListenerFeatures.disableScroll(true);
         return new BackPressImplementation(this).onBackPressed();
     }
 
@@ -174,7 +167,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         o.setCreationDate(creationDate);
         o.setTrackingMode(trackingMode);
 
-        iLDAPorganizationFragmentListener.sendOrganization(o);
+        fragmentListenerFeatures.sendOrganization(o);
     }
 
     //Failure of LDAP authentication

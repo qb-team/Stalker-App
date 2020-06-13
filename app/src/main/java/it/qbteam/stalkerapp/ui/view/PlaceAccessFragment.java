@@ -20,6 +20,7 @@ import it.qbteam.stalkerapp.contract.PlaceAccessContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.presenter.PlaceAccessPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
+import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import lombok.SneakyThrows;
 
@@ -31,7 +32,7 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     private TableLayout tbl;
 
     private FloatingActionButton buttonDelete;
-    PlaceAccessFragmentListener placeAccessFragmentListener;
+    private FragmentListenerFeatures fragmentListenerFeatures;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface PlaceAccessFragmentListener {
@@ -43,8 +44,8 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof PlaceAccessFragmentListener) {
-            placeAccessFragmentListener = (PlaceAccessFragmentListener) context;
+        if (context instanceof FragmentListenerFeatures) {
+            fragmentListenerFeatures = (FragmentListenerFeatures) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " PlaceAccessFragmentListener");
@@ -102,7 +103,7 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     @Override
     public boolean onBackPressed() {
         HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
-        placeAccessFragmentListener.disableScroll(true);
+        fragmentListenerFeatures.disableScroll(true);
         getActivity().setTitle("Storico accessi");
         return new BackPressImplementation(this).onBackPressed();
 

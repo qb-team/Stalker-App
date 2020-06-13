@@ -25,6 +25,7 @@ import it.qbteam.stalkerapp.contract.StandardOrganizationContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.presenter.StandardOrganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
+import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -33,7 +34,7 @@ import java.io.IOException;
 public class StandardOrganizationFragment extends Fragment implements View.OnClickListener, OnBackPressListener, StandardOrganizationContract.View {
     private Bundle bundle;
     private StandardOrganizationPresenter standardOrganizationPresenter;
-    StandardOrganizationFragmentListener standardOrganizationFragmentListener;
+    private FragmentListenerFeatures fragmentListenerFeatures;
 
     //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
     public interface StandardOrganizationFragmentListener {
@@ -46,8 +47,8 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof StandardOrganizationFragmentListener) {
-            standardOrganizationFragmentListener = (StandardOrganizationFragmentListener) context;
+        if (context instanceof FragmentListenerFeatures) {
+            fragmentListenerFeatures = (FragmentListenerFeatures) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " StandardOrganizationFragmentListener");
@@ -92,7 +93,7 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     @Override
     public boolean onBackPressed() {
         HomePageActivity.getTabLayout().setVisibility(View.VISIBLE);
-        standardOrganizationFragmentListener.disableScroll(true);
+        fragmentListenerFeatures.disableScroll(true);
         return new BackPressImplementation(this).onBackPressed();
     }
 

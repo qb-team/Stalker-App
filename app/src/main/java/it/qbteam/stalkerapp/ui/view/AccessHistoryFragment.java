@@ -35,6 +35,7 @@ import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.presenter.AccessHistoryPresenter;
 import it.qbteam.stalkerapp.tools.AccessHistoryViewAdapter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
+import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.tools.SearchViewCustom;
 
@@ -45,21 +46,16 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
     private FloatingActionButton buttonDelete;
     private AccessHistoryPresenter accessHistoryPresenter;
     private List<OrganizationAccess> accessList;
-    private AccessHistoryFragmentListener accessHistoryFragmentListener;
     private TextView errorText;
-
-    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
-    public interface AccessHistoryFragmentListener {
-        void disableScroll(boolean enable);
-    }
+    private FragmentListenerFeatures fragmentListenerFeatures;
 
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof AccessHistoryFragmentListener) {
-            accessHistoryFragmentListener = (AccessHistoryFragmentListener) context;
+        if (context instanceof FragmentListenerFeatures) {
+            fragmentListenerFeatures = (FragmentListenerFeatures) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " AccessHistoryFragmentListener");
@@ -221,7 +217,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         transaction.replace(R.id.AccessHistoryID, placeAccessFragment).commit();
 
         HomePageActivity.getTabLayout().setVisibility(View.GONE);
-        accessHistoryFragmentListener.disableScroll(false);
+        fragmentListenerFeatures.disableScroll(false);
     }
 
 

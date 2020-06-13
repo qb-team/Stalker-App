@@ -35,6 +35,7 @@ import com.webianks.library.scroll_choice.ScrollChoice;
 import org.json.JSONException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
+import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.presenter.HomePresenter;
@@ -55,7 +56,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private String path;
-    private FragmentListener fragmentListener;
     private SwipeRefreshLayout refresh;
     private List<Organization> auxList;
     private String countrySelected="";
@@ -73,20 +73,15 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private ProgressDialog progressBar;
     private int progressStatus = 0;
     private Handler handler = new Handler();
-
-    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
-    public interface FragmentListener {
-        void sendOrganization(Organization organization) throws IOException, JSONException;
-        void disableScroll(boolean enable);
-    }
+    private FragmentListenerFeatures fragmentListenerFeatures;
 
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof FragmentListener) {
-            fragmentListener = (FragmentListener) context;
+        if (context instanceof FragmentListenerFeatures) {
+            fragmentListenerFeatures = (FragmentListenerFeatures) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " FragmentListener");
@@ -149,7 +144,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         if(organizationList != null){
             adapter = new OrganizationViewAdapter(organizationList, this.getContext(),this);
             recyclerView.setAdapter(adapter);
-            errorTextView.setVisibility(View.INVISIBLE);
+
         }
         else
             Toast.makeText(getActivity(),"Devi ancora scaricare la lista", Toast.LENGTH_SHORT).show();
@@ -169,11 +164,11 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
                     })
                     .setNegativeButton("Annulla", (dialog, which) -> {
-
+                        errorTextView.setVisibility(View.VISIBLE);
                     })
                     .create();
             download.show();
-            errorTextView.setVisibility(View.VISIBLE);
+
 
     }
    private void progressBarDownload(){
@@ -223,10 +218,12 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         if(userToken!=null)
             OrganizationListPresenter.downloadHomeListServer(path,userToken);
         else {
-            Toast.makeText(getActivity(),"Errore durante lo scaricamento della lista ciaoooo", Toast.LENGTH_SHORT).show();
+            errorTextView.setVisibility(View.VISIBLE);
+            Toast.makeText(getActivity(),"Errore durante lo scaricamento della lista ", Toast.LENGTH_SHORT).show();
         }
         refresh.setRefreshing(false);
     }
+
     private void downloadListWithSwipe() {
 
         if(mPrefs2.getString("userToken", "")!=null)
@@ -270,7 +267,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.HomeFragmentID, stdOrgFragment).commit();
-            fragmentListener.disableScroll(false);
+            fragmentListenerFeatures.disableScroll(false);
         }
         else {
             bundle.putString("trackingMode",organizationList.get(position).getTrackingMode().getValue());
@@ -279,7 +276,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.HomeFragmentID, LDAPFragment).commit();
-            fragmentListener.disableScroll(false);
+            fragmentListenerFeatures.disableScroll(false);
         }
     }
 
@@ -309,7 +306,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         //Try to add the organization locally and on the server.
         aggPref.setOnClickListener(v -> {
             try {
-                fragmentListener.sendOrganization(organizationList.get(position));
+                fragmentListenerFeatures.sendOrganization(organizationList.get(position));
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }

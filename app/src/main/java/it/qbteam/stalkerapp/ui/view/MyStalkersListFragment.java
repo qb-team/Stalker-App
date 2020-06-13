@@ -33,6 +33,7 @@ import com.webianks.library.scroll_choice.ScrollChoice;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
+import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.presenter.MyStalkersListPresenter;
@@ -52,7 +53,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private static String path;
-    private MyStalkersListFragmentListener myStalkersListFragmentListener;
+    private FragmentListenerFeatures fragmentListenerFeatures;
     private TextView errorText;
     private SwipeRefreshLayout refresh;
     private String countrySelected="";
@@ -68,18 +69,13 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private String userToken;
     private String userID;
 
-    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
-    public interface MyStalkersListFragmentListener {
-        void disableScroll(boolean enable);
-    }
-
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MyStalkersListFragmentListener) {
-            myStalkersListFragmentListener = (MyStalkersListFragmentListener) context;
+        if (context instanceof FragmentListenerFeatures) {
+            fragmentListenerFeatures = (FragmentListenerFeatures) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " MyStalkersListFragmentListener");
@@ -146,14 +142,14 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.ListaPreferitiID, stdOrgFragment).commit();
-            myStalkersListFragmentListener.disableScroll(false);
+            fragmentListenerFeatures.disableScroll(false);
         } else {
             LDAPorganizationFragment LDAPFragment = new LDAPorganizationFragment();
             LDAPFragment.setArguments(bundle);
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.ListaPreferitiID, LDAPFragment).commit();
-            myStalkersListFragmentListener.disableScroll(false);
+            fragmentListenerFeatures.disableScroll(false);
         }
     }
     //Notifies the user through a dialog box, the possibility of deleting the organization selected by the user after a long click.
@@ -412,6 +408,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
 
         }
         else {
+            errorText.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(),"Errore durante il caricamento della lista MyStalkeList",Toast.LENGTH_SHORT).show();
         }
 

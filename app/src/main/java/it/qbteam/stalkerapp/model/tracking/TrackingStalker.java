@@ -190,7 +190,6 @@ public class TrackingStalker extends Service {
                 new Handler().postDelayed(() -> {
                          if(mPrefs.getBoolean("switchTrack", false)) {
                              mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-                             stopSelf();
                          }
 
                      }, 3000);
@@ -208,7 +207,7 @@ public class TrackingStalker extends Service {
                 new Handler().postDelayed(() -> {
                         if(mPrefs.getBoolean("switchTrack", false)) {
                             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-                            stopSelf();
+
                         }
                     }, 10000);
 
@@ -225,7 +224,7 @@ public class TrackingStalker extends Service {
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
                         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-                        stopSelf();
+
                     }
                 }, 10000);
 
@@ -241,7 +240,6 @@ public class TrackingStalker extends Service {
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
                         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-                        stopSelf();
                     }
                 }, 10000);
 
@@ -255,7 +253,6 @@ public class TrackingStalker extends Service {
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
                         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-                        stopSelf();
                     }
                 }, 10000);
 

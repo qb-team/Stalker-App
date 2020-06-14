@@ -400,8 +400,6 @@ public class TrackingStalker extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        startForeground(NOTIFICATION_ID,getNotification());
-
         boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
                 false);
 
@@ -471,12 +469,11 @@ public class TrackingStalker extends Service {
         // Called when the last client (MainActivity in case of this sample) unbinds from this
         // service. If this method is called due to a configuration change in MainActivity, we
         // do nothing. Otherwise, we make this service a foreground service.
-        
-        /*if (!mChangingConfiguration &&  mPrefs.getBoolean("switchTrack", false)) {
-            Log.i(TAG, "Starting foreground service");
 
-            startForeground(NOTIFICATION_ID, C());
-        }*/
+        if (!mChangingConfiguration &&  mPrefs.getBoolean("switchTrack", false)) {
+            Log.i(TAG, "Starting foreground service");
+            startForeground(NOTIFICATION_ID, getNotification());
+        }
         return true; // Ensures onRebind() is called when a client re-binds.
     }
 

@@ -35,6 +35,7 @@ import com.google.firebase.firestore.BuildConfig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -417,11 +418,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void startTracking() {
         mService.requestLocationUpdates();
+        Intent serviceIntent = new Intent(this, TrackingStalker.class);
+        ContextCompat.startForegroundService(this, serviceIntent);
     }
 
 
     //Manage the end of the tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
     private void stopTracking() {
+        Intent serviceIntent = new Intent(this, TrackingStalker.class);
+        stopService(serviceIntent);
         mService.removeLocationUpdates();
     }
 

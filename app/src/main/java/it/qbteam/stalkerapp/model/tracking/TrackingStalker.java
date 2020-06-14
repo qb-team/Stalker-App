@@ -128,6 +128,7 @@ public class TrackingStalker extends Service {
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
     private Gson gson;
+    private boolean notify;
 
     @Override
     public void onCreate() {
@@ -154,8 +155,6 @@ public class TrackingStalker extends Service {
                 try {
                     onNewLocation(locationResult.getLastLocation());
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -401,7 +400,8 @@ public class TrackingStalker extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.i(TAG, "Service started");
+        startForeground(NOTIFICATION_ID,getNotification());
+
         boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
                 false);
 
@@ -471,11 +471,12 @@ public class TrackingStalker extends Service {
         // Called when the last client (MainActivity in case of this sample) unbinds from this
         // service. If this method is called due to a configuration change in MainActivity, we
         // do nothing. Otherwise, we make this service a foreground service.
-        if (!mChangingConfiguration &&  mPrefs.getBoolean("switchTrack", false)) {
+        
+        /*if (!mChangingConfiguration &&  mPrefs.getBoolean("switchTrack", false)) {
             Log.i(TAG, "Starting foreground service");
 
-            startForeground(NOTIFICATION_ID, getNotification());
-        }
+            startForeground(NOTIFICATION_ID, C());
+        }*/
         return true; // Ensures onRebind() is called when a client re-binds.
     }
 
@@ -530,7 +531,7 @@ public class TrackingStalker extends Service {
         return builder.build();
     }
 
-    private void onNewLocation(Location location) throws IOException, ClassNotFoundException {
+    private void onNewLocation(Location location) throws IOException {
 
         mLocation=location;
 

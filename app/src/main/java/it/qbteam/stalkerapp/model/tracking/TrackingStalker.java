@@ -199,7 +199,7 @@ public class TrackingStalker extends Service {
                              requestLocationUpdates();
                          }
 
-                     }, 5000);
+                     }, 10000);
 
                 break;
 
@@ -679,7 +679,7 @@ public class TrackingStalker extends Service {
                 if (isInsideBoundary && isInside) {
                     HomePageActivity.setNameOrg(latLngOrganizationList.get(i).getName());
                     Long min =  HomePageActivity.getCurrentTime()/1000/60;
-                    if(min >= 5L){// active saveBattery after 5 min
+                    if(min >= 10L){// active saveBattery after 10 min
                         saveBattery = true;
                         switchPriority(2);
                     }

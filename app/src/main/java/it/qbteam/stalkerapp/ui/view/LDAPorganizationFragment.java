@@ -166,7 +166,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         o.setCreationDate(creationDate);
         o.setTrackingMode(trackingMode);
 
-        fragmentListenerFeatures.sendOrganization(o);
+        fragmentListenerFeatures.addOrganization(o);
     }
 
     //Failure of LDAP authentication

@@ -470,6 +470,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             oos.flush();
             oos.close();
             fos.close();
+            accessHistoryListener.onFailureGetOrganizationAccess();
         }
         else{
 

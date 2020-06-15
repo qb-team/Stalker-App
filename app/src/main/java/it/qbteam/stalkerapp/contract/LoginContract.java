@@ -17,7 +17,7 @@ public interface LoginContract {
     }
     interface Interactor{
         void performFirebaseLogin(String email, String password);
-        void performResetEmail(String email);
+        void performResetPassword(String email);
     }
 
     interface onLoginListener{

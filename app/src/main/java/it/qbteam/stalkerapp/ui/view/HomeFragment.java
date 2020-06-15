@@ -213,7 +213,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private void downloadList() {
 
         if(userToken!=null)
-            OrganizationListPresenter.downloadHomeListServer(path,userToken);
+            OrganizationListPresenter.downloadOrganizationListServer(path,userToken);
         else {
             errorTextView.setVisibility(View.VISIBLE);
             Toast.makeText(getActivity(),"Errore durante lo scaricamento della lista ", Toast.LENGTH_SHORT).show();
@@ -224,7 +224,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     private void downloadListWithSwipe() {
 
         if(mPrefs2.getString("userToken", "")!=null)
-            OrganizationListPresenter.downloadHomeListServer(path,userToken = mPrefs2.getString("userToken", ""));
+            OrganizationListPresenter.downloadOrganizationListServer(path,userToken = mPrefs2.getString("userToken", ""));
         else {
             Toast.makeText(getActivity(),"Errore durante lo scaricamento della lista ciaoooo", Toast.LENGTH_SHORT).show();
         }
@@ -303,7 +303,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         //Try to add the organization locally and on the server.
         aggPref.setOnClickListener(v -> {
             try {
-                fragmentListenerFeatures.sendOrganization(organizationList.get(position));
+                fragmentListenerFeatures.addOrganization(organizationList.get(position));
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }

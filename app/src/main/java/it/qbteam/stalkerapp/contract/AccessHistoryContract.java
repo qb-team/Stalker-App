@@ -8,6 +8,7 @@ public interface AccessHistoryContract {
     interface View {
         void onSuccessGetOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList);
         void onSuccessDeleteOrganizationAccess();
+        void onFailureGetOrganizationAccessInLocal();
 
     }
 
@@ -20,6 +21,7 @@ public interface AccessHistoryContract {
     }
 
     interface AccessHistoryListener {
+        void onFailureGetOrganizationAccess();
         void onSuccessGetOrganizationAccess(List<OrganizationAccess> organizationAccessList);
         void onSuccessDelete();
 

@@ -14,6 +14,7 @@ public interface MyStalkersListContract {
         void onFailureAddOrganization(String message);
         void onSuccessRemoveOrganization(List<Organization> list) throws IOException, JSONException;
         void onSuccessLoadMyStalkerList(List<Organization> list) throws IOException, JSONException;
+        void onFailureLoadMyStalkerList();
     }
 
     interface Presenter {
@@ -23,7 +24,7 @@ public interface MyStalkersListContract {
         void addOrganizationServer(Organization organization, String UID, String userToken) throws IOException, JSONException;
         void removeOrganizationLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException;
         void removeOrganizationServer(Organization organization,String UID, String userToken) throws IOException, ClassNotFoundException;
-        void downloadListServer(String UID, String userToken);
+        void loadFavoriteListServer(String UID, String userToken);
 
     }
 
@@ -38,5 +39,6 @@ public interface MyStalkersListContract {
         void onFailureAdd(String message);
         void onSuccesRemove(List<Organization> list) throws IOException, JSONException;
         void onSuccessLoad(List<Organization> list) throws IOException, JSONException;
+        void onFailureLoad();
     }
 }

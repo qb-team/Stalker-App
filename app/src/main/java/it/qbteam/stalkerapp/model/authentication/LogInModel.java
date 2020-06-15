@@ -34,7 +34,7 @@ public class LogInModel implements LoginContract.Interactor {
                 });
     }
 
-    public void performResetEmail(String email){
+    public void performResetPassword(String email){
         FirebaseAuth.getInstance()
                 .sendPasswordResetEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -63,7 +63,7 @@ public class Server {
     }
 
     //Gets the list of favorite organizations of a user.
-    public void performLoadListServer(String UID, String userToken) {
+    public void performLoadFavoriteListServer(String UID, String userToken) {
 
                 Favorite favoriteDownload = new Favorite();
                 favoriteDownload.setUserId(UID);
@@ -77,7 +77,7 @@ public class Server {
                             if(response.code()==200)
                                 myStalkerListener.onSuccessLoad(response.body());
                             else
-                                myStalkerListener.onSuccessLoad(null);
+                                myStalkerListener.onFailureLoad();
                         } catch (IOException | JSONException e) {
                             e.printStackTrace();
                         }
@@ -224,7 +224,7 @@ public class Server {
 
 
     //Returns the list of all organizations.
-    public void performDownloadFileServer(String path, String userToken)  {
+    public void performDownloadOrganizationListServer(String path, String userToken)  {
 
         ArrayList<Organization> returnList = new ArrayList<>();
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);

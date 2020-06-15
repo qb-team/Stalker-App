@@ -30,14 +30,8 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
     private TableRow.LayoutParams  params1;
     private TableRow.LayoutParams  params2;
     private TableLayout tbl;
-
     private FloatingActionButton buttonDelete;
     private FragmentListenerFeatures fragmentListenerFeatures;
-
-    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
-    public interface PlaceAccessFragmentListener {
-        void disableScroll(boolean enable);
-    }
 
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.

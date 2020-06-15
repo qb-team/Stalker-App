@@ -40,8 +40,8 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     //Calls the the method performDownloadFileServer(path,userToken) of the class Server(persistent layer of the server).
     @Override
-    public void downloadHomeListServer(String path, String userToken)  {
-        server.performDownloadFileServer(path,userToken);
+    public void downloadOrganizationListServer(String path, String userToken)  {
+        server.performDownloadOrganizationListServer(path,userToken);
     }
 
 

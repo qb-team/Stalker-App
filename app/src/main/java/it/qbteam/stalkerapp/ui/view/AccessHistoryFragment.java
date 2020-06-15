@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -120,6 +122,10 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             errorText.setVisibility(View.INVISIBLE);
         }
     }
+    @Override
+    public void onFailureGetOrganizationAccessInLocal() {
+        Toast.makeText(getActivity(),"Lista storico accessi ancora vuota",Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onSuccessDeleteOrganizationAccess() {
@@ -128,6 +134,7 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         recyclerView.setAdapter(adapter);
         errorText.setVisibility(View.VISIBLE);
     }
+
 
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".
     @Override
@@ -259,6 +266,10 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
             adapter = new AccessHistoryViewAdapter(list, getActivity(), this);
             recyclerView.setAdapter(adapter);
         }
+    }
+
+    public void searchForDay(List<OrganizationAccess>list){
+
     }
 
     static final Comparator<OrganizationAccess> byDateCreasing = (o1, o2) -> o1.getExitTimestamp().compareTo(o2.getExitTimestamp());

@@ -80,14 +80,19 @@ public class MyStalkersListPresenter implements MyStalkersListContract.Presenter
 
     //Calls the the method performLoadListServer(UID, userToken) of the class Server(persistent layer that comunicates with Server).
     @Override
-    public void downloadListServer(String UID, String userToken) {
-        server.performLoadListServer(UID, userToken);
+    public void loadFavoriteListServer(String UID, String userToken) {
+        server.performLoadFavoriteListServer(UID, userToken);
     }
 
     //Comunicates the success result of download organization list to the view.
     @Override
     public void onSuccessLoad(List<Organization> list) throws IOException, JSONException {
         myStalkersView.onSuccessLoadMyStalkerList(list);
+    }
+
+    @Override
+    public void onFailureLoad() {
+        myStalkersView.onFailureLoadMyStalkerList();
     }
 
 }

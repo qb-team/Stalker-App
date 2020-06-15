@@ -128,7 +128,7 @@ public class TrackingStalker extends Service {
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
     private Gson gson;
-    private boolean notify;
+
 
     @Override
     public void onCreate() {

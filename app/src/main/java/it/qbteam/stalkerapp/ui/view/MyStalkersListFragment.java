@@ -403,7 +403,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     public void loadMyStalkerList() {
 
         if(userToken!=null && userID!=null){
-            myStalkersListPresenter.downloadListServer(userID, userToken);
+            myStalkersListPresenter.loadFavoriteListServer(userID, userToken);
             Toast.makeText(getActivity(), "Lista MyStalker aggiornata", Toast.LENGTH_SHORT).show();
 
         }
@@ -418,19 +418,21 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     @Override
     public void onSuccessLoadMyStalkerList(List<Organization> list) throws IOException, JSONException {
 
-        if (list != null) {
+        if (list != null)
             //Assegno la lista appena scaricata dal server a organizationList.
             organizationList = list;
             adapter = new OrganizationViewAdapter(organizationList, this.getContext(), this);
             recyclerView.setAdapter(adapter);
             myStalkersListPresenter.updateFile(organizationList, path);
             errorText.setVisibility(View.INVISIBLE);
-        }
-        else{
-            errorText.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(), "Lista MyStalker ancora vuota", Toast.LENGTH_SHORT).show();
-        }
             refresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onFailureLoadMyStalkerList() {
+        errorText.setVisibility(View.VISIBLE);
+        Toast.makeText(getContext(), "Lista MyStalker ancora vuota", Toast.LENGTH_SHORT).show();
+        refresh.setRefreshing(false);
     }
 
     public boolean organizationIsPresentInList(String orgName){

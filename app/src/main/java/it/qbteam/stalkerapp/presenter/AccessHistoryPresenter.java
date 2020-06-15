@@ -24,6 +24,11 @@ public class AccessHistoryPresenter implements AccessHistoryContract.Presenter, 
     }
 
     @Override
+    public void onFailureGetOrganizationAccess() {
+        accessHistoryView.onFailureGetOrganizationAccessInLocal();
+    }
+
+    @Override
     public void onSuccessGetOrganizationAccess(List<OrganizationAccess> organizationAccessList) {
             accessHistoryView.onSuccessGetOrganizationAccessInLocal(organizationAccessList);
     }

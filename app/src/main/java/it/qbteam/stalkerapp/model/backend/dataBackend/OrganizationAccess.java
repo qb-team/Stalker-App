@@ -65,13 +65,17 @@ public class OrganizationAccess implements Serializable {
   private String accessType;
 
   public void setAccessType(String accessType){this.accessType=accessType;}
+
   public String getAccessType(){return accessType;}
+
   public void setTimeStay(Long timeStay){
     this.timeStay=timeStay;
   }
+
   public Long getTimeStay(){
     return timeStay;
   }
+
   public void setOrgName(String orgName) {
     this.orgName = orgName;
   }

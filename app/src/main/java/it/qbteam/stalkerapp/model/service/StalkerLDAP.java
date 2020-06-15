@@ -70,5 +70,13 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
 
         }
 
+        public String getBindDN(){
+            return bindDN;
+        }
+
+        public String getBindPassword(){
+            return bindPassword;
+        }
+
 
     }

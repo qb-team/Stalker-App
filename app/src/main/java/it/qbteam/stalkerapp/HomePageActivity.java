@@ -35,7 +35,6 @@ import com.google.firebase.firestore.BuildConfig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -55,7 +54,6 @@ import it.qbteam.stalkerapp.ui.view.AccessHistoryFragment;
 import it.qbteam.stalkerapp.ui.view.ActionTabFragment;
 import it.qbteam.stalkerapp.ui.view.HomeFragment;
 import it.qbteam.stalkerapp.ui.view.MyStalkersListFragment;
-
 import lombok.SneakyThrows;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, FragmentListenerFeatures {
@@ -486,7 +484,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     //Comunicates with MyStalkerListFragment to add the organization.
     @Override
-    public void sendOrganization(Organization organization) throws IOException, JSONException {
+    public void addOrganization(Organization organization) throws IOException, JSONException {
         Fragment frag = (MyStalkersListFragment)ActionTabFragment.getMyStalkerFragment();
         ((MyStalkersListFragment) frag).addOrganization(organization);
     }
@@ -513,6 +511,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public static void setNamePlace(String name){
         namePlace.setText(name);
     }
+
+    public static String getNameOrg(){return nameOrg.getText().toString();}
+
+    public static String getNamePlace(){return namePlace.getText().toString();}
 
     public static boolean getSwitcherModeStatus(){
         if(switcherMode.isChecked())
@@ -550,7 +552,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         mins = 0;
         secs = 0;
         setTime();
-
     }
 
     @SneakyThrows
@@ -627,7 +628,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         @SneakyThrows
         @Override
         public void onReceive(Context context, Intent intent) {
-                //Location location = intent.getParcelableExtra(TrackingStalker.EXTRA_LOCATION);
                 Fragment frag = (AccessHistoryFragment )ActionTabFragment.getAccessHistoryFragment();
                 try {
                     ((AccessHistoryFragment) frag).printAccess();

@@ -21,7 +21,7 @@ public class LoginPresenter implements LoginContract.Presenter, LoginContract.on
     }
 
     public void forgotPassword(String email){
-        mLoginInteractor.performResetEmail(email);
+        mLoginInteractor.performResetPassword(email);
     }
 
     //Comunicates the success result of login to the view.

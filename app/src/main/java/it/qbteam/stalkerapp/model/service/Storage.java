@@ -216,7 +216,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     //Deletes the current object Place serialized in a local file.
     public void deletePlace() throws IOException {
 
-        
+
         FileOutputStream fos=new FileOutputStream(HomePageActivity.getPath()+"/PlaceList.txt");
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         //Write the object OrganizationMovement null==delete
@@ -283,7 +283,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
         OrganizationMovement organizationMovement;
         //Reading the OrganizationMovement from a file
-        FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/OrganizationMovement.txt");
+        File organizationFile = new File(HomePageActivity.getPath()+"/OrganizationMovement.txt");
+        FileInputStream fis= new FileInputStream(organizationFile);
         ObjectInputStream ois = new ObjectInputStream(fis);
         //Method for deserialization of object
         organizationMovement = (OrganizationMovement)ois.readObject();
@@ -419,9 +420,9 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     public void serializeOrganizationAccessInLocal(OrganizationAccess organizationAccess) throws IOException, ClassNotFoundException {
         //Saving of OrganizationAccess in a file
         List<OrganizationAccess> oldList;
-        File placeAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        if(placeAccessFile.length()==0 || !placeAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(placeAccessFile,false);
+        File organizationAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
+        if(organizationAccessFile.length()==0 || !organizationAccessFile.exists()) {
+            FileOutputStream fos=new FileOutputStream(organizationAccessFile,false);
             ObjectOutputStream oos=new ObjectOutputStream(fos);
             oldList= new ArrayList<>();
             oldList.add(organizationAccess);
@@ -432,7 +433,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         }
         else {
             if(organizationAccess!=null){
-            FileInputStream fis= new FileInputStream(placeAccessFile);
+            FileInputStream fis= new FileInputStream(organizationAccessFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //Method for deserialization of object
             oldList= (List<OrganizationAccess>) ois.readObject();

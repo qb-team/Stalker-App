@@ -764,7 +764,7 @@ public class TrackingStalker extends Service {
                                     e.printStackTrace();
                                 }
                             }
-                        }, 2000);
+                        }, 3000);
                     }
                 }
                 else {

@@ -120,9 +120,10 @@ public class Server {
         place.enqueue(new Callback<List<Place>>() {
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
-
+                System.out.print(response.body());
                 try {
                     if(response.code()==200){
+
                         storage.serializePlaceInLocal(response.body());
                     }
 

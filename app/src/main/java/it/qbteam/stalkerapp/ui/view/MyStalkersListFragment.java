@@ -402,14 +402,9 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     //Downloads from the Server the list of organizations previously added by the user.
     public void loadMyStalkerList() {
 
-        if(userToken!=null && userID!=null){
+        if(userToken!=null && userID!=null) {
             myStalkersListPresenter.loadFavoriteListServer(userID, userToken);
-            Toast.makeText(getActivity(), "Lista MyStalker aggiornata", Toast.LENGTH_SHORT).show();
 
-        }
-        else {
-            errorText.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(),"Errore durante il caricamento della lista MyStalkeList",Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -425,6 +420,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
             recyclerView.setAdapter(adapter);
             myStalkersListPresenter.updateFile(organizationList, path);
             errorText.setVisibility(View.INVISIBLE);
+            Toast.makeText(getActivity(), "Lista MyStalker aggiornata", Toast.LENGTH_SHORT).show();
             refresh.setRefreshing(false);
     }
 

@@ -199,7 +199,7 @@ public class TrackingStalker extends Service {
                              requestLocationUpdates();
                          }
 
-                     }, 10000);
+                     }, 5000);
 
                 break;
 

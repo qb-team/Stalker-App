@@ -216,9 +216,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     //Deletes the current object Place serialized in a local file.
     public void deletePlace() throws IOException {
 
-        //Reading the OrganizationMovement from a file
-        File toDelete=new File(HomePageActivity.getPath()+"/PlaceList.txt");
-        FileOutputStream fos=new FileOutputStream(toDelete);
+        
+        FileOutputStream fos=new FileOutputStream(HomePageActivity.getPath()+"/PlaceList.txt");
         ObjectOutputStream oos=new ObjectOutputStream(fos);
         //Write the object OrganizationMovement null==delete
         oos.writeObject(null);
@@ -294,7 +293,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
     }
 
-    public void performCreateAllFile() throws IOException {
+    /*public void performCreateAllFile() throws IOException {
 
         String[] paths={HomePageActivity.getPath()+"/OrganizationMovement.txt",HomePageActivity.getPath()+"/PlaceMovement.txt",
                 HomePageActivity.getPath()+"/PlaceList.txt"};
@@ -309,14 +308,14 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
            fos.close();
 
         }
-    }
+    }*/
 
     public void serializePlaceAccessInLocal(PlaceAccess placeAccess) throws IOException, ClassNotFoundException {
         //Saving of PlaceAccess in a file
         List<PlaceAccess> oldList;
         File placeAccessFile = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
         if(placeAccessFile.length()==0 || !placeAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(placeAccessFile);
+            FileOutputStream fos=new FileOutputStream(placeAccessFile,false);
             ObjectOutputStream oos=new ObjectOutputStream(fos);
             oldList= new ArrayList<>();
             oldList.add(placeAccess);

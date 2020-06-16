@@ -252,7 +252,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         bundle.putString("serverURL", organizationList.get(position).getAuthenticationServerURL());
         bundle.putString("creationDate",organizationList.get(position).getCreationDate().toString());
 
-        if(organizationList.get(position).getTrackingMode().toString().equals("anonymous")){
+        if(organizationList.get(position).getTrackingMode() == Organization.TrackingModeEnum.anonymous){
             StandardOrganizationFragment stdOrgFragment= new StandardOrganizationFragment();
             stdOrgFragment.setArguments(bundle);
             FragmentTransaction transaction= getChildFragmentManager().beginTransaction();

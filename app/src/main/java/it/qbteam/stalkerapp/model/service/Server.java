@@ -48,8 +48,7 @@ public class Server {
 
                     Favorite favoriteUpload = new Favorite();
                     favoriteUpload.setUserId(UID);
-                    favoriteUpload.setCreationDate(organization.getCreationDate());
-                    favoriteUpload.setOrgAuthServerId(organization.getAuthenticationServerURL());
+                    favoriteUpload.setCreationDate(OffsetDateTime.now());
                     favoriteUpload.setOrganizationId(organization.getId());
                     ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
                     FavoriteApi service = ac.createService(FavoriteApi.class);
@@ -57,10 +56,11 @@ public class Server {
                     favorite.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-
+                        System.out.println(response.code() == 205 ? "PREFERITO RIMOSSO DA MYSTALKERLIST" : "performAddOrganizationServer onResponse STATUS CODE: " + response.code());
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
+                        System.out.println("performRemoveOrganizationServer onFailure: " + t.getMessage());
                     }
             });
 
@@ -89,6 +89,7 @@ public class Server {
                     }
                     @Override
                     public void onFailure(Call<List<Organization>> call, Throwable t) {
+                        System.out.println("performLoadFavoriteListServer onFailure: " + t.getMessage());
                     }
                 });
     }
@@ -98,19 +99,19 @@ public class Server {
 
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(UID);
+        favoriteUpload.setCreationDate(OffsetDateTime.now());
         favoriteUpload.setOrganizationId(organization.getId());
-        favoriteUpload.setCreationDate(organization.getCreationDate());
-        favoriteUpload.setOrgAuthServerId(organization.getAuthenticationServerURL());
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         FavoriteApi service = ac.createService(FavoriteApi.class);
         Call<Favorite> favorite = service.addFavoriteOrganization(favoriteUpload);
         favorite.enqueue(new Callback<Favorite>() {
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
-
+                System.out.println(response.code() == 201 ? "PREFERITO AGGIUNTO A MYSTALKERLIST" : "performAddOrganizationServer onResponse STATUS CODE: " + response.code());
             }
             @Override
             public void onFailure(Call<Favorite> call, Throwable t) {
+                System.out.println("performAddOrganizationServer onFailure: " + t.getMessage());
             }
         });
     }
@@ -169,7 +170,7 @@ public class Server {
                     }
                     else if(type==-1 && response.code()==202){
                         //serialize in local the object List<OrganizationAccess>.
-                        System.out.println("DATA: 0" + organizationAccess.getEntranceTimestamp() + " " + organizationAccess.getExitTimestamp());
+                        System.out.println("DATA: " + organizationAccess.getEntranceTimestamp() + " " + organizationAccess.getExitTimestamp());
                         String organizationAccessJson = gson.toJson(organizationAccess);
                         System.out.println(organizationAccessJson);
                         prefEditor.putString("organizationAccess",organizationAccessJson);

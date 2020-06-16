@@ -20,6 +20,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
         private String bindDN;
         private String bindPassword;
         private String serverAddress;
+        private String orgAuthServerId;
         private int serverPort;
         private SearchResultEntry entry;
 
@@ -60,12 +61,15 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
             });
             new Thread(searchFutureTask).start();
             this.entry = searchFutureTask.get();
-            this.connection.close();
-            if(this.result != null && this.entry != null)
-                ldaPlistener.onSuccess("Ti sei autenticato con successo");
-            else
-                ldaPlistener.onFailure("Errore durante l'autenticazione");
 
+            this.connection.close();
+            if(this.result != null && this.entry != null) {
+                this.orgAuthServerId = "" + this.entry.getAttribute("uidNumber").getValue();
+                ldaPlistener.onSuccess("Ti sei autenticato con successo");
+            }
+            else {
+                ldaPlistener.onFailure("Errore durante l'autenticazione");
+            }
         }
 
         public String getBindDN(){

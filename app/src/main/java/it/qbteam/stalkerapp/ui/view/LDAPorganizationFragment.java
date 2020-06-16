@@ -162,6 +162,17 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
 
     }
 
+    private String[] parseUrl(String serverUrl) {
+        String[] parsedUrl;
+        if(serverUrl.contains(":")) {
+            parsedUrl = serverUrl.split(":");
+        } else {
+            parsedUrl = new String[]{serverUrl};
+        }
+
+        return parsedUrl;
+    }
+
     private void LDAPAuthentication(){
         myDialog.setContentView(R.layout.dialog_ldap_access);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -176,8 +187,23 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         access.setOnClickListener(v1 -> {
             EditText userNameLDAP = myDialog.findViewById(R.id.userNameID);
             EditText passwordLDAP = myDialog.findViewById(R.id.passwordID);
+
+            String ldapServer;
+            int ldapPort = 389;
+
+            String[] ldapUrl = parseUrl(serverURL);
+            ldapServer = ldapUrl[0];
+
+            if(ldapUrl.length == 2) {
+                try {
+                    ldapPort = Integer.parseInt(ldapUrl[1]);
+                } catch(NumberFormatException exc) {
+                    ldapPort = 389;
+                }
+            }
+
             //Try to connect of the LDAP server and it sends the credentials to the model (to the presenter).
-            ldapOrganizationPresenter.setLDAP("2.234.128.81",389, userNameLDAP.getText().toString(), passwordLDAP.getText().toString());
+            ldapOrganizationPresenter.setLDAP(ldapServer,ldapPort, userNameLDAP.getText().toString(), passwordLDAP.getText().toString());
             try {
                 ldapOrganizationPresenter.bind();
                 ldapOrganizationPresenter.search();

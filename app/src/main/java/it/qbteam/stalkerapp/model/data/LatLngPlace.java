@@ -37,7 +37,7 @@ public class LatLngPlace {
     }
 
 
-    public static List<LatLngPlace> updatePlace(SharedPreferences mPref, Gson gson) throws JSONException, IOException, ClassNotFoundException {
+    public static List<LatLngPlace> updatePlace(SharedPreferences mPref, Gson gson) throws JSONException {
         List<LatLngPlace> latLngPlaceList= new ArrayList<>();
         List<Place> list;
        // list=storage.deserializePlaceInLocal();

@@ -37,6 +37,8 @@ import android.util.Log;
 import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -46,6 +48,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.maps.android.PolyUtil;
 import org.json.JSONException;
 import java.io.IOException;
@@ -142,7 +145,7 @@ public class TrackingStalker extends Service {
         userToken = mPrefs.getString("userToken", "");
         trackingDistance = new TrackingDistance();
         prefsEditor = mPrefs.edit();
-        gson = new Gson();
+        gson = Converters.registerOffsetDateTime(new GsonBuilder()).create();
         switchPriority(0);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -794,6 +797,8 @@ public class TrackingStalker extends Service {
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
                         organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
+                        System.out.println("\nORGANIZATION ACCESS\n");
+                        System.out.println(organizationAccess.toString());
 
                         //HomePageActivity.playPauseTimeService();
                         HomePageActivity.resetTime();

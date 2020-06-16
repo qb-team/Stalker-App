@@ -30,7 +30,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.webianks.library.scroll_choice.ScrollChoice;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
@@ -102,7 +104,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         View view = inflater.inflate(R.layout.fragment_mystalker_list, container, false);
         refresh = view.findViewById(R.id.swiperefreshID);
         refresh.setColorSchemeResources(R.color.colorAccent);
-        gson = new Gson();
+        gson = Converters.registerOffsetDateTime(new GsonBuilder()).create();
         auxList= new ArrayList<>();
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);

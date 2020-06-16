@@ -25,9 +25,11 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -95,7 +97,7 @@ public class AccessHistoryFragment extends Fragment implements SearchView.OnQuer
         errorText = view.findViewById(R.id.errorTextID);
         mPrefs = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         prefsEditor =  mPrefs.edit();
-        gson = new Gson();
+        gson = Converters.registerOffsetDateTime(new GsonBuilder()).create();;
         printAccess();
 
         buttonDelete = view.findViewById(R.id.accessID);

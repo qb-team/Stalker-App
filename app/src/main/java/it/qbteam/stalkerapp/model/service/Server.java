@@ -169,7 +169,9 @@ public class Server {
                     }
                     else if(type==-1 && response.code()==202){
                         //serialize in local the object List<OrganizationAccess>.
+                        System.out.println("DATA: 0" + organizationAccess.getEntranceTimestamp() + " " + organizationAccess.getExitTimestamp());
                         String organizationAccessJson = gson.toJson(organizationAccess);
+                        System.out.println(organizationAccessJson);
                         prefEditor.putString("organizationAccess",organizationAccessJson);
                         prefEditor.commit();
                     }

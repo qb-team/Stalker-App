@@ -19,7 +19,6 @@ public interface MyStalkersListContract {
 
     interface Presenter {
         void updateFile(List<Organization> list, String path) throws IOException, JSONException;
-        OrganizationMovement getOrganizationMovement() throws IOException, ClassNotFoundException;
         void addOrganizationLocal(Organization organization , List<Organization> list, String path) throws IOException, JSONException;
         void addOrganizationServer(Organization organization, String UID, String userToken) throws IOException, JSONException;
         void removeOrganizationLocal(Organization organization, List<Organization> list, String path) throws IOException, JSONException;

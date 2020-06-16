@@ -2,10 +2,14 @@ package it.qbteam.stalkerapp.model.authentication;
 
 import androidx.annotation.NonNull;
 import it.qbteam.stalkerapp.contract.LoginContract;
+import it.qbteam.stalkerapp.model.service.Storage;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.io.IOException;
 
 //Modello di Login
 public class LogInModel implements LoginContract.Interactor {
@@ -24,9 +28,7 @@ public class LogInModel implements LoginContract.Interactor {
             .signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-
                         mOnLoginListener.onSuccess();
-
                     }
                     else {
                         mOnLoginListener.onFailure((FirebaseException) task.getException());

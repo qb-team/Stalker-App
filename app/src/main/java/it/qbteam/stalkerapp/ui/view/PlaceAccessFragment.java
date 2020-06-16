@@ -1,6 +1,7 @@
 package it.qbteam.stalkerapp.ui.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,26 +13,33 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
-import it.qbteam.stalkerapp.contract.PlaceAccessContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
-import it.qbteam.stalkerapp.presenter.PlaceAccessPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import lombok.SneakyThrows;
 
-public class PlaceAccessFragment extends Fragment implements OnBackPressListener, PlaceAccessContract.View {
+public class PlaceAccessFragment extends Fragment implements OnBackPressListener {
     private Bundle bundle;
-    private PlaceAccessPresenter placeAccessPresenter;
     private TableRow.LayoutParams  params1;
     private TableRow.LayoutParams  params2;
     private TableLayout tbl;
     private FloatingActionButton buttonDelete;
     private FragmentListenerFeatures fragmentListenerFeatures;
+    private SharedPreferences mPrefs;
+    private List<PlaceAccess> placeAccessList;
+    private static final String SHARED_PREFS = "sharedPrefs";
+    private SharedPreferences.Editor prefsEditor;
+    private Gson gson;
+
 
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
@@ -59,15 +67,18 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         View view = inflater.inflate(R.layout.fragment_place_access, container, false);
         bundle = this.getArguments();
         getActivity().setTitle("Storico accessi luoghi");
-        placeAccessPresenter = new PlaceAccessPresenter(this);
 
         params1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f);
         params2 = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tbl=(TableLayout) view.findViewById(R.id.accessTableID);
-        try {
-            placeAccessPresenter.getPlaceAccessList();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        mPrefs = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        prefsEditor =  mPrefs.edit();
+        gson = new Gson();
+        Type type = new TypeToken<List<PlaceAccess>>(){}.getType();
+        String placeAccessListJson = mPrefs.getString("placeAccessList",null);
+        placeAccessList = gson.fromJson(placeAccessListJson, type);
+        if(placeAccessList!=null){
+            printPlaceAccess();
         }
         buttonDelete= view.findViewById(R.id.deleteAccessID);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -75,11 +86,9 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
             @Override
             public void onClick(View v) {
 
-                try {
-                    placeAccessPresenter.deletePlaceAccess(bundle.getLong("orgID"));
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                deletePlaceAccess();
+                prefsEditor.putString("placeAccessList",null);
+                prefsEditor.commit();
 
             }
         });
@@ -103,10 +112,8 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
 
     }
 
-    @Override
-    public void onSuccessGetPlaceAccessInLocal(List<PlaceAccess> placeAccessList) {
 
-        if(placeAccessList!=null&&placeAccessList.size()!=0){
+    public void printPlaceAccess() {
             for(int i=0;i<placeAccessList.size();i++){
                     if((placeAccessList.get(i).getOrgId()).equals(bundle.getLong("orgID"))){
                         //Creating new tablerows and textviews
@@ -137,11 +144,11 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                         tbl.addView(row);
                     }
             }
-        }
+
     }
 
-    @Override
-    public void onSuccessDeletePlaceAccess() {
+
+    public void deletePlaceAccess() {
             tbl.removeAllViews();
     }
 }

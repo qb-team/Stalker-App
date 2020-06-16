@@ -629,11 +629,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         @Override
         public void onReceive(Context context, Intent intent) {
                 Fragment frag = (AccessHistoryFragment )ActionTabFragment.getAccessHistoryFragment();
-                try {
-                    ((AccessHistoryFragment) frag).printAccess();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+            ((AccessHistoryFragment) frag).saveAccess();
         }
     }
 

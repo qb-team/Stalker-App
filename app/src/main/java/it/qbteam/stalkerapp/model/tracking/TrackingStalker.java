@@ -35,10 +35,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -46,12 +44,12 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import org.json.JSONException;
-import org.slf4j.helpers.Util;
-
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +120,7 @@ public class TrackingStalker extends Service {
     private String userToken;
     private OrganizationMovement organizationMovement;
     private PlaceMovement placeMovement;
+    private List<PlaceAccess> placeAccessList;
 
     //usati una volta che l'app è killata.
     private static final String SHARED_PREFS = "sharedPrefs";
@@ -136,7 +135,7 @@ public class TrackingStalker extends Service {
         latLngOrganizationList=new ArrayList<>();
         latLngPlaceList=new ArrayList<>();
         organizationAccess=new OrganizationAccess();
-        storage = new Storage(null,null, null, null);
+        storage = new Storage(null,null);
         server = new Server(null,null);
         timer = new Timer();
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -323,10 +322,10 @@ public class TrackingStalker extends Service {
 
                         if (HomePageActivity.getSwitcherModeStatus()) {
                             //Comunicates the server that user is outside the organization(authenticated).
-                            server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), userToken, -1, organizationMovement.getExitToken(), organizationAccess);
+                            server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), userToken, -1, organizationMovement.getExitToken(),organizationAccess,prefsEditor,gson);
                         } else {
                             //Comunicates the server that user is outside the organization(anonymous).
-                            server.performOrganizationMovementServer(null, insideOrganization.getOrgID(),userToken, -1, organizationMovement.getExitToken(), organizationAccess);
+                            server.performOrganizationMovementServer(null, insideOrganization.getOrgID(),userToken, -1, organizationMovement.getExitToken(), organizationAccess,prefsEditor,gson);
                         }
 
                         flag = false;
@@ -344,18 +343,14 @@ public class TrackingStalker extends Service {
 
                         if (HomePageActivity.getSwitcherModeStatus()) {
                             //Comunicates the server that user is outside the place(authenticated).
-                            server.performPlaceMovementServer(placeMovement.getExitToken(), -1, insidePlace.getId(), insideOrganization.getOrgAuthServerID(), userToken, placeAccess);
+                            server.performPlaceMovementServer(placeMovement.getExitToken(), -1, insidePlace.getId(), insideOrganization.getOrgAuthServerID(), userToken, placeAccess,prefsEditor,gson);
                         } else {
                             //Comunicates the server that user is outside the place(anonymous).
-                            server.performPlaceMovementServer(placeMovement.getExitToken(), -1, insidePlace.getId(), null, userToken, placeAccess);
+                            server.performPlaceMovementServer(placeMovement.getExitToken(), -1, insidePlace.getId(), null, userToken, placeAccess,prefsEditor,gson);
                         }
 
                         //Deletes the place's list of the organization.
-                        try {
-                            storage.deletePlace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+
                     }
                     Intent intent = new Intent(ACTION_BROADCAST);
                     intent.putExtra(EXTRA_LOCATION, mLocation);
@@ -577,21 +572,16 @@ public class TrackingStalker extends Service {
                         Toast.makeText(getApplicationContext(), "Sei dentro al luogo: " + insidePlace.getName()+" in modo autenticato", Toast.LENGTH_SHORT).show();
 
                         //Comunicates the server that user is outside the place
-                        server.performPlaceMovementServer(null, 1, latLngPlaceList.get(i).getId(), insideOrganization.getOrgAuthServerID(), userToken,placeAccess);
+                        server.performPlaceMovementServer(null, 1, latLngPlaceList.get(i).getId(), insideOrganization.getOrgAuthServerID(), userToken,placeAccess, prefsEditor,gson);
 
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
-                                try {
-                                    placeMovement = storage.deserializePlaceMovement();
-                                    String placeMovementJson = gson.toJson(insidePlace);
-                                    String insidePlacejson = gson.toJson(insidePlace);
-                                    prefsEditor.putString("placeMovement",placeMovementJson);
-                                    prefsEditor.putString("insidePlace",insidePlacejson);
-                                    prefsEditor.commit();
-                                } catch (IOException | ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
+                                String placeMovementJson =mPrefs.getString("placeMovement",null);
+                                placeMovement= gson.fromJson(placeMovementJson,PlaceMovement.class);
+                                String insidePlacejson = gson.toJson(insidePlace);
+                                prefsEditor.putString("insidePlace",insidePlacejson);
+                                prefsEditor.commit();
                             }
                         }, delay);
                     }
@@ -605,21 +595,16 @@ public class TrackingStalker extends Service {
                         Toast.makeText(getApplicationContext(), "Sei dentro al luogo: " + insidePlace.getName()+" in modo non autenticato", Toast.LENGTH_SHORT).show();
 
                         //Comunicates the server that user is outside the place
-                        server.performPlaceMovementServer(null, 1, latLngPlaceList.get(i).getId(), null, userToken,placeAccess);
+                        server.performPlaceMovementServer(null, 1, latLngPlaceList.get(i).getId(), null, userToken,placeAccess, prefsEditor,gson);
 
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
-                                try {
-                                    placeMovement = storage.deserializePlaceMovement();
-                                    String placeMovementJson = gson.toJson(insidePlace);
+                                    String placeMovementJson =mPrefs.getString("placeMovement",null);
+                                    placeMovement= gson.fromJson(placeMovementJson,PlaceMovement.class);
                                     String insidePlacejson = gson.toJson(insidePlace);
-                                    prefsEditor.putString("placeMovement",placeMovementJson);
                                     prefsEditor.putString("insidePlace",insidePlacejson);
                                     prefsEditor.commit();
-                                } catch (IOException | ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         }, delay);
                     }
@@ -636,9 +621,26 @@ public class TrackingStalker extends Service {
                         placeAccess.setPlaceName(insidePlace.getName());
                         placeAccess.setOrgId(orgID);
                         placeAccess.setExitTimestamp(OffsetDateTime.now());
+                        Type type = new TypeToken<List<PlaceAccess>>(){}.getType();
+                        String placeAccessListJson = mPrefs.getString("placeAccessList",null);
+                        placeAccessList = gson.fromJson(placeAccessListJson, type);
+                        if(placeAccessList!=null){
+                            placeAccessList.add(placeAccess);
+                            String placeAccessListFileJson = gson.toJson(placeAccessList);
+                            prefsEditor.putString("placeAccessList",placeAccessListFileJson);
+                            prefsEditor.commit();
+                        }
+                        else{
+                            placeAccessList = new ArrayList<>();
+                            placeAccessList.add(placeAccess);
+                            String placeAccessListFileJson = gson.toJson(placeAccessList);
+                            prefsEditor.putString("placeAccessList",placeAccessListFileJson);
+                            prefsEditor.commit();
+
+                        }
 
                         //Comunicates the server that user is outside the place
-                        server.performPlaceMovementServer(placeMovement.getExitToken(), -1, latLngPlaceList.get(i).getId(), placeMovement.getOrgAuthServerId(), userToken,placeAccess);
+                        server.performPlaceMovementServer(placeMovement.getExitToken(), -1, latLngPlaceList.get(i).getId(), placeMovement.getOrgAuthServerId(), userToken,placeAccess,prefsEditor,gson);
 
                         placeMovement = null;
 
@@ -660,7 +662,7 @@ public class TrackingStalker extends Service {
 
     }
 
-    public void isInsideOrganizations(Location location) throws IOException {
+    public void isInsideOrganizations(Location location) {
 
         if(latLngOrganizationList!=null) {
 
@@ -700,23 +702,22 @@ public class TrackingStalker extends Service {
                         orgID = insideOrganization.getOrgID();
 
                         //Comunicates the server that user is inside the organization
-                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(),userToken, 1, null, organizationAccess);
+                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(),userToken, 1, null, organizationAccess,prefsEditor,gson);
 
                         //Download the places' list.
-                        server.performDownloadPlaceServer(insideOrganization.getOrgID(), userToken);
+                        server.performDownloadPlaceServer(insideOrganization.getOrgID(), userToken,prefsEditor,gson);
 
 
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
                                 try {
-                                    organizationMovement = storage.deserializeOrganizationMovementInLocal();
-                                    String organizationMovementJson = gson.toJson(organizationMovement);
+                                    String orgMove= mPrefs.getString("organizationMovement",null);
+                                    organizationMovement = gson.fromJson(orgMove,OrganizationMovement.class);
                                     String insideOrganizationJson = gson.toJson(insideOrganization);
-                                    prefsEditor.putString("organizationMovement",organizationMovementJson);
                                     prefsEditor.putString("insideOrganization",insideOrganizationJson);
                                     prefsEditor.commit();
-                                    latLngPlaceList = LatLngPlace.updatePlace(storage);
+                                    latLngPlaceList = LatLngPlace.updatePlace(mPrefs,gson);
 
                                 } catch (JSONException | IOException | ClassNotFoundException e) {
                                     e.printStackTrace();
@@ -743,22 +744,21 @@ public class TrackingStalker extends Service {
                         orgID=insideOrganization.getOrgID();
 
                         //Comunicates the server that user is inside the organization
-                        server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), userToken, 1, null, organizationAccess);
+                        server.performOrganizationMovementServer(null, insideOrganization.getOrgID(), userToken, 1, null, organizationAccess,prefsEditor,gson);
 
                         //Download the places' list.
-                        server.performDownloadPlaceServer(insideOrganization.getOrgID(), userToken);
+                        server.performDownloadPlaceServer(insideOrganization.getOrgID(), userToken,prefsEditor,gson);
 
                         timer.schedule( new TimerTask(){
                             @SneakyThrows
                             public void run() {
                                 try {
-                                    organizationMovement = storage.deserializeOrganizationMovementInLocal();
-                                    String organizationMovementJson = gson.toJson(organizationMovement);
+                                    String orgMove= mPrefs.getString("organizationMovement",null);
+                                    organizationMovement = gson.fromJson(orgMove,OrganizationMovement.class);
                                     String insideOrganizationJson = gson.toJson(insideOrganization);
-                                    prefsEditor.putString("organizationMovement",organizationMovementJson);
                                     prefsEditor.putString("insideOrganization",insideOrganizationJson);
                                     prefsEditor.commit();
-                                    latLngPlaceList = LatLngPlace.updatePlace(storage);
+                                    latLngPlaceList = LatLngPlace.updatePlace(mPrefs,gson);
 
                                 } catch (JSONException | ClassNotFoundException | IOException e) {
                                     e.printStackTrace();
@@ -790,7 +790,7 @@ public class TrackingStalker extends Service {
                         HomePageActivity.resetTime();
 
                         //Comunicates the server that user is outside the organization
-                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), userToken, -1, organizationMovement.getExitToken(), organizationAccess);
+                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), userToken, -1, organizationMovement.getExitToken(), organizationAccess,prefsEditor,gson);
 
                         // Notify anyone listening for broadcasts about the new location.
                         timer.schedule( new TimerTask(){
@@ -802,8 +802,6 @@ public class TrackingStalker extends Service {
                             }
                         }, delay);
 
-                        //Deletes the organization movement
-                        storage.deleteOrganizationMovement();
 
                         insideOrganization = null;
                         organizationMovement = null;

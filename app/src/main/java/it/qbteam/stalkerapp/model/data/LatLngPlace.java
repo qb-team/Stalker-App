@@ -1,10 +1,16 @@
 package it.qbteam.stalkerapp.model.data;
 
+import android.content.SharedPreferences;
+
 import com.google.android.gms.maps.model.LatLng;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
@@ -31,10 +37,13 @@ public class LatLngPlace {
     }
 
 
-    public static List<LatLngPlace> updatePlace( Storage storage) throws JSONException, IOException, ClassNotFoundException {
+    public static List<LatLngPlace> updatePlace(SharedPreferences mPref, Gson gson) throws JSONException, IOException, ClassNotFoundException {
         List<LatLngPlace> latLngPlaceList= new ArrayList<>();
         List<Place> list;
-        list=storage.deserializePlaceInLocal();
+       // list=storage.deserializePlaceInLocal();
+        String placeDownloadJson = mPref.getString("placeDownload", null);
+        Type type = new TypeToken<List<Place>>(){}.getType();
+        list= gson.fromJson(placeDownloadJson, type);
         if(list!=null){
             for(int i=0;i<list.size();i++){
                 LatLngPlace aux= new LatLngPlace();

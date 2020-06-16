@@ -1,5 +1,9 @@
 package it.qbteam.stalkerapp.model.service;
 
+import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -20,6 +24,7 @@ import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
+import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,7 +41,7 @@ public class Server {
     public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
         this.myStalkerListener = myStalkerListener;
         this.homeListener = homeListener;
-        storage= new Storage(null, null, null, null);
+        storage= new Storage(null, null);
     }
 
     //Removes the organization from the user's favorite organization list.
@@ -111,7 +116,7 @@ public class Server {
         });
     }
 
-    public void performDownloadPlaceServer(Long orgID, String userToken)  {
+    public void performDownloadPlaceServer(Long orgID, String userToken, SharedPreferences.Editor prefEditor, Gson gson)  {
         Place placeDownload = new Place();
         placeDownload.setOrganizationId(orgID);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
@@ -121,17 +126,13 @@ public class Server {
             @Override
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
                 System.out.print(response.body());
-                try {
-                    if(response.code()==200){
-
-                        storage.serializePlaceInLocal(response.body());
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(response.code()==200){
+                    System.out.print("Place download REGISTERED");
+                    String placeDownloadJson = gson.toJson(response.body());
+                    prefEditor.putString("placeDownload",placeDownloadJson);
+                    prefEditor.commit();
+                   // storage.serializePlaceInLocal(response.body());
                 }
-
-
             }
 
             @Override
@@ -142,7 +143,7 @@ public class Server {
     }
 
     //Tracks the user movement inside the trackingArea of an organization.
-    public void performOrganizationMovementServer(String authServerID,Long orgID,String userToken,int type,String exitToken, OrganizationAccess organizationAccess) {
+    public void performOrganizationMovementServer(String authServerID, Long orgID, String userToken, int type, String exitToken, OrganizationAccess organizationAccess, SharedPreferences.Editor prefEditor, Gson gson) {
 
         OrganizationMovement movementUpload = new OrganizationMovement();
         movementUpload.setMovementType(type);
@@ -162,16 +163,23 @@ public class Server {
 
                 try {
                     if(type==1 && response.code() == 201){
+                        System.out.print("ORGANIZATION MOVEMENT REGISTERED");
                         movementUpload.setExitToken(response.body().getExitToken());
-                        storage.serializeOrganizationMovementInLocal(movementUpload);
+                        String organizationMovementJson = gson.toJson(movementUpload);
+                        prefEditor.putString("organizationMovement",organizationMovementJson);
+                        prefEditor.commit();
+                        //storage.serializeOrganizationMovementInLocal(movementUpload);
                         storage.saveLastAccess(movementUpload);
                     }
                     else if(type==-1 && response.code() == 202){
                         //serialize in local the object List<OrganizationAccess>.
-                        storage.serializeOrganizationAccessInLocal(organizationAccess);
+                        String organizationAccessJson = gson.toJson(organizationAccess);
+                        prefEditor.putString("organizationAccess",organizationAccessJson);
+                        prefEditor.commit();
+                       // storage.serializeOrganizationAccessInLocal(organizationAccess);
                     }
 
-                } catch (IOException | ClassNotFoundException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -182,7 +190,7 @@ public class Server {
         });
 
     }
-    public void performPlaceMovementServer(String exitToken, int type, Long placeId, String authServerID, String userToken, PlaceAccess placeAccess){
+    public void performPlaceMovementServer(String exitToken, int type, Long placeId, String authServerID, String userToken, PlaceAccess placeAccess, SharedPreferences.Editor prefEditor, Gson gson){
         PlaceMovement movementUpload= new PlaceMovement();
         movementUpload.setMovementType(type);
         OffsetDateTime dateTime= OffsetDateTime.now();
@@ -199,20 +207,23 @@ public class Server {
             @Override
             public void onResponse(Call<PlaceMovement> call, Response<PlaceMovement> response) {
 
-                try {
-                    if(type==1 && response.code() == 201 ){
-                        movementUpload.setExitToken(response.body().getExitToken());
-                        storage.serializePlaceMovement(movementUpload);
-                    }
-                    else if(type==-1 && response.code() == 202){
-                        //serialize in local the object List<PlaceAccess>.
-                        storage.serializePlaceAccessInLocal(placeAccess);
-
-                    }
-
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                if(type==1 && response.code() == 201 ){
+                    movementUpload.setExitToken(response.body().getExitToken());
+                    System.out.print("PLACE MOVEMENT REGISTERED");
+                    String placeMovementJson = gson.toJson(movementUpload);
+                    prefEditor.putString("placeMovement",placeMovementJson);
+                    prefEditor.commit();
+                    //storage.serializePlaceMovement(movementUpload);
                 }
+                else if(type==-1 && response.code() == 202){
+                    //serialize in local the object List<PlaceAccess>.
+                    String placeAccessJson = gson.toJson(placeAccess);
+                    prefEditor.putString("placeAccess",placeAccessJson);
+                    prefEditor.commit();
+
+                    //storage.serializePlaceAccessInLocal(placeAccess);
+                }
+
             }
 
             @Override
@@ -261,7 +272,7 @@ public class Server {
                     }
 
                     try {
-                        Storage save = new Storage(null,null, null, null);
+                        Storage save = new Storage(null,null);
                         save.performUpdateFile(returnList,path);
                     } catch (JSONException | IOException e) {
                         e.printStackTrace();

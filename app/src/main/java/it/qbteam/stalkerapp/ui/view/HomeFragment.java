@@ -97,11 +97,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         OrganizationListPresenter = new HomePresenter(this);
 
-       /* try {
-            OrganizationListPresenter.createAllFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+
 
         path = getContext().getFilesDir() + "/Organizzazioni.txt";
     }
@@ -226,7 +222,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         if(mPrefs2.getString("userToken", "")!=null)
             OrganizationListPresenter.downloadOrganizationListServer(path,userToken = mPrefs2.getString("userToken", ""));
         else {
-            Toast.makeText(getActivity(),"Errore durante lo scaricamento della lista ciaoooo", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Errore durante lo scaricamento della lista", Toast.LENGTH_SHORT).show();
         }
         refresh.setRefreshing(false);
     }
@@ -244,6 +240,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
     @Override
     public void onFailureDownloadList(String message) {
         refresh.setRefreshing(false);
+        errorTextView.setVisibility(View.VISIBLE);
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 

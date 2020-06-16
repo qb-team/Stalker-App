@@ -1,10 +1,7 @@
 package it.qbteam.stalkerapp.model.service;
 
 import it.qbteam.stalkerapp.HomePageActivity;
-import it.qbteam.stalkerapp.contract.AccessHistoryContract;
-import it.qbteam.stalkerapp.contract.PlaceAccessContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
-import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.contract.HomeContract;
 import org.json.JSONArray;
@@ -13,7 +10,6 @@ import org.json.JSONObject;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,23 +21,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import it.qbteam.stalkerapp.contract.MyStalkersListContract;
-import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
-import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
-import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
+
 
 public class Storage implements HomeContract.Interactor, MyStalkersListContract.Interactor {
 
     private HomeContract.HomeListener homeListener;
     private MyStalkersListContract.MyStalkerListener myStalkerListener;
-    private AccessHistoryContract.AccessHistoryListener accessHistoryListener;
-    private PlaceAccessContract.PlaceAccessListener placeAccessListener;
+
 
     //Storage's constructor.
-    public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener,  AccessHistoryContract.AccessHistoryListener accessHistoryListener, PlaceAccessContract.PlaceAccessListener placeAccessListener){
+    public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener){
          this.homeListener = homeListener;
          this.myStalkerListener = myStalkerListener;
-         this.accessHistoryListener = accessHistoryListener;
-         this.placeAccessListener = placeAccessListener;
+
     }
 
     //Checks if the list of organizations already exists in local file.
@@ -119,7 +111,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         if(trovato){
             myStalkerListener.onSuccesRemove(list);
             performUpdateFile(list,path);
-
         }
     }
 
@@ -187,317 +178,6 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
             w.write(inline);
             w.flush();
             w.close();
-    }
-
-    public void serializePlaceInLocal(List<Place> place) throws IOException {
-        //Saving places' list in a file
-        File toWrite = new File(HomePageActivity.getPath()+"/PlaceList.txt");
-        FileOutputStream fos=new FileOutputStream(toWrite,false);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        // Method for serialization of OrganizationMovement
-        oos.writeObject(place);
-        oos.flush();
-        oos.close();
-        fos.close();
-    }
-    public List<Place> deserializePlaceInLocal() throws IOException, ClassNotFoundException{
-
-        List<Place> place;
-        //Reading the places' list from a file
-        FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/PlaceList.txt");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        //Method for deserialization of object
-        place = (ArrayList)ois.readObject();
-        ois.close();
-        fis.close();
-        return place;
-    }
-
-    //Deletes the current object Place serialized in a local file.
-    public void deletePlace() throws IOException {
-
-
-        FileOutputStream fos=new FileOutputStream(HomePageActivity.getPath()+"/PlaceList.txt");
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        //Write the object OrganizationMovement null==delete
-        oos.writeObject(null);
-        oos.flush();
-        oos.close();
-        fos.close();
-    }
-
-    public void serializePlaceMovement(PlaceMovement placeMovement) throws IOException {
-        //Saving of OrganizationMovement in a file
-        File toWrite = new File(HomePageActivity.getPath()+"/PlaceMovement.txt");
-        FileOutputStream fos=new FileOutputStream(toWrite,false);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        // Method for serialization of OrganizationMovement
-        oos.writeObject(placeMovement);
-        oos.flush();
-        oos.close();
-        fos.close();
-
-    }
-    public PlaceMovement deserializePlaceMovement() throws IOException, ClassNotFoundException {
-        PlaceMovement placeMovement;
-        //Reading the OrganizationMovement from a file
-        FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/PlaceMovement.txt");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        //Method for deserialization of object
-        placeMovement = (PlaceMovement)ois.readObject();
-        ois.close();
-        fis.close();
-        return placeMovement;
-    }
-
-    //Serializes the object OrganizationMovement in a local file.
-    public void serializeOrganizationMovementInLocal(OrganizationMovement organizationMovement) throws IOException {
-
-        //Saving of OrganizationMovement in a file
-        File toWrite = new File(HomePageActivity.getPath()+"/OrganizationMovement.txt");
-        FileOutputStream fos=new FileOutputStream(toWrite,false);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        // Method for serialization of OrganizationMovement
-        oos.writeObject(organizationMovement);
-        oos.flush();
-        oos.close();
-        fos.close();
-
-    }
-
-    public void deleteOrganizationMovement() throws IOException {
-        File toDelete=new File(HomePageActivity.getPath()+"/OrganizationMovement.txt");
-        FileOutputStream fos = new FileOutputStream(toDelete);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        //Write the object OrganizationMovement null==delete
-        oos.writeObject(null);
-        oos.flush();
-        oos.close();
-        fos.close();
-    }
-
-
-
-    //Deserializes the object OrganizationMovement from a local file.
-    public OrganizationMovement deserializeOrganizationMovementInLocal() throws IOException, ClassNotFoundException {
-
-        OrganizationMovement organizationMovement;
-        //Reading the OrganizationMovement from a file
-        File organizationFile = new File(HomePageActivity.getPath()+"/OrganizationMovement.txt");
-        FileInputStream fis= new FileInputStream(organizationFile);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        //Method for deserialization of object
-        organizationMovement = (OrganizationMovement)ois.readObject();
-        ois.close();
-        fis.close();
-        return organizationMovement;
-
-    }
-
-    /*public void performCreateAllFile() throws IOException {
-
-        String[] paths={HomePageActivity.getPath()+"/OrganizationMovement.txt",HomePageActivity.getPath()+"/PlaceMovement.txt",
-                HomePageActivity.getPath()+"/PlaceList.txt"};
-
-        for(int i=0; i<paths.length; i++){
-           File file=new File(paths[i]);
-           FileOutputStream fos=new FileOutputStream(file);
-           ObjectOutputStream oos=new ObjectOutputStream(fos);
-           oos.writeObject(null);
-           oos.flush();
-           oos.close();
-           fos.close();
-
-        }
-    }*/
-
-    public void serializePlaceAccessInLocal(PlaceAccess placeAccess) throws IOException, ClassNotFoundException {
-        //Saving of PlaceAccess in a file
-        List<PlaceAccess> oldList;
-        File placeAccessFile = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
-        if(placeAccessFile.length()==0 || !placeAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(placeAccessFile,false);
-            ObjectOutputStream oos=new ObjectOutputStream(fos);
-            oldList= new ArrayList<>();
-            oldList.add(placeAccess);
-            oos.writeObject(oldList);
-            oos.flush();
-            oos.close();
-            fos.close();
-        }
-        else {
-            FileInputStream fis= new FileInputStream(placeAccessFile);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            //Method for deserialization of object
-            oldList= (List<PlaceAccess>) ois.readObject();
-            ois.close();
-            fis.close();
-            if(oldList!=null)
-                oldList.add(placeAccess);
-            else{
-                oldList = new ArrayList<>();
-                oldList.add(placeAccess);
-            }
-            File toWrite = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
-            FileOutputStream fos=new FileOutputStream(toWrite);
-            ObjectOutputStream oos=new ObjectOutputStream(fos);
-            // Method for serialization of PlaceAccess
-            oos.writeObject(oldList);
-            oos.flush();
-            oos.close();
-            fos.close();
-        }
-    }
-
-    //Deserializes the object PlaceAccess from a local file.
-    public void deserializePlaceAccessInLocal() throws IOException, ClassNotFoundException {
-
-        List<PlaceAccess> placeAccessList;
-        //Reading the OrganizationMovement from a file
-        File placeAccessFile = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
-        if(placeAccessFile.length() == 0 || !placeAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(placeAccessFile);
-            ObjectOutputStream oos=new ObjectOutputStream(fos);
-            oos.writeObject(null);
-            oos.flush();
-            oos.close();
-            fos.close();
-        }
-        else{
-
-            FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/PlaceAccess.txt");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            //Method for deserialization of object
-            placeAccessList= (List<PlaceAccess>) ois.readObject();
-            ois.close();
-            fis.close();
-            placeAccessListener.onSuccessGetPlaceAccess(placeAccessList);
-        }
-    }
-    public void performDeletePlaceAccess(Long orgID) throws IOException, ClassNotFoundException {
-        List<PlaceAccess> placeAccessList;
-        //Reading the placeAccess from a file
-        File placeAccessFile = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
-        if(placeAccessFile.length() == 0 || !placeAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(placeAccessFile);
-            ObjectOutputStream oos=new ObjectOutputStream(fos);
-            oos.writeObject(null);
-            oos.flush();
-            oos.close();
-            fos.close();
-        }
-        else{
-
-            FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/PlaceAccess.txt");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            //Method for deserialization of object
-            placeAccessList= (List<PlaceAccess>) ois.readObject();
-            ois.close();
-            fis.close();
-            boolean trovato = false;
-            for (Iterator<PlaceAccess> iterator = placeAccessList.iterator(); iterator.hasNext();) {
-                PlaceAccess pa = iterator.next();
-                if (pa.getOrgId().equals(orgID)) {
-                    iterator.remove();
-                    trovato=true;
-                }
-            }
-            if(trovato){
-                File toWrite = new File(HomePageActivity.getPath()+"/PlaceAccess.txt");
-                FileOutputStream fos=new FileOutputStream(toWrite);
-                ObjectOutputStream oos=new ObjectOutputStream(fos);
-                // Method for serialization of PlaceAccess
-                oos.writeObject(placeAccessList);
-                oos.flush();
-                oos.close();
-                fos.close();
-            }
-        if(placeAccessListener != null)
-            placeAccessListener.onSuccessDelete();
-    }
-    }
-    //Serializes the object OrganizationAccess in a local file.
-    public void serializeOrganizationAccessInLocal(OrganizationAccess organizationAccess) throws IOException, ClassNotFoundException {
-        //Saving of OrganizationAccess in a file
-        List<OrganizationAccess> oldList;
-        File organizationAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        if(organizationAccessFile.length()==0 || !organizationAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(organizationAccessFile,false);
-            ObjectOutputStream oos=new ObjectOutputStream(fos);
-            oldList= new ArrayList<>();
-            oldList.add(organizationAccess);
-            oos.writeObject(oldList);
-            oos.flush();
-            oos.close();
-            fos.close();
-        }
-        else {
-            if(organizationAccess!=null){
-            FileInputStream fis= new FileInputStream(organizationAccessFile);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            //Method for deserialization of object
-            oldList= (List<OrganizationAccess>) ois.readObject();
-            ois.close();
-            fis.close();
-            if(oldList!=null)
-                oldList.add(organizationAccess);
-            else{
-                oldList = new ArrayList<>();
-                oldList.add(organizationAccess);
-            }
-            File toWrite = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-            FileOutputStream fos=new FileOutputStream(toWrite,false);
-            ObjectOutputStream oos=new ObjectOutputStream(fos);
-            // Method for serialization of OrganizationMovement
-            oos.writeObject(oldList);
-            oos.flush();
-            oos.close();
-            fos.close();
-        }
-        }
-    }
-
-    //Deserializes the object OrganizationAccess from a local file.
-    public void deserializeOrganizationAccessInLocal() throws IOException, ClassNotFoundException {
-
-        List<OrganizationAccess> organizationAccessList;
-        //Reading the OrganizationMovement from a file
-        File organizationAccessFile = new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        if(organizationAccessFile.length()==0 || !organizationAccessFile.exists()) {
-            FileOutputStream fos=new FileOutputStream(organizationAccessFile);
-            ObjectOutputStream oos=new ObjectOutputStream(fos);
-            oos.writeObject(null);
-            oos.flush();
-            oos.close();
-            fos.close();
-            accessHistoryListener.onFailureGetOrganizationAccess();
-        }
-        else{
-
-        FileInputStream fis= new FileInputStream(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        //Method for deserialization of object
-        organizationAccessList= (List<OrganizationAccess>) ois.readObject();
-        ois.close();
-        fis.close();
-        accessHistoryListener.onSuccessGetOrganizationAccess(organizationAccessList);
-        }
-    }
-
-    public void performDeleteOrganizationAccess(List<OrganizationAccess> accessList) throws IOException, ClassNotFoundException {
-        //Reading the OrganizationMovement from a file
-        File toDelete=new File(HomePageActivity.getPath()+"/OrganizationAccess.txt");
-        FileOutputStream fos=new FileOutputStream(toDelete);
-        ObjectOutputStream oos=new ObjectOutputStream(fos);
-        //Write the object OrganizationMovement null==delete
-        oos.writeObject(null);
-        oos.flush();
-        oos.close();
-        fos.close();
-        for(int i=0; i<accessList.size();i++){
-            performDeletePlaceAccess(accessList.get(i).getOrganizationId());
-        }
-        accessHistoryListener.onSuccessDelete();
     }
 
     public void saveLastAccess(OrganizationMovement organizationMovement) throws IOException {

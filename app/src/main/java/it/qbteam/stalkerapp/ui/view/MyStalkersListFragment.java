@@ -29,6 +29,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.gson.Gson;
 import com.webianks.library.scroll_choice.ScrollChoice;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
@@ -66,6 +68,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
     private List<Organization> auxList;
     private static final String SHARED_PREFS = "sharedPrefs";
     private SharedPreferences mPrefs2;
+    private Gson gson;
     private String userToken;
     private String userID;
 
@@ -99,6 +102,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
         View view = inflater.inflate(R.layout.fragment_mystalker_list, container, false);
         refresh = view.findViewById(R.id.swiperefreshID);
         refresh.setColorSchemeResources(R.color.colorAccent);
+        gson = new Gson();
         auxList= new ArrayList<>();
         recyclerView = view.findViewById(R.id.recyclerViewID);
         recyclerView.setHasFixedSize(true);
@@ -161,7 +165,8 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                 .setMessage("Sei sicuro di voler eliminare l'organizzazione?")
                 .setPositiveButton("Elimina", (dialog, whichButton) -> {
                     try {
-                        OrganizationMovement organizationMovement = myStalkersListPresenter.getOrganizationMovement();
+                         String organizationMovementJson = mPrefs2.getString("organizationMovement",null);
+                         OrganizationMovement organizationMovement = gson.fromJson(organizationMovementJson,OrganizationMovement.class);
                         if (organizationMovement !=null && organizationList.get(position).getId().equals(organizationMovement.getOrganizationId())){
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setTitle("Condizioni di eliminazione organizzazione")
@@ -177,7 +182,7 @@ public class MyStalkersListFragment extends Fragment implements MyStalkersListCo
                         else removeOrganization(position);
 
                     }
-                    catch (IOException | JSONException | ClassNotFoundException e) {
+                    catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
                     dialog.dismiss();

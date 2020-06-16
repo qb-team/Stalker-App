@@ -2,6 +2,7 @@ package it.qbteam.stalkerapp.ui.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -25,31 +26,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
-import it.qbteam.stalkerapp.contract.AccessHistoryContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
-import it.qbteam.stalkerapp.presenter.AccessHistoryPresenter;
+import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.tools.AccessHistoryViewAdapter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.OnBackPressListener;
 import it.qbteam.stalkerapp.tools.SearchViewCustom;
 
-public class AccessHistoryFragment extends Fragment implements AccessHistoryContract.View, SearchView.OnQueryTextListener, AccessHistoryViewAdapter.OrganizationAccessListener, OnBackPressListener {
+public class AccessHistoryFragment extends Fragment implements SearchView.OnQueryTextListener, AccessHistoryViewAdapter.OrganizationAccessListener, OnBackPressListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private FloatingActionButton buttonDelete;
-    private AccessHistoryPresenter accessHistoryPresenter;
     private List<OrganizationAccess> accessList;
     private TextView errorText;
     private FragmentListenerFeatures fragmentListenerFeatures;
+    private static final String SHARED_PREFS = "sharedPrefs";
+    private SharedPreferences mPrefs;
+    private SharedPreferences.Editor prefsEditor;
+    private Gson gson;
 
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
@@ -83,58 +90,68 @@ public class AccessHistoryFragment extends Fragment implements AccessHistoryCont
         recyclerView = view.findViewById(R.id.recyclerAccessViewID);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
+        accessList = new ArrayList<>();
         recyclerView.setLayoutManager(llm);
         recyclerView.setHasFixedSize(true);
         errorText = view.findViewById(R.id.errorTextID);
-
-        accessHistoryPresenter = new AccessHistoryPresenter(this);
-        try {
-            printAccess();
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        mPrefs = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        prefsEditor =  mPrefs.edit();
+        gson = new Gson();
+        printAccess();
 
         buttonDelete = view.findViewById(R.id.accessID);
         buttonDelete.setOnClickListener(v -> {
 
-            try {
-                if(accessList!=null)
-                accessHistoryPresenter.deleteOrganizationAccess(accessList);
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+            if(accessList!=null){
+                prefsEditor.putString("organizationAccessList",null);
+                prefsEditor.commit();
+                adapter = new AccessHistoryViewAdapter(null, getActivity(), this);
+                recyclerView.setAdapter(adapter);
+                errorText.setVisibility(View.VISIBLE);
             }
         });
 
         return view;
     }
 
-    public void printAccess() throws IOException, ClassNotFoundException {
-        accessHistoryPresenter.getOrganizationAccess();
-    }
-
-    @Override
-    public void onSuccessGetOrganizationAccessInLocal(List<OrganizationAccess> organizationAccessList) {
-        if (organizationAccessList != null) {
-            accessList = organizationAccessList;
-            adapter = new AccessHistoryViewAdapter(organizationAccessList, getActivity(), this);
+    public void printAccess() {
+        Type type = new TypeToken<List<OrganizationAccess>>(){}.getType();
+        String organizationAccessListJson = mPrefs.getString("organizationAccessList",null);
+        accessList = gson.fromJson(organizationAccessListJson, type);
+        if (accessList != null && accessList.size() != 0) {
+            adapter = new AccessHistoryViewAdapter(accessList, getActivity(), this);
             recyclerView.setAdapter(adapter);
             errorText.setVisibility(View.INVISIBLE);
+        } else {
+            errorText.setVisibility(View.VISIBLE);
         }
-    }
-    @Override
-    public void onFailureGetOrganizationAccessInLocal() {
-        Toast.makeText(getActivity(),"Lista storico accessi ancora vuota",Toast.LENGTH_SHORT).show();
-    }
 
-    @Override
-    public void onSuccessDeleteOrganizationAccess() {
-        accessList = null;
-        adapter = new AccessHistoryViewAdapter(null, getActivity(), this);
-        recyclerView.setAdapter(adapter);
-        errorText.setVisibility(View.VISIBLE);
     }
+    public void saveAccess(){
 
+        String organizationAccessJson =mPrefs.getString("organizationAccess",null);
+        OrganizationAccess organizationAccess = gson.fromJson(organizationAccessJson,OrganizationAccess.class);
+
+        Type type = new TypeToken<List<OrganizationAccess>>(){}.getType();
+        String organizationAccessListJson = mPrefs.getString("organizationAccessList",null);
+        accessList = gson.fromJson(organizationAccessListJson, type);
+        if(accessList!=null){
+            accessList.add(organizationAccess);
+            String organizationAccessListFileJson = gson.toJson(accessList);
+            prefsEditor.putString("organizationAccessList",organizationAccessListFileJson);
+            prefsEditor.commit();
+        }
+        else{
+            accessList = new ArrayList<>();
+            accessList.add(organizationAccess);
+            String placeAccessListFileJson = gson.toJson(accessList);
+            prefsEditor.putString("organizationAccessList",placeAccessListFileJson);
+            prefsEditor.commit();
+
+        }
+        printAccess();
+
+    }
 
     //It hides to menu actionTab the option "Aggiungi a MyStalkers".
     @Override

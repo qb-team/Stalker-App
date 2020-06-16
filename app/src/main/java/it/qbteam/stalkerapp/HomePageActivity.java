@@ -230,8 +230,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onStart() {
 
-        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
-
         if(myService==null){
             this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         }
@@ -274,14 +272,16 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         user=new User(task.getResult().getToken(),FirebaseAuth.getInstance().getCurrentUser().getUid());
-                        System.out.println("TOKEN:\n"+user.getToken().substring(0, 100) +"\n"); // stampo i primi 100 solo per dire "okay c'è"
+                       // System.out.println("TOKEN:\n"+user.getToken().substring(0, 100) +"\n"); // stampo i primi 100 solo per dire "okay c'è"
                         prefsEditor.putString("userToken",user.getToken());
                         prefsEditor.putString("userID",user.getUid());
                         prefsEditor.commit();
+                        this.bindService(new Intent(this, TrackingStalker.class), mServiceConnection, Context.BIND_AUTO_CREATE);
                     } else {
                         // Handle error -> task.getException();
                     }
                 });}
+
     //creates the action tab menu.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

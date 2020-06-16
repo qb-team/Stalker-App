@@ -163,7 +163,6 @@ public class Server {
                 try {
                     if(type==1){
                         System.out.print("RESPONSE CODE"+response.code());
-
                         System.out.print("ORGANIZATION MOVEMENT REGISTERED  " + response.body());
                         movementUpload.setExitToken(response.body().getExitToken());
                         String organizationMovementJson = gson.toJson(movementUpload);

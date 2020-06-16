@@ -712,7 +712,7 @@ public class TrackingStalker extends Service {
                         orgID = insideOrganization.getOrgID();
 
                         //Comunicates the server that user is inside the organization
-                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(),userToken, 1, null, organizationAccess,prefsEditor,gson);
+                        server.performOrganizationMovementServer(insideOrganization.getOrgAuthServerID(), insideOrganization.getOrgID(), userToken, 1, null, organizationAccess, prefsEditor, gson);
 
                         //Download the places' list.
                         server.performDownloadPlaceServer(insideOrganization.getOrgID(), userToken,prefsEditor,gson);

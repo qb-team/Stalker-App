@@ -1,5 +1,6 @@
 package it.qbteam.stalkerapp.ui.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -15,8 +18,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.unboundid.ldap.sdk.LDAPException;
 import org.json.JSONException;
@@ -28,6 +35,7 @@ import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
 import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
@@ -42,6 +50,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     private LDAPorganizationPresenter ldapOrganizationPresenter;
     private Dialog myDialog;
     private String trackingMode;
+    private Bundle bundle;
     private FragmentListenerFeatures fragmentListenerFeatures;
 
     // This method insures that the Activity has actually implemented our
@@ -68,7 +77,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ldap_organization, container, false);
-        Bundle bundle = this.getArguments();
+         bundle = this.getArguments();
         HomePageActivity.getTabLayout().setVisibility(View.GONE);
         title = view.findViewById(R.id.titleID);
         title.setText(bundle.getString("name"));
@@ -82,6 +91,8 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         serverURL = bundle.getString("serverURL");
         trackingMode = bundle.getString("trackingMode");
         authentication.setOnClickListener(this);
+        FloatingActionButton access= view.findViewById(R.id.accessID);
+        access.setOnClickListener(this);
         UrlImageViewHelper.setUrlDrawable(mImageView, bundle.getString("image"));
         if(fragmentListenerFeatures.deleteAuthButton(bundle.getString("name"))){
             authentication.setVisibility(View.INVISIBLE);
@@ -113,6 +124,39 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
             case R.id.LDAPaccessID:
                 myDialog = new Dialog(view.getContext());
                 LDAPAuthentication();
+                break;
+            case R.id.accessID:
+                Dialog accessDialog = new Dialog(getContext());
+                accessDialog.setContentView(R.layout.dialog_last_access);
+                TableLayout tableLayout= accessDialog.findViewById(R.id.scroll_table);
+                accessDialog.show();
+                Button exit=accessDialog.findViewById(R.id.exitID);
+                exit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        accessDialog.dismiss();
+                    }
+                });
+
+                OrganizationMovement om= null;
+                try {
+                    om = ldapOrganizationPresenter.getLastAccess(bundle.getLong("orgID"));
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Long orgId=bundle.getLong("orgID");
+
+                if(om!=null&&orgId.equals(om.getOrganizationId()))
+                {
+                    TableRow tr=new TableRow(getContext());
+                    TextView tv= new TextView(getContext());
+                    tv.setText("           "+om.getTimestamp().getYear()+"-"+om.getTimestamp().getMonthValue()+"-"+om.getTimestamp().getDayOfMonth()+
+                            "                       "+om.getTimestamp().getHour()+":"+om.getTimestamp().getMinute()+":"+om.getTimestamp().getSecond());
+                    tv.setGravity(Gravity.CENTER);
+                    tr.addView(tv);
+                    tableLayout.addView(tr);
+                }
+                accessDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 break;
         }
 

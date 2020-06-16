@@ -326,6 +326,7 @@ public class TrackingStalker extends Service {
 
                         flag = false;
 
+
                         organizationMovement = null;
                         insideOrganization =null;
                         String organizationMovementJson = gson.toJson(null);
@@ -333,10 +334,6 @@ public class TrackingStalker extends Service {
                         prefsEditor.putString("organizationMovement",organizationMovementJson);
                         prefsEditor.putString("insideOrganization",insideOrganizationJson);
                         prefsEditor.commit();
-
-                        Intent intent = new Intent(ACTION_BROADCAST);
-                        intent.putExtra(EXTRA_LOCATION, mLocation);
-                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
                     if (insidePlace != null) {
 
@@ -382,6 +379,14 @@ public class TrackingStalker extends Service {
             HomePageActivity.playPauseTimeService();
             HomePageActivity.resetTime();
 
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(ACTION_BROADCAST);
+                    intent.putExtra(EXTRA_LOCATION, mLocation);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                }
+            },5000);
          //Reset of all parameters.
          Log.i(TAG, "Removing location updates");
 

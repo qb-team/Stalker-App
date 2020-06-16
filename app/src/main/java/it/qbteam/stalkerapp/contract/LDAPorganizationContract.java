@@ -5,6 +5,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
+
 //The contract interface describes the communication between view and presenter. It helps us to design in a cleaner way the interaction.
 public interface LDAPorganizationContract {
 
@@ -18,6 +20,7 @@ public interface LDAPorganizationContract {
          void setLDAP(String host, int port, String bindDN, String password);
          void bind() throws InterruptedException, LDAPException, ExecutionException;
          void search() throws ExecutionException, InterruptedException, IOException, JSONException;
+        OrganizationMovement getLastAccess(Long orgID) throws IOException, ClassNotFoundException;
     }
 
     interface Interactor {

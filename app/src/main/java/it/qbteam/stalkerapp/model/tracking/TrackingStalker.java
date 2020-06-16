@@ -331,7 +331,6 @@ public class TrackingStalker extends Service {
 
 
                         organizationMovement = null;
-                        insideOrganization =null;
                         String organizationMovementJson = gson.toJson(null);
                         String insideOrganizationJson = gson.toJson(null);
                         prefsEditor.putString("organizationMovement",organizationMovementJson);

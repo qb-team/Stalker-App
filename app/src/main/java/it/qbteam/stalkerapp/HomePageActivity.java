@@ -326,6 +326,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 HomeFragment frag = (HomeFragment)ActionTabFragment.getHomeFragment();
                 frag.alphabeticalOrder();
                 break;
+            case R.id.helperLinkID:
+                Uri uri = Uri.parse("https://stalker-manuale-utente.readthedocs.io/app/funzionalita/"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

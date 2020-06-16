@@ -52,6 +52,11 @@
                 android:id="@+id/alphabeticalOrderID"
                 android:title="Ordinamento alfabetico" />
 
+            <item
+                android:id="@+id/helperLinkID"
+                android:title="Guida Stalker"
+                />
+
         </menu>
     </item>
 

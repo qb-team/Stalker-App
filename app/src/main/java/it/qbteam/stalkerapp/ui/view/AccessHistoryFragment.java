@@ -58,6 +58,8 @@ public class AccessHistoryFragment extends Fragment implements SearchView.OnQuer
     private SharedPreferences mPrefs;
     private SharedPreferences.Editor prefsEditor;
     private Gson gson;
+    private MenuItem searchForDay;
+    private  SearchView searchView;
 
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
@@ -160,7 +162,8 @@ public class AccessHistoryFragment extends Fragment implements SearchView.OnQuer
         MenuItem item = menu.findItem(R.id.searchID);
         item.setVisible(true);
         menu.findItem(R.id.search_forID).setVisible(false);
-        SearchView searchView = (SearchView) item.getActionView();
+        searchForDay = menu.findItem(R.id.speacificDateID);
+        searchView = (SearchView) item.getActionView();
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -197,10 +200,10 @@ public class AccessHistoryFragment extends Fragment implements SearchView.OnQuer
                 break;
 
             case R.id.speacificDateID:
-
+                //searchForDay(accessList);
+                item.setChecked(true);
+                new SearchViewCustom().setSearchIconResource(R.drawable.ic_search_black_24dp, true, false).setSearchHintText("YYYY/MM/DD").format(searchView);
                 break;
-
-
         }
         return true;
     }
@@ -214,7 +217,17 @@ public class AccessHistoryFragment extends Fragment implements SearchView.OnQuer
     public boolean onQueryTextChange(String newText) {
         String userInput = newText.toLowerCase();
         List<OrganizationAccess> newList = new ArrayList<>();
-        if (accessList != null) {
+
+         if (searchForDay.isChecked() && accessList != null){//Search for Day
+            for (int i = 0; i < accessList.size(); i++) {
+                String date = accessList.get(i).getEntranceTimestamp().getYear()+"/"+accessList.get(i).getEntranceTimestamp().getMonthValue()+"/"+accessList.get(i).getEntranceTimestamp().getDayOfMonth();
+                    if (date.toLowerCase().contains(userInput))
+                        newList.add(accessList.get(i));
+                }
+                adapter = new AccessHistoryViewAdapter(newList, getActivity(), this);
+                recyclerView.setAdapter(adapter);
+         }
+         else if (!searchForDay.isChecked() && accessList != null) {
             for (int i = 0; i < accessList.size(); i++) {
                 if (accessList.get(i).getOrgName().toLowerCase().contains(userInput))
                     newList.add(accessList.get(i));
@@ -287,7 +300,6 @@ public class AccessHistoryFragment extends Fragment implements SearchView.OnQuer
     }
 
     public void searchForDay(List<OrganizationAccess>list){
-
     }
 
     static final Comparator<OrganizationAccess> byDateCreasing = (o1, o2) -> o1.getExitTimestamp().compareTo(o2.getExitTimestamp());

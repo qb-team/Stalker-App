@@ -33,11 +33,6 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
         storage.performUpdateFile(list,path);
     }
 
-   /* @Override
-    public void createAllFile() throws IOException {
-        storage.performCreateAllFile();
-    }*/
-
     //Calls the the method performDownloadFileServer(path,userToken) of the class Server(persistent layer of the server).
     @Override
     public void downloadOrganizationListServer(String path, String userToken)  {

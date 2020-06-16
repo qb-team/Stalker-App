@@ -717,7 +717,7 @@ public class TrackingStalker extends Service {
                                     prefsEditor.commit();
                                     latLngPlaceList = LatLngPlace.updatePlace(mPrefs,gson);
 
-                                } catch (JSONException | IOException | ClassNotFoundException e) {
+                                } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -758,11 +758,11 @@ public class TrackingStalker extends Service {
                                     prefsEditor.commit();
                                     latLngPlaceList = LatLngPlace.updatePlace(mPrefs,gson);
 
-                                } catch (JSONException | ClassNotFoundException | IOException e) {
+                                } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
-                        }, 3000);
+                        }, 2000);
                     }
                 }
                 else {

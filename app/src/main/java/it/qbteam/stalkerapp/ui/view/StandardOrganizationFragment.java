@@ -36,12 +36,6 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     private StandardOrganizationPresenter standardOrganizationPresenter;
     private FragmentListenerFeatures fragmentListenerFeatures;
 
-    //Interfate to communicate with MyStalkerListFragment through the HomePageActivity.
-    public interface StandardOrganizationFragmentListener {
-
-        void disableScroll(boolean enable);
-    }
-
     // This method insures that the Activity has actually implemented our
     // listener and that it isn't null.
     @Override
@@ -58,7 +52,7 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
     //Creation of the fragment as a component.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        standardOrganizationPresenter= new StandardOrganizationPresenter(this);
+        standardOrganizationPresenter= new StandardOrganizationPresenter();
         setHasOptionsMenu(true);
     }
 

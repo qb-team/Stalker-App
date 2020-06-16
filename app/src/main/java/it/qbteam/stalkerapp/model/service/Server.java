@@ -24,7 +24,6 @@ import it.qbteam.stalkerapp.contract.MyStalkersListContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Place;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceMovement;
-import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -131,7 +130,6 @@ public class Server {
                     String placeDownloadJson = gson.toJson(response.body());
                     prefEditor.putString("placeDownload",placeDownloadJson);
                     prefEditor.commit();
-                   // storage.serializePlaceInLocal(response.body());
                 }
             }
 
@@ -168,7 +166,6 @@ public class Server {
                         String organizationMovementJson = gson.toJson(movementUpload);
                         prefEditor.putString("organizationMovement",organizationMovementJson);
                         prefEditor.commit();
-                        //storage.serializeOrganizationMovementInLocal(movementUpload);
                         storage.saveLastAccess(movementUpload);
                     }
                     else if(type==-1 && response.code() == 202){
@@ -176,7 +173,6 @@ public class Server {
                         String organizationAccessJson = gson.toJson(organizationAccess);
                         prefEditor.putString("organizationAccess",organizationAccessJson);
                         prefEditor.commit();
-                       // storage.serializeOrganizationAccessInLocal(organizationAccess);
                     }
 
                 } catch (IOException e) {
@@ -213,15 +209,12 @@ public class Server {
                     String placeMovementJson = gson.toJson(movementUpload);
                     prefEditor.putString("placeMovement",placeMovementJson);
                     prefEditor.commit();
-                    //storage.serializePlaceMovement(movementUpload);
                 }
                 else if(type==-1 && response.code() == 202){
                     //serialize in local the object List<PlaceAccess>.
                     String placeAccessJson = gson.toJson(placeAccess);
                     prefEditor.putString("placeAccess",placeAccessJson);
                     prefEditor.commit();
-
-                    //storage.serializePlaceAccessInLocal(placeAccess);
                 }
 
             }

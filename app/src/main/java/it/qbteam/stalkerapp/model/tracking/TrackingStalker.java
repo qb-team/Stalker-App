@@ -151,11 +151,7 @@ public class TrackingStalker extends Service {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                try {
-                    onNewLocation(locationResult.getLastLocation());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                onNewLocation(locationResult.getLastLocation());
             }
         };
 
@@ -520,7 +516,7 @@ public class TrackingStalker extends Service {
         return builder.build();
     }
 
-    private void onNewLocation(Location location) throws IOException {
+    private void onNewLocation(Location location)  {
 
         mLocation=location;
 
@@ -539,7 +535,7 @@ public class TrackingStalker extends Service {
     }
 
 
-    private void handleOrganizations(Location location) throws IOException {
+    private void handleOrganizations(Location location) {
 
         isInsideOrganizations(location);
         isInsidePlace(location);
@@ -624,6 +620,7 @@ public class TrackingStalker extends Service {
                         Type type = new TypeToken<List<PlaceAccess>>(){}.getType();
                         String placeAccessListJson = mPrefs.getString("placeAccessList",null);
                         placeAccessList = gson.fromJson(placeAccessListJson, type);
+
                         if(placeAccessList!=null){
                             placeAccessList.add(placeAccess);
                             String placeAccessListFileJson = gson.toJson(placeAccessList);
@@ -681,6 +678,7 @@ public class TrackingStalker extends Service {
                 if (isInsideBoundary && isInside) {
                     HomePageActivity.setNameOrg(latLngOrganizationList.get(i).getName());
                     Long min =  HomePageActivity.getCurrentTime()/1000/60;
+
                     if(min >= 10L){// active saveBattery after 10 min
                         saveBattery = true;
                         switchPriority(2);

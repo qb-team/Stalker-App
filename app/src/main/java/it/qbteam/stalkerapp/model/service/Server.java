@@ -152,6 +152,7 @@ public class Server {
             movementUpload.setOrgAuthServerId(authServerID);
         if(type == -1)
             movementUpload.setExitToken(exitToken);
+        System.out.print("MOVEMENT UPLOAD "+movementUpload+ "BEARTOKENN"+userToken);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         MovementApi service = ac.createService(MovementApi.class);
         Call<OrganizationMovement> movement = service.trackMovementInOrganization(movementUpload);
@@ -161,6 +162,8 @@ public class Server {
 
                 try {
                     if(type==1){
+                        System.out.print("RESPONSE CODE"+response.code());
+
                         System.out.print("ORGANIZATION MOVEMENT REGISTERED  " + response.body());
                         movementUpload.setExitToken(response.body().getExitToken());
                         String organizationMovementJson = gson.toJson(movementUpload);

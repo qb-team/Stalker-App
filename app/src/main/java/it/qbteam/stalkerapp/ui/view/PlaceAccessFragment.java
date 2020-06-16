@@ -12,9 +12,12 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -73,7 +76,7 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
         tbl=(TableLayout) view.findViewById(R.id.accessTableID);
         mPrefs = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         prefsEditor =  mPrefs.edit();
-        gson = new Gson();
+        gson = Converters.registerOffsetDateTime(new GsonBuilder()).create();
         Type type = new TypeToken<List<PlaceAccess>>(){}.getType();
         String placeAccessListJson = mPrefs.getString("placeAccessList",null);
         placeAccessList = gson.fromJson(placeAccessListJson, type);

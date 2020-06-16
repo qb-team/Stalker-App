@@ -10,6 +10,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+
+import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.ApiClient;
 import it.qbteam.stalkerapp.model.backend.api.FavoriteApi;
 import it.qbteam.stalkerapp.model.backend.api.MovementApi;
@@ -30,11 +32,9 @@ import retrofit2.Response;
 
 public class Server {
 
-
     private  MyStalkersListContract.MyStalkerListener myStalkerListener;
     private  HomeContract.HomeListener homeListener;
     private Storage storage;
-
 
     //Server's constructor.
     public Server(MyStalkersListContract.MyStalkerListener myStalkerListener, HomeContract.HomeListener homeListener) {
@@ -160,15 +160,15 @@ public class Server {
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
                 try {
-                    if(type==1 && response.code() == 201){
-                        System.out.print("ORGANIZATION MOVEMENT REGISTERED");
+                    if(type==1){
+                        System.out.print("ORGANIZATION MOVEMENT REGISTERED  " + response.body());
                         movementUpload.setExitToken(response.body().getExitToken());
                         String organizationMovementJson = gson.toJson(movementUpload);
                         prefEditor.putString("organizationMovement",organizationMovementJson);
                         prefEditor.commit();
                         storage.saveLastAccess(movementUpload);
                     }
-                    else if(type==-1 && response.code() == 202){
+                    else if(type==-1){
                         //serialize in local the object List<OrganizationAccess>.
                         String organizationAccessJson = gson.toJson(organizationAccess);
                         prefEditor.putString("organizationAccess",organizationAccessJson);

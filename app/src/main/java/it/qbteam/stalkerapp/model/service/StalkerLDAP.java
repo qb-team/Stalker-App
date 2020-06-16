@@ -30,8 +30,6 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
             this.bindDN = binDn;
             this.bindPassword = password;
             this.ldaPlistener = ldaPlistener;
-
-
         }
 
         //Uses to authenticate clients to the directory server,

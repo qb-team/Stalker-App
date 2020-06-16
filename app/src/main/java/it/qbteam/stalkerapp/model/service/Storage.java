@@ -28,12 +28,10 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     private HomeContract.HomeListener homeListener;
     private MyStalkersListContract.MyStalkerListener myStalkerListener;
 
-
     //Storage's constructor.
     public Storage(HomeContract.HomeListener homeListener, MyStalkersListContract.MyStalkerListener myStalkerListener){
          this.homeListener = homeListener;
          this.myStalkerListener = myStalkerListener;
-
     }
 
     //Checks if the list of organizations already exists in local file.

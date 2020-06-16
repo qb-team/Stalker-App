@@ -140,6 +140,7 @@ public class TrackingStalker extends Service {
         timer = new Timer();
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         userToken = mPrefs.getString("userToken", "");
+        System.out.print("USER TOKEN SERVICE  "+ userToken);
         trackingDistance = new TrackingDistance();
         prefsEditor = mPrefs.edit();
         gson = new Gson();
@@ -327,6 +328,16 @@ public class TrackingStalker extends Service {
                         flag = false;
 
                         organizationMovement = null;
+                        insideOrganization =null;
+                        String organizationMovementJson = gson.toJson(null);
+                        String insideOrganizationJson = gson.toJson(null);
+                        prefsEditor.putString("organizationMovement",organizationMovementJson);
+                        prefsEditor.putString("insideOrganization",insideOrganizationJson);
+                        prefsEditor.commit();
+
+                        Intent intent = new Intent(ACTION_BROADCAST);
+                        intent.putExtra(EXTRA_LOCATION, mLocation);
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
                     if (insidePlace != null) {
 
@@ -346,11 +357,15 @@ public class TrackingStalker extends Service {
                         }
 
                         //Deletes the place's list of the organization.
-
+                        insidePlace = null;
+                        placeMovement = null;
+                        String placeMovementJson = gson.toJson(null);
+                        String insidePlacejson = gson.toJson(null);
+                        prefsEditor.putString("placeMovement",placeMovementJson);
+                        prefsEditor.putString("insidePlace",insidePlacejson);
+                        prefsEditor.commit();
                     }
-                    Intent intent = new Intent(ACTION_BROADCAST);
-                    intent.putExtra(EXTRA_LOCATION, mLocation);
-                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
                 }
             }, 2000);
 
@@ -525,7 +540,6 @@ public class TrackingStalker extends Service {
             if(!saveBattery)
                 switchPriority(trackingDistance.checkDistance(mLocation,latLngOrganizationList));
 
-           //authenticated = HomePageActivity.getSwitcherModeStatus();
             handleOrganizations(location);
         }
         // Aggiornamento notifiche quando funziona in background
@@ -640,9 +654,7 @@ public class TrackingStalker extends Service {
                         server.performPlaceMovementServer(placeMovement.getExitToken(), -1, latLngPlaceList.get(i).getId(), placeMovement.getOrgAuthServerId(), userToken,placeAccess,prefsEditor,gson);
 
                         placeMovement = null;
-
                         insidePlace = null;
-
                         String placeMovementJson = gson.toJson(null);
                         String insidePlacejson = gson.toJson(null);
                         prefsEditor.putString("placeMovement",placeMovementJson);

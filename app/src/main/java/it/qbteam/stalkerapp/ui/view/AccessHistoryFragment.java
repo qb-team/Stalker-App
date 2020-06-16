@@ -38,7 +38,6 @@ import java.util.List;
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationAccess;
-import it.qbteam.stalkerapp.model.backend.dataBackend.PlaceAccess;
 import it.qbteam.stalkerapp.tools.AccessHistoryViewAdapter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;

@@ -28,9 +28,6 @@ public class ActionTabFragment extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
 
     //Creation of the graphic part displayed by the user.

@@ -82,7 +82,6 @@ public class StandardOrganizationFragment extends Fragment implements View.OnCli
         super.onPrepareOptionsMenu(menu);
     }
 
-
     //Manages the back button.
     @Override
     public boolean onBackPressed() {

@@ -49,7 +49,7 @@ public class AccessHistoryViewAdapter extends RecyclerView.Adapter<AccessHistory
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         OrganizationAccess oa = organizationAccessList.get(position);
-        if(oa.getEntranceTimestamp()!=null) {
+        if(oa!=null && oa.getEntranceTimestamp()!=null) {
             holder.nameOrg.setText(oa.getOrgName());
             holder.date.setText(oa.getEntranceTimestamp().getYear() + "/" + oa.getEntranceTimestamp().getMonthValue() + "/" + oa.getEntranceTimestamp().getDayOfMonth());
             holder.access.setText(oa.getEntranceTimestamp().getHour() + ":" + oa.getEntranceTimestamp().getMinute() + ":" + oa.getEntranceTimestamp().getSecond());

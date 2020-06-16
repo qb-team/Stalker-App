@@ -96,9 +96,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
         super.onCreate(savedInstanceState);
         mPrefs2 = this.getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         OrganizationListPresenter = new HomePresenter(this);
-
-
-
         path = getContext().getFilesDir() + "/Organizzazioni.txt";
     }
 

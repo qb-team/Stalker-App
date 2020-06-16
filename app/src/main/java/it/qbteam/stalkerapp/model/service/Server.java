@@ -126,7 +126,6 @@ public class Server {
             public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
                 System.out.print(response.body());
                 if(response.code()==200){
-                    System.out.print("Place download REGISTERED");
                     String placeDownloadJson = gson.toJson(response.body());
                     prefEditor.putString("placeDownload",placeDownloadJson);
                     prefEditor.commit();
@@ -161,16 +160,14 @@ public class Server {
             public void onResponse(Call<OrganizationMovement> call, Response<OrganizationMovement> response) {
 
                 try {
-                    if(type==1){
-                        System.out.print("RESPONSE CODE"+response.code());
-                        System.out.print("ORGANIZATION MOVEMENT REGISTERED  " + response.body());
+                    if(type==1 && response.code()==201){
                         movementUpload.setExitToken(response.body().getExitToken());
                         String organizationMovementJson = gson.toJson(movementUpload);
                         prefEditor.putString("organizationMovement",organizationMovementJson);
                         prefEditor.commit();
                         storage.saveLastAccess(movementUpload);
                     }
-                    else if(type==-1){
+                    else if(type==-1 && response.code()==202){
                         //serialize in local the object List<OrganizationAccess>.
                         String organizationAccessJson = gson.toJson(organizationAccess);
                         prefEditor.putString("organizationAccess",organizationAccessJson);
@@ -207,7 +204,6 @@ public class Server {
 
                 if(type==1 && response.code() == 201 ){
                     movementUpload.setExitToken(response.body().getExitToken());
-                    System.out.print("PLACE MOVEMENT REGISTERED");
                     String placeMovementJson = gson.toJson(movementUpload);
                     prefEditor.putString("placeMovement",placeMovementJson);
                     prefEditor.commit();

@@ -140,7 +140,6 @@ public class TrackingStalker extends Service {
         timer = new Timer();
         mPrefs = getApplicationContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         userToken = mPrefs.getString("userToken", "");
-        System.out.print("USER TOKEN SERVICE  "+ userToken);
         trackingDistance = new TrackingDistance();
         prefsEditor = mPrefs.edit();
         gson = new Gson();

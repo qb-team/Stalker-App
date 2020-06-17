@@ -66,6 +66,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                     String creationDate=jsonObj.getString("creationDate");
                     String serverUrl;
                     String trackingArea=jsonObj.getString("trackingArea");
+
+
                     Organization organization=new Organization();
                     organization.setName(name);
                     organization.setImage(image);
@@ -80,7 +82,9 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                     organization.setCreationDate(offsetDateTime);
 
                     if(trackingMode.equals("authenticated")){
+                        String orgAuth=jsonObj.getString("orgAuth");
                         serverUrl=jsonObj.getString("authenticationServerURL");
+                        organization.setOrgAuthServerId(orgAuth);
                         organization.setAuthenticationServerURL(serverUrl);
                     }
 
@@ -116,6 +120,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     @Override
     public void performAddOrganizationLocal(Organization organization, List<Organization> list,String path) throws IOException, JSONException {
         boolean trovato = false;
+        System.out.print("LDAP"+organization.getOrgAuthServerId());
         if(list != null){
             for (Iterator<Organization> iterator = list.iterator(); iterator.hasNext();) {
                     Organization o = iterator.next();
@@ -164,6 +169,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         jo.put("lastChangeDate", list.get(i).getLastChangeDate());
         jo.put("trackingArea", list.get(i).getTrackingArea());
         jo.put("trackingMode", list.get(i).getTrackingMode());
+        if(list.get(i).getTrackingMode().equals("authenticated")&&list.get(i).getOrgAuthServerId()!=null)
+            jo.put("orgAuth",list.get(i).getOrgAuthServerId());
         ja.put(jo);
     }
 

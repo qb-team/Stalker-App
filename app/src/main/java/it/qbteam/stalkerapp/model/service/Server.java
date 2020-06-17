@@ -99,7 +99,9 @@ public class Server {
 
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(UID);
-        favoriteUpload.setOrgAuthServerId(organization.getOrgAuthServerId());
+        if(organization.getTrackingMode().equals("authenticated")&&organization.getOrgAuthServerId()!=null )
+            favoriteUpload.setOrgAuthServerId(organization.getOrgAuthServerId());
+
         favoriteUpload.setCreationDate(OffsetDateTime.now());
         favoriteUpload.setOrganizationId(organization.getId());
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
@@ -257,6 +259,7 @@ public class Server {
                         o.setStreet(response.body().get(i).getStreet());
                         o.setTrackingArea(response.body().get(i).getTrackingArea());
                         o.setTrackingMode(response.body().get(i).getTrackingMode().toString());
+
 
                         if(response.body().get(i).getTrackingMode().getValue() == "authenticated"){
                             o.setAuthenticationServerURL(response.body().get(i).getAuthenticationServerURL());

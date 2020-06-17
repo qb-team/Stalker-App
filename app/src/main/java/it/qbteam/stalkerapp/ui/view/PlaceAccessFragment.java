@@ -130,7 +130,7 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                         TextView txt4 = new TextView(getContext());
                         txt4.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
                         TextView txt5 = new TextView(getContext());
-                        txt4.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+                        txt5.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
                         //setting the textViews
                         txt1.setText(placeAccessList.get(i).getPlaceName());
                         txt2.setText(placeAccessList.get(i).getEntranceTimestamp().getYear() + "/" + placeAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + placeAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
@@ -141,11 +141,13 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                         txt2.setLayoutParams(params1);
                         txt3.setLayoutParams(params1);
                         txt4.setLayoutParams(params1);
+                        txt5.setLayoutParams(params1);
                         //the textViews have to be added to the row created
                         row.addView(txt1);
                         row.addView(txt2);
                         row.addView(txt3);
                         row.addView(txt4);
+                        row.addView(txt5);
                         row.setLayoutParams(params2);
                         tbl.addView(row);
                     }

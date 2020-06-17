@@ -177,8 +177,11 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         jo.put("lastChangeDate", list.get(i).getLastChangeDate());
         jo.put("trackingArea", list.get(i).getTrackingArea());
         jo.put("trackingMode", list.get(i).getTrackingMode());
-        if(path.equals("/data/user/0/it.qbteam.stalkerapp/files"+"/Preferiti.txt")&&list.get(i).getTrackingMode().equals("authenticated") )
+        if(path.equals("/data/user/0/it.qbteam.stalkerapp/files"+"/Preferiti.txt")&&list.get(i).getTrackingMode().equals("authenticated") ){
+            System.out.print("HO SETTATO JO");
             jo.put("orgAuthServerId",list.get(i).getOrgAuthServerId());
+
+        }
         ja.put(jo);
     }
 

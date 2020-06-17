@@ -34,7 +34,7 @@
             <item xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/navi_time_inside_PlaceID"
                 android:title="Permanenza nel luogo: "
-                app:actionLayout="@layout/time_text"
+                app:actionLayout="@layout/time_stay_place"
                 app:showAsAction="always" />
         </menu>
     </item>

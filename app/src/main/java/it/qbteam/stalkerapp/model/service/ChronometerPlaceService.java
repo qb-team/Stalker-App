@@ -47,7 +47,7 @@ public class ChronometerPlaceService extends Service {
 
         if (isRunning) {
             timeSwapBuff += timeInMilliseconds;
-            HomePageActivity.sHandler.removeCallbacks(updateTimer);
+            HomePageActivity.sHandler1.removeCallbacks(updateTimer);
             isRunning = false;
             stopSelf();
         } else {

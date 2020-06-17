@@ -84,7 +84,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
                 mPrefs = fragmentActivity.getApplicationContext().getSharedPreferences(SHARED_PREFS, fragmentActivity.getApplicationContext().MODE_PRIVATE);
                 prefsEditor = mPrefs.edit();
                 gson = Converters.registerOffsetDateTime(new GsonBuilder()).create();
-                prefsEditor.putString("OrgAuthServerId",orgAuthServerId);
+                prefsEditor.putString("orgAuthServerId",orgAuthServerId);
                 prefsEditor.commit();
                 ldaPlistener.onSuccess("Ti sei autenticato con successo");
             }

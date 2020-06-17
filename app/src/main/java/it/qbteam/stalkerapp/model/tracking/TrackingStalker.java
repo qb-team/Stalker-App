@@ -645,6 +645,8 @@ public class TrackingStalker extends Service {
                         placeAccess.setPlaceName(insidePlace.getName());
                         placeAccess.setOrgId(orgID);
                         placeAccess.setExitTimestamp(OffsetDateTime.now());
+                        placeAccess.setTimeStay(HomePageActivity.getCurrentTimePlace());
+                        System.out.print("TIME STAY  "+placeAccess.getTimeStay()+HomePageActivity.getCurrentTimePlace());
                         Type type = new TypeToken<List<PlaceAccess>>(){}.getType();
                         String placeAccessListJson = mPrefs.getString("placeAccessList",null);
                         placeAccessList = gson.fromJson(placeAccessListJson, type);
@@ -664,7 +666,7 @@ public class TrackingStalker extends Service {
 
                         }
 
-                        placeAccess.setTimeStay(HomePageActivity.getCurrentTimePlace());
+
                         //Comunicates the server that user is outside the place
                         server.performPlaceMovementServer(placeMovement.getExitToken(), -1, latLngPlaceList.get(i).getId(), placeMovement.getOrgAuthServerId(), userToken,placeAccess,prefsEditor,gson);
 

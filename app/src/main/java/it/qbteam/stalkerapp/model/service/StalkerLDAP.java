@@ -65,6 +65,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
             this.connection.close();
             if(this.result != null && this.entry != null) {
                 this.orgAuthServerId = "" + this.entry.getAttribute("uidNumber").getValue();
+                System.out.print("OrgaUTH  "+orgAuthServerId);
                 ldaPlistener.onSuccess("Ti sei autenticato con successo");
             }
             else {

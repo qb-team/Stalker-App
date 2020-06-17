@@ -44,7 +44,7 @@ public class LatLngOrganization {
                 latLngOrganization.setLatLng(list.get(i));
                 latLngOrganization.setName(list.get(i));
                 latLngOrganization.setOrganizationID(list.get(i));
-                latLngOrganization.setOrgAuthServerid(list.get(i));
+                latLngOrganization.setOrgAuthServerId(list.get(i));
                 latLngOrganizationList.add(latLngOrganization);
             }
 
@@ -69,7 +69,8 @@ public class LatLngOrganization {
     }
 
     //Sets organization's authentication server URL.
-    public void setOrgAuthServerid(Organization organization){
+    public void setOrgAuthServerId(Organization organization){
+        System.out.print("ORGAUTH  "+organizationID);
         this.orgAuthServerID = organization.getOrgAuthServerId();
     }
 

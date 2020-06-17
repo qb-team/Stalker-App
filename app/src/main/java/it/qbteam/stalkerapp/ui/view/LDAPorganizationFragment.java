@@ -237,6 +237,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         o.setCreationDate(creationDate);
         o.setTrackingMode(trackingMode);
         o.setOrgAuthServerId(StalkerLDAP.getOrgAuthServerId());
+        System.out.print("AUTH   "+StalkerLDAP.getOrgAuthServerId());
         fragmentListenerFeatures.addOrganization(o);
     }
 

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/custom_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inserisci le credenziali aziendali"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/userNameID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:hint="User name"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-light"
+            android:inputType="textEmailAddress"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/passwordID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:inputType="textPassword"
+            android:layout_centerHorizontal = "true"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
+            android:hint="Password" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/annulID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_border"
+                android:text="Annulla"
+                android:textAlignment="center"
+                android:gravity="center" />
+            <Button
+                android:id="@+id/accessID"
+                android:layout_width="wrap_content"
+                android:background="@drawable/custom_border"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:text="Accedi"
+                android:textAlignment="center"
+                android:gravity="center" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

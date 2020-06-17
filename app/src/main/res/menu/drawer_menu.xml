@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/logoutID"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="Logout" />
+    </group>
+
+    <item android:title="Info tracciamento">
+        <menu>
+            <item
+                android:id="@+id/navi_org_item"
+                app:actionLayout="@layout/text_layout_name_org"
+                app:showAsAction="always"
+                android:checkable="false"
+                android:title="Sei dentro a: "
+               />
+            <item android:id="@+id/navi_place_item"
+                app:actionLayout="@layout/text_layout_name_place"
+                android:checkable="false"
+                app:showAsAction="always"
+                android:title="Nel luogo: "
+                />
+            <item xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/navi_time_insideID"
+                android:title="Permanenza organizzazione:"
+                app:actionLayout="@layout/time_text"
+                app:showAsAction="always" />
+            <item xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/navi_time_inside_PlaceID"
+                android:title="Permanenza luogo:"
+                app:actionLayout="@layout/time_stay_place"
+                app:showAsAction="always" />
+        </menu>
+    </item>
+
+    <item android:title="Impostazioni tracciamento">
+        <menu>
+            <item android:id="@+id/nav_switchID"
+                app:actionLayout="@layout/switch_tracking"
+                android:title="Tracciamento" />
+
+            <item android:id="@+id/nav_switch_ModeID"
+                app:actionLayout="@layout/switch_mode"
+                android:title="Modalità autenticata" />
+        </menu>
+    </item>
+
+    <item android:title="Altro">
+        <menu>
+            <item
+                android:id="@+id/alphabeticalOrderID"
+                android:title="Ordinamento alfabetico" />
+
+            <item
+                android:id="@+id/helperLinkID"
+                android:title="Guida Stalker"
+                />
+
+        </menu>
+    </item>
+
+
+</menu>

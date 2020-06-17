@@ -1,8 +1,8 @@
 ---
-name: Nuovo requisito obbligatorio
-about: Nuovo requisito obbligatorio da implementare
+name: Nuovo requisito desiderabile
+about: Nuovo requisito desiderabile da implementare
 title: Codice requisito
-labels: obbligatorio
+labels: Desiderabile
 assignees: babastreio, ChristianMattei, EnricoSalmaso, FraDrago
 
 ---

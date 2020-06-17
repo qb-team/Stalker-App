@@ -46,7 +46,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.data.User;
-import it.qbteam.stalkerapp.model.service.ChronometerService;
+import it.qbteam.stalkerapp.model.service.ChronometerOrganizationService;
+import it.qbteam.stalkerapp.model.service.ChronometerPlaceService;
 import it.qbteam.stalkerapp.model.tracking.TrackingStalker;
 import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
 import it.qbteam.stalkerapp.tools.Utils;
@@ -75,15 +76,26 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private boolean mBound = false;
     private static String path = "/data/user/0/it.qbteam.stalkerapp/files";
 
-    //Time spent fields
+    //Time spent in organization fields
     public static Handler sHandler;
     private static int hours = 0;
     private static int secs = 0;
     private static int mins = 0;
     private static Long currentTime = 0L;
     private boolean isBound = false;
-    private static ChronometerService myService;
+    private static ChronometerOrganizationService myService;
     private static TextView time;
+
+    //Time spent in place fields
+    public static Handler sHandler1;
+    private static int hours1 = 0;
+    private static int secs1 = 0;
+    private static int mins1 = 0;
+    private static Long currentTime1 = 0L;
+    private boolean isBound1 = false;
+    private static ChronometerPlaceService myService1;
+    private static TextView time1;
+
     private static final String SHARED_PREFS = "sharedPrefs";
     private SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
@@ -111,7 +123,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            ChronometerService.LocalBinder binder = (ChronometerService.LocalBinder) service;
+            ChronometerOrganizationService.LocalBinder binder = (ChronometerOrganizationService.LocalBinder) service;
             myService = binder.getService();
             isBound = true;
         }
@@ -121,6 +133,25 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         public void onServiceDisconnected(ComponentName name) {
             myService = null;
             isBound = false;
+
+        }
+    };
+
+    //Connects the chronometerService to the HomePageActivity.
+    private final ServiceConnection chronometerPlaceConnection = new ServiceConnection() {
+        //Internal class method `ServiceConnection` which allows you to establish a connection with the` Bind Service`.
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ChronometerPlaceService.LocalBinder binder = (ChronometerPlaceService.LocalBinder) service;
+            myService1 = binder.getService();
+            isBound1 = true;
+        }
+
+        //Method of the internal class `ServiceConnection` which allows you to disconnect the connection with the` Bind Service`.
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            myService1 = null;
+            isBound1 = false;
 
         }
     };
@@ -163,6 +194,22 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 secs = (int) (currentTime / 1000);
                 mins = secs / 60;
                 secs = secs % 60;
+                setTime();
+            }
+        };
+
+
+        HomePageActivity.sHandler1 = new Handler() {
+
+            @Override
+            public void handleMessage(Message timeMsg) {
+                super.handleMessage(timeMsg);
+
+                currentTime1 = Long.valueOf(timeMsg.obj.toString());
+                hours1 = secs1 / 3600;
+                secs1 = (int) (currentTime1 / 1000);
+                mins1 = secs1 / 60;
+                secs1 = secs1 % 60;
                 setTime();
             }
         };
@@ -210,11 +257,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         TextView emailTextView= headerView.findViewById(R.id.emailTextDrawerID);
         emailTextView.setText(userEmail);
 
-        //imposto cronometro
+        //imposto cronometro place
         MenuItem chronometerItem=menu.findItem(R.id.navi_time_insideID);
         actionView = MenuItemCompat.getActionView(chronometerItem);
         time = actionView.findViewById(R.id.timeID);
 
+        //imposto cronometro place
+        MenuItem chronometerPlaceItem=menu.findItem(R.id.navi_time_inside_PlaceID);
+        actionView = MenuItemCompat.getActionView(chronometerItem);
+        time = actionView.findViewById(R.id.timeID);
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
@@ -231,8 +282,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onStart() {
 
         if(myService==null){
-            this.bindService(new Intent(this, ChronometerService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
+            this.bindService(new Intent(this, ChronometerOrganizationService.class), chronometerServiceConnection, Context.BIND_AUTO_CREATE);
         }
+
+        if(myService1==null){
+            this.bindService(new Intent(this, ChronometerPlaceService.class), chronometerPlaceConnection, Context.BIND_AUTO_CREATE);
+        }
+
         super.onStart();
     }
 
@@ -247,6 +303,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             this.unbindService(chronometerServiceConnection);
             isBound = false;
         }
+        if (isBound1) {
+            this.unbindService(chronometerPlaceConnection);
+            isBound1 = false;
+        }
+
 
         super.onStop();
     }
@@ -435,6 +496,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         playPauseTimeService();
         resetTime();
     }
+    public static void stopChronometerPlaceService(){
+        myService1.stopSelf();
+        playPauseTimeServicePlace();
+        resetTimePlace();
+    }
 
     //Check if the GPS is active.
     public void statusCheck() {
@@ -534,6 +600,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     public static TabLayout getTabLayout(){return ActionTabFragment.getTabLayout();}
 
+    //CRONOMETRO ORGANIZATION
     public static void setTime() {
 
         time.setText(String.format("%02d", hours) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs));
@@ -558,6 +625,34 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         secs = 0;
         setTime();
     }
+    //FINE CRONOMETRO ORGANIZATION
+
+    //CRONOMETRO PLACE
+    public static void setTimePlace() {
+
+        time1.setText(String.format("%02d", hours1) + ":" + String.format("%02d", mins1) + ":" + String.format("%02d", secs1));
+
+    }
+
+    public static Long getCurrentTimePlace(){
+
+        return currentTime1;
+
+    }
+    public static void playPauseTimeServicePlace() {
+
+        myService1.startStopPlace();
+
+    }
+    public static void resetTimePlace() {
+
+        myService1.resetPlace();
+        hours1 = 0;
+        mins1 = 0;
+        secs1 = 0;
+        setTimePlace();
+    }
+//FINE CRONOMETRO PLACE
 
     @SneakyThrows
     @Override

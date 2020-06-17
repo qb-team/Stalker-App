@@ -41,7 +41,12 @@
         android:exported="true"
         android:foregroundServiceType="location"/>
         <service
-            android:name=".model.service.ChronometerService"
+        android:name=".model.service.ChronometerOrganizationService"
+        android:enabled="true"
+        android:exported="true"
+        />
+        <service
+            android:name=".model.service.ChronometerPlaceService"
             android:enabled="true"
             android:exported="true"
             />

@@ -8,7 +8,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import it.qbteam.stalkerapp.HomePageActivity;
 
-public class ChronometerService extends Service {
+public class ChronometerOrganizationService extends Service {
 
     private boolean isRunning = false;
     private long startTime = 0;
@@ -18,7 +18,7 @@ public class ChronometerService extends Service {
     private final IBinder mBinder = new LocalBinder();
     private Message timeMsg;
 
-    public ChronometerService() { }
+    public ChronometerOrganizationService() { }
 
     public Runnable updateTimer = new Runnable() {
 
@@ -81,8 +81,8 @@ public class ChronometerService extends Service {
     }
 
     public class LocalBinder extends Binder {
-        public ChronometerService getService(){
-            return ChronometerService.this;
+        public ChronometerOrganizationService getService(){
+            return ChronometerOrganizationService.this;
         }
     }
 

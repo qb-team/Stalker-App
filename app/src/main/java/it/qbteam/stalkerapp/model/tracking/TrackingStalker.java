@@ -381,6 +381,9 @@ public class TrackingStalker extends Service {
             HomePageActivity.playPauseTimeService();
             HomePageActivity.resetTime();
 
+        HomePageActivity.playPauseTimeServicePlace();
+        HomePageActivity.resetTimePlace();
+
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -417,6 +420,7 @@ public class TrackingStalker extends Service {
             removeLocationUpdates();
             stopSelf();
             HomePageActivity.stopChronometerService();
+            HomePageActivity.stopChronometerPlaceService();
         }
 
         // Tells the system to not try to recreate the service after it has been killed.
@@ -581,6 +585,8 @@ public class TrackingStalker extends Service {
 
                     if (placeMovement == null && mPrefs.getBoolean("switchMode", false)) {
 
+                        HomePageActivity.playPauseTimeServicePlace();
+
                         insidePlace = latLngPlaceList.get(i);
 
                         placeAccessTime=OffsetDateTime.now();
@@ -603,6 +609,8 @@ public class TrackingStalker extends Service {
                     }
 
                     else if(placeMovement== null && !mPrefs.getBoolean("switchMode", false)){
+
+                        HomePageActivity.playPauseTimeServicePlace();
 
                         insidePlace = latLngPlaceList.get(i);
 
@@ -658,7 +666,8 @@ public class TrackingStalker extends Service {
 
                         //Comunicates the server that user is outside the place
                         server.performPlaceMovementServer(placeMovement.getExitToken(), -1, latLngPlaceList.get(i).getId(), placeMovement.getOrgAuthServerId(), userToken,placeAccess,prefsEditor,gson);
-
+                        
+                        HomePageActivity.resetTimePlace();
                         placeMovement = null;
                         insidePlace = null;
                         String placeMovementJson = gson.toJson(null);

@@ -82,11 +82,13 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                     organization.setCreationDate(offsetDateTime);
 
                     if(trackingMode.equals("authenticated")){
-                        String orgAuth= null;
+                        if(path.equals("/data/user/0/it.qbteam.stalkerapp/files"+"/Preferiti.txt")){
+                            String orgAuth = organization.setOrgAuthServerId(orgAuth);
+                        }
                         serverUrl=jsonObj.getString("authenticationServerURL");
 
                         //if(orgAuth!=null)
-                            organization.setOrgAuthServerId(orgAuth);
+
                         organization.setAuthenticationServerURL(serverUrl);
                     }
 

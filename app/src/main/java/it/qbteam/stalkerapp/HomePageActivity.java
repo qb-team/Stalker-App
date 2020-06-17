@@ -595,6 +595,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public static String getPath(){
+        System.out.println("PATHH" + path);
         return path;
     }
 

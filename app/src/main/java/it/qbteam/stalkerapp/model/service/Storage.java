@@ -86,8 +86,11 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
                     if(trackingMode.equals("authenticated")){
                         if(path.equals("/data/user/0/it.qbteam.stalkerapp/files/Preferiti.txt")){
-                            String orgAuth = jsonObj.getString("orgAuthServerId");
-                            organization.setOrgAuthServerId(orgAuth);
+                            String orgAuth = StalkerLDAP.getOrgAuthServerId();
+                            if(orgAuth!=null){
+                                organization.setOrgAuthServerId(orgAuth);
+                                System.out.println("HO assegnato orgAuth "+ orgAuth);
+                            }
                         }
                         serverUrl=jsonObj.getString("authenticationServerURL");
 

@@ -77,6 +77,7 @@ public class Server {
                 favorite.enqueue(new Callback<List<Organization>>() {
                     @Override
                     public void onResponse(Call<List<Organization>> call, Response<List<Organization>> response) {
+                       System.out.println("HO AGGIORNATO MYSTALKER"+ response.body());
                         try {
                             if(response.code()==200)
                                 myStalkerListener.onSuccessLoad(response.body());

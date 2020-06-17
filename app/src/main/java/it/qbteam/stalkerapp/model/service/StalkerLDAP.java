@@ -1,5 +1,13 @@
 package it.qbteam.stalkerapp.model.service;
 
+import android.content.SharedPreferences;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
+import com.fatboyindustrial.gsonjavatime.Converters;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.LDAPException;
@@ -13,7 +21,8 @@ import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
 
 public class StalkerLDAP implements LDAPorganizationContract.Interactor {
 
-        private LDAPorganizationContract.LDAPlistener ldaPlistener;
+
+    private LDAPorganizationContract.LDAPlistener ldaPlistener;
         private static final String TAG = "StalkerLDAP";
         private LDAPConnection connection;
         private BindResult result;
@@ -23,14 +32,21 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
         private static String orgAuthServerId;
         private int serverPort;
         private SearchResultEntry entry;
+        private FragmentActivity fragmentActivity;
+    //usati una volta che l'app è killata.
+    private static final String SHARED_PREFS = "sharedPrefs";
+    private SharedPreferences mPrefs;
+    private SharedPreferences.Editor prefsEditor;
+    private Gson gson;
 
         //StalkerLDAP's constructor.
-        public StalkerLDAP(String serverAddress, int port, String binDn, String password,LDAPorganizationContract.LDAPlistener ldaPlistener) {
+        public StalkerLDAP(String serverAddress, int port, String binDn, String password, LDAPorganizationContract.LDAPlistener ldaPlistener, FragmentActivity fragmentActivity) {
             this.serverAddress = serverAddress;
             this.serverPort = port;
             this.bindDN = binDn;
             this.bindPassword = password;
             this.ldaPlistener = ldaPlistener;
+            this.fragmentActivity = fragmentActivity;
         }
 
         //Uses to authenticate clients to the directory server,
@@ -65,7 +81,11 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
             this.connection.close();
             if(this.result != null && this.entry != null) {
                 this.orgAuthServerId = "" + this.entry.getAttribute("uidNumber").getValue();
-                System.out.print("OrgaUTH  "+orgAuthServerId);
+                mPrefs = fragmentActivity.getApplicationContext().getSharedPreferences(SHARED_PREFS, fragmentActivity.getApplicationContext().MODE_PRIVATE);
+                prefsEditor = mPrefs.edit();
+                gson = Converters.registerOffsetDateTime(new GsonBuilder()).create();
+                prefsEditor.putString("OrgAuthServerId",orgAuthServerId);
+                prefsEditor.commit();
                 ldaPlistener.onSuccess("Ti sei autenticato con successo");
             }
             else {

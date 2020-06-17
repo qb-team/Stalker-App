@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, Organiz
 
     //It takes care of loading the list of organizations and uploading them directly from FileSystem.
     public void checkFile()  {
-        organizationList=OrganizationListPresenter.checkLocalFile(path);
+        organizationList=OrganizationListPresenter.checkLocalFile(path,mPrefs2);
 
         if(organizationList != null){
             adapter = new OrganizationViewAdapter(organizationList, this.getContext(),this);

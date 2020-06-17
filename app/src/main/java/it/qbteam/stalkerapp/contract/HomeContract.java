@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.contract;
 
+import android.content.SharedPreferences;
+
 import org.json.JSONException;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import java.io.IOException;
@@ -16,14 +18,14 @@ public interface HomeContract {
     }
 
     interface Presenter {
-        List<Organization> checkLocalFile(String path);
+        List<Organization> checkLocalFile(String path, SharedPreferences mpref);
         void downloadOrganizationListServer(String path, String userToken) throws InterruptedException, IOException;
         void updateFile(List<Organization> list, String path) throws IOException, JSONException;
 
     }
 
     interface Interactor {
-        List<Organization> performCheckFileLocal(String path);
+        List<Organization> performCheckFileLocal(String path,SharedPreferences mpref);
         void performUpdateFile(List<Organization> list, String path) throws IOException, JSONException;
     }
 

@@ -1,5 +1,8 @@
 package it.qbteam.stalkerapp.presenter;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import com.unboundid.ldap.sdk.LDAPException;
 import org.json.JSONException;
 import java.io.IOException;
@@ -35,8 +38,8 @@ public class LDAPorganizationPresenter implements LDAPorganizationContract.Prese
 
     //Builds the instance of the class StalkerLDAP.
     @Override
-    public void setLDAP(String host, int port, String bindDN, String password) {
-        this.stalkerLDAP = new StalkerLDAP(host,  port, bindDN, password,this);
+    public void setLDAP(String host, int port, String bindDN, String password, FragmentActivity fragmentActivity) {
+        this.stalkerLDAP = new StalkerLDAP(host,  port, bindDN, password,this, fragmentActivity);
     }
 
     //Comunicates the success result of the ldap comunication to the view.

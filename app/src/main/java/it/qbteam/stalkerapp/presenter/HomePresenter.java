@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.presenter;
 
+import android.content.SharedPreferences;
+
 import org.json.JSONException;
 import it.qbteam.stalkerapp.contract.HomeContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
@@ -23,8 +25,8 @@ public class HomePresenter implements HomeContract.Presenter, HomeContract.HomeL
 
     //Calls the the method performCheckFileLocal(path) of the class Storage(persistent layer of the file system).
     @Override
-    public List<Organization> checkLocalFile(String path) {
-        return storage.performCheckFileLocal(path);
+    public List<Organization> checkLocalFile(String path, SharedPreferences mpref) {
+        return storage.performCheckFileLocal(path,mpref);
     }
 
     //Calls the the method performUpdateFile(list,path) of the class Storage(persistent layer of the file system).

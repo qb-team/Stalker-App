@@ -1,5 +1,8 @@
 package it.qbteam.stalkerapp.model.data;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,10 +37,10 @@ public class LatLngOrganization {
 
     }
 
-    public static List<LatLngOrganization> checkUpdateList(Storage storage) throws JSONException {
+    public static List<LatLngOrganization> checkUpdateList(Storage storage, SharedPreferences mpref) throws JSONException {
          List<LatLngOrganization> latLngOrganizationList= new ArrayList<>();
          List<Organization> list;
-         list=storage.performCheckFileLocal(HomePageActivity.getPath()+"/Preferiti.txt");
+         list=storage.performCheckFileLocal(HomePageActivity.getPath()+"/Preferiti.txt",mpref);
         if(list!=null) {
             for (int i = 0; i < list.size(); i++) {
                 LatLngOrganization latLngOrganization = new LatLngOrganization();

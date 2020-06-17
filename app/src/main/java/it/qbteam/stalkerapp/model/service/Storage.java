@@ -1,6 +1,8 @@
 package it.qbteam.stalkerapp.model.service;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
@@ -39,7 +41,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     //Checks if the list of organizations already exists in local file.
     @SuppressLint("SdCardPath")
     @Override
-    public List<Organization> performCheckFileLocal(String path) {
+    public List<Organization> performCheckFileLocal(String path, SharedPreferences mpref) {
 
         List<Organization> aux = new ArrayList<>();
         File organizationFile = new File(path);
@@ -86,7 +88,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
                     if(trackingMode.equals("authenticated")){
                         if(path.equals("/data/user/0/it.qbteam.stalkerapp/files/Preferiti.txt")){
-                            String orgAuth = StalkerLDAP.getOrgAuthServerId();
+                            String orgAuth = mpref.getString("orgAuthServerId",null);
                             if(orgAuth!=null){
                                 organization.setOrgAuthServerId(orgAuth);
                                 System.out.println("HO assegnato orgAuth "+ orgAuth);

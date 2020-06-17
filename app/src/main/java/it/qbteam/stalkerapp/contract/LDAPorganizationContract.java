@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.contract;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.unboundid.ldap.sdk.LDAPException;
 import org.json.JSONException;
 import java.io.IOException;
@@ -17,7 +19,7 @@ public interface LDAPorganizationContract {
     }
 
     interface Presenter {
-         void setLDAP(String host, int port, String bindDN, String password);
+         void setLDAP(String host, int port, String bindDN, String password, FragmentActivity fragmentActivity);
          void bind() throws InterruptedException, LDAPException, ExecutionException;
          void search() throws ExecutionException, InterruptedException, IOException, JSONException;
         OrganizationMovement getLastAccess(Long orgID) throws IOException, ClassNotFoundException;

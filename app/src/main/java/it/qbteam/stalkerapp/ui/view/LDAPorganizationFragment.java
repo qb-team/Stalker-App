@@ -204,7 +204,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
             }
 
             //Try to connect of the LDAP server and it sends the credentials to the model (to the presenter).
-            ldapOrganizationPresenter.setLDAP(ldapServer,ldapPort, userNameLDAP.getText().toString(), passwordLDAP.getText().toString());
+            ldapOrganizationPresenter.setLDAP(ldapServer,ldapPort, userNameLDAP.getText().toString(), passwordLDAP.getText().toString(),getActivity());
             try {
                 ldapOrganizationPresenter.bind();
                 ldapOrganizationPresenter.search();

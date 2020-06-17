@@ -146,6 +146,7 @@ public class TrackingStalker extends Service {
         trackingDistance = new TrackingDistance();
         prefsEditor = mPrefs.edit();
         gson = Converters.registerOffsetDateTime(new GsonBuilder()).create();
+
         switchPriority(0);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -278,7 +279,7 @@ public class TrackingStalker extends Service {
 
     public void updateTrackingList() throws JSONException {
 
-        latLngOrganizationList=LatLngOrganization.checkUpdateList(storage);
+        latLngOrganizationList=LatLngOrganization.checkUpdateList(storage, mPrefs);
     }
     public void requestLocationUpdates() {
 

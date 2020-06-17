@@ -70,7 +70,7 @@ public class LatLngOrganization {
 
     //Sets organization's authentication server URL.
     public void setOrgAuthServerid(Organization organization){
-        this.orgAuthServerID = organization.getAuthenticationServerURL();
+        this.orgAuthServerID = organization.getOrgAuthServerId();
     }
 
     //Returns the organization's authentication server URL.

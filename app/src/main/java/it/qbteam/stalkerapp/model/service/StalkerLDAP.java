@@ -20,7 +20,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
         private String bindDN;
         private String bindPassword;
         private String serverAddress;
-        private String orgAuthServerId;
+        private static String orgAuthServerId;
         private int serverPort;
         private SearchResultEntry entry;
 
@@ -80,5 +80,7 @@ public class StalkerLDAP implements LDAPorganizationContract.Interactor {
             return bindPassword;
         }
 
-
+        public static String getOrgAuthServerId(){
+        return orgAuthServerId;
+    }
     }

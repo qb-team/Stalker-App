@@ -85,11 +85,15 @@ public class Organization implements Comparable<Organization>, Serializable {
   @SerializedName(SERIALIZED_NAME_TRACKING_AREA)
   private String trackingArea;
 
+  public static final String SERIALIZED_ORG_AUTH_SERVER_ID = "orgAuthServerId";
+  @SerializedName(SERIALIZED_ORG_AUTH_SERVER_ID)
+  private String orgAuthServerId;
 
   @Override
   public int compareTo(Organization o) {
     return name.compareTo(o.getName());
   }
+
 
   /**
    * How an user who added to its favorites the organization can be tracked inside the organization&#39;s trackingArea and its places.
@@ -159,6 +163,14 @@ public class Organization implements Comparable<Organization>, Serializable {
   public Organization setId(Long id) {
     this.id = id;
     return this;
+  }
+
+  public void setOrgAuthServerId(String auth){
+    this.orgAuthServerId=auth;
+  }
+
+  public String getOrgAuthServerId(){
+    return this.orgAuthServerId;
   }
 
   /**

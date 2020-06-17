@@ -646,7 +646,6 @@ public class TrackingStalker extends Service {
                         placeAccess.setOrgId(orgID);
                         placeAccess.setExitTimestamp(OffsetDateTime.now());
                         placeAccess.setTimeStay(HomePageActivity.getCurrentTimePlace());
-                        System.out.print("TIME STAY  "+placeAccess.getTimeStay()+HomePageActivity.getCurrentTimePlace());
                         Type type = new TypeToken<List<PlaceAccess>>(){}.getType();
                         String placeAccessListJson = mPrefs.getString("placeAccessList",null);
                         placeAccessList = gson.fromJson(placeAccessListJson, type);

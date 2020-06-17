@@ -36,6 +36,7 @@ import it.qbteam.stalkerapp.R;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.contract.LDAPorganizationContract;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
+import it.qbteam.stalkerapp.model.service.StalkerLDAP;
 import it.qbteam.stalkerapp.presenter.LDAPorganizationPresenter;
 import it.qbteam.stalkerapp.tools.BackPressImplementation;
 import it.qbteam.stalkerapp.tools.FragmentListenerFeatures;
@@ -235,7 +236,7 @@ public class LDAPorganizationFragment extends Fragment implements View.OnClickLi
         o.setAuthenticationServerURL(serverURL);
         o.setCreationDate(creationDate);
         o.setTrackingMode(trackingMode);
-
+        o.setOrgAuthServerId(StalkerLDAP.getOrgAuthServerId());
         fragmentListenerFeatures.addOrganization(o);
     }
 

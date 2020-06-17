@@ -1,5 +1,7 @@
 package it.qbteam.stalkerapp.model.service;
 
+import android.annotation.SuppressLint;
+
 import it.qbteam.stalkerapp.HomePageActivity;
 import it.qbteam.stalkerapp.model.backend.dataBackend.Organization;
 import it.qbteam.stalkerapp.model.backend.dataBackend.OrganizationMovement;
@@ -35,6 +37,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
     }
 
     //Checks if the list of organizations already exists in local file.
+    @SuppressLint("SdCardPath")
     @Override
     public List<Organization> performCheckFileLocal(String path) {
 
@@ -83,7 +86,8 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
 
                     if(trackingMode.equals("authenticated")){
                         if(path.equals("/data/user/0/it.qbteam.stalkerapp/files"+"/Preferiti.txt")){
-                            String orgAuth = organization.setOrgAuthServerId(orgAuth);
+                            String orgAuth = jsonObj.getString("orgAuthServerId");
+                            organization.setOrgAuthServerId(orgAuth);
                         }
                         serverUrl=jsonObj.getString("authenticationServerURL");
 
@@ -173,7 +177,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         jo.put("lastChangeDate", list.get(i).getLastChangeDate());
         jo.put("trackingArea", list.get(i).getTrackingArea());
         jo.put("trackingMode", list.get(i).getTrackingMode());
-        if(list.get(i).getTrackingMode().equals("authenticated")&&list.get(i).getOrgAuthServerId()!=null)
+        if(path.equals("/data/user/0/it.qbteam.stalkerapp/files"+"/Preferiti.txt")&&list.get(i).getTrackingMode().equals("authenticated") )
             jo.put("orgAuthServerId",list.get(i).getOrgAuthServerId());
         ja.put(jo);
     }

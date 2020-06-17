@@ -99,7 +99,7 @@ public class Server {
 
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(UID);
-        if(organization.getTrackingMode().equals("authenticated")&&organization.getOrgAuthServerId()!=null )
+        if(organization.getTrackingMode().equals("authenticated")&& organization.getOrgAuthServerId()!=null )
             favoriteUpload.setOrgAuthServerId(organization.getOrgAuthServerId());
 
         favoriteUpload.setCreationDate(OffsetDateTime.now());

@@ -666,7 +666,7 @@ public class TrackingStalker extends Service {
 
                         //Comunicates the server that user is outside the place
                         server.performPlaceMovementServer(placeMovement.getExitToken(), -1, latLngPlaceList.get(i).getId(), placeMovement.getOrgAuthServerId(), userToken,placeAccess,prefsEditor,gson);
-                        
+
                         HomePageActivity.resetTimePlace();
                         placeMovement = null;
                         insidePlace = null;

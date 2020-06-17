@@ -60,6 +60,12 @@ public class PlaceAccess implements Serializable {
   @SerializedName(SERIALIZED_NAME_PLACE)
   private String placeName;
 
+
+  public static final String SERIALIZED_ORG_TIME_STAY= "timeStay";
+  @SerializedName(SERIALIZED_ORG_TIME_STAY)
+  private Long timeStay;
+
+
   public void setOrgId(Long orgId){this.orgId=orgId;}
 
   public Long getOrgId(){return orgId;}

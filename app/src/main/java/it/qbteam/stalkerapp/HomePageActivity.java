@@ -264,8 +264,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         //imposto cronometro place
         MenuItem chronometerPlaceItem=menu.findItem(R.id.navi_time_inside_PlaceID);
-        actionView = MenuItemCompat.getActionView(chronometerItem);
-        time = actionView.findViewById(R.id.timeID);
+        actionView = MenuItemCompat.getActionView(chronometerPlaceItem);
+        time1 = actionView.findViewById(R.id.timePlaceID);
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {

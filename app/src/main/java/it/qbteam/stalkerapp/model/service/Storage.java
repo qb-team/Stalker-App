@@ -82,9 +82,11 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                     organization.setCreationDate(offsetDateTime);
 
                     if(trackingMode.equals("authenticated")){
-                        String orgAuth=jsonObj.getString("orgAuth");
+                        String orgAuth= null;
                         serverUrl=jsonObj.getString("authenticationServerURL");
-                        organization.setOrgAuthServerId(orgAuth);
+
+                        //if(orgAuth!=null)
+                            organization.setOrgAuthServerId(orgAuth);
                         organization.setAuthenticationServerURL(serverUrl);
                     }
 
@@ -170,7 +172,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         jo.put("trackingArea", list.get(i).getTrackingArea());
         jo.put("trackingMode", list.get(i).getTrackingMode());
         if(list.get(i).getTrackingMode().equals("authenticated")&&list.get(i).getOrgAuthServerId()!=null)
-            jo.put("orgAuth",list.get(i).getOrgAuthServerId());
+            jo.put("orgAuthServerId",list.get(i).getOrgAuthServerId());
         ja.put(jo);
     }
 

@@ -85,7 +85,7 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
                     organization.setCreationDate(offsetDateTime);
 
                     if(trackingMode.equals("authenticated")){
-                        if(path.equals("/data/user/0/it.qbteam.stalkerapp/files"+"/Preferiti.txt")){
+                        if(path.equals("/data/user/0/it.qbteam.stalkerapp/files/Preferiti.txt")){
                             String orgAuth = jsonObj.getString("orgAuthServerId");
                             organization.setOrgAuthServerId(orgAuth);
                         }
@@ -177,7 +177,9 @@ public class Storage implements HomeContract.Interactor, MyStalkersListContract.
         jo.put("lastChangeDate", list.get(i).getLastChangeDate());
         jo.put("trackingArea", list.get(i).getTrackingArea());
         jo.put("trackingMode", list.get(i).getTrackingMode());
-        if(path.equals("/data/user/0/it.qbteam.stalkerapp/files"+"/Preferiti.txt")&&list.get(i).getTrackingMode().equals("authenticated") ){
+        System.out.println("PIRIPICCHIO"+ path);
+        System.out.println("TRACKINGMODE"+list.get(i).getOrgAuthServerId()+"  " + list.get(i).getTrackingMode());
+        if(list.get(i).getTrackingMode().getValue().equals("authenticated") && list.get(i).getOrgAuthServerId() != null){
             System.out.print("HO SETTATO JO");
             jo.put("orgAuthServerId",list.get(i).getOrgAuthServerId());
 

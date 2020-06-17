@@ -99,6 +99,7 @@ public class Server {
 
         Favorite favoriteUpload = new Favorite();
         favoriteUpload.setUserId(UID);
+        favoriteUpload.setOrgAuthServerId(organization.getOrgAuthServerId());
         favoriteUpload.setCreationDate(OffsetDateTime.now());
         favoriteUpload.setOrganizationId(organization.getId());
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);

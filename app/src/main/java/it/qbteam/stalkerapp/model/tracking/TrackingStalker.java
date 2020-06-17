@@ -194,7 +194,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                          if(mPrefs.getBoolean("switchTrack", false)) {
-                             requestLocationUpdates();
+                             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                          }
 
                      }, 5000);
@@ -211,7 +211,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                         if(mPrefs.getBoolean("switchTrack", false)) {
-                            requestLocationUpdates();
+                            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
 
                         }
                     }, 60000);
@@ -228,7 +228,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        requestLocationUpdates();
+                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     }
                 }, 180000);
 
@@ -243,7 +243,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        requestLocationUpdates();
+                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     }
                 }, 900000);// 15 min
 
@@ -256,7 +256,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        requestLocationUpdates();
+                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     }
                 }, 1800000);// 30 min
 

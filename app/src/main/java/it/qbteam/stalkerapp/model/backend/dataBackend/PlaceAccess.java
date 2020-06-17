@@ -65,6 +65,13 @@ public class PlaceAccess implements Serializable {
   @SerializedName(SERIALIZED_ORG_TIME_STAY)
   private Long timeStay;
 
+  public void setTimeStay(Long timeStay){
+    this.timeStay=timeStay;
+  }
+
+  public Long getTimeStay(){
+    return timeStay;
+  }
 
   public void setOrgId(Long orgId){this.orgId=orgId;}
 

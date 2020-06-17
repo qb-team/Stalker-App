@@ -26,8 +26,8 @@ public class ChronometerPlaceService extends Service {
             updatedTime = timeSwapBuff + timeInMilliseconds;
             timeMsg = new Message();
             timeMsg.obj = updatedTime;
-            HomePageActivity.sHandler.sendMessage(timeMsg);
-            HomePageActivity.sHandler.postDelayed(this, 0);
+            HomePageActivity.sHandler1.sendMessage(timeMsg);
+            HomePageActivity.sHandler1.postDelayed(this, 0);
         }
     };
 
@@ -52,7 +52,7 @@ public class ChronometerPlaceService extends Service {
             stopSelf();
         } else {
             startTime = SystemClock.uptimeMillis();
-            HomePageActivity.sHandler.postDelayed(updateTimer, 0);
+            HomePageActivity.sHandler1.postDelayed(updateTimer, 0);
             isRunning = true;
         }
     }
@@ -66,7 +66,7 @@ public class ChronometerPlaceService extends Service {
 
     public void resetPlace(){
 
-        HomePageActivity.sHandler.removeCallbacks(updateTimer);
+        HomePageActivity.sHandler1.removeCallbacks(updateTimer);
         isRunning=false;
         startTime = 0L;
         timeInMilliseconds = 0L;
@@ -75,7 +75,7 @@ public class ChronometerPlaceService extends Service {
 
         timeMsg = new Message();
         timeMsg.obj = updatedTime;
-        HomePageActivity.sHandler.sendMessage(timeMsg);
+        HomePageActivity.sHandler1.sendMessage(timeMsg);
 
     }
 

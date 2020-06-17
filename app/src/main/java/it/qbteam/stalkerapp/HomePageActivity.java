@@ -210,7 +210,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 secs1 = (int) (currentTime1 / 1000);
                 mins1 = secs1 / 60;
                 secs1 = secs1 % 60;
-                setTime();
+                setTimePlace();
             }
         };
 

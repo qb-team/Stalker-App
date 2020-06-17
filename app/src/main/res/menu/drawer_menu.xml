@@ -28,12 +28,12 @@
                 />
             <item xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/navi_time_insideID"
-                android:title="Permanenza nell'organizzazione: "
+                android:title="Permanenza organizzazione:"
                 app:actionLayout="@layout/time_text"
                 app:showAsAction="always" />
             <item xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/navi_time_inside_PlaceID"
-                android:title="Permanenza nel luogo: "
+                android:title="Permanenza luogo:"
                 app:actionLayout="@layout/time_stay_place"
                 app:showAsAction="always" />
         </menu>

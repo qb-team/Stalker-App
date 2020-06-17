@@ -152,7 +152,6 @@ public class Server {
             movementUpload.setOrgAuthServerId(authServerID);
         if(type == -1)
             movementUpload.setExitToken(exitToken);
-        System.out.print("MOVEMENT UPLOAD "+movementUpload+ "BEARTOKENN"+userToken);
         ApiClient ac = new ApiClient("bearerAuth").setBearerToken(userToken);
         MovementApi service = ac.createService(MovementApi.class);
         Call<OrganizationMovement> movement = service.trackMovementInOrganization(movementUpload);
@@ -170,7 +169,6 @@ public class Server {
                     }
                     else if(type==-1 && response.code()==202){
                         //serialize in local the object List<OrganizationAccess>.
-                        System.out.println("DATA: " + organizationAccess.getEntranceTimestamp() + " " + organizationAccess.getExitTimestamp());
                         String organizationAccessJson = gson.toJson(organizationAccess);
                         System.out.println(organizationAccessJson);
                         prefEditor.putString("organizationAccess",organizationAccessJson);

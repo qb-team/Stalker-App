@@ -664,6 +664,7 @@ public class TrackingStalker extends Service {
 
                         }
 
+                        placeAccess.setTimeStay(HomePageActivity.getCurrentTimePlace());
                         //Comunicates the server that user is outside the place
                         server.performPlaceMovementServer(placeMovement.getExitToken(), -1, latLngPlaceList.get(i).getId(), placeMovement.getOrgAuthServerId(), userToken,placeAccess,prefsEditor,gson);
 
@@ -810,8 +811,6 @@ public class TrackingStalker extends Service {
                         organizationAccess.setOrgName(insideOrganization.getName());
                         organizationAccess.setExitTimestamp(OffsetDateTime.now());
                         organizationAccess.setTimeStay(HomePageActivity.getCurrentTime());
-                        System.out.println("\nORGANIZATION ACCESS\n");
-                        System.out.println(organizationAccess.toString());
 
                         //HomePageActivity.playPauseTimeService();
                         HomePageActivity.resetTime();

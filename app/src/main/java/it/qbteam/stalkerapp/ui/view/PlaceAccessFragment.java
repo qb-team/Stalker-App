@@ -129,11 +129,14 @@ public class PlaceAccessFragment extends Fragment implements OnBackPressListener
                         txt3.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                         TextView txt4 = new TextView(getContext());
                         txt4.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+                        TextView txt5 = new TextView(getContext());
+                        txt4.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
                         //setting the textViews
                         txt1.setText(placeAccessList.get(i).getPlaceName());
                         txt2.setText(placeAccessList.get(i).getEntranceTimestamp().getYear() + "/" + placeAccessList.get(i).getEntranceTimestamp().getMonthValue() + "/" + placeAccessList.get(i).getEntranceTimestamp().getDayOfMonth());
                         txt3.setText(placeAccessList.get(i).getEntranceTimestamp().getHour()+":"+placeAccessList.get(i).getEntranceTimestamp().getMinute()+":"+placeAccessList.get(i).getEntranceTimestamp().getSecond());
                         txt4.setText(placeAccessList.get(i).getExitTimestamp().getHour()+":"+placeAccessList.get(i).getExitTimestamp().getMinute()+":"+placeAccessList.get(i).getExitTimestamp().getSecond());
+                        txt5.setText(String.valueOf(placeAccessList.get(i).getTimeStay()));
                         txt1.setLayoutParams(params1);
                         txt2.setLayoutParams(params1);
                         txt3.setLayoutParams(params1);

@@ -194,8 +194,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                          if(mPrefs.getBoolean("switchTrack", false)) {
-                             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                         }
+                             requestLocationUpdates();                         }
 
                      }, 5000);
 
@@ -211,8 +210,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                         if(mPrefs.getBoolean("switchTrack", false)) {
-                            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-
+                            requestLocationUpdates();
                         }
                     }, 60000);
 
@@ -228,8 +226,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    }
+                        requestLocationUpdates();                    }
                 }, 180000);
 
                 break;
@@ -243,8 +240,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    }
+                        requestLocationUpdates();                    }
                 }, 900000);// 15 min
 
             case 5:  //distance>15000
@@ -256,8 +252,7 @@ public class TrackingStalker extends Service {
 
                 new Handler().postDelayed(() -> {
                     if(mPrefs.getBoolean("switchTrack", false)) {
-                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    }
+                        requestLocationUpdates();                    }
                 }, 1800000);// 30 min
 
                 break;

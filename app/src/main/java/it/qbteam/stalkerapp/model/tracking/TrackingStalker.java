@@ -105,9 +105,9 @@ public class TrackingStalker extends Service {
     private LocationCallback mLocationCallback;
     private Handler mServiceHandler;
     private Location mLocation;
-    private List<LatLngOrganization> latLngOrganizationList;
+    private static List<LatLngOrganization> latLngOrganizationList;
     private List<LatLngPlace> latLngPlaceList;
-    private Storage storage;
+    private static Storage storage;
     private Server server;
     private OrganizationAccess organizationAccess;
     private PlaceAccess placeAccess;
@@ -127,7 +127,7 @@ public class TrackingStalker extends Service {
 
     //usati una volta che l'app è killata.
     private static final String SHARED_PREFS = "sharedPrefs";
-    private SharedPreferences  mPrefs;
+    private static SharedPreferences  mPrefs;
     private SharedPreferences.Editor prefsEditor;
     private Gson gson;
 
@@ -277,7 +277,7 @@ public class TrackingStalker extends Service {
         }
     }
 
-    public void updateTrackingList() throws JSONException {
+    public static void updateTrackingList() throws JSONException {
 
         latLngOrganizationList=LatLngOrganization.checkUpdateList(storage, mPrefs);
     }
@@ -288,10 +288,10 @@ public class TrackingStalker extends Service {
         startService(new Intent(getApplicationContext(), TrackingStalker.class));
 
         try {
-            updateTrackingList();
+            //updateTrackingList();
             Log.i(TAG,"RequestLocationUpdates è partito ");
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-        } catch (SecurityException | JSONException unlikely) {
+        } catch (SecurityException unlikely) {
             Utils.setRequestingLocationUpdates(this, false);
             Log.e(TAG, "Lost location permission. Could not request updates. " + unlikely);
         }

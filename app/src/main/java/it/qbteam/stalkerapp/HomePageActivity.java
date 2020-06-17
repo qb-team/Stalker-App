@@ -443,6 +443,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     //Callback received when a permissions request has been completed.
+    @SneakyThrows
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionResult");
@@ -480,8 +481,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     //Manage the start of tracking by referring to the organizations chosen and entered by the user in the `MyStalkersList` view.
-    private void startTracking() {
+    private void startTracking() throws JSONException {
         mService.requestLocationUpdates();
+        TrackingStalker.updateTrackingList();
     }
 
 
@@ -516,6 +518,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @SneakyThrows
                     public void onClick(final DialogInterface dialog, final int id) {
                         if (checkPermissions()) {
                             requestPermissions();
